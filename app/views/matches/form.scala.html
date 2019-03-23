@@ -1,0 +1,49 @@
+@(form: Form[lidraughts.matches.MatchSetup], config: lidraughts.matches.DataForm)(implicit ctx: Context)
+
+@import config._
+
+@matches.layout(
+title = trans.createANewMatch.txt()) {
+<div id="match" class="form">
+    <div class="content_box small_box match_box">
+        <h1>@trans.createANewMatch()</h1>
+        <form class="plain create content_box_content" action="@routes.Match.create" method="POST">
+            @globalError(form)
+            <table>
+                <tr class="help">
+                    <th colspan="2">
+                        Select one or more variants.
+                    </th>
+                </tr>
+                <tr>
+                    <th><label for="@form("variants").id">@trans.variants()</label></th>
+                    <td>
+                        @views.html.setup.filterCheckboxes(form, "variants", form.value.map(_.variants.map(_.toString)).getOrElse(Nil), translatedVariantChoicesWithVariants)
+                        @errMsg(form("variants"))
+                    </td>
+                </tr>
+                <tr class="help">
+                    <th colspan="2">
+                        Fischer Clock setup.
+                    </th>
+                </tr>
+                <tr class="time">
+                    <th><label>@trans.timeControl()</label></th>
+                    <td class="inline">
+                        @base.form.select(form("clockTime"), config.clockTimeChoices)
+                        +
+                        @base.form.select(form("clockIncrement"), config.clockIncrementChoices)
+                    </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td>
+                        <button type="submit" class="submit button text" data-icon="|">@trans.create()</button>
+                        <a href="@routes.Match.home()">@trans.cancel()</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+}

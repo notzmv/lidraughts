@@ -263,6 +263,13 @@ POST  /simul/$id<\w{8}>/abort                 controllers.Simul.abort(id: String
 POST  /simul/$id<\w{8}>/join/:variant         controllers.Simul.join(id: String, variant: String)
 POST  /simul/$id<\w{8}>/withdraw              controllers.Simul.withdraw(id: String)
 
+# Match
+GET   /match                                  controllers.Match.home
+GET   /match/new                              controllers.Match.form
+POST  /match/new                              controllers.Match.create
+GET   /match/reload                           controllers.Match.homeReload
+GET   /match/$id<\w{8}>                       controllers.Match.show(id: String)
+
 # Team
 GET   /team                                   controllers.Team.home(page: Int ?= 1)
 GET   /team/new                               controllers.Team.form

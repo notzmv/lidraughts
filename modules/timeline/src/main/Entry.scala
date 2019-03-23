@@ -34,6 +34,8 @@ case class Entry(
     case "game-end" => gameEndHandler.read(data)
     case "simul-create" => simulCreateHandler.read(data)
     case "simul-join" => simulJoinHandler.read(data)
+    case "match-create" => matchCreateHandler.read(data)
+    case "match-join" => matchJoinHandler.read(data)
     case "study-create" => studyCreateHandler.read(data)
     case "study-like" => studyLikeHandler.read(data)
     case "plan-start" => planStartHandler.read(data)
@@ -73,6 +75,8 @@ object Entry {
       case d: GameEnd => "game-end" -> toBson(d)
       case d: SimulCreate => "simul-create" -> toBson(d)
       case d: SimulJoin => "simul-join" -> toBson(d)
+      case d: MatchCreate => "match-create" -> toBson(d)
+      case d: MatchJoin => "match-join" -> toBson(d)
       case d: StudyCreate => "study-create" -> toBson(d)(studyCreateHandler)
       case d: StudyLike => "study-like" -> toBson(d)(studyLikeHandler)
       case d: PlanStart => "plan-start" -> toBson(d)(planStartHandler)
@@ -97,6 +101,8 @@ object Entry {
     implicit val gameEndHandler = Macros.handler[GameEnd]
     implicit val simulCreateHandler = Macros.handler[SimulCreate]
     implicit val simulJoinHandler = Macros.handler[SimulJoin]
+    implicit val matchCreateHandler = Macros.handler[MatchCreate]
+    implicit val matchJoinHandler = Macros.handler[MatchJoin]
     implicit val studyCreateHandler = Macros.handler[StudyCreate]
     implicit val studyLikeHandler = Macros.handler[StudyLike]
     implicit val planStartHandler = Macros.handler[PlanStart]
@@ -117,6 +123,8 @@ object Entry {
     implicit val gameEndWrite = Json.writes[GameEnd]
     implicit val simulCreateWrite = Json.writes[SimulCreate]
     implicit val simulJoinWrite = Json.writes[SimulJoin]
+    implicit val matchCreateWrite = Json.writes[MatchCreate]
+    implicit val matchJoinWrite = Json.writes[MatchJoin]
     implicit val studyCreateWrite = Json.writes[StudyCreate]
     implicit val studyLikeWrite = Json.writes[StudyLike]
     implicit val planStartWrite = Json.writes[PlanStart]
@@ -135,6 +143,8 @@ object Entry {
       case d: GameEnd => gameEndWrite writes d
       case d: SimulCreate => simulCreateWrite writes d
       case d: SimulJoin => simulJoinWrite writes d
+      case d: MatchCreate => matchCreateWrite writes d
+      case d: MatchJoin => matchJoinWrite writes d
       case d: StudyCreate => studyCreateWrite writes d
       case d: StudyLike => studyLikeWrite writes d
       case d: PlanStart => planStartWrite writes d

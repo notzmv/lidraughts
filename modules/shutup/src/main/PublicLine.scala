@@ -20,6 +20,7 @@ object PublicLine {
     def read(bs: BSONString): Source = bs.value split ':' match {
       case Array("t", id) => Source.Tournament(id)
       case Array("s", id) => Source.Simul(id)
+      case Array("m", id) => Source.Match(id)
       case Array("w", gameId) => Source.Watcher(gameId)
       case Array("u", id) => Source.Study(id)
       case a => sys error s"Invalid PublicLine source ${bs.value}"
@@ -28,6 +29,7 @@ object PublicLine {
       x match {
         case Source.Tournament(id) => s"t:$id"
         case Source.Simul(id) => s"s:$id"
+        case Source.Match(id) => s"m:$id"
         case Source.Study(id) => s"u:$id"
         case Source.Watcher(gameId) => s"w:$gameId"
       }

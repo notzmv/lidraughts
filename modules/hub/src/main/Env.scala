@@ -14,6 +14,7 @@ final class Env(config: Config, system: ActorSystem) {
     val draughtsnet = select("actor.draughtsnet")
     val tournamentApi = select("actor.tournament.api")
     val simul = select("actor.simul")
+    val matches = select("actor.matches")
     val timeline = select("actor.timeline.user")
     val bookmark = select("actor.bookmark")
     val roundMap = select("actor.round.map")
@@ -39,6 +40,7 @@ final class Env(config: Config, system: ActorSystem) {
     val round = select("socket.round")
     val tournament = select("socket.tournament")
     val simul = select("socket.simul")
+    val matches = select("socket.matches")
     val site = select("socket.site")
     val hub = select("socket.hub")
   }

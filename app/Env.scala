@@ -191,6 +191,7 @@ object Env {
   def importer = lidraughts.importer.Env.current
   def tournament = lidraughts.tournament.Env.current
   def simul = lidraughts.simul.Env.current
+  def matches = lidraughts.matches.Env.current
   def relation = lidraughts.relation.Env.current
   def report = lidraughts.report.Env.current
   def pref = lidraughts.pref.Env.current

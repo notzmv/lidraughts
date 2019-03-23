@@ -57,7 +57,7 @@ lazy val modules = Seq(
   message, notifyModule, i18n, game, bookmark, search,
   gameSearch, timeline, forum, forumSearch, team, teamSearch,
   analyse, mod, site, round, pool, lobby, setup,
-  importer, tournament, simul, relation, report, pref, // simulation,
+  importer, tournament, simul, matches, relation, report, pref, // simulation,
   evaluation, chat, puzzle, tv, coordinate, blog, qa,
   history, shutup, push, explorer,
   playban, insight, perfStat, slack, quote, challenge,
@@ -167,7 +167,7 @@ lazy val event = module("event", Seq(common, db, memo, i18n)).settings(
   libraryDependencies ++= provided(play.api, play.test, reactivemongo.driver)
 )
 
-lazy val mod = module("mod", Seq(common, db, user, hub, security, tournament, simul, game, analyse, evaluation,
+lazy val mod = module("mod", Seq(common, db, user, hub, security, tournament, simul, matches, game, analyse, evaluation,
   report, notifyModule, history, perfStat)).settings(
   libraryDependencies ++= provided(play.api, play.test, reactivemongo.driver)
 )
@@ -225,6 +225,10 @@ lazy val tournament = module("tournament", Seq(common, hub, socket, game, round,
 )
 
 lazy val simul = module("simul", Seq(common, hub, socket, game, round, chat, memo, quote)).settings(
+  libraryDependencies ++= provided(play.api, reactivemongo.driver)
+)
+
+lazy val matches = module("matches", Seq(common, hub, socket, game, round, chat, memo, quote)).settings(
   libraryDependencies ++= provided(play.api, reactivemongo.driver)
 )
 

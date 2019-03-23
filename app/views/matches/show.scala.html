@@ -1,0 +1,37 @@
+@(mtch: lidraughts.matches.Match, socketVersion: Int, data: play.api.libs.json.JsObject, chatOption: Option[lidraughts.chat.UserChat.Mine], stream: Option[lidraughts.streamer.Stream])(implicit ctx: Context)
+
+@underchat = {
+<div class="watchers hidden">
+    <span class="list inline_userlist"></span>
+</div>
+}
+
+@moreJs = {
+@jsAt(s"compiled/lidraughts.match${isProd??(".min")}.js")
+@embedJs {
+lidraughts.match = {
+data: @safeJson(data),
+i18n: @jsI18n(),
+socketVersion: @socketVersion,
+userId: @jsUserId,
+chat: @jsOrNull(chatOption map { c =>
+chat.ChatJsData.json(c.chat, name = trans.chatRoom.txt(), timeout = c.timeout, public = true)
+})
+};
+}
+}
+
+@moreCss = {
+@cssTag("chat.css")
+@if(mtch.isCreated) { @cssTag("quote.css") }
+}
+
+@matches.layout(
+title = mtch.fullName,
+side = matches.side(mtch, stream).some,
+underchat = underchat.some,
+chat = chat.dom().some,
+moreJs = moreJs,
+moreCss = moreCss) {
+<div id="match"></div>
+}

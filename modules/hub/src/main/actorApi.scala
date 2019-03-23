@@ -61,6 +61,7 @@ package shutup {
   object PublicSource {
     case class Tournament(id: String) extends PublicSource
     case class Simul(id: String) extends PublicSource
+    case class Match(id: String) extends PublicSource
     case class Study(id: String) extends PublicSource
     case class Watcher(gameId: String) extends PublicSource
   }
@@ -87,6 +88,7 @@ package captcha {
 package lobby {
   case class ReloadTournaments(html: String)
   case class ReloadSimuls(html: String)
+  case class ReloadMatches(html: String)
   case object NewForumPost
 }
 
@@ -143,6 +145,12 @@ package timeline {
     def userIds = List(userId)
   }
   case class SimulJoin(userId: String, simulId: String, simulName: String) extends Atom("simulJoin", true) {
+    def userIds = List(userId)
+  }
+  case class MatchCreate(userId: String, matchId: String, matchName: String) extends Atom("matchCreate", true) {
+    def userIds = List(userId)
+  }
+  case class MatchJoin(userId: String, matchId: String, matchName: String) extends Atom("matchJoin", true) {
     def userIds = List(userId)
   }
   case class StudyCreate(userId: String, studyId: String, studyName: String) extends Atom("studyCreate", true) {

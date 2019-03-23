@@ -1,0 +1,66 @@
+@(createds: List[lidraughts.matches.Match], starteds: List[lidraughts.matches.Match], finisheds: List[lidraughts.matches.Match])(implicit ctx: Context)
+
+@iconTd(mtch: lidraughts.matches.Match) = {
+<td class="variant_icons @if(mtch.variantRich){rich}">
+    @mtch.perfTypes.map { pt =>
+    <span class="is-gold" data-icon="@pt.iconChar"></span>
+    }
+</td>
+}
+
+<div class="content_box match_box no_padding">
+    <h1>@trans.matches()</h1>
+    <table class="slist">
+        <thead>
+        <tr>
+            <th colspan=2 class="large">@trans.createdMatches()</th>
+            <th>@trans.players()</th>
+        </tr>
+        </thead>
+        <tbody>
+        @createds.map { mtch =>
+        <tr class="scheduled">
+            @iconTd(mtch)
+            <td class="text" data-icon="r">@mtch.applicants.size</td>
+        </tr>
+        }
+        @if(ctx.isAuth) {
+        <tr class="create">
+            <td colspan="4">
+                <a href="@routes.Match.form()" class="action button text">@trans.createANewMatch()</a>
+            </td>
+        </tr>
+        }
+        </tbody>
+        @if(starteds.nonEmpty) {
+        <thead>
+        <tr>
+            <th colspan=2 class="large">@trans.eventInProgress()</th>
+            <th>@trans.players()</th>
+        </tr>
+        </thead>
+        <tbody>
+        @starteds.map { mtch =>
+        <tr>
+            @iconTd(mtch)
+            <td class="text" data-icon="r">@mtch.pairings.size</td>
+        </tr>
+        }
+        </tbody>
+        }
+        <thead>
+        <tr>
+            <th colspan=2 class="large">@trans.finished()</th>
+            <th>@trans.players()</th>
+        </tr>
+        </thead>
+        <tbody>
+        @finisheds.map { mtch =>
+        <tr>
+            @iconTd(mtch)
+            <td class="text" data-icon="r">@mtch.pairings.size</td>
+        </tr>
+        }
+        </tbody>
+    </table>
+</div>

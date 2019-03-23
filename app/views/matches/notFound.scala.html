@@ -1,0 +1,13 @@
+@()(implicit ctx: Context)
+
+@matches.layout(title = trans.noMatchFound.txt()) {
+<div id="match">
+    <div class="content_box small_box faq_page">
+        <h1>@trans.noMatchFound()</h1><br /><br />
+        @trans.noMatchExplanation()
+        <br />
+        <br />
+        <a href="@routes.Match.home()">@trans.returnToMatchHomepage()</a>
+    </div>
+</div>
+}

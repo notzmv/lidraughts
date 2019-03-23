@@ -32,6 +32,14 @@ case SimulJoin(userId, simulId, simulName) => {
 @trans.xJoinsY(userIdLink(userId.some, withOnline = false),
 Html(s"""<a href="${routes.Simul.show(simulId)}">${escapeHtml(simulName)}</a>"""))
 }
+case MatchCreate(userId, matchId, matchName) => {
+@trans.xCreatesY(userIdLink(userId.some, withOnline = false),
+Html(s"""<a href="${routes.Match.show(matchId)}">${escapeHtml(matchName)}</a>"""))
+}
+case MatchJoin(userId, matchId, matchName) => {
+@trans.xJoinsY(userIdLink(userId.some, withOnline = false),
+Html(s"""<a href="${routes.Match.show(matchId)}">${escapeHtml(matchName)}</a>"""))
+}
 case QaQuestion(userId, id, title) => {
 @trans.xAskedY(userIdLink(userId.some, withOnline = false),
 Html("""<a href="%s">%s</a>""".format(routes.QaQuestion.show(id, "redirect"), escapeHtml(title))))

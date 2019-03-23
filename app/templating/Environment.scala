@@ -28,6 +28,7 @@ object Environment
   with AnalysisHelper
   with TournamentHelper
   with SimulHelper
+  with MatchHelper
   with DraughtsgroundHelper {
 
   implicit val LidraughtsHtmlMonoid = scalaz.Monoid.instance[Html](

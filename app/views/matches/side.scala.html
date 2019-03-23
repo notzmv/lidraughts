@@ -1,0 +1,19 @@
+@(mtch: lidraughts.matches.Match, stream: Option[lidraughts.streamer.Stream])(implicit ctx: Context)
+
+<div class="side_box padded">
+    <div class="game_infos">
+        <div class="variant_icons @if(mtch.variantRich){rich}">
+            @mtch.perfTypes.map { pt =>
+            <span data-icon="@pt.iconChar"></span>
+            }
+        </div>
+        <span class="clock">@mtch.clock.config.show</span><br />
+        <div class="setup">
+            @mtch.variants.map(_.name).mkString(", ") • @trans.casual()
+        </div>
+    </div>
+    @trans.by(usernameOrId(mtch.hostId)), @momentFromNow(mtch.createdAt)
+</div>
+@stream.map { s =>
+@*<a href="@routes.Streamer.show(s.streamer.userId)" class="context-streamer text side_box" data-icon="">@usernameOrId(s.streamer.userId) is streaming</a>*@
+}

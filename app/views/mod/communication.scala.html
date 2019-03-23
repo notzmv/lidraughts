@@ -66,6 +66,7 @@ side = side.some) {
       @line.from.map {
       case PublicSource.Tournament(id) => { @tournamentLink(id) }
       case PublicSource.Simul(id) => { @simulLink(id) }
+      case PublicSource.Match(id) => { @matchLink(id) }
       case PublicSource.Watcher(id) => { <a href="@routes.Round.watcher(id, "white")">Game #@id</a> }
       case PublicSource.Study(id) => { <a href="@routes.Study.show(id)">Study #@id</a> }
       }
