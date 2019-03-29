@@ -9,8 +9,7 @@ case class Piece(color: Color, role: Role) {
 
   def oneOf(rs: Set[Role]) = rs(role)
 
-  def isMinor = oneOf(Set(Man))
-  def isMajor = oneOf(Set(King))
+  def isGhost = role == GhostMan || role == GhostKing
 
   def forsyth: Char = role.forsyth
 

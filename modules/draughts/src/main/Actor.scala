@@ -24,16 +24,16 @@ case class Actor(
   lazy val capturesFinal: List[Move] = captureMoves(true)
 
   private def noncaptureMoves(): List[Move] = piece.role match {
-    case Man => shortRangeMoves(dirsOfColor)
+    case Man => shortRangeMoves(board.variant.moveDirsColor(color))
     case King =>
       if (board.variant.frisianVariant && board.history.kingMoves(color) >= 3 && board.history.kingMoves.kingPos(color).fold(true)(_ == pos)) Nil
-      else longRangeMoves(dirsAll)
+      else longRangeMoves(board.variant.moveDirsAll)
     case _ => Nil
   }
 
   private def captureMoves(finalSquare: Boolean): List[Move] = piece.role match {
-    case Man => shortRangeCaptures(if (board.variant.frisianVariant) dirsAllFrisian else dirsAll, finalSquare)
-    case King => longRangeCaptures(if (board.variant.frisianVariant) dirsAllFrisian else dirsAll, finalSquare)
+    case Man => shortRangeCaptures(board.variant.captureDirs, finalSquare)
+    case King => longRangeCaptures(board.variant.captureDirs, finalSquare)
     case _ => Nil
   }
 
@@ -59,15 +59,13 @@ case class Actor(
   //Speed critical function
   private def shortRangeCaptures(dirs: Directions, finalSquare: Boolean): List[Move] = {
     val buf = new ArrayBuffer[Move]
+    var bestCaptureValue = 0
 
-    var bestValue = 0f
-    var bestLength = 0
-
-    def walkCaptures(walkDir: Direction, curBoard: Board, curPos: Pos, destPos: Option[Pos], destBoard: Option[Board], allSquares: List[Pos], allTaken: List[Pos]): Unit =
+    def walkCaptures(walkDir: Direction, curBoard: Board, curPos: Pos, destPos: Option[Pos], destBoard: Option[Board], allSquares: List[Pos], allTaken: List[Pos], captureValue: Int): Unit =
       walkDir._2(curPos).fold() {
         nextPos =>
           curBoard(nextPos) match {
-            case Some(captPiece) if (captPiece isNot color) && (captPiece isNot GhostMan) && (captPiece isNot GhostKing) =>
+            case Some(captPiece) if (captPiece isNot color) && !captPiece.isGhost =>
               walkDir._2(nextPos) match {
                 case Some(landingPos) if curBoard(landingPos).isEmpty =>
                   curBoard.taking(curPos, landingPos, nextPos).fold() {
@@ -75,30 +73,22 @@ case class Actor(
                       {
                         val newSquares = landingPos :: allSquares
                         val newTaken = nextPos :: allTaken
-                        val newMove =
-                          if (finalSquare)
-                            move(landingPos, boardAfter.withoutGhosts(), newSquares, newTaken)
-                          else
-                            move(destPos.getOrElse(landingPos), destBoard.getOrElse(boardAfter), newSquares, newTaken)
-                        if (board.variant.frisianVariant) {
-                          val lineValue = newMove.frisianValue
-                          if (lineValue > bestValue) {
-                            bestValue = lineValue
-                            buf.clear()
-                            buf += newMove
-                          } else if ((lineValue - bestValue).abs < 0.001)
-                            buf += newMove
-                        } else {
-                          if (allTaken.lengthCompare(bestLength) > 0) {
-                            bestLength = allTaken.length
-                            buf.clear()
-                            buf += newMove
-                          } else if (allTaken.lengthCompare(bestLength) == 0)
-                            buf += newMove
+                        val newCaptureValue = captureValue + board.variant.captureValue(board, nextPos)
+                        if (newCaptureValue > bestCaptureValue) {
+                          bestCaptureValue = newCaptureValue
+                          buf.clear()
                         }
-                        filterOpposite(dirs, walkDir).foreach {
+                        if (newCaptureValue == bestCaptureValue) {
+                          if (finalSquare)
+                            buf += move(landingPos, boardAfter.withoutGhosts(), newSquares, newTaken)
+                          else
+                            buf += move(destPos.getOrElse(landingPos), destBoard.getOrElse(boardAfter), newSquares, newTaken)
+                        }
+                        val opposite = oppositeDirs(walkDir._1)
+                        dirs.foreach {
                           captDir =>
-                            walkCaptures(captDir, boardAfter, landingPos, destPos.getOrElse(landingPos).some, destBoard.getOrElse(boardAfter).some, newSquares, newTaken)
+                            if (captDir._1 != opposite)
+                              walkCaptures(captDir, boardAfter, landingPos, destPos.getOrElse(landingPos).some, destBoard.getOrElse(boardAfter).some, newSquares, newTaken, newCaptureValue)
                         }
                       }
                   }
@@ -110,7 +100,7 @@ case class Actor(
 
     dirs.foreach {
       walkDir =>
-        walkCaptures(walkDir, board, pos, None, None, Nil, Nil)
+        walkCaptures(walkDir, board, pos, None, None, Nil, Nil, 0)
     }
 
     buf.flatMap {
@@ -146,94 +136,89 @@ case class Actor(
   //Speed critical function
   private def longRangeCaptures(dirs: Directions, finalSquare: Boolean): List[Move] = {
     val buf = new ArrayBuffer[Move]
+    var bestCaptureValue = 0
 
-    var bestValue = 0f
-    var bestLength = 0
+    // "transposition table", dramatically reduces calculation time for extreme frisian positions like W:WK50:B3,7,10,12,13,14,17,20,21,23,25,30,32,36,38,39,41,43,K47
+    val cacheExtraCapts = new scala.collection.mutable.HashMap[PieceMap, Int]
 
-    def walkUntilCapture(walkDir: Direction, curBoard: Board, curPos: Pos, destPos: Option[Pos], destBoard: Option[Board], allSquares: List[Pos], allTaken: List[Pos]): Unit =
-      walkDir._2(curPos).fold() {
+    def walkUntilCapture(walkDir: Direction, curBoard: Board, curPos: Pos, destPos: Option[Pos], destBoard: Option[Board], allSquares: List[Pos], allTaken: List[Pos], captureValue: Int): Int =
+      walkDir._2(curPos).fold(captureValue) {
         nextPos =>
           curBoard(nextPos) match {
             case None =>
-              curBoard.move(curPos, nextPos).fold() {
+              curBoard.move(curPos, nextPos).fold(captureValue) {
                 boardAfter =>
-                  walkUntilCapture(walkDir, boardAfter, nextPos, destPos, destBoard, allSquares, allTaken)
+                  walkUntilCapture(walkDir, boardAfter, nextPos, destPos, destBoard, allSquares, allTaken, captureValue)
               }
-            case Some(captPiece) if (captPiece isNot color) && (captPiece isNot GhostMan) && (captPiece isNot GhostKing) =>
+            case Some(captPiece) if (captPiece isNot color) && !captPiece.isGhost =>
               walkDir._2(nextPos) match {
                 case Some(landingPos) if curBoard(landingPos).isEmpty =>
-                  curBoard.taking(curPos, landingPos, nextPos).fold() {
+                  curBoard.taking(curPos, landingPos, nextPos).fold(captureValue) {
                     boardAfter =>
-                      walkAfterCapture(walkDir, boardAfter, landingPos, destPos, destBoard, allSquares, nextPos :: allTaken)
+                      walkAfterCapture(walkDir, boardAfter, landingPos, destPos, destBoard, allSquares, nextPos :: allTaken, captureValue + board.variant.captureValue(board, nextPos))
                   }
-                case _ => ()
+                case _ => captureValue
               }
-            case _ => ()
+            case _ => captureValue
           }
       }
 
-    def walkAfterCapture(walkDir: Direction, curBoard: Board, curPos: Pos, destPos: Option[Pos], destBoard: Option[Board], allSquares: List[Pos], allTaken: List[Pos]): Unit = {
-      val newSquares = curPos :: allSquares
-      val newMove =
-        if (finalSquare)
-          move(curPos, curBoard.withoutGhosts(), newSquares, allTaken)
-        else
-          move(destPos.getOrElse(curPos), destBoard.getOrElse(curBoard), newSquares, allTaken)
-      if (board.variant.frisianVariant) {
-        val lineValue = newMove.frisianValue
-        if (lineValue > bestValue) {
-          bestValue = lineValue
-          buf.clear()
-          buf += newMove
-        } else if ((lineValue - bestValue).abs < 0.001)
-          buf += newMove
-      } else {
-        if (allTaken.lengthCompare(bestLength) > 0) {
-          bestLength = allTaken.length
-          buf.clear()
-          buf += newMove
-        } else if (allTaken.lengthCompare(bestLength) == 0)
-          buf += newMove
-      }
-      filterOpposite(dirs, walkDir).foreach {
-        captDir =>
-          walkUntilCapture(captDir, curBoard, curPos, destPos.getOrElse(curPos).some, destBoard.getOrElse(curBoard).some, newSquares, allTaken)
-      }
-      walkDir._2(curPos).fold() {
-        nextPos =>
-          if (curBoard(nextPos).isEmpty)
-            curBoard.move(curPos, nextPos).fold() {
-              boardAfter =>
-                walkAfterCapture(walkDir, boardAfter, nextPos, destPos, destBoard, allSquares, allTaken)
-            }
+    def walkAfterCapture(walkDir: Direction, curBoard: Board, curPos: Pos, destPos: Option[Pos], destBoard: Option[Board], curSquares: List[Pos], newTaken: List[Pos], newCaptureValue: Int): Int = {
+      val cachedExtraCapts = cacheExtraCapts.get(curBoard.pieces)
+      cachedExtraCapts match {
+        case Some(extraCapts) if newCaptureValue + extraCapts < bestCaptureValue =>
+          newCaptureValue + extraCapts
+        case _ =>
+          val newSquares = curPos :: curSquares
+
+          if (newCaptureValue > bestCaptureValue) {
+            bestCaptureValue = newCaptureValue
+            buf.clear()
+          }
+          if (newCaptureValue == bestCaptureValue) {
+            if (finalSquare)
+              buf += move(curPos, curBoard.withoutGhosts(), newSquares, newTaken)
+            else
+              buf += move(destPos.getOrElse(curPos), destBoard.getOrElse(curBoard), newSquares, newTaken)
+          }
+
+          var maxExtraCapts = 0
+          val opposite = oppositeDirs(walkDir._1)
+          dirs.foreach {
+            captDir =>
+              if (captDir._1 != opposite) {
+                val extraCapts = walkUntilCapture(captDir, curBoard, curPos, destPos.getOrElse(curPos).some, destBoard.getOrElse(curBoard).some, newSquares, newTaken, newCaptureValue) - newCaptureValue
+                if (extraCapts > maxExtraCapts)
+                  maxExtraCapts = extraCapts
+              }
+          }
+
+          if (cachedExtraCapts.isEmpty)
+            cacheExtraCapts += (curBoard.pieces -> maxExtraCapts)
+
+          walkDir._2(curPos).fold() {
+            nextPos =>
+              if (curBoard(nextPos).isEmpty)
+                curBoard.move(curPos, nextPos).fold() {
+                  boardAfter =>
+                    val extraCapts = walkAfterCapture(walkDir, boardAfter, nextPos, destPos, destBoard, curSquares, newTaken, newCaptureValue) - newCaptureValue
+                    if (extraCapts > maxExtraCapts)
+                      maxExtraCapts = extraCapts
+                }
+          }
+
+          newCaptureValue + maxExtraCapts
+
       }
     }
 
     dirs.foreach {
       initialDir =>
-        walkUntilCapture(initialDir, board, pos, None, None, Nil, Nil)
+        walkUntilCapture(initialDir, board, pos, None, None, Nil, Nil, 0)
     }
 
     buf.toList
   }
-
-  private def filterOpposite(dirs: Directions, dir: Direction): Directions = {
-    val opposite = dir._1 match {
-      case UpLeft => DownRight
-      case DownLeft => UpRight
-      case UpRight => DownLeft
-      case DownRight => UpLeft
-      case Up => Down
-      case Down => Up
-      case Left => Right
-      case _ => Left
-    }
-    dirs filter { _._1 != opposite }
-  }
-
-  private lazy val dirsOfColor = getDirsOfColor(color)
-  private lazy val dirsAll = getDirsAll()
-  private lazy val dirsAllFrisian = getDirsAllFrisian()
 
   private def move(
     dest: Pos,
@@ -283,10 +268,6 @@ case class Actor(
 
 object Actor {
 
-  def getDirsOfColor(color: Color): Directions = color.fold(List((UpLeft, _.moveUpLeft), (UpRight, _.moveUpRight)), List((DownLeft, _.moveDownLeft), (DownRight, _.moveDownRight)))
-  def getDirsAll(): Directions = List((UpLeft, _.moveUpLeft), (UpRight, _.moveUpRight), (DownLeft, _.moveDownLeft), (DownRight, _.moveDownRight))
-  def getDirsAllFrisian(): Directions = List((UpLeft, _.moveUpLeft), (UpRight, _.moveUpRight), (Up, _.moveUp), (DownLeft, _.moveDownLeft), (DownRight, _.moveDownRight), (Down, _.moveDown), (Left, _.moveLeft), (Right, _.moveRight))
-
   val UpLeft = 1
   val UpRight = 2
   val DownLeft = 3
@@ -295,5 +276,17 @@ object Actor {
   val Down = 6
   val Left = 7
   val Right = 8
+
+  val oppositeDirs: Array[Int] = Array(
+    0,
+    DownRight,
+    DownLeft,
+    UpRight,
+    UpLeft,
+    Down,
+    Up,
+    Right,
+    Left
+  )
 
 }

@@ -6,29 +6,29 @@ sealed trait Role {
   val forsyth: Char
   lazy val pdn: Char = forsyth
   lazy val name: String = toString.toLowerCase
-  val projection: Boolean
+  val frisianValue: Int
 }
 
 sealed trait PromotableRole extends Role
 
 case object King extends PromotableRole {
   val forsyth = 'K'
-  val projection = false
+  val frisianValue = 199
 }
 
 case object Man extends Role {
   val forsyth = ' '
-  val projection = false
+  val frisianValue = 100
 }
 
 case object GhostMan extends Role {
   val forsyth = 'G'
-  val projection = false
+  val frisianValue = 0
 }
 
 case object GhostKing extends Role {
   val forsyth = 'P'
-  val projection = false
+  val frisianValue = 0
 }
 
 object Role {
