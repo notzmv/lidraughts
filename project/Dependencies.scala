@@ -43,7 +43,7 @@ object Dependencies {
   val scalaUri = "io.lemonlabs" %% "scala-uri" % "1.2.0"
   val markdown = "com.vladsch.flexmark" % "flexmark-all" % "0.50.30"
   val scalatags = "com.lihaoyi" %% "scalatags" % "0.6.7"
-  val scredis = "com.github.scredis" %% "scredis" % "2.2.4"
+  val jedis = "redis.clients" % "jedis" % "3.0.1"
 
   object reactivemongo {
     val version = "0.12.2"
