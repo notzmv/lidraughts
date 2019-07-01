@@ -11,6 +11,7 @@ final class Env(
     system: ActorSystem,
     config: Config,
     lifecycle: play.api.inject.ApplicationLifecycle,
+    hub: lidraughts.hub.Env,
     settingStore: lidraughts.memo.SettingStore.Builder
 ) {
 
@@ -31,6 +32,7 @@ final class Env(
     chanIn = "site-in",
     chanOut = "site-out",
     lifecycle = lifecycle,
+    notificationActor = hub.notification,
     bus = system.lidraughtsBus
   )
 
@@ -49,6 +51,7 @@ object Env {
     system = lidraughts.common.PlayApp.system,
     config = lidraughts.common.PlayApp loadConfig "socket",
     lifecycle = lidraughts.common.PlayApp.lifecycle,
+    hub = lidraughts.hub.Env.current,
     settingStore = lidraughts.memo.Env.current.settingStore
   )
 }
