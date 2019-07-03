@@ -13,6 +13,7 @@ private object MoveMonitor {
       var current: Int = 0
       context.system.scheduler.schedule(5 second, 2 second) {
         channel ! lidraughts.socket.Channel.Publish(lidraughts.socket.Socket.makeMessage("mlat", current))
+        system.lidraughtsBus.publish(lidraughts.hub.actorApi.round.Mlat(current), 'mlat)
       }
       def receive = {
         case tick: TickMetricSnapshot => tick.metrics.collectFirst {

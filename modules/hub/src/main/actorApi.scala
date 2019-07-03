@@ -262,6 +262,7 @@ package round {
   case class Resign(playerId: String)
   case object AnalysisComplete
   case class FinishGameId(gameId: String)
+  case class Mlat(ms: Int)
 }
 
 package evaluation {
