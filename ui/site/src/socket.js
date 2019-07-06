@@ -256,14 +256,20 @@ lidraughts.StrongSocket = function(url, version, settings) {
     }
   };
 
-  var baseUrl = function() {
-    var urls = options.baseUrls, url = storage.get();
+  const baseUrls = (
+    d => [d] // .concat((d.includes('lidraughts.org') ? [5, 6, 7, 8, 9] : []).map(port => d + ':' + (9020 + port)))
+  )(options.remoteSocketDomain || document.body.getAttribute('data-socket-domain'));
+
+  const baseUrl = function() {
+    console.log(baseUrls, options.remoteSocketDomain);
+    if (options.remoteSocketDomain) return baseUrls[Math.floor(Math.random() * baseUrls.length)];
+    let url = storage.get();
     if (!url) {
-      url = urls[0];
+      url = baseUrls[0];
       storage.set(url);
     } else if (tryOtherUrl) {
       tryOtherUrl = false;
-      url = urls[(urls.indexOf(url) + 1) % urls.length];
+      url = baseUrls[(baseUrls.indexOf(url) + 1) % baseUrls.length];
       storage.set(url);
     }
     return url;
@@ -339,9 +345,7 @@ lidraughts.StrongSocket.defaults = {
     pingDelay: 2500, // time between pong and ping
     autoReconnectDelay: 3500,
     protocol: location.protocol === 'https:' ? 'wss:' : 'ws:',
-    baseUrls: (function(d) {
-      return [d];
-    })(document.body.getAttribute('data-socket-domain')),
-    onFirstConnect: $.noop
+    onFirstConnect: $.noop,
+    remoteSocketDomain: null
   }
 };

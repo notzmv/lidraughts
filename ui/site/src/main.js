@@ -277,7 +277,13 @@
       lidraughts.pubsub.on('content_loaded', renderTimeago);
 
       if (!window.customWS) setTimeout(function() {
-        if (lidraughts.socket === null) lidraughts.socket = lidraughts.StrongSocket("/socket/v3", false);
+        if (lidraughts.socket === null) {
+          lidraughts.socket = lidraughts.StrongSocket("/socket/v3", false, {
+            options: {
+              remoteSocketDomain: document.body.getAttribute('data-remote-socket-domain')
+            }
+          });
+        }
       }, 300);
 
       var initiatingHtml = '<div class="initiating">' + lidraughts.spinnerHtml + '</div>';

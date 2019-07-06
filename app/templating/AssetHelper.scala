@@ -15,6 +15,7 @@ trait AssetHelper { self: I18nHelper with SecurityHelper =>
   val siteDomain = lidraughts.api.Env.current.Net.Domain
   val assetDomain = lidraughts.api.Env.current.Net.AssetDomain
   val socketDomain = lidraughts.api.Env.current.Net.SocketDomain
+  val remoteSocketDomain = lidraughts.api.Env.current.Net.RemoteSocketDomain
   val vapidPublicKey = lidraughts.push.Env.current.WebVapidPublicKey
 
   val sameAssetDomain = siteDomain == assetDomain
@@ -107,9 +108,17 @@ trait AssetHelper { self: I18nHelper with SecurityHelper =>
   def basicCsp(implicit req: RequestHeader): ContentSecurityPolicy = {
     val assets = if (req.secure) "https://" + assetDomain else assetDomain
     val socket = (if (req.secure) "wss://" else "ws://") + socketDomain + (if (socketDomain.contains(":")) "" else ":*")
+    val remoteSocket = (if (req.secure) "wss://" else "ws://") + remoteSocketDomain + (if (remoteSocketDomain.contains(":")) "" else ":*")
     ContentSecurityPolicy(
       defaultSrc = List("'self'", assets),
-      connectSrc = List("'self'", assets, socket, lidraughts.api.Env.current.ExplorerEndpoint, lidraughts.api.Env.current.TablebaseEndpoint),
+      connectSrc = List(
+        "'self'",
+        assets,
+        socket,
+        remoteSocket,
+        lidraughts.api.Env.current.ExplorerEndpoint,
+        lidraughts.api.Env.current.TablebaseEndpoint
+      ),
       styleSrc = List("'self'", "'unsafe-inline'", assets),
       fontSrc = List("'self'", assetDomain, "https://fonts.gstatic.com"),
       frameSrc = List("'self'", assets, "https://www.youtube.com", "https://player.twitch.tv"),

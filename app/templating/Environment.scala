@@ -3,6 +3,7 @@ package templating
 
 import scala.concurrent.duration._
 
+import lidraughts.api.Context
 import lidraughts.api.Env.{ current => apiEnv }
 import lidraughts.app.ui.ScalatagsTemplate._
 
@@ -52,7 +53,12 @@ object Environment
   def isChatPanicEnabled =
     lidraughts.chat.Env.current.panic.enabled
 
-  def NotForKids(f: => Frag)(implicit ctx: lidraughts.api.Context) = if (ctx.kid) emptyFrag else f
+  def NotForKids(f: => Frag)(implicit ctx: Context) = if (ctx.kid) emptyFrag else f
 
   val spinner: Frag = raw("""<div class="spinner"><svg viewBox="0 0 40 40"><circle cx=20 cy=20 r=18 fill="none"></circle></svg></div>""")
+
+  def maybeRemoteSocketDomain(implicit ctx: Context): Option[String] = {
+    val regex = Env.socket.socketRemoteUsersSetting.get()
+    regex == "." || ctx.userId.exists(regex.r.matches)
+  } option remoteSocketDomain
 }
