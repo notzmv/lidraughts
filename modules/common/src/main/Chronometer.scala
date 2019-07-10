@@ -74,4 +74,9 @@ object Chronometer {
     lidraughts.mon.recPath(path)(nowNanos - start)
     res
   }
+
+  def start = new {
+    private val s = nowNanos
+    def mon(path: lidraughts.mon.RecPath): Unit = lidraughts.mon.recPath(path)(nowNanos - s)
+  }
 }
