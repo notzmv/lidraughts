@@ -9,10 +9,10 @@ import draughts.format.FEN
 
 import lidraughts.chat.Chat
 import lidraughts.chat.UserLine
-import lidraughts.game.actorApi.{ AbortedBy, MoveGameEvent }
+import lidraughts.game.actorApi.{ AbortedBy, FinishGame, MoveGameEvent }
 import lidraughts.game.{ Game, GameRepo }
 import lidraughts.hub.actorApi.map.Tell
-import lidraughts.hub.actorApi.round.{ MoveEvent, FinishGameId }
+import lidraughts.hub.actorApi.round.MoveEvent
 import lidraughts.socket.actorApi.BotConnected
 import lidraughts.user.User
 
@@ -37,7 +37,7 @@ final class GameStateStream(
 
           private val classifiers = List(
             MoveGameEvent makeSymbol id,
-            'finishGameId, 'abortGame,
+            'finishGame, 'abortGame,
             Chat classify Chat.Id(id),
             Chat classify Chat.Id(s"$id/w")
           )
@@ -68,7 +68,7 @@ final class GameStateStream(
             case MoveGameEvent(g, _, _) if g.id == id => pushState(g)
             case lidraughts.chat.actorApi.ChatLine(chatId, UserLine(username, _, text, false, false)) =>
               pushChatLine(username, text, chatId.value.size == Game.gameIdSize)
-            case FinishGameId(gameId) if gameId == id => onGameOver
+            case FinishGame(g, _, _) if g.id == id => onGameOver
             case AbortedBy(pov) if pov.gameId == id => onGameOver
             case SetOnline =>
               setConnected(true)
