@@ -3,8 +3,8 @@ package lidraughts.evalCache
 import com.typesafe.config.Config
 import play.api.libs.json.JsValue
 
-import lila.hub.actorApi.socket.{ RemoteSocketTellSriIn, RemoteSocketTellSriOut }
-import lila.socket.Socket.Uid
+import lidraughts.hub.actorApi.socket.{ RemoteSocketTellSriIn, RemoteSocketTellSriOut }
+import lidraughts.socket.Socket.Uid
 
 final class Env(
     config: Config,
@@ -36,13 +36,9 @@ final class Env(
   system.lidraughtsBus.subscribeFun('socketLeave) {
     case lidraughts.socket.actorApi.SocketLeave(uid, _) => upgrade unregister uid
   }
-  system.lilaBus.subscribeFun(Symbol("remoteSocketIn:evalGet")) {
+  system.lidraughtsBus.subscribeFun(Symbol("remoteSocketIn:evalGet")) {
     case RemoteSocketTellSriIn(sri, d) =>
-      val uid = Uid(sri)
-      def push(res: JsValue) = system.lilaBus.publish(RemoteSocketTellSriOut(sri, res), 'remoteSocketOut)
-      socketHandler.evalGet(uid, d,
-        reply = push,
-        subscribe = (variant, fen, multiPv, path) => upgrade.register(uid, variant, fen, multiPv, path)(push))
+      socketHandler.evalGet(Uid(sri), d, res => system.lidraughtsBus.publish(RemoteSocketTellSriOut(sri, res), 'remoteSocketOut))
   }
 
   def cli = new lidraughts.common.Cli {
