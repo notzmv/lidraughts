@@ -1,7 +1,7 @@
 package lidraughts.evalCache
 
-import play.api.libs.json._
 import draughts.variant.Variant
+import play.api.libs.json._
 
 import draughts.format.FEN
 import lidraughts.socket._
@@ -50,4 +50,13 @@ final class EvalCacheSocketHandler(
     }
     if (d.value contains "up") upgrade.register(uid, variant, fen, multiPv, path)(push)
   }
+
+  private[evalCache] def untrustedEvalPut(uid: Socket.Uid, userId: User.ID, data: JsObject): Unit =
+    truster cachedTrusted userId foreach {
+      _ foreach { tu =>
+        JsonHandlers.readPutData(tu, data) foreach {
+          api.put(tu, _, uid)
+        }
+      }
+    }
 }

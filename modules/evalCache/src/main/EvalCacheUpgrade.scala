@@ -11,7 +11,7 @@ import lidraughts.socket.{ Socket, SocketMember }
  * by remembering the last evalGet of each socket member,
  * and listening to new evals stored.
  */
-private final class EvalCacheUpgrade(asyncCache: lidraughts.memo.AsyncCache.Builder) {
+private final class EvalCacheUpgrade {
   import EvalCacheUpgrade._
 
   private val members = AnyRefMap.empty[UidString, WatchingMember]
