@@ -2,6 +2,7 @@ package lidraughts.evalCache
 
 import com.typesafe.config.Config
 import play.api.libs.json.JsValue
+import scala.concurrent.duration._
 
 import lidraughts.hub.actorApi.socket.{ RemoteSocketTellSriIn, RemoteSocketTellSriOut }
 import lidraughts.socket.Socket.Uid

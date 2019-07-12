@@ -2,10 +2,12 @@ package lidraughts.evalCache
 
 import play.api.libs.json.{ JsString, JsObject }
 import scala.collection.mutable.AnyRefMap
+import scala.concurrent.duration._
 
 import draughts.format.FEN
 import draughts.variant.Variant
 import lidraughts.socket.{ Socket, SocketMember }
+import lidraughts.memo.ExpireCallbackMemo
 
 /* Upgrades the user's eval when a better one becomes available,
  * by remembering the last evalGet of each socket member,
@@ -16,6 +18,7 @@ private final class EvalCacheUpgrade {
 
   private val members = AnyRefMap.empty[UidString, WatchingMember]
   private val evals = AnyRefMap.empty[SetupId, Set[UidString]]
+  private val expirableUids = new ExpireCallbackMemo(20 minutes, uid => unregister(Socket.Uid(uid)))
 
   def register(uid: Socket.Uid, variant: Variant, fen: FEN, multiPv: Int, path: String)(push: Push): Unit = {
     members get uid.value foreach { wm =>
@@ -24,6 +27,7 @@ private final class EvalCacheUpgrade {
     val setupId = makeSetupId(variant, fen, multiPv)
     members += (uid.value -> WatchingMember(push, setupId, path))
     evals += (setupId -> (~evals.get(setupId) + uid.value))
+    expirableUids put uid.value
   }
 
   def onEval(input: EvalCacheEntry.Input, uid: Socket.Uid): Unit = {
@@ -39,6 +43,7 @@ private final class EvalCacheUpgrade {
         lidraughts.mon.evalCache.upgrade.hit(wms.size)
         lidraughts.mon.evalCache.upgrade.members(members.size)
         lidraughts.mon.evalCache.upgrade.evals(evals.size)
+        lidraughts.mon.evalCache.upgrade.expirable(expirableUids.count)
       }
     }
   }
@@ -46,6 +51,7 @@ private final class EvalCacheUpgrade {
   def unregister(uid: Socket.Uid): Unit = members get uid.value foreach { wm =>
     unregisterEval(wm.setupId, uid)
     members -= uid.value
+    expirableUids remove uid.value
   }
 
   private def unregisterEval(setupId: SetupId, uid: Socket.Uid): Unit =
