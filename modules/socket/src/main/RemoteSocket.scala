@@ -8,6 +8,7 @@ import draughts.Centis
 import lidraughts.common.{ Chronometer, WithResource }
 import lidraughts.hub.actorApi.relation.ReloadOnlineFriends
 import lidraughts.hub.actorApi.round.{ MoveEvent, Mlat }
+import lidraughts.hub.actorApi.security.CloseAccount
 import lidraughts.hub.actorApi.socket.{ SendTo, SendTos, WithUserIds, RemoteSocketTellSriIn, RemoteSocketTellSriOut }
 import lidraughts.hub.actorApi.{ Deploy, Announce }
 
@@ -41,12 +42,13 @@ private final class RemoteSocket(
     val TellFlag = "tell/flag"
     val TellSri = "tell/sri"
     val Mlat = "mlat"
+    val DisconnectUser = "disconnect/user"
   }
 
   private val connectedUserIds = collection.mutable.Set.empty[String]
   private val watchedGameIds = collection.mutable.Set.empty[String]
 
-  bus.subscribeFun('moveEvent, 'socketUsers, 'deploy, 'announce, 'mlat, 'sendToFlag, 'remoteSocketOut) {
+  bus.subscribeFun('moveEvent, 'socketUsers, 'deploy, 'announce, 'mlat, 'sendToFlag, 'remoteSocketOut, 'accountClose) {
     case MoveEvent(gameId, fen, move) =>
       if (watchedGameIds(gameId)) send(Out.Move, gameId, move, fen)
     case SendTos(userIds, payload) =>
@@ -64,6 +66,8 @@ private final class RemoteSocket(
       send(Out.TellFlag, flag, Json stringify payload)
     case RemoteSocketTellSriOut(sri, payload) =>
       send(Out.TellSri, sri, Json stringify payload)
+    case CloseAccount(userId) =>
+      send(Out.DisconnectUser, userId)
     case WithUserIds(f) =>
       f(connectedUserIds)
   }

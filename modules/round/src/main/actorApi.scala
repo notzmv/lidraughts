@@ -8,12 +8,12 @@ import draughts.{ MoveMetrics, Color }
 
 import lidraughts.common.{ IpAddress, IsMobile }
 import lidraughts.socket.Socket.{ SocketVersion, Uid }
-import lidraughts.socket.SocketMember
+import lidraughts.socket.DirectSocketMember
 import lidraughts.user.User
 
 case class EventList(events: List[lidraughts.game.Event])
 
-sealed trait Member extends SocketMember {
+sealed trait Member extends DirectSocketMember {
 
   val color: Color
   val playerIdOption: Option[String]

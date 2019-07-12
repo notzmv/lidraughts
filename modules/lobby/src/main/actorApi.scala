@@ -4,7 +4,7 @@ package actorApi
 import scala.concurrent.Promise
 
 import lidraughts.game.Game
-import lidraughts.socket.SocketMember
+import lidraughts.socket.DirectSocketMember
 import lidraughts.socket.Socket.{ Uid, Uids }
 import lidraughts.user.User
 
@@ -13,7 +13,7 @@ private[lobby] case class Member(
     user: Option[LobbyUser],
     uid: Uid,
     mobile: Boolean
-) extends SocketMember {
+) extends DirectSocketMember {
 
   val userId = user.map(_.id)
 }

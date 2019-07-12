@@ -4,7 +4,7 @@ package actorApi
 import scala.concurrent.Promise
 
 import lidraughts.game.Game
-import lidraughts.socket.Socket.{ Uid, SocketVersion }
+import lidraughts.socket.Socket.{ Uid, DirectSocketVersion  }
 import lidraughts.socket.SocketMember
 import lidraughts.user.User
 
@@ -12,7 +12,7 @@ private[tournament] case class Member(
     channel: JsChannel,
     userId: Option[String],
     troll: Boolean
-) extends SocketMember
+) extends DirectSocketMember
 
 private[tournament] object Member {
   def apply(channel: JsChannel, user: Option[User]): Member = Member(
