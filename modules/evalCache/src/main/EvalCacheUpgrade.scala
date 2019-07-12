@@ -38,7 +38,7 @@ private final class EvalCacheUpgrade {
       if (wms.nonEmpty) {
         val json = JsonHandlers.writeEval(input.eval, input.fen)
         wms foreach { wm =>
-          wm push Socket.makeMessage("evalHit", json + ("path" -> JsString(wm.path)))
+          wm.push(json + ("path" -> JsString(wm.path)))
         }
         lidraughts.mon.evalCache.upgrade.hit(wms.size)
         lidraughts.mon.evalCache.upgrade.members(members.size)
