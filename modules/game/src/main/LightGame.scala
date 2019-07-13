@@ -28,7 +28,7 @@ object LightGame {
   def projection = lidraughts.db.dsl.$doc(
     F.whitePlayer -> true,
     F.blackPlayer -> true,
-    F.playerSris -> true,
+    F.playerUids -> true,
     F.winnerColor -> true,
     F.status -> true
   )
