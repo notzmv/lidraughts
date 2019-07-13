@@ -95,12 +95,12 @@ object Relay extends LidraughtsController {
     }
 
   def websocket(id: String, apiVersion: Int) = SocketOption[JsValue] { implicit ctx =>
-    get("sri") ?? { uid =>
+    get("sri") ?? { sri =>
       env.api byId id flatMap {
         _ ?? { relay =>
           env.socketHandler.join(
             relayId = relay.id,
-            uid = lidraughts.socket.Socket.Uid(uid),
+            sri = lidraughts.socket.Socket.Sri(sri),
             user = ctx.me,
             getSocketVersion,
             apiVersion

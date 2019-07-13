@@ -18,7 +18,7 @@ private[simul] final class Socket(
     getSimul: Simul.ID => Fu[Option[Simul]],
     jsonView: JsonView,
     lightUser: lidraughts.common.LightUser.Getter,
-    uidTtl: Duration,
+    sriTtl: Duration,
     keepMeAlive: () => Unit
 ) extends SocketTrouper[SimulSocketMember](system, sriTtl) with Historical[SimulSocketMember, Messadata] {
 

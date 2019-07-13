@@ -125,8 +125,8 @@ object UserAnalysis extends LidraughtsController with TheftPrevention {
     }
 
   def socket(apiVersion: Int) = SocketOption { implicit ctx =>
-    getSocketUid("sri") ?? { uid =>
-      Env.analyse.socketHandler.join(uid, ctx.me, apiVersion) map some
+    getSocketSri("sri") ?? { sri =>
+      Env.analyse.socketHandler.join(sri, ctx.me, apiVersion) map some
     }
   }
 

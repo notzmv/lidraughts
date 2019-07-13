@@ -260,8 +260,8 @@ object Tournament extends LidraughtsController {
   }
 
   def websocket(id: String, apiVersion: Int) = SocketOption[JsValue] { implicit ctx =>
-    getSocketUid("sri") ?? { uid =>
-      env.socketHandler.join(id, uid, ctx.me, getSocketVersion, apiVersion)
+    getSocketSri("sri") ?? { sri =>
+      env.socketHandler.join(id, sri, ctx.me, getSocketVersion, apiVersion)
     }
   }
 

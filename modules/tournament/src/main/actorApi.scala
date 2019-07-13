@@ -4,7 +4,7 @@ package actorApi
 import scala.concurrent.Promise
 
 import lidraughts.game.Game
-import lidraughts.socket.Socket.{ Uid, SocketVersion  }
+import lidraughts.socket.Socket.{ Sri, SocketVersion  }
 import lidraughts.socket.DirectSocketMember
 import lidraughts.user.User
 
@@ -25,7 +25,7 @@ private[tournament] object Member {
 private[tournament] case class Messadata(trollish: Boolean = false)
 
 private[tournament] case class Join(
-    uid: Uid,
+    sri: Sri,
     user: Option[User],
     version: Option[SocketVersion],
     promise: Promise[Connected]

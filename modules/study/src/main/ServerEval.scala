@@ -7,7 +7,7 @@ import draughts.format.{ Forsyth, FEN, Uci, UciCharPair }
 import lidraughts.analyse.{ Analysis, Info }
 import lidraughts.hub.actorApi.draughtsnet.StudyChapterRequest
 import lidraughts.hub.actorApi.map.Tell
-import lidraughts.socket.Socket.Uid
+import lidraughts.socket.Socket.Sri
 import lidraughts.tree._
 import lidraughts.tree.Node.Comment
 import lidraughts.user.User

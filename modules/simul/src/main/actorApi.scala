@@ -19,7 +19,7 @@ private[simul] case class SimulSocketMember(
 private[simul] case class Messadata(trollish: Boolean = false)
 
 private[simul] case class Join(
-    uid: Uid,
+    sri: Sri,
     user: Option[User],
     version: Option[SocketVersion],
     promise: Promise[Connected]

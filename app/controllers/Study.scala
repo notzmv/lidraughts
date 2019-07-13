@@ -217,12 +217,12 @@ object Study extends LidraughtsController {
   } ?? Env.chat.api.userChat.findMine(Chat.Id(study.id.value), ctx.me).map(some)
 
   def websocket(id: String, apiVersion: Int) = SocketOption[JsValue] { implicit ctx =>
-    get("sri") ?? { uid =>
+    get("sri") ?? { sri =>
       env.api byId id flatMap {
         _.filter(canView) ?? { study =>
           env.socketHandler.join(
             studyId = id,
-            uid = lidraughts.socket.Socket.Uid(uid),
+            sri = lidraughts.socket.Socket.Sri(sri),
             user = ctx.me,
             getSocketVersion,
             apiVersion

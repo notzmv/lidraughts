@@ -44,7 +44,7 @@ private[api] final class GameApi(
         selector = {
           if (~playing) lidraughts.game.Query.nowPlaying(user.id)
           else $doc(
-            G.playerUids -> user.id,
+            G.playerSris -> user.id,
             G.status $gte draughts.Status.Mate.id,
             G.analysed -> analysed.map[BSONValue] {
               case true => BSONBoolean(true)

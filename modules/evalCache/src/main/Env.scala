@@ -5,7 +5,7 @@ import play.api.libs.json.JsValue
 import scala.concurrent.duration._
 
 import lidraughts.hub.actorApi.socket.{ RemoteSocketTellSriIn, RemoteSocketTellSriOut }
-import lidraughts.socket.Socket.Uid
+import lidraughts.socket.Socket.Sri
 
 final class Env(
     config: Config,
@@ -35,17 +35,17 @@ final class Env(
   )
 
   system.lidraughtsBus.subscribeFun('socketLeave) {
-    case lidraughts.socket.actorApi.SocketLeave(uid, _) => upgrade unregister uid
+    case lidraughts.socket.actorApi.SocketLeave(sri, _) => upgrade unregister sri
   }
 
   // remote socket support
   system.lidraughtsBus.subscribeFun(Symbol("remoteSocketIn:evalGet")) {
     case RemoteSocketTellSriIn(sri, _, d) =>
-      socketHandler.evalGet(Uid(sri), d, res => system.lidraughtsBus.publish(RemoteSocketTellSriOut(sri, res), 'remoteSocketOut))
+      socketHandler.evalGet(Sri(sri), d, res => system.lidraughtsBus.publish(RemoteSocketTellSriOut(sri, res), 'remoteSocketOut))
   }
   system.lidraughtsBus.subscribeFun(Symbol("remoteSocketIn:evalPut")) {
     case RemoteSocketTellSriIn(sri, Some(userId), d) =>
-      socketHandler.untrustedEvalPut(Uid(sri), userId, d)
+      socketHandler.untrustedEvalPut(Sri(sri), userId, d)
   }
   // END remote socket support
 

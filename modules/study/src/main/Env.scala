@@ -32,7 +32,7 @@ final class Env(
     val CollectionStudy = config getString "collection.study"
     val CollectionChapter = config getString "collection.chapter"
     val HistoryMessageTtl = config duration "history.message.ttl"
-    val UidTimeout = config duration "uid.timeout"
+    val SriTimeout = config duration "sri.timeout"
     val SocketTimeout = config duration "socket.timeout"
     val SequencerTimeout = config duration "sequencer.timeout"
     val NetDomain = config getString "net.domain"
@@ -60,7 +60,7 @@ final class Env(
       chapterRepo = chapterRepo,
       lightUserApi = lightUserApi,
       history = new lidraughts.socket.History(ttl = HistoryMessageTtl),
-      uidTtl = UidTimeout,
+      sriTtl = SriTimeout,
       lightStudyCache = lightStudyCache,
       keepMeAlive = () => socketMap touch studyId
     ),

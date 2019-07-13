@@ -30,11 +30,11 @@ final class EvalCacheApi(
       }
     }
 
-  def put(trustedUser: TrustedUser, candidate: Input.Candidate, uid: Socket.Uid): Funit =
-    candidate.input ?? { put(trustedUser.user.id, _, uid.some) }
+  def put(trustedUser: TrustedUser, candidate: Input.Candidate, sri: Socket.Sri): Funit =
+    candidate.input ?? { put(trustedUser.user.id, _, sri.some) }
 
-  def put(trustedUserId: String, candidate: Input.Candidate, uid: Option[Socket.Uid]): Funit =
-    candidate.input ?? { put(trustedUserId, _, uid) }
+  def put(trustedUserId: String, candidate: Input.Candidate, sri: Option[Socket.Sri]): Funit =
+    candidate.input ?? { put(trustedUserId, _, sri) }
 
   def shouldPut = truster shouldPut _
 
@@ -66,7 +66,7 @@ final class EvalCacheApi(
       if (res.isDefined) coll.updateFieldUnchecked($id(id), "usedAt", DateTime.now)
     }
 
-  private def put(trustedUserId: String, input: Input, uid: Option[Socket.Uid]): Funit = Validator(input) match {
+  private def put(trustedUserId: String, input: Input, sri: Option[Socket.Sri]): Funit = Validator(input) match {
     case Some(error) =>
       logger.info(s"Invalid ${input.id.variant.key} from $trustedUserId $error ${input.fen} ${input.eval}")
       funit
@@ -80,13 +80,13 @@ final class EvalCacheApi(
         )
         coll.insert(entry).recover(lidraughts.db.recoverDuplicateKey(_ => ())) >>-
           cache.put(input.id, entry.some) >>-
-          uid ?? { upgrade.onEval(input, _) }
+          sri ?? { upgrade.onEval(input, _) }
       case Some(oldEntry) =>
         val entry = oldEntry add input.eval
         !(entry similarTo oldEntry) ?? {
           coll.update($id(entry.id), entry, upsert = true).void >>-
             cache.put(input.id, entry.some) >>-
-            uid ?? { upgrade.onEval(input, _) }
+            sri ?? { upgrade.onEval(input, _) }
         }
 
     }

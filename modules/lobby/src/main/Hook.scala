@@ -7,13 +7,13 @@ import play.api.libs.json._
 
 import lidraughts.game.PerfPicker
 import lidraughts.rating.RatingRange
-import lidraughts.socket.Socket.Uid
+import lidraughts.socket.Socket.Sri
 import lidraughts.user.User
 
 // realtime draughts, volatile
 case class Hook(
     id: String,
-    uid: Uid, // owner socket uid
+    sri: Sri, // owner socket sri
     sid: Option[String], // owner cookie (used to prevent multiple hooks)
     variant: Int,
     clock: Clock.Config,
@@ -60,7 +60,7 @@ case class Hook(
 
   lazy val render: JsObject = Json.obj(
     "id" -> id,
-    "uid" -> uid,
+    "sri" -> sri,
     "clock" -> clock.show,
     "t" -> clock.estimateTotalSeconds,
     "s" -> speed.id
@@ -87,7 +87,7 @@ case class Hook(
     hookId = id,
     member = lidraughts.pool.PoolMember(
       userId = user.??(_.id),
-      uid = uid,
+      sri = sri,
       rating = rating | lidraughts.rating.Glicko.defaultIntRating,
       ratingRange = realRatingRange,
       lame = user.??(_.lame),
@@ -104,7 +104,7 @@ object Hook {
   val idSize = 8
 
   def make(
-    uid: Uid,
+    sri: Sri,
     variant: draughts.variant.Variant,
     clock: Clock.Config,
     mode: Mode,
@@ -115,7 +115,7 @@ object Hook {
     blocking: Set[String]
   ): Hook = new Hook(
     id = Random nextString idSize,
-    uid = uid,
+    sri = sri,
     variant = variant.id,
     clock = clock,
     mode = mode.id,

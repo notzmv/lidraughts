@@ -6,7 +6,7 @@ import play.api.libs.json._
 
 import lidraughts.common.LightUser
 import lidraughts.common.PimpedJson._
-import lidraughts.socket.Socket.Uid
+import lidraughts.socket.Socket.Sri
 import lidraughts.tree.Node.Shape
 import lidraughts.user.User
 
@@ -137,8 +137,8 @@ object JsonView {
   private[study] implicit val fenWriter: Writes[FEN] = Writes[FEN] { f =>
     JsString(f.value)
   }
-  private[study] implicit val uidWriter: Writes[Uid] = Writes[Uid] { uid =>
-    JsString(uid.value)
+  private[study] implicit val sriWriter: Writes[Sri] = Writes[Sri] { sri =>
+    JsString(sri.value)
   }
   private[study] implicit val visibilityWriter: Writes[Study.Visibility] = Writes[Study.Visibility] { v =>
     JsString(v.key)

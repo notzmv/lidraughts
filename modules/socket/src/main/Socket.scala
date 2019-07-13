@@ -6,12 +6,12 @@ import ornicar.scalalib.Zero
 
 object Socket extends Socket {
 
-  case class Uid(value: String) extends AnyVal
+  case class Sri(value: String) extends AnyVal
 
-  val uidIso = lidraughts.common.Iso.string[Uid](Uid.apply, _.value)
-  implicit val uidFormat = lidraughts.common.PimpedJson.stringIsoFormat(uidIso)
+  val sriIso = lidraughts.common.Iso.string[Sri](Sri.apply, _.value)
+  implicit val sriFormat = lidraughts.common.PimpedJson.stringIsoFormat(sriIso)
 
-  case class Uids(uids: Set[Uid])
+  case class Sris(sris: Set[Sri])
 
   case class SocketVersion(value: Int) extends AnyVal with IntValue with Ordered[SocketVersion] {
     def compare(other: SocketVersion) = Integer.compare(value, other.value)

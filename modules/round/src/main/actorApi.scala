@@ -7,7 +7,7 @@ import draughts.format.Uci
 import draughts.{ MoveMetrics, Color }
 
 import lidraughts.common.{ IpAddress, IsMobile }
-import lidraughts.socket.Socket.{ SocketVersion, Uid }
+import lidraughts.socket.Socket.{ SocketVersion, Sri }
 import lidraughts.socket.DirectSocketMember
 import lidraughts.user.User
 
@@ -70,7 +70,7 @@ case class Watcher(
 }
 
 case class Join(
-    uid: Uid,
+    sri: Sri,
     user: Option[User],
     color: Color,
     playerId: Option[String],

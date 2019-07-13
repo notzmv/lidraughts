@@ -265,7 +265,7 @@ module.exports = function(cfg, element) {
         var poolMember = false; // hookToPoolMember(color, $form.serializeArray());
         $.modal.close();
         var call = {
-          url: $form.attr('action').replace(/uid-placeholder/, lidraughts.StrongSocket.sri),
+          url: $form.attr('action').replace(/sri-placeholder/, lidraughts.StrongSocket.sri),
           data: $form.serialize() + "&color=" + color,
           type: 'post'
         };

@@ -21,7 +21,7 @@ final class Env(
 
   private val settings = new {
     val NetDomain = config getString "net.domain"
-    val SocketUidTtl = config duration "socket.uid.ttl"
+    val SocketSriTtl = config duration "socket.sri.ttl"
     val BroomPeriod = config duration "broom_period"
     val ResyncIdsPeriod = config duration "resync_ids_period"
     val CollectionSeek = config getString "collection.seek"
@@ -41,7 +41,7 @@ final class Env(
     )
   }
 
-  private val socket = new LobbySocket(system, SocketUidTtl)
+  private val socket = new LobbySocket(system, SocketSriTtl)
 
   lazy val seekApi = new SeekApi(
     coll = db(CollectionSeek),

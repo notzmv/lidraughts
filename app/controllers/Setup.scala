@@ -12,7 +12,7 @@ import lidraughts.common.{ HTTPRequest, LidraughtsCookie, IpAddress }
 import lidraughts.game.{ GameRepo, Pov, AnonCookie }
 import lidraughts.setup.Processor.HookResult
 import lidraughts.setup.ValidFen
-import lidraughts.socket.Socket.Uid
+import lidraughts.socket.Socket.Sri
 import lidraughts.user.UserRepo
 import views._
 
@@ -138,7 +138,7 @@ object Setup extends LidraughtsController with TheftPrevention {
 
   private val hookSaveOnlyResponse = Ok(Json.obj("ok" -> true))
 
-  def hook(uid: String) = OpenBody { implicit ctx =>
+  def hook(sri: String) = OpenBody { implicit ctx =>
     NoBot {
       implicit val req = ctx.body
       PostRateLimit(HTTPRequest lastRemoteAddress ctx.req) {
@@ -151,7 +151,7 @@ object Setup extends LidraughtsController with TheftPrevention {
               //else
               (ctx.userId ?? Env.relation.api.fetchBlocking) flatMap {
                 blocking =>
-                  env.processor.hook(config, Uid(uid), HTTPRequest sid req, blocking) map hookResponse
+                  env.processor.hook(config, Sri(sri), HTTPRequest sid req, blocking) map hookResponse
               }
             }
           )
@@ -160,7 +160,7 @@ object Setup extends LidraughtsController with TheftPrevention {
     }
   }
 
-  def like(uid: String, gameId: String) = Open { implicit ctx =>
+  def like(sri: String, gameId: String) = Open { implicit ctx =>
     NoBot {
       PostRateLimit(HTTPRequest lastRemoteAddress ctx.req) {
         NoPlaybanOrCurrent {
@@ -170,7 +170,7 @@ object Setup extends LidraughtsController with TheftPrevention {
             blocking <- ctx.userId ?? Env.relation.api.fetchBlocking
             hookConfig = game.fold(config)(config.updateFrom)
             sameOpponents = game.??(_.userIds)
-            hookResult <- env.processor.hook(hookConfig, Uid(uid), HTTPRequest sid ctx.req, blocking ++ sameOpponents)
+            hookResult <- env.processor.hook(hookConfig, Sri(sri), HTTPRequest sid ctx.req, blocking ++ sameOpponents)
           } yield hookResponse(hookResult)
         }
       }
