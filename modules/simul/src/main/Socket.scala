@@ -20,7 +20,7 @@ private[simul] final class Socket(
     lightUser: lidraughts.common.LightUser.Getter,
     uidTtl: Duration,
     keepMeAlive: () => Unit
-) extends SocketTrouper[SimulMember](system, uidTtl) with Historical[SimulSocketMember, Messadata] {
+) extends SocketTrouper[SimulSocketMember](system, uidTtl) with Historical[SimulSocketMember, Messadata] {
 
   lidraughtsBus.subscribe(this, chatClassifier)
 
@@ -78,7 +78,7 @@ private[simul] final class Socket(
 
     case Join(uid, user, version, promise) =>
       val (enumerator, channel) = Concurrent.broadcast[JsValue]
-      val member = Member(channel, user)
+      val member = SimulSocketMember(channel, user)
       addMember(uid, member)
       notifyCrowd
       promise success Connected(

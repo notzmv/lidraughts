@@ -7,14 +7,14 @@ import play.api.libs.json.JsObject
 
 import lidraughts.game.Game
 import lidraughts.socket.Socket.{ Uid, SocketVersion }
-import lidraughts.socket.SocketMember
+import lidraughts.socket.RemoteSocketMember
 import lidraughts.user.User
 
-private[simul] case class SimulMember(
+private[simul] case class SimulSocketMember(
     push: JsObject => Unit,
     userId: Option[String],
     troll: Boolean
-)
+) extends RemoteSocketMember
 
 private[simul] case class Messadata(trollish: Boolean = false)
 
@@ -31,7 +31,7 @@ private[simul] case class HostIsOn(gameId: String)
 private[simul] case class ReloadEval(gameId: String, json: JsObject)
 private[simul] case object Reload
 private[simul] case object Aborted
-private[simul] case class Connected(member: SimulMember)
+private[simul] case class Connected(member: SimulSocketMember)
 
 private[simul] case object NotifyCrowd
 

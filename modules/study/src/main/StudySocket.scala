@@ -12,7 +12,7 @@ import lidraughts.chat.Chat
 import lidraughts.hub.Trouper
 import lidraughts.socket.actorApi.{ Connected => _, _ }
 import lidraughts.socket.Socket.{ Uid, GetVersion, SocketVersion }
-import lidraughts.socket.{ SocketTrouper, History, Historical, AnaDests }
+import lidraughts.socket.{ SocketTrouper, History, Historical, AnaDests, DirectSocketMember }
 import lidraughts.tree.Node.{ Shapes, Comment }
 import lidraughts.user.User
 
@@ -293,7 +293,7 @@ object StudySocket {
       channel: JsChannel,
       userId: Option[String],
       troll: Boolean
-  ) extends lidraughts.socket.SocketMember
+  ) extends DirectSocketMember
 
   case class Who(u: String, s: Uid)
   import JsonView.uidWriter

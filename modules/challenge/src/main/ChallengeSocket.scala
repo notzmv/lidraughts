@@ -10,7 +10,7 @@ import lidraughts.hub.TimeBomb
 import lidraughts.socket.actorApi.{ Connected => _, _ }
 import lidraughts.socket.SocketTrouper
 import lidraughts.socket.Socket.{ Uid, GetVersion, SocketVersion }
-import lidraughts.socket.{ History, Historical }
+import lidraughts.socket.{ History, Historical, DirectSocketMember }
 
 private final class ChallengeSocket(
     system: ActorSystem,
@@ -56,7 +56,7 @@ private object ChallengeSocket {
       channel: JsChannel,
       userId: Option[String],
       owner: Boolean
-  ) extends lidraughts.socket.SocketMember {
+  ) extends DirectSocketMember {
     val troll = false
   }
 
