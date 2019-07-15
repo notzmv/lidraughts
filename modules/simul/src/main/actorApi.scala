@@ -3,17 +3,17 @@ package actorApi
 
 import play.api.libs.json.JsObject
 import scala.concurrent.Promise
-import play.api.libs.json.JsObject
 
 import lidraughts.game.Game
-import lidraughts.socket.Socket.{ Uid, SocketVersion }
 import lidraughts.socket.RemoteSocketMember
+import lidraughts.socket.Socket.{ Sri, SocketVersion }
 import lidraughts.user.User
 
 private[simul] case class SimulSocketMember(
-    push: JsObject => Unit,
+    sri: Sri,
     userId: Option[String],
-    troll: Boolean
+    troll: Boolean,
+    bus: lidraughts.common.Bus
 ) extends RemoteSocketMember
 
 private[simul] case class Messadata(trollish: Boolean = false)

@@ -24,7 +24,7 @@ trait DirectSocketMember extends SocketMember {
 trait RemoteSocketMember extends SocketMember {
 
   protected def bus: lidraughts.common.Bus
-  protected def sri: Socket.Uid
+  protected def sri: Socket.Sri
 
   def push(msg: JsValue) = msg.asOpt[JsObject] foreach { obj =>
     bus.publish(lidraughts.hub.actorApi.socket.RemoteSocketTellSriOut(sri.value, obj), 'remoteSocketOut)

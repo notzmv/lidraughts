@@ -48,7 +48,7 @@ lazy val modules = Seq(
   message, notifyModule, i18n, game, bookmark, search,
   gameSearch, timeline, forum, forumSearch, team, teamSearch,
   analyse, mod, site, round, pool, lobby, setup,
-  importer, tournament, simul, relation, report, pref, // simulation,
+  importer, tournament, simul, relation, report, pref,
   evaluation, chat, puzzle, tv, coordinate, blog,
   history, shutup, push, explorer,
   playban, insight, perfStat, slack, quote, challenge,
@@ -65,7 +65,7 @@ lazy val api = module("api", moduleCPDeps)
     libraryDependencies ++= provided(
       play.api, hasher, typesafeConfig, findbugs,
       reactivemongo.driver, reactivemongo.iteratees,
-      kamon.core, kamon.influxdb
+      kamon.core, kamon.influxdb, lettuce
     ),
     aggregate in Runtime := false,
     aggregate in Test := true  // Test <: Runtime
@@ -216,7 +216,7 @@ lazy val tournament = module("tournament", Seq(common, hub, socket, game, round,
 )
 
 lazy val simul = module("simul", Seq(common, hub, socket, game, round, chat, memo, quote, evaluation)).settings(
-  libraryDependencies ++= provided(play.api, reactivemongo.driver, scalatags)
+  libraryDependencies ++= provided(play.api, reactivemongo.driver, scalatags, lettuce)
 )
 
 lazy val draughtsnet = module("draughtsnet", Seq(common, game, analyse, db, evalCache)).settings(
@@ -328,7 +328,7 @@ lazy val notifyModule = module("notify", Seq(common, db, game, user, hub, relati
 )
 
 lazy val site = module("site", Seq(common, socket)).settings(
-  libraryDependencies ++= provided(play.api)
+  libraryDependencies ++= provided(play.api, lettuce)
 )
 
 lazy val tree = module("tree", Seq(common, draughts)).settings(

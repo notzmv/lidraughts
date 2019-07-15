@@ -20,7 +20,7 @@ private[simul] final class Socket(
     lightUser: lidraughts.common.LightUser.Getter,
     uidTtl: Duration,
     keepMeAlive: () => Unit
-) extends SocketTrouper[SimulSocketMember](system, uidTtl) with Historical[SimulSocketMember, Messadata] {
+) extends SocketTrouper[SimulSocketMember](system, sriTtl) with Historical[SimulSocketMember, Messadata] {
 
   lidraughtsBus.subscribe(this, chatClassifier)
 
@@ -76,15 +76,11 @@ private[simul] final class Socket(
 
     case GetUserIdsP(promise) => promise success members.values.flatMap(_.userId)
 
-    case Join(uid, user, version, promise) =>
-      val (enumerator, channel) = Concurrent.broadcast[JsValue]
-      val member = SimulSocketMember(channel, user)
-      addMember(uid, member)
+    case Join(sri, user, version, promise) =>
+      val member = SimulSocketMember(sri, user.map(_.id), user.exists(_.troll), lidraughtsBus)
+      addMember(sri, member)
       notifyCrowd
-      promise success Connected(
-        prependEventsSince(version, enumerator, member),
-        member
-      )
+      getEventsSince(version, member) foreach member.push
 
     case NotifyCrowd =>
       delayedCrowdNotification = false
@@ -99,7 +95,7 @@ private[simul] final class Socket(
     if (members.nonEmpty) keepMeAlive()
   }
 
-  override protected def afterQuit(uid: lidraughts.socket.Socket.Uid, member: Member) = notifyCrowd
+  override protected def afterQuit(sri: lidraughts.socket.Socket.Sri, member: SimulSocketMember) = notifyCrowd
 
   def notifyCrowd: Unit =
     if (!delayedCrowdNotification) {
@@ -107,7 +103,7 @@ private[simul] final class Socket(
       system.scheduler.scheduleOnce(500 millis)(this ! NotifyCrowd)
     }
 
-  protected def shouldSkipMessageFor(message: Message, member: Member) =
+  protected def shouldSkipMessageFor(message: Message, member: SimulSocketMember) =
     message.metadata.trollish && !member.troll
 
   private val noMessadata = Messadata()

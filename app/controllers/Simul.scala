@@ -243,11 +243,7 @@ object Simul extends LidraughtsController {
     }
   }
 
-  def websocket(id: String, apiVersion: Int) = SocketOption[JsValue] { implicit ctx =>
-    getSocketUid("sri") ?? { uid =>
-      env.socketHandler.join(id, uid, ctx.me, getSocketVersion, apiVersion)
-    }
-  }
+  def websocket(id: String, apiVersion: Int) = Action(NotFound)
 
   private val ExportRateLimitPerUser = new lidraughts.memo.RateLimit[lidraughts.user.User.ID](
     credits = 20,

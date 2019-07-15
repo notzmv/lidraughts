@@ -33,6 +33,8 @@ final class Env(
     isPlaying: lidraughts.user.User.ID => Boolean,
     pools: List[lidraughts.pool.PoolConfig],
     challengeJsonView: lidraughts.challenge.JsonView,
+    remoteSocketApi: lidraughts.socket.RemoteSocket,
+    siteRemoteSocket: lidraughts.site.SiteRemoteSocket,
     val isProd: Boolean
 ) {
 
@@ -140,6 +142,10 @@ final class Env(
 
   lazy val cli = new Cli(system.lidraughtsBus)
 
+  //   new RemoteSocket(remoteSocketApi, Map(
+  //     "site-in" -> siteRemoteSocket.handler
+  //   ))
+
   KamonPusher.start(system) {
     new KamonPusher(countUsers = () => userEnv.onlineUserIdMemo.count)
   }
@@ -184,6 +190,8 @@ object Env {
     isPlaying = lidraughts.relation.Env.current.online.isPlaying,
     pools = lidraughts.pool.Env.current.api.configs,
     challengeJsonView = lidraughts.challenge.Env.current.jsonView,
+    remoteSocketApi = lidraughts.socket.Env.current.remoteSocket,
+    siteRemoteSocket = lidraughts.site.Env.current.remoteSocket,
     isProd = lidraughts.common.PlayApp.isProd
   )
 }

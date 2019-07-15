@@ -5,12 +5,13 @@ import com.typesafe.config.Config
 import scala.concurrent.duration._
 
 import lidraughts.hub.{ Duct, DuctMap, TrouperMap }
-import lidraughts.socket.History
+import lidraughts.socket.{ History, RemoteSocket }
 import lidraughts.socket.Socket.{ GetVersion, SocketVersion }
 
 final class Env(
     config: Config,
     system: ActorSystem,
+    remoteSocket: RemoteSocket,
     scheduler: lidraughts.common.Scheduler,
     evalCacheApi: lidraughts.evalCache.EvalCacheApi,
     db: lidraughts.db.Env,
@@ -71,7 +72,8 @@ final class Env(
     broomFrequency = 3691 millis
   )
 
-  lazy val socketHandler = new SocketHandler(
+  lazy val socketHandler = new SimulSocketHandler(
+    remoteSocket = remoteSocket,
     hub = hub,
     socketMap = socketMap,
     chat = hub.chat,
@@ -165,6 +167,7 @@ object Env {
   lazy val current = "simul" boot new Env(
     config = lidraughts.common.PlayApp loadConfig "simul",
     system = lidraughts.common.PlayApp.system,
+    remoteSocket = lidraughts.socket.Env.current.remoteSocket,
     scheduler = lidraughts.common.PlayApp.scheduler,
     evalCacheApi = lidraughts.evalCache.Env.current.api,
     db = lidraughts.db.Env.current,
