@@ -54,7 +54,7 @@ final class RemoteSocket(
     case (In.Disconnect, userId) => connectedUserIds -= userId
     case (In.Watch, gameId) => watchedGameIds += gameId
     case (In.Unwatch, gameId) => watchedGameIds -= gameId
-    case (In.Notified, userId) => notificationActor ! lila.hub.actorApi.notify.Notified(userId)
+    case (In.Notified, userId) => notificationActor ! lidraughts.hub.actorApi.notify.Notified(userId)
     case (In.Connections, nbStr) =>
       parseIntOption(nbStr) foreach { nb =>
         setNb(nb)
@@ -112,7 +112,7 @@ final class RemoteSocket(
     mon.sets.games(watchedGameIds.size)
   }
 
-  private val mon = lila.mon.socket.remote
+  private val mon = lidraughts.mon.socket.remote
 
   def sendTo(channel: Channel)(path: Path, args: String*): Unit = {
     val chrono = Chronometer.start

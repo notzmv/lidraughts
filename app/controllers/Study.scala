@@ -274,10 +274,10 @@ object Study extends LidraughtsController {
 
   def importPdn(id: String) = AuthBody { implicit ctx => me =>
     implicit val req = ctx.body
-    get("sri") ?? { uid =>
+    get("sri") ?? { sri =>
       lidraughts.study.DataForm.importPdn.form.bindFromRequest.fold(
         jsonFormError,
-        data => env.api.importPdns(me, StudyModel.Id(id), data.toChapterDatas, sticky = data.sticky, lidraughts.socket.Socket.Uid(uid))
+        data => env.api.importPdns(me, StudyModel.Id(id), data.toChapterDatas, sticky = data.sticky, lidraughts.socket.Socket.Sri(sri))
       )
     }
   }

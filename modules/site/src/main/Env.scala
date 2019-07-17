@@ -8,8 +8,8 @@ import lidraughts.socket.actorApi.SendToFlag
 
 final class Env(
     config: Config,
-    remoteSocketApi: lila.socket.RemoteSocket,
-    population: lila.socket.SocketPopulation,
+    remoteSocketApi: lidraughts.socket.RemoteSocket,
+    population: lidraughts.socket.SocketPopulation,
     hub: lidraughts.hub.Env,
     system: ActorSystem
 ) {
@@ -29,8 +29,8 @@ object Env {
 
   lazy val current = "site" boot new Env(
     config = lidraughts.common.PlayApp loadConfig "site",
-    remoteSocketApi = lila.socket.Env.current.remoteSocket,
-    population = lila.socket.Env.current.population,
+    remoteSocketApi = lidraughts.socket.Env.current.remoteSocket,
+    population = lidraughts.socket.Env.current.population,
     hub = lidraughts.hub.Env.current,
     system = lidraughts.common.PlayApp.system
   )

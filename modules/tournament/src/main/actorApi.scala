@@ -4,7 +4,7 @@ package actorApi
 import scala.concurrent.Promise
 
 import lidraughts.game.Game
-import lidraughts.socket.Socket.{ Sri, SocketVersion  }
+import lidraughts.socket.Socket.{ Sri, SocketVersion }
 import lidraughts.socket.DirectSocketMember
 import lidraughts.user.User
 

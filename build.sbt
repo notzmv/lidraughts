@@ -200,7 +200,7 @@ lazy val activity = module("activity", Seq(common, game, analyse, user, forum, s
 )
 
 lazy val lobby = module("lobby", Seq(common, db, memo, hub, socket, game, user, round, timeline, relation, playban, security, pool)).settings(
-  libraryDependencies ++= provided(play.api, reactivemongo.driver)
+  libraryDependencies ++= provided(play.api, reactivemongo.driver, lettuce)
 )
 
 lazy val setup = module("setup", Seq(common, db, memo, hub, socket, game, user, lobby, pref, relation)).settings(
@@ -216,7 +216,7 @@ lazy val tournament = module("tournament", Seq(common, hub, socket, game, round,
 )
 
 lazy val simul = module("simul", Seq(common, hub, socket, game, round, chat, memo, quote, evaluation)).settings(
-  libraryDependencies ++= provided(play.api, reactivemongo.driver, scalatags, lettuce)
+  libraryDependencies ++= provided(play.api, reactivemongo.driver, scalatags)
 )
 
 lazy val draughtsnet = module("draughtsnet", Seq(common, game, analyse, db, evalCache)).settings(

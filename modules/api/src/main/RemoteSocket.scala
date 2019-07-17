@@ -1,9 +1,9 @@
-package lila.api
+package lidraughts.api
 
-import lila.socket.RemoteSocket._
+import lidraughts.socket.RemoteSocket._
 
 private final class RemoteSocket(
-    api: lila.socket.RemoteSocket,
+    api: lidraughts.socket.RemoteSocket,
     channelHandlers: Map[Channel, Handler]
 ) {
 

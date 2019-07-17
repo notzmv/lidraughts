@@ -5,16 +5,23 @@ import play.api.libs.json.JsObject
 import scala.concurrent.Promise
 
 import lidraughts.game.Game
-import lidraughts.socket.RemoteSocketMember
+import lidraughts.socket.DirectSocketMember
 import lidraughts.socket.Socket.{ Sri, SocketVersion }
 import lidraughts.user.User
 
 private[simul] case class SimulSocketMember(
-    sri: Sri,
+    channel: JsChannel,
     userId: Option[String],
-    troll: Boolean,
-    bus: lidraughts.common.Bus
-) extends RemoteSocketMember
+    troll: Boolean
+) extends DirectSocketMember
+
+private[simul] object SimulSocketMember {
+  def apply(channel: JsChannel, user: Option[User]): SimulSocketMember = SimulSocketMember(
+    channel = channel,
+    userId = user map (_.id),
+    troll = user.??(_.troll)
+  )
+}
 
 private[simul] case class Messadata(trollish: Boolean = false)
 
@@ -31,7 +38,7 @@ private[simul] case class HostIsOn(gameId: String)
 private[simul] case class ReloadEval(gameId: String, json: JsObject)
 private[simul] case object Reload
 private[simul] case object Aborted
-private[simul] case class Connected(member: SimulSocketMember)
+private[simul] case class Connected(enumerator: JsEnumerator, member: SimulSocketMember)
 
 private[simul] case object NotifyCrowd
 
