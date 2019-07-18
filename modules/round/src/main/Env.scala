@@ -35,8 +35,7 @@ final class Env(
     evalCache: lidraughts.evalCache.EvalCacheApi,
     evalCacheHandler: lidraughts.evalCache.EvalCacheSocketHandler,
     isBotSync: lidraughts.common.LightUser.IsBotSync,
-    ratingFactors: () => lidraughts.rating.RatingFactors,
-    val socketDebug: () => Boolean
+    ratingFactors: () => lidraughts.rating.RatingFactors
 ) {
 
   private val settings = new {
@@ -281,7 +280,6 @@ object Env {
     evalCache = lidraughts.evalCache.Env.current.api,
     evalCacheHandler = lidraughts.evalCache.Env.current.socketHandler,
     isBotSync = lidraughts.user.Env.current.lightUserApi.isBotSync,
-    ratingFactors = lidraughts.rating.Env.current.ratingFactorsSetting.get,
-    socketDebug = lidraughts.socket.Env.current.socketDebugSetting.get
+    ratingFactors = lidraughts.rating.Env.current.ratingFactorsSetting.get
   )
 }

@@ -33,12 +33,6 @@ final class Env(
 
   system.scheduler.schedule(5 seconds, 1 seconds) { population ! PopulationTell }
 
-  val socketDebugSetting = settingStore[Boolean](
-    "socketDebug",
-    default = false,
-    text = "Send extra debugging to websockets.".some
-  )
-
   import lidraughts.memo.SettingStore.Regex._
   import lidraughts.memo.SettingStore.Formable.regexFormable
   val socketRemoteUsersSetting = settingStore[scala.util.matching.Regex](
