@@ -12,6 +12,7 @@ final class LobbyApi(
     getFilter: UserContext => Fu[FilterConfig],
     lightUserApi: lidraughts.user.LightUserApi,
     seekApi: SeekApi,
+    remoteSocketDomain: Context => Option[String],
     pools: List[lidraughts.pool.PoolConfig]
 ) {
 
@@ -32,7 +33,7 @@ final class LobbyApi(
               "nowPlaying" -> JsArray(displayedPovs map nowPlaying),
               "nbNowPlaying" -> povs.size,
               "filter" -> filter.render
-            ) -> displayedPovs
+            ).add("remoteSocketDomain" -> remoteSocketDomain(ctx)) -> displayedPovs
           }
       }
 

@@ -109,7 +109,7 @@ object Env {
     poolApi = lidraughts.pool.Env.current.api,
     asyncCache = lidraughts.memo.Env.current.asyncCache,
     settingStore = lidraughts.memo.Env.current.settingStore,
-    remoteSocketApi = lila.socket.Env.current.remoteSocket,
+    remoteSocketApi = lidraughts.socket.Env.current.remoteSocket,
     system = lidraughts.common.PlayApp.system
   )
 }

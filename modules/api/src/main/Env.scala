@@ -133,6 +133,7 @@ final class Env(
     getFilter = setupEnv.filter,
     lightUserApi = userEnv.lightUserApi,
     seekApi = lobbyEnv.seekApi,
+    remoteSocketDomain = ctx => ctx.userId exists lidraughts.socket.Env.current.socketRemoteUsersSetting.get().matches option Net.RemoteSocketDomain,
     pools = pools
   )
 
@@ -141,10 +142,6 @@ final class Env(
   private def makeUrl(path: String): String = s"${Net.BaseUrl}/$path"
 
   lazy val cli = new Cli(system.lidraughtsBus)
-
-  //   new RemoteSocket(remoteSocketApi, Map(
-  //     "site-in" -> siteRemoteSocket.handler
-  //   ))
 
   KamonPusher.start(system) {
     new KamonPusher(countUsers = () => userEnv.onlineUserIdMemo.count)
