@@ -8,5 +8,5 @@ final class SiteRemoteSocket(
     remoteSocketApi: lidraughts.socket.RemoteSocket
 ) {
 
-  remoteSocketApi.subscribe("site-in")(remoteSocketApi.baseHandler)
+  remoteSocketApi.subscribe("site-in", Protocol.In.baseReader)(remoteSocketApi.baseHandler)
 }

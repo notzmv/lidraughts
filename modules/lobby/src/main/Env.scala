@@ -5,17 +5,20 @@ import com.typesafe.config.Config
 import lidraughts.common.Strings
 import scala.concurrent.duration._
 
+import lidraughts.user.User
+
 final class Env(
     config: Config,
     db: lidraughts.db.Env,
     hub: lidraughts.hub.Env,
     onStart: String => Unit,
-    blocking: String => Fu[Set[String]],
+    blocking: User.ID => Fu[Set[User.ID]],
     playban: String => Fu[Option[lidraughts.playban.TempBan]],
     gameCache: lidraughts.game.Cached,
     poolApi: lidraughts.pool.PoolApi,
     asyncCache: lidraughts.memo.AsyncCache.Builder,
     settingStore: lidraughts.memo.SettingStore.Builder,
+    remoteSocketApi: lidraughts.socket.RemoteSocket,
     system: ActorSystem
 ) {
 
@@ -79,6 +82,13 @@ final class Env(
   )
   system.lidraughtsBus.subscribe(socketHandler, 'nbMembers, 'nbRounds)
 
+  private val remoteSocket = new LobbyRemoteSocket(
+    remoteSocketApi = remoteSocketApi,
+    socket = socket,
+    blocking = blocking,
+    bus = system.lidraughtsBus
+  )
+
   private val abortListener = new AbortListener(seekApi, lobbyTrouper)
 
   system.lidraughtsBus.subscribeFun('abortGame) {
@@ -99,6 +109,7 @@ object Env {
     poolApi = lidraughts.pool.Env.current.api,
     asyncCache = lidraughts.memo.Env.current.asyncCache,
     settingStore = lidraughts.memo.Env.current.settingStore,
+    remoteSocketApi = lila.socket.Env.current.remoteSocket,
     system = lidraughts.common.PlayApp.system
   )
 }

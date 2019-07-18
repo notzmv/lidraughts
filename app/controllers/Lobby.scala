@@ -65,7 +65,7 @@ object Lobby extends LidraughtsController {
 
   def socket(apiVersion: Int) = SocketOptionLimited[JsValue](MessageLimitPerIP, "lobby") { implicit ctx =>
     getSocketSri("sri") ?? { sri =>
-      Env.lobby.socketHandler(sri, user = ctx.me, mobile = getBool("mobile"), apiVersion) map some
+      Env.lobby.socketHandler(sri, user = ctx.me, apiVersion) map some
     }
   }
 
