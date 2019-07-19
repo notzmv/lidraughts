@@ -140,6 +140,14 @@ private[lobby] final class LobbySocket(
     }
   }
 
+  // don't broom out remote socket members
+  // since we don't get their pings and don't set them alive
+  override protected def broom: Unit =
+    members.foreachValue {
+      case m @ LobbyDirectSocketMember(_, _, sri) if !aliveSris.get(sri.value) => eject(sri, m)
+      case _ =>
+    }
+
   private def redirectPlayers(p: lidraughts.pool.PoolApi.Pairing) = {
     withMember(p.whiteSri)(notifyPlayerStart(p.game, draughts.White))
     withMember(p.blackSri)(notifyPlayerStart(p.game, draughts.Black))
@@ -157,15 +165,15 @@ private[lobby] final class LobbySocket(
       case m: LobbyDirectSocketMember => m push msg
       case _ =>
     }
-    system.lilaBus.publish(LobbySocketTellAll(msg), 'lobbySocketTellAll)
+    system.lidraughtsBus.publish(LobbySocketTellAll(msg), 'lobbySocketTellAll)
   }
 
-  // TODO let lila-websocket know about active members
+  // TODO let lidraughts-websocket know about active members
   private def notifyAllActive(msg: JsObject) = {
     members.foreach {
       case (sri, m: LobbyDirectSocketMember) if !idleSris(sri) => m push msg
     }
-    system.lilaBus.publish(LobbySocketTellAll(msg), 'lobbySocketTellAll)
+    system.lidraughtsBus.publish(LobbySocketTellAll(msg), 'lobbySocketTellAll)
   }
 
   private def withActiveMemberBySriString(sri: String)(f: LobbySocketMember => Unit): Unit =

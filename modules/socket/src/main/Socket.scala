@@ -6,7 +6,7 @@ import ornicar.scalalib.Zero
 
 object Socket extends Socket {
 
-  case class Sri(value: String) extends AnyVal
+  case class Sri(value: String) extends AnyVal with StringValue
 
   val sriIso = lidraughts.common.Iso.string[Sri](Sri.apply, _.value)
   implicit val sriFormat = lidraughts.common.PimpedJson.stringIsoFormat(sriIso)
