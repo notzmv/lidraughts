@@ -24,6 +24,7 @@ private[controllers] trait LidraughtsController
   with LidraughtsSocket {
 
   protected val controllerLogger = lidraughts.log("controller")
+  protected val authLogger = lidraughts.log("auth")
 
   protected implicit val LidraughtsResultZero = Zero.instance[Result](Results.NotFound)
 
@@ -204,7 +205,11 @@ private[controllers] trait LidraughtsController
     a: => Fu[A],
     or: => Fu[Result] = fuccess(Redirect(routes.Lobby.home()))
   )(implicit ctx: Context): Fu[Result] =
-    if (Env.security.firewall accepts ctx.req) a else or
+    if (Env.security.firewall accepts ctx.req) a
+    else {
+      authLogger.info(s"Firewall blocked ${ctx.req}")
+      or
+    }
 
   protected def NoTor(res: => Fu[Result])(implicit ctx: Context) =
     if (Env.security.tor isExitNode HTTPRequest.lastRemoteAddress(ctx.req))
