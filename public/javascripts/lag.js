@@ -215,7 +215,7 @@ $(function() {
     $('.lag .answer span').hide().parent().find('.' + c).show();
   };
 
-  lidraughts.socket = new lidraughts.StrongSocket('/socket', false, {
+  lidraughts.socket = new lidraughts.StrongSocket('/socket/v3', false, {
     options: {
       name: "analyse",
       onFirstConnect: function() {
