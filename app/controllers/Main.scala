@@ -5,8 +5,8 @@ import play.api.data._, Forms._
 import play.api.libs.json._
 import play.api.mvc._
 
-import lidraughts.app._
 import lidraughts.api.Context
+import lidraughts.app._
 import lidraughts.common.HTTPRequest
 import lidraughts.hub.actorApi.captcha.ValidCaptcha
 import makeTimeout.large
