@@ -1,9 +1,9 @@
-package lila.common
+package lidraughts.common
 
 import play.api.http.HeaderNames
 import play.api.mvc.RequestHeader
 
-import lila.common.HTTPRequest.{ isLocalApp, localAppOrigin }
+import lidraughts.common.HTTPRequest.{ isLocalApp, localAppOrigin }
 
 object ResponseHeaders {
 
