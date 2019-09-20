@@ -39,7 +39,12 @@ object Global extends GlobalSettings {
     else if (HTTPRequest isBot req) lidraughts.mon.http.request.bot()
     else lidraughts.mon.http.request.page()
     lidraughts.i18n.Env.current.subdomainKiller(req) orElse
-      super.onRouteRequest(req)
+      super.onRouteRequest(req).map {
+        case action: EssentialAction if HTTPRequest.isApiOrLocalhost8080(req) => EssentialAction { r =>
+          action(r) map { _.withHeaders(HTTPRequest.apiHeaders(r): _*) }
+        }
+        case other => other
+      }
   }
 
   private def niceError(req: RequestHeader): Boolean =

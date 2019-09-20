@@ -21,7 +21,23 @@ object HTTPRequest {
 
   def isRedirectable(req: RequestHeader) = isSynchronousHttp(req) && isSafe(req)
 
+  def isProgrammatic(req: RequestHeader) =
+    !isSynchronousHttp(req) || isDraughtsnet(req) || isApi(req) || req.headers.get(HeaderNames.ACCEPT).exists(_ startsWith "application/vnd.lidraughts.v")
+
+  val localhost8080 = "http://localhost:8080"
+
+  def isLocalhost8080(req: RequestHeader) = origin(req) has localhost8080
+
+  def isApi(req: RequestHeader) = req.path startsWith "/api/"
+
+  def isApiOrLocalhost8080(req: RequestHeader) = isApi(req) || isLocalhost8080(req)
+
   def userAgent(req: RequestHeader): Option[String] = req.headers get HeaderNames.USER_AGENT
+
+  def apiHeaders(req: RequestHeader) = List(
+    "Access-Control-Allow-Origin" -> { if (isLocalhost8080(req)) localhost8080 else "*" },
+    "Vary" -> "Origin"
+  )
 
   val isAndroid = UaMatcher("""(?i)android.+mobile""")
   val isIOS = UaMatcher("""(?i)iphone|ipad|ipod""")
