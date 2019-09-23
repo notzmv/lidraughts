@@ -113,7 +113,7 @@ final class PlaybanApi(
   }
 
   def propagateSitting(game: Game, userId: String) =
-    sitAndDcCounter(userId) map { counter =>
+    rageSit(userId) map { counter =>
       if (counter <= -5) {
         bus.publish(SittingDetected(game, userId), 'playban)
       }
@@ -176,21 +176,21 @@ final class PlaybanApi(
       }(scala.collection.breakOut)
     }
 
-  private val sitAndDcCounterCache = asyncCache.multi[User.ID, Int](
+  private val rageSitCache = asyncCache.multi[User.ID, Int](
     name = "playban.sit_dc_counter",
     f = userId => coll.primitiveOne[Int]($doc("_id" -> userId, "c" $exists true), "c").map(~_),
     expireAfter = _.ExpireAfterWrite(30 minutes)
   )
 
-  def sitAndDcCounter(userId: User.ID): Fu[Int] = sitAndDcCounterCache get userId
+  def rageSit(userId: User.ID): Fu[Int] = rageSitCache get userId
 
-  private def save(outcome: Outcome, userId: User.ID, sitAndDcCounterChange: Int): Funit = {
+  private def save(outcome: Outcome, userId: User.ID, rageSitChange: Int): Funit = {
     lidraughts.mon.playban.outcome(outcome.key)()
     coll.findAndUpdate(
       selector = $id(userId),
       update = $doc(
         $push("o" -> $doc("$each" -> List(outcome), "$slice" -> -30)),
-        $inc("c" -> sitAndDcCounterChange)
+        $inc("c" -> rageSitChange)
       ),
       fetchNewObject = true,
       upsert = true
@@ -199,10 +199,10 @@ final class PlaybanApi(
         (outcome != Outcome.Good) ?? {
           UserRepo.createdAtById(userId).flatMap { _ ?? { legiferate(record, _) } }
         } >> {
-          (sitAndDcCounterChange != 0) ?? {
-            sitAndDcCounterCache.put(userId, record.sitAndDcCounter)
-            (sitAndDcCounterChange < 0) ?? {
-              if (record.sitAndDcCounter == -10) for {
+          (rageSitChange != 0) ?? {
+            rageSitCache.put(userId, record.rageSit)
+            (rageSitChange < 0) ?? {
+              if (record.rageSit == -10) for {
                 mod <- UserRepo.Lidraughts
                 user <- UserRepo byId userId
               } yield (mod zip user).headOption foreach {
@@ -211,8 +211,8 @@ final class PlaybanApi(
                   bus.publish(lidraughts.hub.actorApi.mod.AutoWarning(u.id, ModPreset.sittingAuto.subject), 'autoWarning)
                   messenger.sendPreset(m, u, ModPreset.sittingAuto).void
               }
-              else (record.sitAndDcCounter <= -20) ?? {
-                lidraughts.log("stall").warn(s"Close https://lidraughts.org/@/${userId} ragesit=${record.sitAndDcCounter}")
+              else (record.rageSit <= -20) ?? {
+                lidraughts.log("stall").warn(s"Close https://lidraughts.org/@/${userId} ragesit=${record.rageSit}")
                 // bus.publish(lidraughts.hub.actorApi.playban.SitcounterClose(userId), 'playban)
                 funit
               }
