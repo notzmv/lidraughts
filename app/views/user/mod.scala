@@ -5,6 +5,7 @@ import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
 import lidraughts.evaluation.Display
 import lidraughts.security.FingerHash
+import lidraughts.playban.RageSit
 import lidraughts.user.User
 
 import controllers.routes
@@ -125,7 +126,7 @@ object mod {
       )
     )
 
-  def parts(u: User, history: List[lidraughts.mod.Modlog], charges: List[lidraughts.plan.Charge], reports: lidraughts.report.Report.ByAndAbout, pref: lidraughts.pref.Pref, rageSit: Int)(implicit ctx: Context) = frag(
+  def parts(u: User, history: List[lidraughts.mod.Modlog], charges: List[lidraughts.plan.Charge], reports: lidraughts.report.Report.ByAndAbout, pref: lidraughts.pref.Pref, rageSit: RageSit)(implicit ctx: Context) = frag(
     roles(u),
     prefs(u, pref),
     plan(u, charges),
@@ -153,9 +154,9 @@ object mod {
     )
   )
 
-  def showRageSit(rageSit: Int)(implicit ctx: Context) = div(id := "mz_sitdccounter")(
+  def showRageSit(rageSit: RageSit)(implicit ctx: Context) = div(id := "mz_sitdccounter")(
     strong(cls := "text inline")("Sit/disconnect counter: "),
-    span(cls := "text inline")(rageSit),
+    span(cls := "text inline")(rageSit.counter / 10),
     br,
     span(cls := "text inline")("+1 for every sit/disconnect in 'winning' position, -1 for 'losing' position")
   )

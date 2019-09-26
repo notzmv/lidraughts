@@ -5,11 +5,11 @@ import scala.concurrent.duration._
 
 import draughts.{ Status, Color }
 import lidraughts.common.PlayApp.{ startedSinceMinutes, isDev }
-import lidraughts.db.BSON._
 import lidraughts.db.dsl._
 import lidraughts.game.{ Pov, Game, Player, Source }
 import lidraughts.message.{ MessageApi, ModPreset }
 import lidraughts.user.{ User, UserRepo }
+import lidraughts.common.Iso
 
 import org.joda.time.DateTime
 
@@ -28,7 +28,8 @@ final class PlaybanApi(
     def read(bsonInt: BSONInteger): Outcome = Outcome(bsonInt.value) err s"No such playban outcome: ${bsonInt.value}"
     def write(x: Outcome) = BSONInteger(x.id)
   }
-  private implicit val banBSONHandler = Macros.handler[TempBan]
+  private implicit val RageSitBSONHandler = intIsoHandler(Iso.int[RageSit](RageSit.apply, _.counter))
+  private implicit val BanBSONHandler = Macros.handler[TempBan]
   private implicit val UserRecordBSONHandler = Macros.handler[UserRecord]
 
   private case class Blame(player: Player, outcome: Outcome)
@@ -70,7 +71,8 @@ final class PlaybanApi(
   def rageQuit(game: Game, quitterColor: Color): Funit =
     sandbag(game, quitterColor) >> IfBlameable(game) {
       game.player(quitterColor).userId ?? { userId =>
-        save(Outcome.RageQuit, userId, roughWinEstimate(game, quitterColor)) >>- feedback.rageQuit(Pov(game, quitterColor))
+        save(Outcome.RageQuit, userId, roughWinEstimate(game, quitterColor) * 10) >>-
+          feedback.rageQuit(Pov(game, quitterColor))
       }
     }
 
@@ -86,7 +88,7 @@ final class PlaybanApi(
       seconds = nowSeconds - game.movedAt.getSeconds
       limit <- unreasonableTime
       if seconds >= limit
-    } yield save(Outcome.Sitting, userId, roughWinEstimate(game, flaggerColor)) >>-
+    } yield save(Outcome.Sitting, userId, roughWinEstimate(game, flaggerColor) * 10) >>-
       feedback.sitting(Pov(game, flaggerColor)) >>-
       propagateSitting(game, userId)
 
@@ -99,7 +101,7 @@ final class PlaybanApi(
       lastMovetime <- movetimes.lastOption
       limit <- unreasonableTime
       if lastMovetime.toSeconds >= limit
-    } yield save(Outcome.SitMoving, userId, roughWinEstimate(game, flaggerColor)) >>-
+    } yield save(Outcome.SitMoving, userId, roughWinEstimate(game, flaggerColor) * 10) >>-
       feedback.sitting(Pov(game, flaggerColor)) >>-
       propagateSitting(game, userId)
 
@@ -112,11 +114,9 @@ final class PlaybanApi(
     }
   }
 
-  def propagateSitting(game: Game, userId: String) =
-    rageSit(userId) map { counter =>
-      if (counter <= -5) {
-        bus.publish(SittingDetected(game, userId), 'playban)
-      }
+  private def propagateSitting(game: Game, userId: User.ID): Funit =
+    rageSitCache get userId map { rageSit =>
+      if (rageSit.isBad) bus.publish(SittingDetected(game, userId), 'playban)
     }
 
   def other(game: Game, status: Status.type => Status, winner: Option[Color]): Funit =
@@ -176,21 +176,21 @@ final class PlaybanApi(
       }(scala.collection.breakOut)
     }
 
-  private val rageSitCache = asyncCache.multi[User.ID, Int](
+  def getRageSit(userId: User.ID) = rageSitCache get userId
+
+  private val rageSitCache = asyncCache.multi[User.ID, RageSit](
     name = "playban.sit_dc_counter",
-    f = userId => coll.primitiveOne[Int]($doc("_id" -> userId, "c" $exists true), "c").map(~_),
+    f = userId => coll.primitiveOne[RageSit]($doc("_id" -> userId, "c" $exists true), "c").map(_ | RageSit.empty),
     expireAfter = _.ExpireAfterWrite(30 minutes)
   )
 
-  def rageSit(userId: User.ID): Fu[Int] = rageSitCache get userId
-
-  private def save(outcome: Outcome, userId: User.ID, rageSitChange: Int): Funit = {
+  private def save(outcome: Outcome, userId: User.ID, rageSitDelta: Int): Funit = {
     lidraughts.mon.playban.outcome(outcome.key)()
     coll.findAndUpdate(
       selector = $id(userId),
       update = $doc(
         $push("o" -> $doc("$each" -> List(outcome), "$slice" -> -30)),
-        $inc("c" -> rageSitChange)
+        $inc("c" -> rageSitDelta)
       ),
       fetchNewObject = true,
       upsert = true
@@ -199,28 +199,30 @@ final class PlaybanApi(
         (outcome != Outcome.Good) ?? {
           UserRepo.createdAtById(userId).flatMap { _ ?? { legiferate(record, _) } }
         } >> {
-          (rageSitChange != 0) ?? {
-            rageSitCache.put(userId, record.rageSit)
-            (rageSitChange < 0) ?? {
-              if (record.rageSit == -10) for {
-                mod <- UserRepo.Lidraughts
-                user <- UserRepo byId userId
-              } yield (mod zip user).headOption foreach {
-                case (m, u) =>
-                  lidraughts.log("stall").info(s"https://lidraughts.org/@/${u.username}")
-                  bus.publish(lidraughts.hub.actorApi.mod.AutoWarning(u.id, ModPreset.sittingAuto.subject), 'autoWarning)
-                  messenger.sendPreset(m, u, ModPreset.sittingAuto).void
-              }
-              else (record.rageSit <= -20) ?? {
-                lidraughts.log("stall").warn(s"Close https://lidraughts.org/@/${userId} ragesit=${record.rageSit}")
-                // bus.publish(lidraughts.hub.actorApi.playban.SitcounterClose(userId), 'playban)
-                funit
-              }
-            }
-          }
+          (rageSitDelta != 0) ?? registerRageSit(record, rageSitDelta)
         }
       }
   }.void logFailure lidraughts.log("playban")
+
+  private def registerRageSit(record: UserRecord, delta: Int): Funit = {
+    rageSitCache.put(record.userId, record.rageSit)
+    (delta < 0) ?? {
+      if (record.rageSit.isTerrible) {
+        lidraughts.log("ragesit").warn(s"Close https://lidraughts.org/@/${record.userId} ragesit=${record.rageSit}")
+        // bus.publish(lidraughts.hub.actorApi.playban.SitcounterClose(userId), 'playban)
+        funit
+      } else if (record.rageSit.isVeryBad) for {
+        mod <- UserRepo.Lidraughts
+        user <- UserRepo byId record.userId
+      } yield (mod zip user).headOption foreach {
+        case (m, u) =>
+          lidraughts.log("ragesit").info(s"https://lidraughts.org/@/${u.username}")
+          bus.publish(lidraughts.hub.actorApi.mod.AutoWarning(u.id, ModPreset.sittingAuto.subject), 'autoWarning)
+          messenger.sendPreset(m, u, ModPreset.sittingAuto).void
+      }
+      else funit
+    }
+  }
 
   private def legiferate(record: UserRecord, accCreatedAt: DateTime): Funit = record.bannable(accCreatedAt) ?? { ban =>
     (!record.banInEffect) ?? {
