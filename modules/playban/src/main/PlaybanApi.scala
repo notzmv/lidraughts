@@ -4,6 +4,7 @@ import reactivemongo.bson._
 import scala.concurrent.duration._
 
 import draughts.{ Status, Color }
+import lidraughts.common.Iso
 import lidraughts.common.PlayApp.{ startedSinceMinutes, isDev }
 import lidraughts.db.dsl._
 import lidraughts.game.{ Pov, Game, Player, Source }
@@ -132,10 +133,11 @@ final class PlaybanApi(
       }
     }
 
-  private def goodOrSandbag(game: Game, color: Color, isSandbag: Boolean): Funit =
-    game.player(color).userId ?? { userId =>
-      if (isSandbag) feedback.sandbag(Pov(game, color))
-      save(if (isSandbag) Outcome.Sandbag else Outcome.Good, userId, 0)
+  private def goodOrSandbag(game: Game, loserColor: Color, isSandbag: Boolean): Funit =
+    game.player(loserColor).userId ?? { userId =>
+      if (isSandbag) feedback.sandbag(Pov(game, loserColor))
+      val rageSitDelta = if (isSandbag) 0 else 2 // proper defeat decays ragesit
+      save(if (isSandbag) Outcome.Sandbag else Outcome.Good, userId, rageSitDelta)
     }
 
   // memorize users without any ban to save DB reads
