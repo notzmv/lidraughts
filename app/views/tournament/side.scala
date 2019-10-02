@@ -41,7 +41,9 @@ object side {
           (isGranted(_.ManageTournament) || (ctx.userId.has(tour.createdBy) && tour.isCreated)) option frag(
             " ",
             a(href := routes.Tournament.edit(tour.id), title := trans.editTournament.txt())(iconTag("%"))
-          )
+          ),
+          ctx.userId.has(tour.createdBy) && tour.teamBattle.isDefined option
+            a(href := routes.Tournament.teamBattleEdit(tour.id))("Update team list")
         )
       ),
       tour.spotlight map { s =>

@@ -70,6 +70,7 @@ final class CrudApi {
     waitMinutes = 0,
     startDate = none,
     berserkable = true,
+    teamBattle = none,
     description = none
   )
 

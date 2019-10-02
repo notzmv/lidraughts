@@ -86,7 +86,7 @@ final class DataForm {
     "rated" -> optional(boolean),
     "password" -> optional(nonEmptyText),
     "conditions" -> Condition.DataForm.all,
-    "teamBattle" -> optional(TeamBattle.DataForm.form),
+    "teamBattle" -> optional(TeamBattle.DataForm.fields),
     "berserkable" -> optional(boolean),
     "description" -> optional(nonEmptyText(maxLength = 600))
   )(TournamentSetup.apply)(TournamentSetup.unapply)

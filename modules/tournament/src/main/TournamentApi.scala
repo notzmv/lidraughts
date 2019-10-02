@@ -51,15 +51,14 @@ final class TournamentApi(
     setup: TournamentSetup,
     me: User,
     myTeams: List[LightTeam],
-    getUserTeamIds: User => Fu[List[TeamId]],
-    filterExistingTeamIds: Set[TeamId] => Fu[Set[TeamId]]
+    getUserTeamIds: User => Fu[List[TeamId]]
   ): Fu[Tournament] = {
     val position = setup.realVariant match {
       case draughts.variant.Standard => setup.positionStandard
       case draughts.variant.Russian => setup.positionRussian
       case _ => none
     }
-    Tournament.make(
+    val tour = Tournament.make(
       by = Right(me),
       name = DataForm.canPickName(me) ?? setup.name,
       clock = setup.clockConfig,
@@ -73,19 +72,15 @@ final class TournamentApi(
       position = DataForm.startingPosition(position | setup.realVariant.initialFen, setup.realVariant),
       openingTable = position.flatMap(draughts.OpeningTable.byKey).filter(setup.realVariant.openingTables.contains),
       berserkable = setup.berserkable | true,
+      teamBattle = setup.teamBattle.map { tb =>
+        TeamBattle(tb.potentialTeamIds)
+      },
       description = setup.description
     ) |> { tour =>
         tour.perfType.fold(tour) { perfType =>
           tour.copy(conditions = setup.conditions.convert(perfType, myTeams.map(_.pair)(collection.breakOut)))
         }
-      } |> { tour =>
-        setup.teamBattle.fold(fuccess(tour)) { battle =>
-          filterExistingTeamIds(battle.potentialTeamIds) map { teamIds =>
-            tour.copy(teamBattle = teamIds.nonEmpty option TeamBattle(teamIds))
-          }
-        }
       }
-  } flatMap { tour =>
     sillyNameCheck(tour, me)
     logger.info(s"Create $tour")
     TournamentRepo.insert(tour) >>- join(tour.id, me, tour.password, getUserTeamIds, none) inject tour
@@ -132,6 +127,15 @@ final class TournamentApi(
     logger.info(s"Create $tournament")
     TournamentRepo.insert(tournament).void
   }
+
+  def teamBattleUpdate(
+    tour: Tournament,
+    data: TeamBattle.DataForm.Setup,
+    filterExistingTeamIds: Set[TeamId] => Fu[Set[TeamId]]
+  ): Funit =
+    filterExistingTeamIds(data.potentialTeamIds) flatMap { teamIds =>
+      TournamentRepo.setTeamBattle(tour.id, TeamBattle(teamIds))
+    }
 
   private[tournament] def makePairings(oldTour: Tournament, users: WaitingUsers, startAt: Long): Unit = {
     Sequencing(oldTour.id)(TournamentRepo.startedById) { tour =>

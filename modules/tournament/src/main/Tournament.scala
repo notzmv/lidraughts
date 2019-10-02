@@ -42,12 +42,14 @@ case class Tournament(
   def isPrivate = password.isDefined
   def isHidden = isPrivate && !isUnique
 
-  def fullName = schedule.map(_.freq).fold(s"$name $system") {
-    case Schedule.Freq.ExperimentalMarathon | Schedule.Freq.Marathon | Schedule.Freq.Unique => name
-    case Schedule.Freq.Shield => s"$name $system"
-    case _ if clock.hasIncrement => s"$name Inc $system"
-    case _ => s"$name $system"
-  }
+  def fullName =
+    if (teamBattle.isDefined) s"$name Team Battle"
+    else schedule.map(_.freq).fold(s"$name $system") {
+      case Schedule.Freq.ExperimentalMarathon | Schedule.Freq.Marathon | Schedule.Freq.Unique => name
+      case Schedule.Freq.Shield => s"$name $system"
+      case _ if clock.hasIncrement => s"$name Inc $system"
+      case _ => s"$name $system"
+    }
 
   def isMarathon = schedule.map(_.freq) exists {
     case Schedule.Freq.ExperimentalMarathon | Schedule.Freq.Marathon => true
@@ -146,6 +148,7 @@ object Tournament {
     waitMinutes: Int,
     startDate: Option[DateTime],
     berserkable: Boolean,
+    teamBattle: Option[TeamBattle],
     description: Option[String]
   ) = Tournament(
     id = makeId,
@@ -166,6 +169,7 @@ object Tournament {
     mode = mode,
     password = password,
     conditions = Condition.All.empty,
+    teamBattle = teamBattle,
     noBerserk = !berserkable,
     schedule = None,
     startsAt = startDate | {
