@@ -47,13 +47,19 @@ final class TournamentApi(
 
   private val bus = system.lidraughtsBus
 
-  def createTournament(setup: TournamentSetup, me: User, myTeams: List[(String, String)], getUserTeamIds: User => Fu[TeamIdList]): Fu[Tournament] = {
+  def createTournament(
+    setup: TournamentSetup,
+    me: User,
+    myTeams: List[LightTeam],
+    getUserTeamIds: User => Fu[List[TeamId]],
+    filterExistingTeamIds: Set[TeamId] => Fu[Set[TeamId]]
+  ): Fu[Tournament] = {
     val position = setup.realVariant match {
       case draughts.variant.Standard => setup.positionStandard
       case draughts.variant.Russian => setup.positionRussian
       case _ => none
     }
-    val tour = Tournament.make(
+    Tournament.make(
       by = Right(me),
       name = DataForm.canPickName(me) ?? setup.name,
       clock = setup.clockConfig,
@@ -70,15 +76,22 @@ final class TournamentApi(
       description = setup.description
     ) |> { tour =>
         tour.perfType.fold(tour) { perfType =>
-          tour.copy(conditions = setup.conditions.convert(perfType, myTeams toMap))
+          tour.copy(conditions = setup.conditions.convert(perfType, myTeams.map(_.pair)(collection.breakOut)))
+        }
+      } |> { tour =>
+        setup.teamBattle.fold(fuccess(tour)) { battle =>
+          filterExistingTeamIds(battle.potentialTeamIds) map { teamIds =>
+            tour.copy(teamBattle = teamIds.nonEmpty option TeamBattle(teamIds))
+          }
         }
       }
+  } flatMap { tour =>
     sillyNameCheck(tour, me)
     logger.info(s"Create $tour")
     TournamentRepo.insert(tour) >>- join(tour.id, me, tour.password, getUserTeamIds, none) inject tour
   }
 
-  def update(old: Tournament, data: TournamentSetup, me: User, myTeams: List[(String, String)]): Funit = {
+  def update(old: Tournament, data: TournamentSetup, me: User, myTeams: List[LightTeam]): Funit = {
     import data._
     val position = realVariant match {
       case draughts.variant.Standard => positionStandard
@@ -99,7 +112,7 @@ final class TournamentApi(
       description = description
     ) |> { tour =>
         tour.perfType.fold(tour) { perfType =>
-          tour.copy(conditions = conditions.convert(perfType, myTeams toMap))
+          tour.copy(conditions = conditions.convert(perfType, myTeams.map(_.pair)(collection.breakOut)))
         }
       }
     sillyNameCheck(tour, me)
@@ -236,7 +249,7 @@ final class TournamentApi(
     }
   }
 
-  def verdicts(tour: Tournament, me: Option[User], getUserTeamIds: User => Fu[TeamIdList]): Fu[Condition.All.WithVerdicts] = me match {
+  def verdicts(tour: Tournament, me: Option[User], getUserTeamIds: User => Fu[List[TeamId]]): Fu[Condition.All.WithVerdicts] = me match {
     case None => fuccess(tour.conditions.accepted)
     case Some(user) => verify(tour.conditions, user, getUserTeamIds)
   }
@@ -245,7 +258,7 @@ final class TournamentApi(
     tourId: Tournament.ID,
     me: User,
     p: Option[String],
-    getUserTeamIds: User => Fu[TeamIdList],
+    getUserTeamIds: User => Fu[List[TeamId]],
     promise: Option[Promise[Boolean]]
   ): Unit = Sequencing(tourId)(TournamentRepo.enterableById) { tour =>
     PlayerRepo.exists(tour.id, me.id) flatMap { playerExists =>
@@ -273,7 +286,7 @@ final class TournamentApi(
   def joinWithResult(
     tourId: Tournament.ID,
     me: User, p: Option[String],
-    getUserTeamIds: User => Fu[TeamIdList]
+    getUserTeamIds: User => Fu[List[TeamId]]
   ): Fu[Boolean] = {
     val promise = Promise[Boolean]
     join(tourId, me, p, getUserTeamIds, promise.some)

@@ -10,7 +10,7 @@ import draughts.Mode
 import draughts.StartingPosition
 import draughts.variant.{ Variant, Standard, Russian }
 import lidraughts.common.Form._
-import lidraughts.common.Form.ISODateTime._
+import lidraughts.hub.lightTeam._
 import lidraughts.user.User
 
 final class DataForm {
@@ -18,7 +18,7 @@ final class DataForm {
   import DataForm._
   import UTCDate._
 
-  def create(user: User) = form(user) fill TournamentSetup(
+  def create(user: User, teamBattleId: Option[TeamId] = None) = form(user) fill TournamentSetup(
     name = canPickName(user) option user.titleUsername,
     clockTime = clockTimeDefault,
     clockIncrement = clockIncrementDefault,
@@ -32,11 +32,12 @@ final class DataForm {
     mode = none,
     rated = true.some,
     conditions = Condition.DataForm.AllSetup.default,
+    teamBattle = teamBattleId map TeamBattle.DataForm.Setup.apply,
     berserkable = true.some,
     description = none
   )
 
-  def edit(user: User, tour: Tournament) = form(user) fill TournamentSetup(
+  def edit(user: User, tour: Tournament, teamBattleId: Option[TeamId] = None) = form(user) fill TournamentSetup(
     name = tour.name.some,
     clockTime = tour.clock.limitInMinutes,
     clockIncrement = tour.clock.incrementSeconds,
@@ -50,6 +51,7 @@ final class DataForm {
     rated = tour.mode.rated.some,
     password = tour.password,
     conditions = Condition.DataForm.AllSetup(tour.conditions),
+    teamBattle = teamBattleId map TeamBattle.DataForm.Setup.apply,
     berserkable = tour.berserkable.some,
     description = tour.description
   )
@@ -84,6 +86,7 @@ final class DataForm {
     "rated" -> optional(boolean),
     "password" -> optional(nonEmptyText),
     "conditions" -> Condition.DataForm.all,
+    "teamBattle" -> optional(TeamBattle.DataForm.form),
     "berserkable" -> optional(boolean),
     "description" -> optional(nonEmptyText(maxLength = 600))
   )(TournamentSetup.apply)(TournamentSetup.unapply)
@@ -145,6 +148,7 @@ private[tournament] case class TournamentSetup(
     rated: Option[Boolean],
     password: Option[String],
     conditions: Condition.DataForm.AllSetup,
+    teamBattle: Option[TeamBattle.DataForm.Setup],
     berserkable: Option[Boolean],
     description: Option[String]
 ) {

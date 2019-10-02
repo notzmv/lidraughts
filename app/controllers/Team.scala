@@ -3,6 +3,7 @@ package controllers
 import lidraughts.api.Context
 import lidraughts.app._
 import lidraughts.common.{ HTTPRequest, MaxPerSecond }
+import lidraughts.hub.lightTeam._
 import lidraughts.security.Granter
 import lidraughts.team.{ Joined, Motivate, Team => TeamModel, TeamRepo, MemberRepo }
 import lidraughts.user.{ User => UserModel }
@@ -229,4 +230,7 @@ object Team extends LidraughtsController {
   private def Owner(team: TeamModel)(a: => Fu[Result])(implicit ctx: Context): Fu[Result] =
     if (ctx.me.??(me => team.isCreator(me.id) || isGranted(_.ManageTeam))) a
     else renderTeam(team) map { Forbidden(_) }
+
+  private[controllers] def teamsIBelongTo(me: lidraughts.user.User): Fu[List[LightTeam]] =
+    api mine me map { _.map(_.light) }
 }

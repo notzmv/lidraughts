@@ -22,6 +22,8 @@ object Simul extends LidraughtsController {
   private def env = Env.simul
   private def forms = lidraughts.simul.SimulForm
 
+  import Team.teamsIBelongTo
+
   private def simulNotFound(implicit ctx: Context) = NotFound(html.simul.bits.notFound())
 
   private val settleResultOptions = Set("hostwin", "hostloss", "draw")
@@ -289,7 +291,4 @@ object Simul extends LidraughtsController {
     case GameApiV2.Format.PDN => pdnContentType
     case GameApiV2.Format.JSON => ndJsonContentType
   }
-
-  private def teamsIBelongTo(me: lidraughts.user.User): Fu[TeamIdsWithNames] =
-    Env.team.api.mine(me) map { _.map(t => t._id -> t.name) }
 }

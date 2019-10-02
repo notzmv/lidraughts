@@ -11,7 +11,7 @@ import controllers.routes
 
 object form {
 
-  def apply(form: Form[lidraughts.simul.SimulForm.Setup], teams: lidraughts.hub.lightTeam.TeamIdsWithNames, me: lidraughts.user.User)(implicit ctx: Context) = {
+  def apply(form: Form[lidraughts.simul.SimulForm.Setup], teams: List[lidraughts.hub.lightTeam.LightTeam], me: lidraughts.user.User)(implicit ctx: Context) = {
 
     import lidraughts.simul.SimulForm._
 
@@ -63,7 +63,9 @@ object form {
               form3.input(_, typ = "number")(st.placeholder := trans.targetPercentage.txt(), st.min := 50, st.max := 100)
             ),
             teams.nonEmpty ?? {
-              form3.group(form("team"), trans.onlyMembersOfTeam())(form3.select(_, List(("", trans.noRestriction.txt())) ::: teams))
+              form3.group(form("team"), trans.onlyMembersOfTeam())(
+                form3.select(_, List(("", trans.noRestriction.txt())) ::: teams.map(_.pair))
+              )
             },
             form3.group(form("text"), trans.simulDescription(), help = trans.simulDescriptionHelp().some)(form3.textarea(_)(rows := 10)),
             form3.actions(

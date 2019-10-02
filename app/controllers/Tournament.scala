@@ -18,6 +18,8 @@ object Tournament extends LidraughtsController {
   private def env = Env.tournament
   private def repo = TournamentRepo
 
+  import Team.teamsIBelongTo
+
   private def tournamentNotFound(implicit ctx: Context) = NotFound(html.tournament.bits.notFound())
 
   private[controllers] val upcomingCache = Env.memo.asyncCache.single[(VisibleTournaments, List[Tour])](
@@ -163,8 +165,18 @@ object Tournament extends LidraughtsController {
 
   def form = Auth { implicit ctx => me =>
     NoLameOrBot {
-      teamsIBelongTo(me) flatMap { teams =>
-        Ok(html.tournament.form.create(env.forms.create(me), env.forms, me, teams)).fuccess
+      teamsIBelongTo(me) map { teams =>
+        Ok(html.tournament.form.create(env.forms.create(me), env.forms, me, teams))
+      }
+    }
+  }
+
+  def formTeamBattle(teamId: String) = Auth { implicit ctx => me =>
+    NoLameOrBot {
+      Env.team.api.owns(teamId, me.id) map {
+        _ ?? {
+          Ok(html.tournament.form.create(env.forms.create(me, teamId.some), env.forms, me, Nil))
+        }
       }
     }
   }
@@ -202,9 +214,15 @@ object Tournament extends LidraughtsController {
                 setup.password.isDefined) 1 else 2
               CreateLimitPerUser(me.id, cost) {
                 CreateLimitPerIP(HTTPRequest lastRemoteAddress ctx.req, cost = 1) {
-                  env.api.createTournament(setup, me, teams, getUserTeamIds) map { tour =>
-                    Redirect(routes.Tournament.show(tour.id))
-                  }
+                  env.api.createTournament(
+                    setup,
+                    me,
+                    teams,
+                    getUserTeamIds,
+                    Env.team.api.filterExistingIds
+                  ) map { tour =>
+                      Redirect(routes.Tournament.show(tour.id))
+                    }
                 }(rateLimited)
               }(rateLimited)
             }
@@ -220,10 +238,10 @@ object Tournament extends LidraughtsController {
     else teamsIBelongTo(me) flatMap { teams => doApiCreate(me, teams) }
   }
 
-  private def doApiCreate(me: lidraughts.user.User, teams: TeamIdsWithNames)(implicit req: Request[_]): Fu[Result] =
+  private def doApiCreate(me: lidraughts.user.User, teams: List[lidraughts.hub.lightTeam.LightTeam])(implicit req: Request[_]): Fu[Result] =
     env.forms.create(me).bindFromRequest.fold(
       jsonFormErrorDefaultLang,
-      setup => env.api.createTournament(setup, me, teams, getUserTeamIds) flatMap { tour =>
+      setup => env.api.createTournament(setup, me, teams, getUserTeamIds, Env.team.api.filterExistingIds) flatMap { tour =>
         Env.tournament.jsonView(tour, none, none, getUserTeamIds, none, none, partial = false, lidraughts.i18n.defaultLang, none)
       } map { Ok(_) }
     )
@@ -323,8 +341,6 @@ object Tournament extends LidraughtsController {
     expireAfter = _.ExpireAfterWrite(15.seconds)
   )
 
-  private def getUserTeamIds(user: lidraughts.user.User): Fu[TeamIdList] =
+  private def getUserTeamIds(user: lidraughts.user.User): Fu[List[TeamId]] =
     Env.team.cached.teamIdsList(user.id)
-  private def teamsIBelongTo(me: lidraughts.user.User): Fu[TeamIdsWithNames] =
-    Env.team.api.mine(me) map { _.map(t => t._id -> t.name) }
 }

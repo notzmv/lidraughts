@@ -12,6 +12,8 @@ object SimulCrud extends LidraughtsController {
   private def forms = lidraughts.simul.SimulForm
   private def crud = env.crudApi
 
+  import Team.teamsIBelongTo
+
   def index(page: Int) = Secure(_.ManageSimul) { implicit ctx => me =>
     crud.paginator(page) map { paginator =>
       html.simul.crud.index(paginator)
@@ -84,7 +86,4 @@ object SimulCrud extends LidraughtsController {
       )
     }
   }
-
-  private def teamsIBelongTo(me: lidraughts.user.User): Fu[TeamIdsWithNames] =
-    Env.team.api.mine(me) map { _.map(t => t._id -> t.name) }
 }

@@ -7,14 +7,14 @@ import draughts.variant.{ Variant, Standard, Russian }
 import lidraughts.api.Context
 import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
-import lidraughts.user.User
 import lidraughts.tournament.{ Condition, DataForm, Tournament }
+import lidraughts.user.User
 
 import controllers.routes
 
 object form {
 
-  def create(form: Form[_], config: DataForm, me: User, teams: lidraughts.hub.lightTeam.TeamIdsWithNames)(implicit ctx: Context) = views.html.base.layout(
+  def create(form: Form[_], config: DataForm, me: User, teams: List[lidraughts.hub.lightTeam.LightTeam])(implicit ctx: Context) = views.html.base.layout(
     title = trans.newTournament.txt(),
     moreCss = cssTag("tournament.form"),
     moreJs = frag(
@@ -47,6 +47,7 @@ object form {
                 fields.startDate()
               )
             ),
+            form3.hidden(form("teamBattle")("teams")),
             form3.actions(
               a(href := routes.Tournament.home())(trans.cancel()),
               form3.submit(trans.createANewTournament(), icon = "g".some)
@@ -57,7 +58,7 @@ object form {
       )
     }
 
-  def edit(tour: Tournament, form: Form[_], config: DataForm, me: User, teams: lidraughts.hub.lightTeam.TeamIdsWithNames)(implicit ctx: Context) = views.html.base.layout(
+  def edit(tour: Tournament, form: Form[_], config: DataForm, me: User, teams: List[lidraughts.hub.lightTeam.LightTeam])(implicit ctx: Context) = views.html.base.layout(
     title = tour.fullName,
     moreCss = cssTag("tournament.form"),
     moreJs = frag(
@@ -90,6 +91,7 @@ object form {
                 fields.berserkableHack
               )
             ),
+            form3.hidden(form("teamBattle")("teams")),
             form3.actions(
               a(href := routes.Tournament.show(tour.id))(trans.cancel()),
               form3.submit(trans.save(), icon = "g".some)
@@ -108,7 +110,7 @@ object form {
     if (auto) form3.hidden(field) else visible(field)
   )
 
-  def condition(form: Form[_], auto: Boolean, teams: lidraughts.hub.lightTeam.TeamIdsWithNames)(implicit ctx: Context) = frag(
+  def condition(form: Form[_], auto: Boolean, teams: List[lidraughts.hub.lightTeam.LightTeam])(implicit ctx: Context) = frag(
     form3.split(
       form3.group(form("conditions.nbRatedGame.nb"), raw("Minimum rated games"), half = true)(form3.select(_, Condition.DataForm.nbRatedGameChoices)),
       autoField(auto, form("conditions.nbRatedGame.perf")) { field =>
@@ -134,7 +136,9 @@ object form {
       form3.checkbox(form("berserkable"), raw("Allow Berserk"), help = raw("Let players halve their clock time to gain an extra point").some, half = true)
     ),
     (auto && teams.size > 0) ?? {
-      form3.group(form("conditions.teamMember.teamId"), trans.onlyMembersOfTeam(), half = false)(form3.select(_, List(("", trans.noRestriction.txt())) ::: teams))
+      form3.group(form("conditions.teamMember.teamId"), trans.onlyMembersOfTeam(), half = false)(
+        form3.select(_, List(("", trans.noRestriction.txt())) ::: teams.map(_.pair))
+      )
     }
   )
 
@@ -208,9 +212,10 @@ final private class TourFields(me: User, form: Form[_])(implicit ctx: Context) {
       form3.textarea(_)(rows := 3)
     )
   def password =
-    form3.group(form("password"), trans.password(), help = raw("Make the tournament private, and restrict access with a password").some)(
-      form3.input(_)
-    )
+    form("teamBattle")("teams").value.isEmpty option
+      form3.group(form("password"), trans.password(), help = raw("Make the tournament private, and restrict access with a password").some)(
+        form3.input(_)
+      )
   def berserkableHack =
     input(tpe := "hidden", st.name := form("berserkable").name, value := "false") // hack allow disabling berserk
   def startDate(withHelp: Boolean = true) =

@@ -31,7 +31,7 @@ object crud {
         )
       }
 
-  def create(form: Form[lidraughts.simul.crud.CrudForm.Data], teams: lidraughts.hub.lightTeam.TeamIdsWithNames)(implicit ctx: Context) = layout(
+  def create(form: Form[lidraughts.simul.crud.CrudForm.Data], teams: List[lidraughts.hub.lightTeam.LightTeam])(implicit ctx: Context) = layout(
     title = "New simul",
     css = "mod.form"
   ) {
@@ -41,7 +41,7 @@ object crud {
     )
   }
 
-  def edit(simul: Simul, form: Form[lidraughts.simul.crud.CrudForm.Data], teams: lidraughts.hub.lightTeam.TeamIdsWithNames)(implicit ctx: Context) = layout(
+  def edit(simul: Simul, form: Form[lidraughts.simul.crud.CrudForm.Data], teams: List[lidraughts.hub.lightTeam.LightTeam])(implicit ctx: Context) = layout(
     title = simul.fullName,
     css = "mod.form",
     evenMoreJs = jsTag("simul-allow.js")
@@ -86,7 +86,7 @@ object crud {
     )
   )
 
-  private def inForm(form: Form[lidraughts.simul.crud.CrudForm.Data], teams: lidraughts.hub.lightTeam.TeamIdsWithNames, limitedEdit: Boolean)(implicit ctx: Context) = {
+  private def inForm(form: Form[lidraughts.simul.crud.CrudForm.Data], teams: List[lidraughts.hub.lightTeam.LightTeam], limitedEdit: Boolean)(implicit ctx: Context) = {
     import SimulForm._
     frag(
       form3.split(
@@ -137,7 +137,9 @@ object crud {
       ),
       form3.group(form("percentage"), raw("Target winning percentage (optional, min. 50%)"))(form3.input(_, typ = "number")(min := 50, max := 100)),
       teams.nonEmpty ?? {
-        form3.group(form("team"), trans.onlyMembersOfTeam())(form3.select(_, List(("", trans.noRestriction.txt())) ::: teams))
+        form3.group(form("team"), trans.onlyMembersOfTeam())(
+          form3.select(_, List(("", trans.noRestriction.txt())) ::: teams.map(_.pair))
+        )
       },
       form3.group(form("drawLimit"), raw("No draw offers before move (optional, 0 disables draw offers)"))(form3.input(_, typ = "number")(min := 0, max := 99)),
       form3.split(
