@@ -72,8 +72,8 @@ final class TournamentApi(
       position = DataForm.startingPosition(position | setup.realVariant.initialFen, setup.realVariant),
       openingTable = position.flatMap(draughts.OpeningTable.byKey).filter(setup.realVariant.openingTables.contains),
       berserkable = setup.berserkable | true,
-      teamBattle = setup.teamBattle.map { tb =>
-        TeamBattle(tb.potentialTeamIds)
+      teamBattle = setup.teamBattleByTeam.map { tb =>
+        TeamBattle(Set(tb))
       },
       description = setup.description
     ) |> { tour =>
@@ -83,7 +83,7 @@ final class TournamentApi(
       }
     sillyNameCheck(tour, me)
     logger.info(s"Create $tour")
-    TournamentRepo.insert(tour) >>- join(tour.id, me, tour.password, getUserTeamIds, none) inject tour
+    TournamentRepo.insert(tour) >>- join(tour.id, me, tour.password, setup.teamBattleByTeam, getUserTeamIds, none) inject tour
   }
 
   def update(old: Tournament, data: TournamentSetup, me: User, myTeams: List[LightTeam]): Funit = {
@@ -261,39 +261,53 @@ final class TournamentApi(
   def join(
     tourId: Tournament.ID,
     me: User,
-    p: Option[String],
+    password: Option[String],
+    withTeamId: Option[String],
     getUserTeamIds: User => Fu[List[TeamId]],
     promise: Option[Promise[Boolean]]
   ): Unit = Sequencing(tourId)(TournamentRepo.enterableById) { tour =>
-    PlayerRepo.exists(tour.id, me.id) flatMap { playerExists =>
-      if (tour.password == p || playerExists) {
-        verdicts(tour, me.some, getUserTeamIds) flatMap {
-          _.accepted ?? {
-            pause.canJoin(me.id, tour) ?? {
-              PlayerRepo.join(tour.id, me, tour.perfLens) >> updateNbPlayers(tour.id) >>- {
-                withdrawOtherTournaments(tour.id, me.id)
-                socketReload(tour.id)
-                publish()
-              } inject true
+    val fuJoined =
+      PlayerRepo.exists(tour.id, me.id) flatMap { playerExists =>
+        if (tour.password == password || playerExists) {
+          verdicts(tour, me.some, getUserTeamIds) flatMap {
+            _.accepted ?? {
+              pause.canJoin(me.id, tour) ?? {
+                def proceedWithTeam(team: Option[String]) =
+                  PlayerRepo.join(tour.id, me, tour.perfLens) >> updateNbPlayers(tour.id) >>- {
+                    withdrawOtherTournaments(tour.id, me.id)
+                    socketReload(tour.id)
+                    publish()
+                  } inject true
+                withTeamId match {
+                  case None if tour.isTeamBattle => fuccess(false)
+                  case None => proceedWithTeam(none)
+                  case Some(team) => tour.teamBattle match {
+                    case Some(battle) if battle.teams contains team => proceedWithTeam(team.some)
+                    case _ => fuccess(false)
+                  }
+                }
+              }
             }
           }
-        } addEffect {
-          joined => promise.foreach(_ success joined)
-        } void
-      } else {
-        promise.foreach(_ success false)
-        fuccess(socketReload(tour.id))
+        } else {
+          socketReload(tour.id)
+          fuccess(false)
+        }
       }
+    fuJoined map {
+      joined => promise.foreach(_ success joined)
     }
   }
 
   def joinWithResult(
     tourId: Tournament.ID,
-    me: User, p: Option[String],
+    me: User,
+    password: Option[String],
+    teamId: Option[String],
     getUserTeamIds: User => Fu[List[TeamId]]
   ): Fu[Boolean] = {
     val promise = Promise[Boolean]
-    join(tourId, me, p, getUserTeamIds, promise.some)
+    join(tourId, me, password, teamId, getUserTeamIds, promise.some)
     promise.future.withTimeoutDefault(5.seconds, false)(system)
   }
 

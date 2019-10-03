@@ -41,6 +41,7 @@ final class JsonView(
     page: Option[Int],
     me: Option[User],
     getUserTeamIds: User => Fu[List[TeamId]],
+    getTeamName: TeamId => Option[String],
     playerInfoExt: Option[PlayerInfoExt],
     socketVersion: Option[SocketVersion],
     partial: Boolean,
@@ -68,6 +69,11 @@ final class JsonView(
     }
     stats <- statsApi(tour)
     shieldOwner <- full.?? { shieldApi currentOwner tour }
+    teamsToJoinWith <- ~(for {
+      u <- me
+      battle <- tour.teamBattle
+      if full
+    } yield getUserTeamIds(u) map { teams => battle.teams intersect teams.toSet })
   } yield Json.obj(
     "nbPlayers" -> tour.nbPlayers,
     "duels" -> data.duels,
@@ -84,7 +90,8 @@ final class JsonView(
     .add("playerInfo" -> playerInfoJson)
     .add("pairingsClosed" -> tour.pairingsClosed)
     .add("stats" -> stats)
-    .add("socketVersion" -> socketVersion.map(_.value)) ++ full.?? {
+    .add("socketVersion" -> socketVersion.map(_.value)) ++
+    full.?? {
       Json.obj(
         "id" -> tour.id,
         "createdBy" -> tour.createdBy,
@@ -105,6 +112,16 @@ final class JsonView(
         .add("defender" -> shieldOwner.map(_.value))
         .add("greatPlayer" -> GreatPlayer.wikiUrl(tour.name).map { url =>
           Json.obj("name" -> tour.name, "url" -> url)
+        })
+        .add("teamBattle" -> tour.teamBattle.map { battle =>
+          Json.obj(
+            "joinWithTeams" -> teamsToJoinWith.toList.sorted.map { id =>
+              Json.obj(
+                "id" -> id,
+                "name" -> (getTeamName(id).getOrElse(id): String)
+              )
+            }
+          )
         })
         .add("description" -> tour.description)
         .add("draughtsResult" -> pref.flatMap(_.draughtsResult option true))

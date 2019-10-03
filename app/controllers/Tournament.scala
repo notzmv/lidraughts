@@ -91,9 +91,21 @@ object Tournament extends LidraughtsController {
           (for {
             verdicts <- env.api.verdicts(tour, ctx.me, getUserTeamIds)
             version <- env.version(tour.id)
-            json <- env.jsonView(tour, page, ctx.me, getUserTeamIds, none, version.some, partial = false, ctx.lang, ctx.pref.some)
+            json <- env.jsonView(
+              tour = tour,
+              page = page,
+              me = ctx.me,
+              getUserTeamIds = getUserTeamIds,
+              getTeamName = Env.team.cached.name,
+              playerInfoExt = none,
+              socketVersion = version.some,
+              partial = false,
+              lang = ctx.lang,
+              ctx.pref.some
+            )
             chat <- canHaveChat(tour, json.some) ?? Env.chat.api.userChat.cached.findMine(Chat.Id(tour.id), ctx.me).map(some)
             _ <- chat ?? { c => Env.user.lightUserApi.preloadMany(c.chat.userIds) }
+            _ <- tour.teamBattle ?? { b => Env.team.cached.preloadSet(b.teams) }
             streamers <- streamerCache get tour.id
             shieldOwner <- env.shieldApi currentOwner tour
           } yield Ok(html.tournament.show(tour, verdicts, json, chat, streamers, shieldOwner))).mon(_.http.response.tournament.show.website)
@@ -103,7 +115,18 @@ object Tournament extends LidraughtsController {
               case (playerInfoExt, socketVersion) =>
                 val partial = getBool("partial")
                 lidraughts.mon.tournament.apiShowPartial(partial)()
-                env.jsonView(tour, page, ctx.me, getUserTeamIds, playerInfoExt, socketVersion, partial = partial, ctx.lang, ctx.pref.some)
+                env.jsonView(
+                  tour = tour,
+                  page = page,
+                  me = ctx.me,
+                  getUserTeamIds = getUserTeamIds,
+                  getTeamName = Env.team.cached.name,
+                  playerInfoExt = playerInfoExt,
+                  socketVersion = socketVersion,
+                  partial = partial,
+                  lang = ctx.lang,
+                  ctx.pref.some
+                )
             } map { Ok(_) }
         }.mon(_.http.response.tournament.show.mobile)
       ) map NoCache
@@ -142,7 +165,8 @@ object Tournament extends LidraughtsController {
     NoLameOrBot {
       NoPlayban {
         val password = ctx.body.body.\("p").asOpt[String]
-        env.api.joinWithResult(id, me, password, getUserTeamIds) flatMap { result =>
+        val teamId = ctx.body.body.\("team").asOpt[String]
+        env.api.joinWithResult(id, me, password, teamId, getUserTeamIds) flatMap { result =>
           negotiate(
             html = Redirect(routes.Tournament.show(id)).fuccess,
             api = _ => fuccess {
@@ -237,7 +261,7 @@ object Tournament extends LidraughtsController {
     env.forms.create(me).bindFromRequest.fold(
       jsonFormErrorDefaultLang,
       setup => env.api.createTournament(setup, me, teams, getUserTeamIds) flatMap { tour =>
-        Env.tournament.jsonView(tour, none, none, getUserTeamIds, none, none, partial = false, lidraughts.i18n.defaultLang, none)
+        Env.tournament.jsonView(tour, none, none, getUserTeamIds, Env.team.cached.name, none, none, partial = false, lidraughts.i18n.defaultLang, none)
       } map { Ok(_) }
     )
 

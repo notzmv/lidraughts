@@ -22,7 +22,7 @@ object form {
       jsTag("tournamentForm.js")
     )
   ) {
-      val isTeamBattle = form("teamBattle")("teams").value.nonEmpty
+      val isTeamBattle = form("teamBattleByTeam").value.nonEmpty
       val fields = new TourFields(me, form)
       main(cls := "page-small")(
         div(cls := "tour__form box box-pad")(
@@ -51,7 +51,7 @@ object form {
                 fields.startDate()
               )
             ),
-            isTeamBattle option form3.hidden(form("teamBattle")("teams")),
+            isTeamBattle option form3.hidden(form("teamBattleByTeam")),
             form3.actions(
               a(href := routes.Tournament.home())(trans.cancel()),
               form3.submit(trans.createANewTournament(), icon = "g".some)
@@ -70,7 +70,7 @@ object form {
       jsTag("tournamentForm.js")
     )
   ) {
-      val isTeamBattle = form("teamBattle")("teams").value.nonEmpty
+      val isTeamBattle = form("teamBattleByTeam").value.nonEmpty
       val fields = new TourFields(me, form)
       main(cls := "page-small")(
         div(cls := "tour__form box box-pad")(
@@ -96,7 +96,7 @@ object form {
                 fields.berserkableHack
               )
             ),
-            isTeamBattle option form3.hidden(form("teamBattle")("teams")),
+            isTeamBattle option form3.hidden(form("teamBattleByTeam")),
             form3.actions(
               a(href := routes.Tournament.show(tour.id))(trans.cancel()),
               form3.submit(trans.save(), icon = "g".some)

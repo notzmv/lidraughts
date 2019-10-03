@@ -32,7 +32,7 @@ final class DataForm {
     mode = none,
     rated = true.some,
     conditions = Condition.DataForm.AllSetup.default,
-    teamBattle = teamBattleId map TeamBattle.DataForm.Setup.apply,
+    teamBattleByTeam = teamBattleId,
     berserkable = true.some,
     description = none
   )
@@ -51,7 +51,7 @@ final class DataForm {
     rated = tour.mode.rated.some,
     password = tour.password,
     conditions = Condition.DataForm.AllSetup(tour.conditions),
-    teamBattle = teamBattleId map TeamBattle.DataForm.Setup.apply,
+    teamBattleByTeam = teamBattleId,
     berserkable = tour.berserkable.some,
     description = tour.description
   )
@@ -86,7 +86,7 @@ final class DataForm {
     "rated" -> optional(boolean),
     "password" -> optional(nonEmptyText),
     "conditions" -> Condition.DataForm.all,
-    "teamBattle" -> optional(TeamBattle.DataForm.fields),
+    "teamBattleByTeam" -> optional(nonEmptyText),
     "berserkable" -> optional(boolean),
     "description" -> optional(nonEmptyText(maxLength = 600))
   )(TournamentSetup.apply)(TournamentSetup.unapply)
@@ -148,7 +148,7 @@ private[tournament] case class TournamentSetup(
     rated: Option[Boolean],
     password: Option[String],
     conditions: Condition.DataForm.AllSetup,
-    teamBattle: Option[TeamBattle.DataForm.Setup],
+    teamBattleByTeam: Option[String],
     berserkable: Option[Boolean],
     description: Option[String]
 ) {
