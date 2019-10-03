@@ -7,6 +7,7 @@ import reactivemongo.bson._
 import BSONHandlers._
 import lidraughts.common.MaxPerSecond
 import lidraughts.db.dsl._
+import lidraughts.hub.lightTeam.TeamId
 import lidraughts.rating.Perf
 import lidraughts.user.{ User, Perfs }
 
@@ -75,11 +76,11 @@ object PlayerRepo {
       coll.update(selectId(player._id), player).void
     }
 
-  def join(tourId: String, user: User, perfLens: Perfs => Perf) =
+  def join(tourId: String, user: User, perfLens: Perfs => Perf, team: Option[TeamId]) =
     find(tourId, user.id) flatMap {
       case Some(p) if p.withdraw => coll.update(selectId(p._id), $unset("w"))
       case Some(p) => funit
-      case None => coll.insert(Player.make(tourId, user, perfLens))
+      case None => coll.insert(Player.make(tourId, user, perfLens, team))
     } void
 
   def withdraw(tourId: String, userId: String) =

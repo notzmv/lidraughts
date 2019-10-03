@@ -115,13 +115,10 @@ final class JsonView(
         })
         .add("teamBattle" -> tour.teamBattle.map { battle =>
           Json.obj(
-            "joinWithTeams" -> teamsToJoinWith.toList.sorted.map { id =>
-              Json.obj(
-                "id" -> id,
-                "name" -> (getTeamName(id).getOrElse(id): String)
-              )
-            }
-          )
+            "teams" -> JsObject(battle.sortedTeamIds.map { id =>
+              id -> JsString(getTeamName(id).getOrElse(id))
+            })
+          ).add("joinWith" -> me.isDefined.option(teamsToJoinWith.toList.sorted))
         })
         .add("description" -> tour.description)
         .add("draughtsResult" -> pref.flatMap(_.draughtsResult option true))
@@ -328,6 +325,7 @@ final class JsonView(
       ).add("title" -> light.flatMap(_.title))
         .add("provisional" -> p.provisional)
         .add("withdraw" -> p.withdraw)
+        .add("team" -> p.team)
     }
   }
 
