@@ -1,21 +1,21 @@
-package lila.tournament
+package lidraughts.tournament
 
 import play.api.data._
 import play.api.data.Forms._
 
-import lila.hub.lightTeam._
+import lidraughts.hub.lightTeam._
 
 case class TeamBattle(
     teams: Set[TeamId]
 ) {
-  def sortedTeamIds = teams.toList.sorted
+  lazy val sortedTeamIds = teams.toList.sorted
 }
 
 object TeamBattle {
 
   object DataForm {
     import play.api.data.Forms._
-    import lila.common.Form._
+    import lidraughts.common.Form._
 
     def edit(teams: List[String]) = Form(fields) fill Setup(s"${teams mkString "\n"}\n")
 

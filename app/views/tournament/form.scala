@@ -22,12 +22,16 @@ object form {
       jsTag("tournamentForm.js")
     )
   ) {
+      val isTeamBattle = form("teamBattle")("teams").value.nonEmpty
       val fields = new TourFields(me, form)
       main(cls := "page-small")(
         div(cls := "tour__form box box-pad")(
-          h1(trans.createANewTournament()),
+          h1(
+            if (isTeamBattle) "New Team Battle"
+            else trans.createANewTournament()
+          ),
           postForm(cls := "form3", action := routes.Tournament.create)(
-            fields.name,
+            fields.name(isTeamBattle),
             form3.split(fields.rated, fields.variant),
             fields.startPosition(Standard),
             fields.startPosition(Russian),
@@ -41,13 +45,13 @@ object form {
             fieldset(cls := "conditions")(
               fields.advancedSettings,
               div(cls := "form")(
-                fields.password,
+                !isTeamBattle option fields.password,
                 condition(form, auto = true, teams = teams),
                 fields.berserkableHack,
                 fields.startDate()
               )
             ),
-            form3.hidden(form("teamBattle")("teams")),
+            isTeamBattle option form3.hidden(form("teamBattle")("teams")),
             form3.actions(
               a(href := routes.Tournament.home())(trans.cancel()),
               form3.submit(trans.createANewTournament(), icon = "g".some)
@@ -66,12 +70,13 @@ object form {
       jsTag("tournamentForm.js")
     )
   ) {
+      val isTeamBattle = form("teamBattle")("teams").value.nonEmpty
       val fields = new TourFields(me, form)
       main(cls := "page-small")(
         div(cls := "tour__form box box-pad")(
           h1("Edit ", tour.fullName),
           postForm(cls := "form3", action := routes.Tournament.update(tour.id))(
-            fields.name,
+            fields.name(isTeamBattle),
             !tour.isStarted option fields.startDate(false),
             form3.split(fields.rated, fields.variant),
             fields.startPosition(Standard),
@@ -86,12 +91,12 @@ object form {
             fieldset(cls := "conditions")(
               fields.advancedSettings,
               div(cls := "form")(
-                fields.password,
+                !isTeamBattle option fields.password,
                 views.html.tournament.form.condition(form, auto = true, teams = teams),
                 fields.berserkableHack
               )
             ),
-            form3.hidden(form("teamBattle")("teams")),
+            isTeamBattle option form3.hidden(form("teamBattle")("teams")),
             form3.actions(
               a(href := routes.Tournament.show(tour.id))(trans.cancel()),
               form3.submit(trans.save(), icon = "g".some)
@@ -135,7 +140,7 @@ object form {
       },
       form3.checkbox(form("berserkable"), raw("Allow Berserk"), help = raw("Let players halve their clock time to gain an extra point").some, half = true)
     ),
-    (auto && teams.size > 0) ?? {
+    (auto && teams.size > 0) option {
       form3.group(form("conditions.teamMember.teamId"), trans.onlyMembersOfTeam(), half = false)(
         form3.select(_, List(("", trans.noRestriction.txt())) ::: teams.map(_.pair))
       )
@@ -169,14 +174,14 @@ object form {
 
 final private class TourFields(me: User, form: Form[_])(implicit ctx: Context) {
 
-  def name = DataForm.canPickName(me) ?? {
+  def name(isTeamBattle: Boolean) = DataForm.canPickName(me) ?? {
     form3.group(form("name"), trans.name()) { f =>
       div(
-        form3.input(f), " Arena", br,
+        form3.input(f), " ", if (isTeamBattle) "Team Battle" else "Arena", br,
         small(cls := "form-help")(
           trans.safeTournamentName(), br,
           trans.inappropriateNameWarning(), br,
-          trans.emptyTournamentName(), br
+          trans.emptyTournamentName()
         )
       )
     }
@@ -212,10 +217,9 @@ final private class TourFields(me: User, form: Form[_])(implicit ctx: Context) {
       form3.textarea(_)(rows := 3)
     )
   def password =
-    form("teamBattle")("teams").value.isEmpty option
-      form3.group(form("password"), trans.password(), help = raw("Make the tournament private, and restrict access with a password").some)(
-        form3.input(_)
-      )
+    form3.group(form("password"), trans.password(), help = raw("Make the tournament private, and restrict access with a password").some)(
+      form3.input(_)
+    )
   def berserkableHack =
     input(tpe := "hidden", st.name := form("berserkable").name, value := "false") // hack allow disabling berserk
   def startDate(withHelp: Boolean = true) =

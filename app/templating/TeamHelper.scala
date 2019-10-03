@@ -21,8 +21,9 @@ trait TeamHelper {
 
   def teamLink(id: String, name: Frag, withIcon: Boolean): Frag = a(
     href := routes.Team.show(id),
-    dataIcon := withIcon.option("f")
-  )(withIcon option nbsp, name)
+    dataIcon := withIcon.option("f"),
+    cls := withIcon option "text"
+  )(name)
 
   def teamForumUrl(id: String) = routes.ForumCateg.show("team-" + id)
 }

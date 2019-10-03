@@ -18,7 +18,7 @@ object calendar {
       embedJsUnsafe(s"""LidraughtsTournamentCalendar.app(document.getElementById('tournament-calendar'), ${
         safeJsonValue(Json.obj(
           "data" -> json,
-          "i18n" -> bits.jsI18n()
+          "i18n" -> bits.jsI18n
         ))
       })""")
     ),

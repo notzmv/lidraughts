@@ -19,7 +19,7 @@ final class DataForm {
   import UTCDate._
 
   def create(user: User, teamBattleId: Option[TeamId] = None) = form(user) fill TournamentSetup(
-    name = canPickName(user) option user.titleUsername,
+    name = canPickName(user) && teamBattleId.isEmpty option user.titleUsername,
     clockTime = clockTimeDefault,
     clockIncrement = clockIncrementDefault,
     minutes = minuteDefault,

@@ -3,11 +3,11 @@ package tournament
 
 import play.api.data.{ Field, Form }
 
-import lila.api.Context
-import lila.app.templating.Environment._
-import lila.app.ui.ScalatagsTemplate._
-import lila.tournament.Tournament
-import lila.user.User
+import lidraughts.api.Context
+import lidraughts.app.templating.Environment._
+import lidraughts.app.ui.ScalatagsTemplate._
+import lidraughts.tournament.Tournament
+import lidraughts.user.User
 
 import controllers.routes
 
@@ -31,4 +31,32 @@ object teamBattle {
         )
       )
     ))
+
+  def list(tours: List[Tournament])(implicit ctx: Context) =
+    tbody(cls := "team-battles")(
+      tours.map { t =>
+        tr(
+          td(cls := "icon")(iconTag(tournamentIconChar(t))),
+          td(cls := "header")(
+            a(href := routes.Tournament.show(t.id))(
+              span(cls := "name")(t.fullName),
+              span(cls := "setup")(
+                t.clock.show,
+                " • ",
+                if (t.variant.exotic) t.variant.name else t.perfType.map(_.name),
+                !t.isThematic option frag(" • ", trans.thematic()),
+                " • ",
+                t.mode.fold(trans.casualTournament, trans.ratedTournament)()
+              )
+            )
+          ),
+          td(cls := "duration")(t.durationString),
+          td(cls := "winner")(
+            userIdLink(t.winnerId, withOnline = false),
+            br
+          ),
+          td(cls := "text", dataIcon := "r")(t.nbPlayers.localize)
+        )
+      }
+    )
 }

@@ -5,6 +5,7 @@ import lidraughts.api.Context
 import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
 import lidraughts.common.String.html.richText
+import lidraughts.tournament.{ Tournament, TournamentShield, TeamBattle }
 
 import controllers.routes
 
@@ -13,10 +14,10 @@ object side {
   private val separator = " • "
 
   def apply(
-    tour: lidraughts.tournament.Tournament,
+    tour: Tournament,
     verdicts: lidraughts.tournament.Condition.All.WithVerdicts,
     streamers: Set[lidraughts.user.User.ID],
-    shieldOwner: Option[lidraughts.tournament.TournamentShield.OwnerId],
+    shieldOwner: Option[TournamentShield.OwnerId],
     chat: Boolean
   )(implicit ctx: Context) = frag(
     div(cls := "tour__meta")(
@@ -41,11 +42,10 @@ object side {
           (isGranted(_.ManageTournament) || (ctx.userId.has(tour.createdBy) && tour.isCreated)) option frag(
             " ",
             a(href := routes.Tournament.edit(tour.id), title := trans.editTournament.txt())(iconTag("%"))
-          ),
-          ctx.userId.has(tour.createdBy) && tour.teamBattle.isDefined option
-            a(href := routes.Tournament.teamBattleEdit(tour.id))("Update team list")
+          )
         )
       ),
+      tour.teamBattle map teamBattle(tour),
       tour.spotlight map { s =>
         st.section(
           lidraughts.common.String.html.markdownLinks(s.description),
@@ -79,7 +79,7 @@ object side {
         }
       )),
       tour.noBerserk option div(cls := "text", dataIcon := "`")(trans.noBerserkAllowed()),
-      !tour.isScheduled option frag(trans.by(userIdLink(tour.createdBy.some)), br),
+      !tour.isScheduled && !tour.isTeamBattle option frag(trans.by(userIdLink(tour.createdBy.some)), br),
       (!tour.isStarted || (tour.isScheduled && tour.isThematic)) option absClientDateTime(tour.startsAt),
       tour.isThematic option p(cls := "opening")(
         tour.openingTable.fold(frag(
@@ -104,4 +104,21 @@ object side {
   private def openingPosition(position: draughts.StartingPosition) = frag(
     strong(position.code), " ", position.name
   )
+
+  private def teamBattle(tour: Tournament)(battle: TeamBattle)(implicit ctx: Context) =
+    st.section(cls := "team-battle")(
+      p(cls := "team-battle__title text", dataIcon := "f")(
+        s"Battle of ${battle.teams.size} teams",
+        ctx.userId.has(tour.createdBy) option
+          a(href := routes.Tournament.teamBattleEdit(tour.id), title := "Edit team battle")(iconTag("%"))
+      ),
+      div(cls := "team-battle__list")(
+        battle.sortedTeamIds.take(if (battle.teams.size <= 6) 6 else 4).map {
+          teamLink(_, withIcon = false)
+        }
+      ),
+      battle.teams.size > 6 option frag(
+        "and ", battle.teams.size - 4, " more"
+      )
+    )
 }

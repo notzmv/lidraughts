@@ -125,6 +125,9 @@ object TournamentRepo {
   def clockById(id: Tournament.ID): Fu[Option[draughts.Clock.Config]] =
     coll.primitiveOne[draughts.Clock.Config]($id(id), "clock")
 
+  def teamBattlesByTeam(teamId: String, nb: Int): Fu[List[Tournament]] =
+    coll.find($doc("teamBattle.teams" -> teamId)).sort($sort desc "startsAt").list[Tournament](nb)
+
   def setStatus(tourId: Tournament.ID, status: Status) =
     coll.update($id(tourId), $set("status" -> status.id)).void
 
