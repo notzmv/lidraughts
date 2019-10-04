@@ -5,6 +5,7 @@ import reactivemongo.api.{ CursorProducer, Cursor, ReadPreference }
 import reactivemongo.bson._
 
 import BSONHandlers._
+import lidraughts.common.MaxPerSecond
 import lidraughts.db.dsl._
 import lidraughts.rating.Perf
 import lidraughts.user.{ User, Perfs }

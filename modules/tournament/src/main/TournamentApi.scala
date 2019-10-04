@@ -10,7 +10,7 @@ import scala.concurrent.duration._
 import scala.concurrent.Promise
 import actorApi._
 import lidraughts.common.paginator.Paginator
-import lidraughts.common.{ Debouncer, LightUser, MaxPerPage }
+import lidraughts.common.{ Debouncer, LightUser, MaxPerPage, MaxPerSecond }
 import lidraughts.game.{ Game, GameRepo, LightGame, LightPov, Pov }
 import lidraughts.hub.actorApi.lobby.ReloadTournaments
 import lidraughts.hub.actorApi.map.Tell
@@ -24,7 +24,7 @@ import makeTimeout.short
 
 final class TournamentApi(
     cached: Cached,
-    scheduleJsonView: ScheduleJsonView,
+    apiJsonView: ApiJsonView,
     system: ActorSystem,
     sequencers: DuctMap[_],
     autoPairing: AutoPairing,
@@ -500,13 +500,13 @@ final class TournamentApi(
     TournamentRepo.calendar(from = from, to = from plusYears 1)
   }
 
-  def resultStream(tour: Tournament, perSecond: Int, nb: Int): Enumerator[Player.Result] = {
+  def resultStream(tour: Tournament, perSecond: MaxPerSecond, nb: Int): Enumerator[Player.Result] = {
     import reactivemongo.play.iteratees.cursorProducer
     import play.api.libs.iteratee._
     var rank = 0
     PlayerRepo.cursor(
       tournamentId = tour.id,
-      batchSize = perSecond
+      batchSize = perSecond.value
     ).bulkEnumerator(nb) &>
       lidraughts.common.Iteratee.delay(1 second)(system) &>
       Enumeratee.mapConcat(_.toSeq) &>
@@ -516,6 +516,14 @@ final class TournamentApi(
           Player.Result(player, lu | LightUser.fallback(player.userId), rank)
         }
       }
+  }
+
+  def byOwnerStream(owner: User, perSecond: MaxPerSecond, nb: Int): Enumerator[Tournament] = {
+    import reactivemongo.play.iteratees.cursorProducer
+    import play.api.libs.iteratee._
+    TournamentRepo.cursor(owner, perSecond.value).bulkEnumerator(nb) &>
+      lidraughts.common.Iteratee.delay(1 second)(system) &>
+      Enumeratee.mapConcat(_.toSeq)
   }
 
   private def playerPovs(tour: Tournament, userId: User.ID, nb: Int): Fu[List[LightPov]] =
@@ -546,7 +554,7 @@ final class TournamentApi(
   private object publish {
     private val debouncer = system.actorOf(Props(new Debouncer(15 seconds, {
       (_: Debouncer.Nothing) =>
-        fetchVisibleTournaments flatMap scheduleJsonView.apply foreach { json =>
+        fetchVisibleTournaments flatMap apiJsonView.apply foreach { json =>
           bus.publish(
             SendToFlag("tournament", Json.obj("t" -> "reload", "d" -> json)),
             'sendToFlag

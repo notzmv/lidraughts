@@ -3,6 +3,7 @@ package lidraughts.tournament
 import draughts.variant.Variant
 import org.joda.time.DateTime
 import reactivemongo.api.ReadPreference
+import reactivemongo.api.{ CursorProducer, Cursor, ReadPreference }
 
 import BSONHandlers._
 import lidraughts.common.paginator.Paginator
@@ -254,4 +255,15 @@ object TournamentRepo {
       "startsAt" $gte from $lte to,
       "schedule.freq" $in Schedule.Freq.all.filter(_.isWeeklyOrBetter)
     )).sort($sort asc "startsAt").list[Tournament](none, ReadPreference.secondaryPreferred)
+
+  private[tournament] def cursor(
+    owner: lidraughts.user.User,
+    batchSize: Int,
+    readPreference: ReadPreference = ReadPreference.secondaryPreferred
+  )(implicit cp: CursorProducer[Tournament]): cp.ProducedCursor = {
+    val query = coll
+      .find($doc("createdBy" -> owner.id))
+      .sort($sort desc "startsAt")
+    query.copy(options = query.options.batchSize(batchSize)).cursor[Tournament](readPreference)
+  }
 }

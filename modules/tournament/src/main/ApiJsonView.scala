@@ -5,7 +5,7 @@ import play.api.libs.json._
 import lidraughts.common.LightUser
 import lidraughts.rating.PerfType
 
-final class ScheduleJsonView(lightUser: LightUser.Getter) {
+final class ApiJsonView(lightUser: LightUser.Getter) {
 
   import JsonView._
 
@@ -54,7 +54,7 @@ final class ScheduleJsonView(lightUser: LightUser.Getter) {
     .add("position", tour.position.some.filterNot(_.initialVariant(tour.variant)) map positionJson)
     .add("schedule", tour.schedule map scheduleJson)
 
-  private def fullJson(tour: Tournament): Fu[JsObject] = for {
+  def fullJson(tour: Tournament): Fu[JsObject] = for {
     owner <- tour.nonLidraughtsCreatedBy ?? lightUser
     winner <- tour.winnerId ?? lightUser
   } yield baseJson(tour) ++ Json.obj(

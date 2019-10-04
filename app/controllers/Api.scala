@@ -11,6 +11,7 @@ import lidraughts.api.{ Context, GameApiV2, UserApi }
 import lidraughts.app._
 import lidraughts.common.PimpedJson._
 import lidraughts.common.{ HTTPRequest, IpAddress, MaxPerPage, MaxPerSecond }
+import lidraughts.user.UserRepo
 
 object Api extends LidraughtsController {
 
@@ -71,7 +72,7 @@ object Api extends LidraughtsController {
     UsersRateLimitPerIP(ip, cost = cost) {
       UsersRateLimitGlobal("-", cost = cost, msg = ip.value) {
         lidraughts.mon.api.users.cost(cost)
-        lidraughts.user.UserRepo nameds usernames map {
+        UserRepo nameds usernames map {
           _.map { Env.user.jsonView(_, none) }
         } map toApiResult map toHttp
       }
@@ -157,7 +158,7 @@ object Api extends LidraughtsController {
     val cost = page * nb + 10
     UserGamesRateLimit(cost, req) {
       lidraughts.mon.api.userGames.cost(cost)
-      lidraughts.user.UserRepo named name flatMap {
+      UserRepo named name flatMap {
         _ ?? { user =>
           gameApi.byUser(
             user = user,
@@ -207,7 +208,7 @@ object Api extends LidraughtsController {
 
   def currentTournaments = ApiRequest { implicit ctx =>
     Env.tournament.api.fetchVisibleTournaments flatMap
-      Env.tournament.scheduleJsonView.apply map Data.apply
+      Env.tournament.apiJsonView.apply map Data.apply
   }
 
   def tournament(id: String) = ApiRequest { req =>
@@ -245,8 +246,21 @@ object Api extends LidraughtsController {
         GlobalLinearLimitPerIP(HTTPRequest lastRemoteAddress req) {
           import lidraughts.tournament.JsonView.playerResultWrites
           val nb = getInt("nb", req) | Int.MaxValue
-          val enumerator = Env.tournament.api.resultStream(tour, 50, nb) &>
+          val enumerator = Env.tournament.api.resultStream(tour, MaxPerSecond(50), nb) &>
             Enumeratee.map(playerResultWrites.writes)
+          jsonStream(enumerator).fuccess
+        }
+      }
+    }
+  }
+
+  def tournamentsByOwner(name: String) = Action.async { req =>
+    (name != "lidraughts") ?? UserRepo.named(name) flatMap {
+      _ ?? { user =>
+        GlobalLinearLimitPerIP(HTTPRequest lastRemoteAddress req) {
+          val nb = getInt("nb", req) | Int.MaxValue
+          val enumerator = Env.tournament.api.byOwnerStream(user, MaxPerSecond(20), nb) &>
+            Enumeratee.mapM(Env.tournament.apiJsonView.fullJson)
           jsonStream(enumerator).fuccess
         }
       }
@@ -276,7 +290,7 @@ object Api extends LidraughtsController {
   def activity(name: String) = ApiRequest { req =>
     UserActivityRateLimitPerIP(HTTPRequest lastRemoteAddress req, cost = 1) {
       lidraughts.mon.api.activity.cost(1)
-      lidraughts.user.UserRepo named name flatMap {
+      UserRepo named name flatMap {
         _ ?? { user =>
           Env.activity.read.recent(user) flatMap {
             _.map { Env.activity.jsonView(_, user) }.sequenceFu
