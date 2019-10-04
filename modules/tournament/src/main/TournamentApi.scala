@@ -72,9 +72,7 @@ final class TournamentApi(
       position = DataForm.startingPosition(position | setup.realVariant.initialFen, setup.realVariant),
       openingTable = position.flatMap(draughts.OpeningTable.byKey).filter(setup.realVariant.openingTables.contains),
       berserkable = setup.berserkable | true,
-      teamBattle = setup.teamBattleByTeam.map { tb =>
-        TeamBattle(Set(tb))
-      },
+      teamBattle = setup.teamBattleByTeam map TeamBattle.init,
       description = setup.description
     ) |> { tour =>
         tour.perfType.fold(tour) { perfType =>
@@ -134,7 +132,7 @@ final class TournamentApi(
     filterExistingTeamIds: Set[TeamId] => Fu[Set[TeamId]]
   ): Funit =
     filterExistingTeamIds(data.potentialTeamIds) flatMap { teamIds =>
-      TournamentRepo.setTeamBattle(tour.id, TeamBattle(teamIds))
+      TournamentRepo.setTeamBattle(tour.id, TeamBattle(teamIds, data.nbTopPlayers))
     }
 
   private[tournament] def makePairings(oldTour: Tournament, users: WaitingUsers, startAt: Long): Unit = {
