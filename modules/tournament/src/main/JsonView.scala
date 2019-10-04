@@ -58,7 +58,7 @@ final class JsonView(
       case _ => standing(tour, 1)
     }
     playerInfoJson <- playerInfoExt ?? { pie =>
-      playerInfoExtended(pie).map(_.some)
+      playerInfoExtended(tour, pie).map(_.some)
     }
     verdicts <- full ?? {
       me match {
@@ -154,11 +154,11 @@ final class JsonView(
       }
     }
 
-  def playerInfoExtended(info: PlayerInfoExt): Fu[JsObject] = for {
-    ranking <- cached ranking info.tour
-    sheet <- cached.sheet(info.tour, info.user.id)
+  def playerInfoExtended(tour: Tournament, info: PlayerInfoExt): Fu[JsObject] = for {
+    ranking <- cached ranking tour
+    sheet <- cached.sheet(tour, info.user.id)
   } yield info match {
-    case PlayerInfoExt(tour, user, player, povs) =>
+    case PlayerInfoExt(user, player, povs) =>
       val isPlaying = povs.headOption.??(_.game.playable)
       val povScores: List[(LightPov, Option[Score])] = povs zip {
         (isPlaying ?? List(none[Score])) ::: sheet.scores.map(some)
@@ -388,6 +388,7 @@ final class JsonView(
       "rank" -> rt.rank,
       "id" -> rt.teamId,
       "score" -> rt.score,
+      "nb" -> rt.nbPlayers,
       "players" -> rt.topPlayers.map { p =>
         Json.obj(
           "user" -> lightUserApi.sync(p.userId),

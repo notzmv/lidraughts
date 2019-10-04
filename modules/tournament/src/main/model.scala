@@ -22,7 +22,6 @@ case class VisibleTournaments(
 }
 
 case class PlayerInfoExt(
-    tour: Tournament,
     user: lidraughts.user.User,
     player: Player,
     recentPovs: List[lidraughts.game.LightPov]
