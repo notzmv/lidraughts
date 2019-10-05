@@ -5,6 +5,7 @@ import akka.actor.ActorSelection
 import lidraughts.db.dsl._
 import lidraughts.hub.actorApi.team.{ CreateTeam, JoinTeam }
 import lidraughts.hub.actorApi.timeline.{ Propagate, TeamJoin, TeamCreate }
+import lidraughts.hub.lightTeam.LightTeam
 import lidraughts.mod.ModlogApi
 import lidraughts.user.{ User, UserRepo, UserContext }
 import org.joda.time.Period

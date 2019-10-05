@@ -1,5 +1,7 @@
 package lidraughts.tournament
 
+import lidraughts.hub.lightTeam.LightTeam
+
 case class TournamentTop(value: List[Player]) extends AnyVal
 
 case class TourMiniView(tour: Tournament, top: Option[TournamentTop])
