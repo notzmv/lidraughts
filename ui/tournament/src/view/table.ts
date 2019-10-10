@@ -3,6 +3,7 @@ import { VNode } from 'snabbdom/vnode';
 import { opposite } from 'draughtsground/util';
 import { player as renderPlayer, miniBoard, bind } from './util';
 import { Duel, DuelPlayer, DuelTeams, TeamBattle } from '../interfaces';
+import { teamName } from './battle';
 import TournamentController from '../ctrl';
 
 function featuredPlayer(player) {
@@ -45,7 +46,7 @@ function renderDuel(battle?: TeamBattle, duelTeams?: DuelTeams) {
     attrs: { href: '/' + d.id }
   }, [
     battle && duelTeams ? h('line.t', [0, 1].map(i =>
-      h('team', battle.teams[duelTeams[d.p[i].n.toLowerCase()]])
+      teamName(battle, duelTeams[d.p[i].n.toLowerCase()])
     )) : undefined,
     h('line.a', [
       h('strong', d.p[0].n),
