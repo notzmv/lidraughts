@@ -119,18 +119,28 @@
     }
   });
 
-  lidraughts.announce = (d) => {
-    $('#announce').remove();
-    if (d.msg) $('body').append(
-      '<div id="announce" class="announce">' +
-      d.msg +
-      '<time class="timeago" datetime="' + d.date + '"></time>' +
-      '<div class="actions"><a class="close">X</a></div>' +
-      '</div>'
-    ).find('#announce .close').click(function() { $('#announce').remove(); });
-  };
-  const announce = $('body').data('announce');
-  if (announce) lidraughts.announce(announce);
+  lidraughts.announce = (() => {
+    let timeout;
+    const kill = () => $('#announce').remove();
+    const set = (d) => {
+      if (!d) return;
+      kill();
+      if (timeout) clearTimeout(timeout);
+      if (d.msg) {
+        $('body').append(
+          '<div id="announce" class="announce">' +
+          d.msg +
+          '<time class="timeago" datetime="' + d.date + '"></time>' +
+          '<div class="actions"><a class="close">X</a></div>' +
+          '</div>'
+        ).find('#announce .close').click(kill);
+        timeout = setTimeout(kill, new Date(d.date) - Date.now());
+        lidraughts.pubsub.emit('content_loaded');
+      }
+    };
+    set($('body').data('announce'));
+    return set;
+  })();
 
   lidraughts.reverse = s => s.split('').reverse().join('');
   lidraughts.readServerFen = t => atob(lidraughts.reverse(t));
@@ -276,13 +286,13 @@
       document.body.addEventListener('mouseover', lidraughts.powertip.mouseover);
 
       function renderTimeago() {
-        lidraughts.raf(function() {
-          lidraughts.timeago.render([].slice.call(document.getElementsByClassName('timeago'), 0, 99));
-        });
+        lidraughts.raf(() =>
+          lidraughts.timeago.render([].slice.call(document.getElementsByClassName('timeago'), 0, 99))
+        );
       }
       function setTimeago(interval) {
         renderTimeago();
-        setTimeout(function() { setTimeago(interval * 1.1); }, interval);
+        setTimeout(() => setTimeago(interval * 1.1), interval);
       }
       setTimeago(1200);
       lidraughts.pubsub.on('content_loaded', renderTimeago);
@@ -291,7 +301,7 @@
         if (lidraughts.socket === null) lidraughts.socket = lidraughts.StrongSocket("/socket/v3", false);
       }, 300);
 
-      var initiatingHtml = '<div class="initiating">' + lidraughts.spinnerHtml + '</div>';
+      const initiatingHtml = '<div class="initiating">' + lidraughts.spinnerHtml + '</div>';
 
       lidraughts.challengeApp = (function() {
         var instance, booted;
