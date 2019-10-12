@@ -109,14 +109,7 @@
           return false;
         });
       },
-      announce: function(d) {
-        if (!$('#announce').length) $('body').append(
-          '<div id="announce" class="announce">' +
-          d.msg +
-          '<div class="actions"><a class="close">X</a></div>' +
-          '</div>'
-        ).find('#announce .close').click(function() { $('#announce').remove(); });
-      }
+      announce: lidraughts.announce
     },
     params: {},
     options: {
@@ -125,6 +118,19 @@
       isAuth: !!$('body').data('user')
     }
   });
+
+  lidraughts.announce = (d) => {
+    $('#announce').remove();
+    if (d.msg) $('body').append(
+      '<div id="announce" class="announce">' +
+      d.msg +
+      '<time class="timeago" datetime="' + d.date + '"></time>' +
+      '<div class="actions"><a class="close">X</a></div>' +
+      '</div>'
+    ).find('#announce .close').click(function() { $('#announce').remove(); });
+  };
+  const announce = $('body').data('announce');
+  if (announce) lidraughts.announce(announce);
 
   lidraughts.reverse = s => s.split('').reverse().join('');
   lidraughts.readServerFen = t => atob(lidraughts.reverse(t));

@@ -2,11 +2,11 @@ package views.html.base
 
 import play.api.libs.json.Json
 
-import lidraughts.api.Context
+import lidraughts.api.{ Context, AnnounceStore }
 import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
-import lidraughts.common.{ Lang, ContentSecurityPolicy }
 import lidraughts.common.String.html.safeJsonValue
+import lidraughts.common.{ Lang, ContentSecurityPolicy }
 import lidraughts.pref.Pref
 
 import controllers.routes
@@ -84,6 +84,7 @@ object layout {
   private val dataZoom = attr("data-zoom")
   private val dataPreload = attr("data-preload")
   private val dataNonce = attr("data-nonce")
+  private val dataAnnounce = attr("data-announce")
 
   def apply(
     title: String,
@@ -147,6 +148,7 @@ object layout {
         dataAssetVersion := assetVersion.value,
         dataNonce := ctx.nonce.ifTrue(sameAssetDomain).map(_.value),
         dataTheme := ctx.currentBg,
+        dataAnnounce := AnnounceStore.get.map(a => safeJsonValue(a.json)),
         style := zoomable option s"--zoom:${ctx.zoom}"
       )(
           blindModeForm,
