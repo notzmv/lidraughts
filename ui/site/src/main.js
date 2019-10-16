@@ -41,6 +41,29 @@
     return u ? '<a class="user-link ulpt ' + (klass || '') + '" href="/@/' + id + '">' + (limit ? u.substring(0, limit) : u) + '</a>' : 'Anonymous';
   };
 
+  lidraughts.announce = (() => {
+    let timeout;
+    const kill = () => $('#announce').remove();
+    const set = (d) => {
+      if (!d) return;
+      kill();
+      if (timeout) clearTimeout(timeout);
+      if (d.msg) {
+        $('body').append(
+          '<div id="announce" class="announce">' +
+          d.msg +
+          '<time class="timeago" datetime="' + d.date + '"></time>' +
+          '<div class="actions"><a class="close">X</a></div>' +
+          '</div>'
+        ).find('#announce .close').click(kill);
+        timeout = setTimeout(kill, new Date(d.date) - Date.now());
+        lidraughts.pubsub.emit('content_loaded');
+      }
+    };
+    set($('body').data('announce'));
+    return set;
+  })();
+
   lidraughts.socket = null;
   const $friendsBox = $('#friend_box');
   $.extend(true, lidraughts.StrongSocket.defaults, {
@@ -118,29 +141,6 @@
       isAuth: !!$('body').data('user')
     }
   });
-
-  lidraughts.announce = (() => {
-    let timeout;
-    const kill = () => $('#announce').remove();
-    const set = (d) => {
-      if (!d) return;
-      kill();
-      if (timeout) clearTimeout(timeout);
-      if (d.msg) {
-        $('body').append(
-          '<div id="announce" class="announce">' +
-          d.msg +
-          '<time class="timeago" datetime="' + d.date + '"></time>' +
-          '<div class="actions"><a class="close">X</a></div>' +
-          '</div>'
-        ).find('#announce .close').click(kill);
-        timeout = setTimeout(kill, new Date(d.date) - Date.now());
-        lidraughts.pubsub.emit('content_loaded');
-      }
-    };
-    set($('body').data('announce'));
-    return set;
-  })();
 
   lidraughts.reverse = s => s.split('').reverse().join('');
   lidraughts.readServerFen = t => atob(lidraughts.reverse(t));
