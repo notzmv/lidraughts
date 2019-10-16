@@ -104,7 +104,10 @@ final class Env(
   }
 
   system.lidraughtsBus.subscribeFun('garbageCollect, 'playban) {
-    case lidraughts.hub.actorApi.security.GarbageCollect(userId, _) => kill(userId)
+    case lidraughts.hub.actorApi.security.GarbageCollect(userId, _) =>
+      lidraughts.user.UserRepo.isTroll(userId) foreach { troll =>
+        if (troll) kill(userId) // GC can be aborted by reverting the initial SB mark
+      }
     case lidraughts.hub.actorApi.playban.SitcounterClose(userId) => kill(userId)
   }
 
