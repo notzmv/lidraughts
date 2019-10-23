@@ -219,7 +219,7 @@ final class PlaybanApi(
         user <- UserRepo byId record.userId
       } yield (mod zip user).headOption foreach {
         case (m, u) =>
-          lidraughts.log("ragesit").info(s"https://lidraughts.org/@/${u.username}")
+          lidraughts.log("ragesit").info(s"https://lidraughts.org/@/${u.username} ${record.rageSit.counterView}")
           bus.publish(lidraughts.hub.actorApi.mod.AutoWarning(u.id, ModPreset.sittingAuto.subject), 'autoWarning)
           messenger.sendPreset(m, u, ModPreset.sittingAuto).void
       }
