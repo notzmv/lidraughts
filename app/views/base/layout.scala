@@ -70,7 +70,7 @@ object layout {
       clinputLink,
       input(
         spellcheck := "false",
-        autocomplete := "false",
+        autocomplete := ctx.blind.toString,
         aria.label := trans.search.txt(),
         placeholder := trans.search.txt()
       )

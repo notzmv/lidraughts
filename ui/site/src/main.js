@@ -145,7 +145,7 @@
   lidraughts.reverse = s => s.split('').reverse().join('');
   lidraughts.readServerFen = t => atob(lidraughts.reverse(t));
 
-  lidraughts.userAutocomplete = function($input, opts) {
+  lidraughts.userAutocomplete = ($input, opts) => {
     opts = opts || {};
     lidraughts.loadCssPath('autocomplete');
     return lidraughts.loadScript('javascripts/vendor/typeahead.jquery.min.js').done(function() {
@@ -165,7 +165,7 @@
               swiss: opts.swiss,
               object: 1
             },
-            success: function(res) {
+            success(res) {
               runAsync(res.result);
             }
           });
@@ -184,15 +184,13 @@
               (title64 ? o.title.slice(0, o.title.length - 3) : o.title) + '</span>&nbsp;' : '') + o.name + '</' + tag + '>';
           }
         }
-      }).on('typeahead:render', function() {
-        lidraughts.pubsub.emit('content_loaded');
-      });
+      }).on('typeahead:render', () => lidraughts.pubsub.emit('content_loaded'));
       if (opts.focus) $input.focus();
-      if (opts.onSelect) $input.on('typeahead:select', function(ev, sel) {
-        opts.onSelect(sel);
-      }).on('keypress', function(e) {
-        if (e.which == 10 || e.which == 13) opts.onSelect($(this).val());
-      });
+      if (opts.onSelect) $input
+        .on('typeahead:select', (_, sel) => opts.onSelect(sel))
+        .on('keypress', function(e) {
+          if (e.which == 10 || e.which == 13) opts.onSelect($(this).val());
+        });
     });
   };
 
@@ -339,14 +337,12 @@
         };
       })();
 
-      lidraughts.notifyApp = (function() {
-        var instance, booted;
-        var $toggle = $('#notify-toggle');
-        var isVisible = function() {
-          return $('#notify-app').is(':visible');
-        };
+      lidraughts.notifyApp = (() => {
+        let instance, booted;
+        const $toggle = $('#notify-toggle'),
+          isVisible = () => $('#notify-app').is(':visible');
 
-        var load = function(data, incoming) {
+        const load = function(data, incoming) {
           if (booted) return;
           booted = true;
           var $el = $('#notify-app').html(initiatingHtml);
@@ -392,55 +388,49 @@
       window.addEventListener('resize', () => lidraughts.dispatchEvent(document.body, 'draughtsground.resize'));
 
       // dasher
-      (function() {
-        var booted;
+      {
+        let booted;
         $('#top .dasher .toggle').one('mouseover click', function() {
           if (booted) return;
           booted = true;
-          var $el = $('#dasher_app').html(initiatingHtml);
-          var isPlaying = $('body').hasClass('playing');
+          const $el = $('#dasher_app').html(initiatingHtml),
+            playing = $('body').hasClass('playing');
           lidraughts.loadCssPath('dasher');
-          lidraughts.loadScript(lidraughts.compiledScript('dasher')).done(function() {
-            LidraughtsDasher.default($el.empty()[0], {
-              playing: isPlaying
-            });
-          });
+          lidraughts.loadScript(lidraughts.compiledScript('dasher')).done(() =>
+            LidraughtsDasher.default($el.empty()[0], { playing })
+          );
         });
-      })();
+      }
 
       // cli
-      (function() {
-        var $wrap = $('#clinput');
+      {
+        const $wrap = $('#clinput');
         if (!$wrap.length) return;
-        var booted;
-        var boot = function() {
+        let booted;
+        const $input = $wrap.find('input');
+        const boot = () => {
           if (booted) return $.Deferred().resolve();
           booted = true;
-          return lidraughts.loadScript(lidraughts.compiledScript('cli')).done(function() {
-            LidraughtsCli.app($wrap, toggle);
-          });
-        }
-        var toggle = function(txt) {
-          boot().done(function() {
-            $wrap.find('input').val(txt || '');
-          });
-          $('body').toggleClass('clinput');
-          if ($('body').hasClass('clinput')) $wrap.find('input').focus();
+          return lidraughts.loadScript(lidraughts.compiledScript('cli')).done(() =>
+            LidraughtsCli.app($wrap, toggle)
+          );
         };
-        $wrap.find('a').on('mouseover click', function(e) {
-          (e.type === 'mouseover' ? boot : toggle)();
-        });
-        Mousetrap.bind('/', function() {
-          lidraughts.raf(function() { toggle('/') });
+        const toggle = txt => {
+          boot().done(() => $input.val(txt || ''));
+          $('body').toggleClass('clinput');
+          if ($('body').hasClass('clinput')) $input.focus();
+        };
+        $wrap.find('a').on('mouseover click', e => (e.type === 'mouseover' ? boot : toggle)());
+        Mousetrap.bind('/', () => {
+          lidraughts.raf(() => toggle('/'));
           return false;
         });
-        Mousetrap.bind('s', function() {
-          lidraughts.raf(function() { toggle() });
-        });
-      })();
+        Mousetrap.bind('s', () => lidraughts.raf(() => toggle()));
+        if ($('body').hasClass('blind-mode')) $input.one('focus', () => toggle());
+      }
 
-      $('.user-autocomplete').each(function() {
-        var opts = {
+      $('.user-autocomplete').each(() => {
+        const opts = {
           focus: 1,
           friend: $(this).data('friend'),
           tag: $(this).data('tag')
