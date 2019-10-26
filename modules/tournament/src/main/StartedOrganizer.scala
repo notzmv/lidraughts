@@ -10,7 +10,6 @@ import makeTimeout.short
 private final class StartedOrganizer(
     api: TournamentApi,
     reminder: TournamentReminder,
-    isOnline: String => Boolean,
     socketMap: SocketMap
 ) extends Actor {
 

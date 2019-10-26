@@ -23,7 +23,7 @@ final class Env(
     hub: lidraughts.hub.Env,
     roundMap: DuctMap[_],
     lightUserApi: lidraughts.user.LightUserApi,
-    isOnline: String => Boolean,
+    isOnline: User.ID => Boolean,
     onStart: String => Unit,
     historyApi: lidraughts.history.HistoryApi,
     trophyApi: lidraughts.user.TrophyApi,
@@ -174,7 +174,6 @@ final class Env(
   system.actorOf(Props(new StartedOrganizer(
     api = api,
     reminder = new TournamentReminder(system.lidraughtsBus),
-    isOnline = isOnline,
     socketMap = socketMap
   )))
 
