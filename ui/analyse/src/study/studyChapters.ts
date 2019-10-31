@@ -155,7 +155,7 @@ export function view(ctrl: StudyCtrl): VNode {
         hook: bind('click', ctrl.chapters.toggleNewForm, ctrl.redraw)
       }, [
         h('span', iconTag('O')),
-        h('h3.add', ctrl.trans.noarg('addNewChapter'))
+        h('h3', ctrl.trans.noarg('addNewChapter'))
       ])
     ] : []
   ));
