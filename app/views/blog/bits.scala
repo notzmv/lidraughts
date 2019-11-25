@@ -3,11 +3,34 @@ package views.html.blog
 import lidraughts.api.Context
 import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
+import lidraughts.blog.MiniPost
 import lidraughts.common.String.html.richText
 
 import controllers.routes
 
 object bits {
+
+  private[blog] def menu(year: Option[Int], hasActive: Boolean = true) =
+    st.nav(cls := "page-menu__menu subnav")(
+      a(cls := (year.isEmpty && hasActive).option("active"), href := routes.Blog.index())("Latest"),
+      lidraughts.blog.allYears map { y =>
+        a(cls := (year has y).option("active"), href := routes.Blog.year(y))(y)
+      }
+    )
+
+  private[blog] def postCard(
+    post: MiniPost,
+    postClass: Option[String] = None,
+    header: Tag = h2
+  )(implicit ctx: Context) =
+    a(cls := postClass)(href := routes.Blog.show(post.id, post.slug))(
+      st.img(src := post.image),
+      div(cls := "content")(
+        header(cls := "title")(post.title),
+        span(post.shortlede),
+        semanticDate(post.date)
+      )
+    )
 
   private[blog] def metas(doc: io.prismic.Document)(implicit ctx: Context, prismic: lidraughts.blog.BlogApi.Context) =
     div(cls := "meta-headline")(

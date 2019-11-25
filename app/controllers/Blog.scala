@@ -16,7 +16,7 @@ object Blog extends LidraughtsController {
 
   def index(page: Int, ref: Option[String]) = WithPrismic { implicit ctx => implicit prismic =>
     pageHit
-    blogApi.recent(prismic, page, lidraughts.common.MaxPerPage(10)) flatMap {
+    blogApi.recent(prismic, page, lidraughts.common.MaxPerPage(12)) flatMap {
       case Some(response) => fuccess(Ok(views.html.blog.index(response)))
       case _ => notFound
     }
@@ -53,14 +53,14 @@ object Blog extends LidraughtsController {
 
   def all = WithPrismic { implicit ctx => implicit prismic =>
     blogApi.byYear(prismic, lidraughts.blog.thisYear) map { posts =>
-      Ok(views.html.blog.all(lidraughts.blog.thisYear, posts))
+      Ok(views.html.blog.index.byYear(lidraughts.blog.thisYear, posts))
     }
   }
 
   def year(year: Int) = WithPrismic { implicit ctx => implicit prismic =>
     if (lidraughts.blog.allYears contains year)
       blogApi.byYear(prismic, year) map { posts =>
-        Ok(views.html.blog.all(year, posts))
+        Ok(views.html.blog.index.byYear(year, posts))
       }
     else notFound
   }
