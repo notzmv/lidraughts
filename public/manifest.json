@@ -1,9 +1,9 @@
 {
   "name": "lidraughts.org",
-  "short_name": "lidraughts.org",
-  "start_url": ".",
+  "short_name": "Lidraughts",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#317EFB",
+  "background_color": "#161512",
   "theme_color": "#161512",
   "description": "The (really) free, no-ads, open source draughts server.",
   "icons": [{
