@@ -15,7 +15,7 @@ object layout {
 
   object bits {
     val doctype = raw("<!doctype html>")
-    def htmlTag(implicit lang: Lang) = html(st.lang := lang.language)
+    def htmlTag(implicit lang: Lang) = html(st.lang := lang.code)
     val topComment = raw("""<!-- Lidraughts is open source, a fork of Lichess! See https://github.com/roepstoep/lidraughts -->""")
     val charset = raw("""<meta charset="utf-8">""")
     val viewport = raw("""<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>""")
