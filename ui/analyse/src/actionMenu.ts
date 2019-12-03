@@ -118,7 +118,7 @@ function studyButton(ctrl: AnalyseCtrl) {
         type: 'submit',
         'data-icon': '4'
       }
-    }, ctrl.trans.noarg('studyMenu'))
+    }, ctrl.trans.noarg('toStudy'))
   ]);
 }
 

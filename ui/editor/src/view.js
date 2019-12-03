@@ -32,7 +32,7 @@ function studyButton(ctrl, fen) {
       disabled: !ctrl.positionLooksLegit(),
       class: ctrl.positionLooksLegit() ? '' : 'disabled'
     },
-    ctrl.trans.noarg('studyMenu'))
+    ctrl.trans.noarg('toStudy'))
   ]);
 }
 

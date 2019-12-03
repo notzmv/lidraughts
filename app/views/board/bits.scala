@@ -52,6 +52,6 @@ object bits {
     trans.playWithTheMachine,
     trans.playWithAFriend,
     trans.analysis,
-    trans.studyMenu
+    trans.toStudy
   )
 }

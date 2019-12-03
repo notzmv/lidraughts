@@ -16,7 +16,7 @@ object create {
 
   def apply(data: lidraughts.study.DataForm.importGame.Data, owner: List[Study.IdName], contrib: List[Study.IdName])(implicit ctx: Context) =
     views.html.site.message(
-      title = trans.studyMenu.txt(),
+      title = trans.toStudy.txt(),
       icon = Some("4"),
       back = true,
       moreCss = cssTag("study.create").some
@@ -28,17 +28,17 @@ object create {
             input(tpe := "hidden", name := "fen", value := data.fenStr),
             input(tpe := "hidden", name := "pdn", value := data.pdnStr),
             input(tpe := "hidden", name := "variant", value := data.variantStr),
-            h2("So, where do you want to study that?"),
+            h2(trans.study.whereDoYouWantToStudyThat()),
             p(
-              submitButton(name := "as", value := "study", cls := "submit button large new text", dataIcon := "4")("New study")
+              submitButton(name := "as", value := "study", cls := "submit button large new text", dataIcon := "4")(trans.study.createStudy())
             ),
             div(cls := "studies")(
               div(
-                h2("My studies"),
+                h2(trans.study.myStudies()),
                 owner map studyButton
               ),
               div(
-                h2("Studies I contribute to"),
+                h2(trans.study.studiesIContributeTo()),
                 contrib map studyButton
               )
             )

@@ -49,7 +49,7 @@ private object jsI18n {
     trans.continueFromHere,
     trans.playWithTheMachine,
     trans.playWithAFriend,
-    trans.studyMenu,
+    trans.toStudy,
     trans.openingExplorer,
     trans.inlineNotation,
     trans.computerAnalysis,
