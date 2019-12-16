@@ -1,7 +1,7 @@
-import { h } from 'snabbdom'
-import { VNode } from 'snabbdom/vnode';
-import { Hooks } from 'snabbdom/hooks'
 import { Attrs } from 'snabbdom/modules/attributes'
+import { h } from 'snabbdom'
+import { Hooks } from 'snabbdom/hooks'
+import { VNode } from 'snabbdom/vnode';
 
 export function bind(eventName: string, f: (e: Event) => any, redraw?: () => void): Hooks {
   return onInsert(el =>
@@ -64,7 +64,7 @@ export function playerName(p) {
   ];
 }
 
-export function player(p, asLink: boolean, withRating: boolean, defender: boolean, withRatingDiff: boolean = true) {
+export function player(p, asLink: boolean, withRating: boolean, defender: boolean, withRatingDiff: boolean = true, leader: boolean = false) {
   let ratingDiff;
   if (p.ratingDiff > 0) ratingDiff = h('span.positive', {
     attrs: { 'data-icon': 'N' }
@@ -81,7 +81,11 @@ export function player(p, asLink: boolean, withRating: boolean, defender: boolea
       destroy: vnode => $.powerTip.destroy(vnode.elm as HTMLElement)
     }
   }, [
-    h('span.name' + (defender ? '.defender' : ''), defender ? { attrs: dataIcon('5') } : {}, fullName),
+    h(
+      'span.name' + (defender ? '.defender' : (leader ? '.leader' : '')),
+      defender ? { attrs: dataIcon('5') } : (
+        leader ? { attrs: dataIcon('8') } : {}
+      ), fullName),
     withRating ? h('span.progress', withRatingDiff ? [rating, ratingDiff] : [rating]) : null
   ]);
 }
