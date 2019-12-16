@@ -84,9 +84,17 @@ object crud {
       form3.group(form("clockTime"), raw("Clock time"), half = true)(form3.select(_, DataForm.clockTimeChoices)),
       form3.group(form("clockIncrement"), raw("Clock increment"), half = true)(form3.select(_, DataForm.clockIncrementChoices))
     ),
-    startPosition(form, draughts.variant.Standard),
-    startPosition(form, draughts.variant.Russian),
-
+    form3.split(
+      frag(
+        startPosition(form, draughts.variant.Standard),
+        startPosition(form, draughts.variant.Russian)
+      ),
+      form3.checkbox(
+        form("teamBattle"),
+        raw("Team battle"),
+        half = true
+      )
+    ),
     hr,
     h2("Conditions of entry"),
     tournament.form.condition(form, auto = false, Nil),
@@ -95,7 +103,7 @@ object crud {
   )
 
   private def startPosition(form: Form[_], v: draughts.variant.Variant)(implicit ctx: Context) =
-    form3.group(form("position_" + v.key), trans.startPosition(), klass = "position-" + v.key)(
+    form3.group(form("position_" + v.key), trans.startPosition(), klass = "position-" + v.key, half = true)(
       views.html.tournament.form.startingPosition(_, v)
     )
 

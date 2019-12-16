@@ -255,8 +255,10 @@ object Tournament extends LidraughtsController {
               CreateLimitPerUser(me.id, cost) {
                 CreateLimitPerIP(HTTPRequest lastRemoteAddress ctx.req, cost = 1) {
                   env.api.createTournament(setup, me, teams, getUserTeamIds) map { tour =>
-                    if (tour.teamBattle.isDefined) Redirect(routes.Tournament.teamBattleEdit(tour.id))
-                    else Redirect(routes.Tournament.show(tour.id))
+                    Redirect {
+                      if (tour.isTeamBattle) routes.Tournament.teamBattleEdit(tour.id)
+                      else routes.Tournament.show(tour.id)
+                    }
                   }
                 }(rateLimited)
               }(rateLimited)
