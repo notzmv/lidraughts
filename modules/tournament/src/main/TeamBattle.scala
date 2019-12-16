@@ -46,10 +46,10 @@ object TeamBattle {
 
     val fields = mapping(
       "teams" -> nonEmptyText,
-      "nbLeaders" -> number(min = 1, max = 10)
+      "nbLeaders" -> number(min = 1, max = 20)
     )(Setup.apply)(Setup.unapply)
       .verifying("We need at least 2 teams", s => s.potentialTeamIds.size > 1)
-      .verifying("In this version of team battles, no more than 10 teams can be allowed.", s => s.potentialTeamIds.size <= 10)
+      .verifying("In this version of team battles, no more than 10 teams can be allowed", s => s.potentialTeamIds.size <= 10)
 
     def edit(teams: List[String], nbLeaders: Int) = Form(fields) fill
       Setup(s"${teams mkString "\n"}\n", nbLeaders)
