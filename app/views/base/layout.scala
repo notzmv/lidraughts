@@ -14,7 +14,7 @@ import controllers.routes
 object layout {
 
   object bits {
-    val doctype = raw("<!doctype html>")
+    val doctype = raw("<!DOCTYPE html>")
     def htmlTag(implicit lang: Lang) = html(st.lang := lang.code)
     val topComment = raw("""<!-- Lidraughts is open source, a fork of Lichess! See https://github.com/roepstoep/lidraughts -->""")
     val charset = raw("""<meta charset="utf-8">""")
