@@ -218,14 +218,14 @@ export default function (data: StudyData, ctrl: AnalyseCtrl, tagTypes: TagTypes,
     ctrl.startCeval();
   };
 
-  function xhrReload(path?: Tree.Path) {
+  const xhrReload = throttle(700, (path?: Tree.Path) => {
     vm.loading = true;
     return xhr.reload(
       practice ? 'practice/load' : (ctrl.embed ? 'study/embed' : 'study'),
       data.id,
       vm.mode.sticky ? undefined : vm.chapterId
     ).then(d => onReload(d, path), li.reload);
-  };
+  });
 
   const onSetPath = throttle(300, (path: Tree.Path) => {
     if (vm.mode.sticky && path !== data.position.path) makeChange("setPath", addChapterId({
