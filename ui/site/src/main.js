@@ -429,7 +429,7 @@
         if ($('body').hasClass('blind-mode')) $input.one('focus', () => toggle());
       }
 
-      $('.user-autocomplete').each(() => {
+      $('.user-autocomplete').each(function() {
         const opts = {
           focus: 1,
           friend: $(this).data('friend'),
