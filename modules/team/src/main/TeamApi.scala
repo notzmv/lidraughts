@@ -199,10 +199,10 @@ final class TeamApi(
     cached.syncTeamIds(userId) contains teamId
 
   def belongsTo(teamId: Team.ID, userId: User.ID): Fu[Boolean] =
-    cached.teamIds(userId) map (_ contains teamId)
+    cached.teamIds(userId) dmap (_ contains teamId)
 
   def owns(teamId: Team.ID, userId: User.ID): Fu[Boolean] =
-    TeamRepo ownerOf teamId map (_ has userId)
+    TeamRepo ownerOf teamId dmap (_ has userId)
 
   def teamName(teamId: Team.ID): Option[String] = cached.name(teamId)
 
