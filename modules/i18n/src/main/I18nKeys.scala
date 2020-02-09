@@ -1,7 +1,7 @@
 // Generated with bin/trans-dump.js
 package lidraughts.i18n
 
-import I18nDb.{ Site, Arena, Emails, Learn, Activity, Coordinates, Study }
+import I18nDb.{ Site, Arena, Emails, Learn, Activity, Coordinates, Study, Tfa }
 
 // format: OFF
 object I18nKeys {
@@ -153,7 +153,6 @@ val `changeUsernameDescription` = new Translated("changeUsernameDescription", Si
 val `password` = new Translated("password", Site)
 val `changePassword` = new Translated("changePassword", Site)
 val `changeEmail` = new Translated("changeEmail", Site)
-val `twoFactorAuth` = new Translated("twoFactorAuth", Site)
 val `email` = new Translated("email", Site)
 val `passwordReset` = new Translated("passwordReset", Site)
 val `forgotPassword` = new Translated("forgotPassword", Site)
@@ -377,6 +376,7 @@ val `lastName` = new Translated("lastName", Site)
 val `biography` = new Translated("biography", Site)
 val `country` = new Translated("country", Site)
 val `countryOrRegion` = new Translated("countryOrRegion", Site)
+val `socialMediaLinks` = new Translated("socialMediaLinks", Site)
 val `linkSuggestions` = new Translated("linkSuggestions", Site)
 val `preferences` = new Translated("preferences", Site)
 val `inlineNotation` = new Translated("inlineNotation", Site)
@@ -1231,6 +1231,20 @@ val `nbChapters` = new Translated("nbChapters", Study)
 val `nbGames` = new Translated("nbGames", Study)
 val `nbMembers` = new Translated("nbMembers", Study)
 val `pasteYourPdnTextHereUpToNbGames` = new Translated("pasteYourPdnTextHereUpToNbGames", Study)
+}
+
+object tfa {
+val `twoFactorAuth` = new Translated("twoFactorAuth", Tfa)
+val `twoFactorHelp` = new Translated("twoFactorHelp", Tfa)
+val `twoFactorApp` = new Translated("twoFactorApp", Tfa)
+val `scanTheCode` = new Translated("scanTheCode", Tfa)
+val `enterPassword` = new Translated("enterPassword", Tfa)
+val `authenticationCode` = new Translated("authenticationCode", Tfa)
+val `ifYouLoseAccess` = new Translated("ifYouLoseAccess", Tfa)
+val `enableTwoFactor` = new Translated("enableTwoFactor", Tfa)
+val `disableTwoFactor` = new Translated("disableTwoFactor", Tfa)
+val `twoFactorEnabled` = new Translated("twoFactorEnabled", Tfa)
+val `twoFactorDisable` = new Translated("twoFactorDisable", Tfa)
 }
 
 }

@@ -37,7 +37,7 @@ object profile {
             form3.group(form(s"${rn}Rating"), trans.xRating(rn.toUpperCase), help = trans.ifNoneLeaveEmpty().some, half = true)(form3.input(_, typ = "number"))
           }
         ),
-        form3.group(form("links"), raw("Social media links "), help = trans.linkSuggestions().some) { f =>
+        form3.group(form("links"), trans.socialMediaLinks(), help = trans.linkSuggestions().some) { f =>
           form3.textarea(f)(rows := 5)
         },
         form3.action(form3.submit(trans.apply()))
