@@ -4,6 +4,7 @@ package html.plan
 import lidraughts.api.Context
 import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
+import lidraughts.common.Lang
 
 import controllers.routes
 
@@ -163,8 +164,8 @@ object features {
       )
     }
 
-  private def header(name: Frag) = thead(
-    st.tr(th(name), th("Free account"), th("Lidraughts Patron"))
+  private def header(name: Frag)(implicit lang: Lang) = thead(
+    st.tr(th(name), th(trans.patron.freeAccount()), th(trans.patron.lidraughtsPatron()))
   )
 
   private val unlimited = span(dataIcon := "E", cls := "is is-green text unlimited")("Unlimited")

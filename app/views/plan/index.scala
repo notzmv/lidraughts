@@ -9,6 +9,8 @@ import controllers.routes
 
 object index {
 
+  import trans.patron._
+
   def apply(
     email: Option[lidraughts.common.EmailAddress],
     stripePublicKey: String,
@@ -17,10 +19,8 @@ object index {
     bestIds: List[String]
   )(implicit ctx: Context) = {
 
-    val title = "Become a Patron of lidraughts.org"
-
     views.html.base.layout(
-      title = title,
+      title = becomePatron.txt(),
       moreCss = cssTag("plan"),
       moreJs = frag(
         script(src := "https://checkout.stripe.com/checkout.js"),
@@ -28,15 +28,15 @@ object index {
         embedJsUnsafe(s"""lidraughts.checkout("$stripePublicKey");""")
       ),
       openGraph = lidraughts.app.ui.OpenGraph(
-        title = title,
+        title = becomePatron.txt(),
         url = s"$netBaseUrl${routes.Plan.index.url}",
-        description = "Free draughts for everyone, forever!"
+        description = freeDraughts.txt()
       ).some,
       csp = defaultCsp.withStripe.some
     ) {
         main(cls := "page-menu plan")(
           st.aside(cls := "page-menu__menu recent-patrons")(
-            h2("New Patrons"),
+            h2(newPatrons()),
             div(cls := "list")(
               recentIds.map { userId =>
                 div(userIdLink(userId.some))
@@ -48,14 +48,12 @@ object index {
               div(cls := "banner one_time_active")(
                 iconTag(patronIconChar),
                 div(
-                  h1("Thank you for your donation!"),
-                  if (p.isLifetime) frag(
-                    "You have a ", strong("Lifetime Patron"), " account. That's pretty awesome!"
-                  )
+                  h1(thankYou()),
+                  if (p.isLifetime) youHaveLifetime()
                   else p.expiresAt.map { expires =>
                     frag(
-                      "You have a Patron account until ", showDate(expires), ".", br,
-                      "If not renewed, you will then be downgraded to free."
+                      patronUntil(showDate(expires)), br,
+                      ifNotRenewed()
                     )
                   }
                 ),
@@ -64,22 +62,16 @@ object index {
             } getOrElse div(cls := "banner moto")(
               iconTag(patronIconChar),
               div(
-                h1("Free draughts for everyone, forever!"),
-                p("No ads, no subscriptions; but open source and passion.")
+                h1(freeDraughts()),
+                p(noAdsNoSubs())
               ),
               iconTag(patronIconChar)
             ),
             div(cls := "box__pad")(
               div(cls := "wrapper")(
                 div(cls := "text")(
-                  p(
-                    "We are a small team of volunteers who believe in a free, ",
-                    "world-class draughts experience for anyone, anywhere."
-                  ),
-                  p(
-                    "We rely on support from people like you to make it possible. ",
-                    "If you've gotten something out of Lidraughts, please take a second to pitch in!"
-                  )
+                  p(weAreVolunteers()),
+                  p(weRelyOnSupport())
                 ),
                 div(cls := "content")(
 
@@ -139,24 +131,24 @@ object index {
 </form>"""),
 
                       patron.exists(_.isLifetime) option
-                        p(style := "text-align:center;margin-bottom:1em")("Make an extra donation?"),
+                        p(style := "text-align:center;margin-bottom:1em")(makeExtraDonation()),
 
                       st.group(cls := "radio buttons freq")(
                         div(
-                          st.title := s"Pay ${lidraughts.plan.Cents.lifetime.usd} once. Be a Lidraughts Patron forever!",
+                          st.title := payLifetimeOnce.txt(lidraughts.plan.Cents.lifetime.usd),
                           cls := List("lifetime-check" -> patron.exists(_.isLifetime)),
                           input(tpe := "radio", name := "freq", id := "freq_lifetime", patron.exists(_.isLifetime) option disabled, value := "lifetime"),
-                          label(`for` := "freq_lifetime")("Lifetime")
+                          label(`for` := "freq_lifetime")(lifetime())
                         ),
                         div(
-                          st.title := "Recurring billing, renewing your Patron Wings every month.",
+                          st.title := recurringBilling.txt(),
                           input(tpe := "radio", name := "freq", id := "freq_monthly", value := "monthly"),
-                          label(`for` := "freq_monthly")("Monthly")
+                          label(`for` := "freq_monthly")(monthly())
                         ),
                         div(
-                          st.title := "A single donation that grants you the Patron Wings for one month.",
+                          st.title := singleDonation.txt(),
                           input(tpe := "radio", name := "freq", id := "freq_onetime", checked, value := "onetime"),
-                          label(`for` := "freq_onetime")("One-time")
+                          label(`for` := "freq_onetime")(onetime())
                         )
                       ),
                       div(cls := "amount_choice")(
@@ -177,7 +169,7 @@ object index {
                             input(tpe := "radio", name := "plan",
                               id := "plan_other",
                               value := "other"),
-                            label(`for` := "plan_other")("Other")
+                            label(`for` := "plan_other")(otherAmount())
                           )
                         )
                       ),
@@ -190,18 +182,16 @@ object index {
                         )
                       ),
                       div(cls := "service")(
-                        // button(cls := "stripe button")("Credit Card"),
-                        button(cls := "paypal button")("Donate with PayPal")
+                        // button(cls := "stripe button")(withCreditCard()),
+                        button(cls := "paypal button")(withPaypal())
                       )
                     )
                 )
               ),
-              p(cls := "small_team")(
-                "We are a small team, so your support makes a huge difference!"
-              ),
+              p(cls := "small_team")(weAreSmallTeam()),
               faq,
               div(cls := "best_patrons")(
-                h2("The celebrated Patrons who make Lidraughts possible"),
+                h2(celebratedPatrons()),
                 div(cls := "list")(
                   bestIds.map { userId =>
                     div(userIdLink(userId.some))
@@ -216,33 +206,26 @@ object index {
 
   private def faq(implicit ctx: Context) = div(cls := "faq")(
     dl(
-      dt("Where does the money go?"),
+      dt(whereMoneyGoes()),
       dd(
-        "The servers that run lidraughts and the Scan engine analysis. ",
-        "Other operating costs such as mailgun and hosting.", br,
-        "Possibly we can have titled tournaments with real money prizes at some point in the future!"
+        serversAndExpenses()
       )
     ),
     dl(
-      dt("Can I change/cancel my monthly support?"),
+      dt(changeMonthlySupport()),
       dd(
-        "Yes, at any time. Login to your PayPal account and go to your automatic payments overview.", br,
-        "Or you can ", a(href := routes.Page.contact, target := "_blank")("contact Lidraughts support"), "."
+        changeOrContact(a(href := routes.Page.contact, target := "_blank")(contactSupport()))
       ),
-      dt("Other methods of donation?"),
+      dt(otherMethods()),
       dd(
-        "We also accept bank transfers. Please send an e-mail to ",
-        contactEmailLink,
-        " for details."
+        bankTransfers(contactEmailLink)
       )
     ),
     dl(
-      dt("Are some features reserved to Patrons?"),
+      dt(patronFeatures()),
       dd(
-        a(href := routes.Plan.features, target := "_blank")("No"), ", because ",
-        "Lidraughts is entirely free, forever, and for everyone. That's a promise. ",
-        "But Patrons get bragging rights with a cool new profile icon.", br,
-        "See the ", a(href := routes.Plan.features, target := "_blank")("detailed features comparison"), "."
+        noPatronFeatures(), br,
+        a(href := routes.Plan.features, target := "_blank")(featuresComparison())
       )
     )
   )
