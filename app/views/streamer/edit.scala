@@ -12,6 +12,8 @@ import controllers.routes
 
 object edit {
 
+  import trans.streamer._
+
   def apply(
     s: lidraughts.streamer.Streamer.WithUserAndStream,
     form: Form[_],
@@ -21,7 +23,7 @@ object edit {
     val modsOnly = raw("Moderators only").some
 
     views.html.base.layout(
-      title = s"${s.user.titleUsername} streamer page",
+      title = s"${s.user.titleUsername} ${lidraughtsStreamer.txt()}",
       moreCss = cssTag("streamer.form"),
       moreJs = jsTag("streamer.form.js")
     ) {
@@ -30,16 +32,16 @@ object edit {
           div(cls := "page-menu__content box streamer-edit")(
             if (ctx.is(s.user)) div(cls := "streamer-header")(
               if (s.streamer.hasPicture)
-                a(target := "_blank", href := routes.Streamer.picture, title := "Change/delete your picture")(
+                a(target := "_blank", href := routes.Streamer.picture, title := changePicture.txt())(
                 bits.pic(s.streamer, s.user)
               )
               else div(cls := "picture-create")(
                 ctx.is(s.user) option
-                  a(target := "_blank", cls := "button", href := routes.Streamer.picture)("Upload a picture")
+                  a(target := "_blank", cls := "button", href := routes.Streamer.picture)(uploadPicture())
               ),
               div(cls := "overview")(
                 h1(s.streamer.name),
-                bits.rules()
+                bits.rules
               )
             )
             else header(s, none),
@@ -50,36 +52,27 @@ object edit {
                   cls := s"status is${granted ?? "-green"}",
                   dataIcon := (if (granted) "E" else "")
                 )(
-                    if (granted) frag(
-                      "Your stream is approved and listed on ",
-                      a(href := routes.Streamer.index())("lidraughts streamers list"), "."
-                    )
+                    if (granted) approved()
                     else frag(
-                      if (s.streamer.approval.requested) frag(
-                        "Your stream is being reviewed by moderators, and will soon be listed on ",
-                        a(href := routes.Streamer.index())("lidraughts streamers list"), "."
-                      )
+                      if (s.streamer.approval.requested) pendingReview()
                       else frag(
-                        if (s.streamer.completeEnough) frag(
-                          "When you are ready to be listed on ",
-                          a(href := routes.Streamer.index())("lidraughts streamers list"), ", ",
+                        if (s.streamer.completeEnough) whenReady(
                           postForm(action := routes.Streamer.approvalRequest)(
-                            button(tpe := "submmit", cls := "button", (!ctx.is(s.user)) option disabled)(
-                              "request a moderator review"
+                            button(tpe := "submit", cls := "button", (!ctx.is(s.user)) option disabled)(
+                              requestReview()
                             )
                           )
                         )
-                        else "Please fill in your streamer information, and upload a picture."
+                        else pleaseFillIn()
                       )
                     )
                   ),
                 ctx.is(s.user) option div(cls := "status")(
-                  strong("If your stream is in another language than English"),
-                  ", include the correct language tag (",
-                  a(href := "https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes")("2-letter ISO 639-1 code"),
-                  " enclosed in square brackets) at the start of your stream title. ",
-                  """As examples, include "[RU]" for Russian, "[TR]" for Turkish, "[FR]" for French, etc. """,
-                  "If your stream is in English, there is no need to include a language tag."
+                  anotherLanguage(
+                    a(href := "https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes")(
+                      "2-letter ISO 639-1 code"
+                    )
+                  )
                 ),
                 modData.map {
                   case (log, notes) => div(cls := "mod_log status")(
@@ -113,28 +106,28 @@ object edit {
                 postForm(cls := "form3", action := s"${routes.Streamer.edit}${!ctx.is(s.user) ?? s"?u=${s.user.id}"}")(
                   isGranted(_.Streamers) option div(cls := "mod")(
                     form3.split(
-                      form3.checkbox(form("approval.granted"), raw("Publish on the streamers list"), help = modsOnly, half = true),
-                      form3.checkbox(form("approval.requested"), raw("Active approval request"), help = modsOnly, half = true)
+                      form3.checkbox(form("approval.granted"), frag("Publish on the streamers list"), help = modsOnly, half = true),
+                      form3.checkbox(form("approval.requested"), frag("Active approval request"), help = modsOnly, half = true)
                     ),
                     form3.split(
-                      form3.checkbox(form("approval.chat"), raw("Embed stream chat too"), help = modsOnly, half = true),
+                      form3.checkbox(form("approval.chat"), frag("Embed stream chat too"), help = modsOnly, half = true),
                       if (granted)
-                        form3.checkbox(form("approval.featured"), raw("Feature on lidraughts homepage"), help = modsOnly, half = true)
+                        form3.checkbox(form("approval.featured"), frag("Feature on lidraughts homepage"), help = modsOnly, half = true)
                       else
-                        form3.checkbox(form("approval.ignored"), raw("Ignore further approval requests"), help = modsOnly, half = true)
+                        form3.checkbox(form("approval.ignored"), frag("Ignore further approval requests"), help = modsOnly, half = true)
                     ),
                     form3.action(form3.submit(trans.apply()))
                   ),
                   form3.split(
-                    form3.group(form("twitch"), raw("Your Twitch username or URL"), help = raw("Optional. Leave empty if none").some, half = true)(form3.input(_)),
-                    form3.group(form("youTube"), raw("Your YouTube channel ID or URL"), help = raw("Optional. Leave empty if none").some, half = true)(form3.input(_))
+                    form3.group(form("twitch"), twitchUsername(), help = optionalOrEmpty().some, half = true)(form3.input(_)),
+                    form3.group(form("youTube"), youtubeChannel(), help = optionalOrEmpty().some, half = true)(form3.input(_))
                   ),
                   form3.split(
-                    form3.group(form("name"), raw("Your streamer name on lidraughts"), help = raw("Keep it short: 25 characters max").some, half = true)(form3.input(_)),
-                    form3.checkbox(form("listed"), raw("Visible on the streamers page"), help = raw("When approved by moderators").some, half = true)
+                    form3.group(form("name"), streamerName(), help = keepItShort(25).some, half = true)(form3.input(_)),
+                    form3.checkbox(form("listed"), visibility(), help = whenApproved().some, half = true)
                   ),
-                  form3.group(form("headline"), raw("Headline"), help = raw("In one sentence, tell us about your stream").some)(form3.input(_)),
-                  form3.group(form("description"), raw("Long description"))(form3.textarea(_)(rows := 10)),
+                  form3.group(form("headline"), headline(), help = tellUsAboutTheStream().some)(form3.input(_)),
+                  form3.group(form("description"), longDescription())(form3.textarea(_)(rows := 10)),
                   form3.actions(
                     a(href := routes.Streamer.show(s.user.username))(trans.cancel()),
                     form3.submit(trans.apply())

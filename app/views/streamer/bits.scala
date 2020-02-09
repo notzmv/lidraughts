@@ -1,5 +1,7 @@
 package views.html.streamer
 
+import play.api.i18n.Lang
+
 import controllers.routes
 import lidraughts.api.Context
 import lidraughts.app.templating.Environment._
@@ -8,19 +10,21 @@ import lidraughts.user.User
 
 object bits {
 
-  def create(me: User)(implicit ctx: Context) = views.html.site.message(
-    title = "Become a lidraughts streamer",
+  import trans.streamer._
+
+  def create(implicit ctx: Context) = views.html.site.message(
+    title = becomeStreamer.txt(),
     icon = Some(""),
     back = false,
     moreCss = cssTag("streamer.form").some
   )(
       postForm(cls := "streamer-new", action := routes.Streamer.create)(
-        h2("Do you have a Twitch or YouTube stream, ", me.username, "?"),
+        h2(doYouHaveStream()),
         br, br,
-        bits.rules(),
+        bits.rules,
         br, br,
         p(style := "text-align: center")(
-          submitButton(cls := "button button-fat text", dataIcon := "")("Here we go!")
+          submitButton(cls := "button button-fat text", dataIcon := "")(hereWeGo())
         )
       )
     )
@@ -31,27 +35,27 @@ object bits {
       height := size,
       cls := "picture",
       src := dbImageUrl(path.value),
-      alt := s"${u.titleUsername} lidraughts streamer"
+      alt := s"${u.titleUsername} Lidraughts streamer picture"
     )
     case _ => img(
       width := size,
       height := size,
       cls := "default picture",
       src := staticUrl("images/streamer-nopic.svg"),
-      alt := "Default streamer picture"
+      alt := "Default Lidraughts streamer picture"
     )
   }
 
   def menu(active: String, s: Option[lidraughts.streamer.Streamer.WithUser])(implicit ctx: Context) =
     st.nav(cls := "subnav")(
-      a(cls := active.active("index"), href := routes.Streamer.index())("All streamers"),
+      a(cls := active.active("index"), href := routes.Streamer.index())(allStreamers()),
       s.map { st =>
         frag(
           a(cls := active.active("show"), href := routes.Streamer.show(st.streamer.id.value))(st.streamer.name),
           (ctx.is(st.user) || isGranted(_.Streamers)) option
-            a(cls := active.active("edit"), href := s"${routes.Streamer.edit}?u=${st.streamer.id.value}")("Edit streamer page")
+            a(cls := active.active("edit"), href := s"${routes.Streamer.edit}?u=${st.streamer.id.value}")(editPage())
         )
-      } getOrElse a(href := routes.Streamer.edit)("Your streamer page"),
+      } getOrElse a(href := routes.Streamer.edit)(yourPage()),
       isGranted(_.Streamers) option a(cls := active.active("requests"), href := s"${routes.Streamer.index()}?requests=1")("Approval requests"),
       a(dataIcon := "", cls := "text", href := "/blog/XsAf0xIAACYAopgo/youtube--twitch-integration-on-lidraughts")("Streamer community")
     )
@@ -65,9 +69,9 @@ object bits {
       )
     }
 
-  def contextual(userId: User.ID): Frag =
+  def contextual(userId: User.ID)(implicit ctx: Context): Frag =
     a(cls := "context-streamer text", dataIcon := "", href := routes.Streamer.show(userId))(
-      usernameOrId(userId), " is streaming"
+      xIsStreaming(usernameOrId(userId))
     )
 
   object svg {
@@ -95,10 +99,19 @@ object bits {
 """)
   }
 
-  def rules = ul(cls := "streamer-rules")(
-    li("Be listed as a lidraughts streamer."),
-    li(title := "For example: Blitz battle on lidraughts.org")("We will list your stream on lidraughts when you stream with the keyword \"lidraughts.org\" in the stream title."),
-    li("Notify your lidraughts followers when you start streaming."),
-    li("Promote your stream in your games and tournaments.")
+  def rules(implicit ctx: Context) = ul(cls := "streamer-rules")(
+    h2(trans.streamer.rules()),
+    ul(
+      li(rule1()),
+      li(rule2()),
+      li(rule3())
+    ),
+    h2(perks()),
+    ul(
+      li(perk1()),
+      li(perk2()),
+      li(perk3()),
+      li(perk4())
+    )
   )
 }

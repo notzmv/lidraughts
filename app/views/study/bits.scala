@@ -60,7 +60,7 @@ object bits {
     )
   )
 
-  def streamers(streams: List[lidraughts.streamer.Stream]) =
+  def streamers(streams: List[lidraughts.streamer.Stream])(implicit ctx: Context) =
     streams.nonEmpty option div(cls := "streamers none")(
       streams.map { s =>
         views.html.streamer.bits.contextual(s.streamer.userId)

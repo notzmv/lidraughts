@@ -119,7 +119,7 @@ object Streamer extends LidraughtsController {
   private def AsStreamer(f: StreamerModel.WithUser => Fu[Result])(implicit ctx: Context) =
     ctx.me.fold(notFound) { me =>
       api.find(get("u").ifTrue(isGranted(_.Streamers)) | me.id) flatMap {
-        _.fold(Ok(html.streamer.bits.create(me)).fuccess)(f)
+        _.fold(Ok(html.streamer.bits.create).fuccess)(f)
       }
     }
 
