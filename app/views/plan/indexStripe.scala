@@ -8,66 +8,75 @@ import controllers.routes
 
 object indexStripe {
 
+  import trans.patron._
+
   private val dataForm = attr("data-form")
 
   def apply(me: lidraughts.user.User, patron: lidraughts.plan.Patron, info: lidraughts.plan.MonthlyCustomerInfo)(implicit ctx: Context) =
     views.html.base.layout(
-      title = "Thank you for your support!",
+      title = thankYou.txt(),
       moreCss = cssTag("plan"),
       moreJs = jsTag("plan.js")
     ) {
         main(cls := "box box-pad plan")(
           h1(
             userLink(me), " • ",
-            if (patron.isLifetime) strong("Lifetime Lidraughts Patron")
-            else frag("Lidraughts Patron for ", pluralize("month", me.plan.months))
+            if (patron.isLifetime) strong(lifetimePatron())
+            else patronForMonths(me.plan.months)
           ),
           table(cls := "all")(
             tbody(
               tr(
-                th("Current status"),
+                th(currentStatus()),
                 td(
-                  "You support lidraughts.org with ", strong(info.subscription.plan.usd.toString), " per month.",
-                  span(cls := "thanks")("Thank you very much for your help. You rock!")
+                  youSupportWith(strong(info.subscription.plan.usd.toString)),
+                  span(cls := "thanks")(tyvm())
                 )
               ),
               tr(
-                th("Next payment"),
+                th(nextPayment()),
                 td(
-                  "You will be charged ", strong(info.nextInvoice.usd.toString), " on ", showDate(info.nextInvoice.dateTime), ".",
+                  youWillBeChargedXOnY(
+                    strong(info.nextInvoice.usd.toString),
+                    showDate(info.nextInvoice.dateTime)
+                  ),
                   br,
-                  a(href := s"${routes.Plan.list()}#onetime")("Make an additional donation now")
+                  a(href := s"${routes.Plan.list()}#onetime")(makeAdditionalDonation())
                 )
               ),
               tr(
-                th("Update"),
+                th(update()),
                 td(cls := "change")(
-                  a(dataForm := "switch")("Change the monthly amount (", info.subscription.plan.usd.toString, ")"),
-                  " or ", a(dataForm := "cancel")("cancel your support"),
+                  xOrY(
+                    a(dataForm := "switch")(
+                      changeMonthlyAmount(info.subscription.plan.usd.toString)
+                    ),
+                    a(dataForm := "cancel")(cancelSupport())
+                  ),
                   postForm(cls := "switch", action := routes.Plan.switch)(
-                    p("Decide what Lidraughts is worth to you:"),
+                    p(decideHowMuch()),
                     "EUR $ ",
                     input(tpe := "number", min := 1, max := 100000, step := "0.01", name := "usd", value := info.subscription.plan.usd.toString),
                     submitButton(cls := "button")(trans.apply()),
-                    a(dataForm := "switch")("Nevermind")
+                    a(dataForm := "switch")(trans.cancel())
                   ),
                   postForm(cls := "cancel", action := routes.Plan.cancel)(
-                    p("Withdraw your credit card and stop payments:"),
-                    submitButton(cls := "button button-red")("No longer support Lidraughts"),
-                    a(dataForm := "cancel")("Nevermind :)")
+                    p(stopPayments()),
+                    submitButton(cls := "button button-red")(noLongerSupport()),
+                    a(dataForm := "cancel")(trans.cancel())
                   )
                 )
               ),
               tr(
-                th("Payment history"),
+                th(paymentHistory()),
                 td(
                   table(cls := "slist payments")(
                     thead(
                       tr(
                         th,
                         th("ID"),
-                        th("Date"),
-                        th("Amount")
+                        th(trans.date()),
+                        th(amount())
                       )
                     ),
                     tbody(
@@ -85,7 +94,7 @@ object indexStripe {
               ),
               tr(
                 th,
-                td(a(href := routes.Plan.list)("View other Lidraughts Patrons"))
+                td(a(href := routes.Plan.list)(viewOthers()))
               )
             )
           )

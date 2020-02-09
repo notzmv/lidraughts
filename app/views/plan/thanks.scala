@@ -8,36 +8,33 @@ import controllers.routes
 
 object thanks {
 
+  import trans.patron._
+
   def apply(patron: Option[lidraughts.plan.Patron], customer: Option[lidraughts.plan.StripeCustomer])(implicit ctx: Context) =
     views.html.base.layout(
       moreCss = cssTag("page"),
-      title = "Thank you for your support!"
+      title = thankYou.txt()
     ) {
         main(cls := "page-small page box box-pad")(
 
-          h1(cls := "text", dataIcon := patronIconChar)("Thank you for your support!"),
+          h1(cls := "text", dataIcon := patronIconChar)(thankYou()),
 
           div(cls := "body")(
-            p("Thank you for helping us build Lidraughts. ", strong("You rock!")),
-            p(
-              "Your transaction has been completed, ",
-              "and a receipt for your donation has been emailed to you."
-            ),
+            p(tyvm()),
+            p(transactionCompleted()),
             patron.map { pat =>
               if (pat.payPal.??(_.renew)) frag(
                 p(
-                  "You now have a permanent Patron account.", br,
+                  permanentPatron(), br,
                   ctx.me.map { me =>
-                    frag("Check out your ", a(href := routes.User.show(me.username))("profile page"), "!")
+                    a(href := routes.User.show(me.username))(checkOutProfile())
                   }
                 ),
-                p(
-                  "In one month, PayPal will automatically renew your payment. ",
-                  "To cancel your monthly support, login to your PayPal account and go to automatic payments."
-                )
+                p(paypalRenew())
               )
               else {
                 if (customer.??(_.renew)) frag(
+                  /* Unused, so not translated */
                   p(
                     "Note that your ", a(href := routes.Plan.index)("Patron page"),
                     " only shows invoices for your monthly subscription."
@@ -46,26 +43,19 @@ object thanks {
                 )
                 else frag(
                   if (pat.isLifetime) p(
-                    "You are now a lifetime Lidraughts Patron!", br,
+                    nowLifetime(), br,
                     ctx.me.map { me =>
-                      frag("Check out your ", a(href := routes.User.show(me.username))("profile page"), ".")
+                      a(href := routes.User.show(me.username))(checkOutProfile())
                     }
                   )
                   else frag(
                     p(
-                      "You are now a Lidraughts Patron for one month!", br,
+                      nowOneMonth(), br,
                       ctx.me.map { me =>
-                        frag("Check out your ", a(href := routes.User.show(me.username))("profile page"), ".")
+                        a(href := routes.User.show(me.username))(checkOutProfile())
                       }
                     ),
-                    p(
-                      "In one month, you will ", strong("not"), " be charged again, ",
-                      "and your Lidraughts account will be downgraded to free."
-                    ),
-                    p(
-                      "To get a permanent Patron account, please consider making a ",
-                      a(href := routes.Plan.index)("monthly donation"), "."
-                    )
+                    p(downgradeNextMonth())
                   )
                 )
               }
