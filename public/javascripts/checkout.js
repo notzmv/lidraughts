@@ -31,7 +31,7 @@ lidraughts.checkout = function(publicKey) {
 
   $checkout.find('group.amount .other label').on('click', function() {
     var amount;
-    var raw = prompt("Please enter an amount in EUR");
+    var raw = prompt($(this).attr('title'));
     try {
       amount = parseFloat(raw.replace(',', '.').replace(/[^0-9\.]/gim, ''));
     } catch (e) {
@@ -39,7 +39,7 @@ lidraughts.checkout = function(publicKey) {
     }
     var cents = Math.round(amount * 100);
     if (!cents) {
-      $(this).text('Other');
+      $(this).text($(this).data('trans-other'));
       $checkout.find('#plan_monthly_1000').click();
       return false;
     }

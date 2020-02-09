@@ -169,7 +169,11 @@ object index {
                             input(tpe := "radio", name := "plan",
                               id := "plan_other",
                               value := "other"),
-                            label(`for` := "plan_other")(otherAmount())
+                            label(
+                              `for` := "plan_other",
+                              title := pleaseEnterAmount.txt(),
+                              attr("data-trans-other") := otherAmount.txt()
+                            )(otherAmount())
                           )
                         )
                       ),

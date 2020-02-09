@@ -23,6 +23,7 @@
   <string name="onetime">One-time</string>
   <string name="singleDonation">A single donation that grants you the Patron Wings for one month.</string>
   <string name="otherAmount">Other</string>
+  <string name="pleaseEnterAmount">Please enter an amount in EUR</string>
   <string name="withCreditCard">Credit Card</string>
   <string name="withPaypal">Donate with PayPal</string>
   <string name="weAreSmallTeam">We are a small team, so your support makes a huge difference!</string>
