@@ -42,6 +42,7 @@ object header {
           a(cls := "service lidraughts", href := routes.User.show(s.user.username))(
             bits.svg.lidraughts,
             " ",
+            netBaseUrl,
             routes.User.show(s.user.username).url
           )
         ),
