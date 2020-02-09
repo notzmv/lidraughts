@@ -1,7 +1,7 @@
 // Generated with bin/trans-dump.js
 package lidraughts.i18n
 
-import I18nDb.{ Site, Arena, Emails, Learn, Activity, Coordinates, Study, Tfa, Team, Swiss }
+import I18nDb.{ Site, Arena, Broadcast, Emails, Learn, Activity, Coordinates, Study, Tfa, Team, Swiss }
 
 // format: OFF
 object I18nKeys {
@@ -1300,6 +1300,27 @@ val `nbRounds` = new Translated("nbRounds", Swiss)
 val `nextRound` = new Translated("nextRound", Swiss)
 val `numberOfRounds` = new Translated("numberOfRounds", Swiss)
 val `scheduleTheNextRound` = new Translated("scheduleTheNextRound", Swiss)
+}
+
+object broadcast {
+val `broadcasts` = new Translated("broadcasts", Broadcast)
+val `liveBroadcasts` = new Translated("liveBroadcasts", Broadcast)
+val `newBroadcast` = new Translated("newBroadcast", Broadcast)
+val `ongoing` = new Translated("ongoing", Broadcast)
+val `upcoming` = new Translated("upcoming", Broadcast)
+val `completed` = new Translated("completed", Broadcast)
+val `eventName` = new Translated("eventName", Broadcast)
+val `eventDescription` = new Translated("eventDescription", Broadcast)
+val `fullDescription` = new Translated("fullDescription", Broadcast)
+val `fullDescriptionHelp` = new Translated("fullDescriptionHelp", Broadcast)
+val `sourceUrl` = new Translated("sourceUrl", Broadcast)
+val `sourceUrlHelp` = new Translated("sourceUrlHelp", Broadcast)
+val `roundNumber` = new Translated("roundNumber", Broadcast)
+val `startDate` = new Translated("startDate", Broadcast)
+val `startDateHelp` = new Translated("startDateHelp", Broadcast)
+val `credits` = new Translated("credits", Broadcast)
+val `cloneBroadcast` = new Translated("cloneBroadcast", Broadcast)
+val `resetBroadcast` = new Translated("resetBroadcast", Broadcast)
 }
 
 }

@@ -15,6 +15,7 @@ object I18nDb {
   case object Tfa extends Ref
   case object Team extends Ref
   case object Swiss extends Ref
+  case object Broadcast extends Ref
 
   val site: Messages = lidraughts.i18n.db.site.Registry.load
   val arena: Messages = lidraughts.i18n.db.arena.Registry.load
@@ -26,6 +27,7 @@ object I18nDb {
   val tfa: Messages = lidraughts.i18n.db.tfa.Registry.load
   val team: Messages = lidraughts.i18n.db.team.Registry.load
   val swiss: Messages = lidraughts.i18n.db.swiss.Registry.load
+  val broadcast: Messages = lidraughts.i18n.db.broadcast.Registry.load
 
   def apply(ref: Ref): Messages = ref match {
     case Site => site
@@ -38,6 +40,7 @@ object I18nDb {
     case Tfa => tfa
     case Team => team
     case Swiss => swiss
+    case Broadcast => broadcast
   }
 
   val langs: Set[Lang] = site.keys.map(Lang.apply)(scala.collection.breakOut)
