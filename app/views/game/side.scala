@@ -16,7 +16,7 @@ object side {
   def apply(
     pov: lidraughts.game.Pov,
     initialFen: Option[draughts.format.FEN],
-    tour: Option[lidraughts.tournament.Tournament],
+    tour: Option[lidraughts.tournament.TourAndTeamVs],
     simul: Option[lidraughts.simul.Simul],
     userTv: Option[lidraughts.user.User] = None,
     bookmarked: Boolean
@@ -28,7 +28,7 @@ object side {
   def meta(
     pov: lidraughts.game.Pov,
     initialFen: Option[draughts.format.FEN],
-    tour: Option[lidraughts.tournament.Tournament],
+    tour: Option[lidraughts.tournament.TourAndTeamVs],
     simul: Option[lidraughts.simul.Simul],
     userTv: Option[lidraughts.user.User] = None,
     bookmarked: Boolean
@@ -77,8 +77,11 @@ object side {
         ),
         div(cls := "game__meta__players")(
           game.players.map { p =>
-            div(cls := s"player color-icon is ${p.color.name} text")(
-              playerLink(p, withOnline = false, withDiff = true, withBerserk = true)
+            frag(
+              div(cls := s"player color-icon is ${p.color.name} text")(
+                playerLink(p, withOnline = false, withDiff = true, withBerserk = true)
+              ),
+              tour.flatMap(_.teamVs).map(_.teams(p.color)) map { teamLink(_, false)(cls := "team") }
             )
           }
         )
@@ -103,8 +106,8 @@ object side {
 
       tour.map { t =>
         st.section(cls := "game__tournament")(
-          a(cls := "text", dataIcon := "g", href := routes.Tournament.show(t.id))(t.fullName),
-          div(cls := "clock", dataTime := t.secondsToFinish)(div(cls := "time")(t.clockStatus))
+          a(cls := "text", dataIcon := "g", href := routes.Tournament.show(t.tour.id))(t.tour.fullName),
+          div(cls := "clock", dataTime := t.tour.secondsToFinish)(div(cls := "time")(t.tour.clockStatus))
         )
       } orElse game.tournamentId.map { tourId =>
         st.section(cls := "game__tournament-link")(tournamentLink(tourId))

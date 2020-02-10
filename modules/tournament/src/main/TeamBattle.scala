@@ -23,6 +23,8 @@ object TeamBattle {
 
   def init(teamId: TeamId) = TeamBattle(Set(teamId), 5)
 
+  case class TeamVs(teams: draughts.Color.Map[TeamId])
+
   case class RankedTeam(
       rank: Int,
       teamId: TeamId,

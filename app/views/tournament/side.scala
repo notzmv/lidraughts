@@ -73,7 +73,7 @@ object side {
             "refused" -> !v.verdict.accepted
           ))(v.condition match {
             case lidraughts.tournament.Condition.TeamMember(teamId, teamName) =>
-              trans.mustBeInTeam(teamLink(teamId, lidraughts.common.String.html.escapeHtml(teamName), withIcon = false))
+              trans.mustBeInTeam(teamLinkWithName(teamId, lidraughts.common.String.html.escapeHtml(teamName), withIcon = false))
             case c => c.name(ctx.lang)
           })
         }

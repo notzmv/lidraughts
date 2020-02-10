@@ -42,7 +42,7 @@ object bits {
   def sides(
     pov: Pov,
     initialFen: Option[draughts.format.FEN],
-    tour: Option[lidraughts.tournament.Tournament],
+    tour: Option[lidraughts.tournament.TourAndTeamVs],
     cross: Option[lidraughts.game.Crosstable.WithMatchup],
     simul: Option[lidraughts.simul.Simul],
     userTv: Option[lidraughts.user.User] = None,

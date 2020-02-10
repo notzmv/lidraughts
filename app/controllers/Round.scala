@@ -8,7 +8,7 @@ import lidraughts.app._
 import lidraughts.chat.Chat
 import lidraughts.common.HTTPRequest
 import lidraughts.game.{ Pov, GameRepo, Game => GameModel, PdnDump, PlayerRef }
-import lidraughts.tournament.{ TourMiniView, Tournament => Tour }
+import lidraughts.tournament.{ Tournament => Tour }
 import lidraughts.user.{ User => UserModel }
 import views._
 
@@ -62,7 +62,7 @@ object Round extends LidraughtsController with TheftPrevention {
   private def renderPlayer(pov: Pov)(implicit ctx: Context): Fu[Result] = negotiate(
     html = if (!pov.game.started) notFound
     else PreventTheft(pov) {
-      myTour(pov.game.tournamentId, true) flatMap { tour =>
+      Env.tournament.api.miniView(pov.game, true) flatMap { tour =>
         (pov.game.simulId ?? Env.simul.repo.find) flatMap { simul =>
           Game.preloadUsers(pov.game) zip
             getPlayerChat(pov.game, tour.map(_.tour), simul) zip
@@ -205,7 +205,7 @@ object Round extends LidraughtsController with TheftPrevention {
           if (getBool("sudo") && isGranted(_.SuperAdmin)) Redirect(routes.Round.player(pov.fullId)).fuccess
           else if (pov.game.replayable) Analyse.replay(pov, userTv = userTv, userTvGameId = userTvGameId)
           else if (HTTPRequest.isHuman(ctx.req))
-            myTour(pov.game.tournamentId, false) zip
+            Env.tournament.api.miniView(pov.game, false) zip
               (pov.game.simulId ?? Env.simul.repo.find) zip
               getWatcherChat(pov.game) zip
               (ctx.noBlind ?? Env.game.crosstableApi.withMatchup(pov.game)) zip
@@ -234,9 +234,6 @@ object Round extends LidraughtsController with TheftPrevention {
         }
       ) map NoCache
     }
-
-  private def myTour(tourId: Option[String], withTop: Boolean): Fu[Option[TourMiniView]] =
-    tourId ?? { Env.tournament.api.miniView(_, withTop) }
 
   private[controllers] def getWatcherChat(game: GameModel)(implicit ctx: Context): Fu[Option[lidraughts.chat.UserChat.Mine]] = {
     ctx.noKid && ctx.me.fold(true)(Env.chat.panic.allowed) && {
@@ -276,7 +273,7 @@ object Round extends LidraughtsController with TheftPrevention {
 
   def sides(gameId: String, color: String) = Open { implicit ctx =>
     OptionFuResult(proxyPov(gameId, color)) { pov =>
-      (pov.game.tournamentId ?? lidraughts.tournament.TournamentRepo.byId) zip
+      Env.tournament.api.withTeamVs(pov.game) zip
         (pov.game.simulId ?? Env.simul.repo.find) zip
         GameRepo.initialFen(pov.game) zip
         Env.game.crosstableApi.withMatchup(pov.game) zip

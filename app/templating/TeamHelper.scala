@@ -16,10 +16,10 @@ trait TeamHelper {
 
   def teamIdToName(id: String): Frag = StringFrag(api.teamName(id).getOrElse(id))
 
-  def teamLink(id: String, withIcon: Boolean = true): Frag =
-    teamLink(id, teamIdToName(id), withIcon)
+  def teamLink(id: String, withIcon: Boolean = true) =
+    teamLinkWithName(id, teamIdToName(id), withIcon)
 
-  def teamLink(id: String, name: Frag, withIcon: Boolean): Frag = a(
+  def teamLinkWithName(id: String, name: Frag, withIcon: Boolean) = a(
     href := routes.Team.show(id),
     dataIcon := withIcon.option("f"),
     cls := withIcon option "text"
