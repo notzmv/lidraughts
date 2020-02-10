@@ -26,9 +26,11 @@ private[forum] final class Recent(
 
   def invalidate: Unit = cache.invalidateAll
 
+  private val defaultLang = "en"
+
   private def userCacheKey(user: Option[User], getTeams: GetTeamIds): Fu[String] =
     (user.map(_.id) ?? getTeams).map { teamIds =>
-      user.fold("en")(_.langs.mkString(",")) :: {
+      user.fold(defaultLang)(u => (defaultLang :: u.lang.filter(defaultLang !=).toList).mkString(",")) :: {
         (user.??(_.troll) ?? List("[troll]")) :::
           (if (user ?? MasterGranter(Permission.StaffForum)) staffCategIds else publicCategIds) :::
           (teamIds.map(teamSlug)(scala.collection.breakOut): List[String])
