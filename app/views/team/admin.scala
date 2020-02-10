@@ -8,17 +8,20 @@ import controllers.routes
 
 object admin {
 
+  import trans.team._
+
   def changeOwner(t: lidraughts.team.Team, userIds: Iterable[lidraughts.user.User.ID])(implicit ctx: Context) = {
 
-    val title = s"Change owner of Team ${t.name}"
+    val title = s"${t.name} - ${appointOwner.txt()}"
 
     bits.layout(title = title) {
       main(cls := "page-menu page-small")(
         bits.menu(none),
         div(cls := "page-menu__content box box-pad")(
           h1(title),
-          p("Who do you want to make owner of this team?"),
-          br, br,
+          p(trans.team.changeOwner()),
+          br,
+          br,
           postForm(cls := "kick", action := routes.Team.changeOwner(t.id))(
             userIds.toList.sorted.map { userId =>
               button(name := "userId", cls := "button button-empty button-no-upper confirm", value := userId)(
@@ -33,15 +36,16 @@ object admin {
 
   def kick(t: lidraughts.team.Team, userIds: Iterable[lidraughts.user.User.ID])(implicit ctx: Context) = {
 
-    val title = s"Kick from Team ${t.name}"
+    val title = s"${t.name} - ${kickSomeone.txt()}"
 
     bits.layout(title = title) {
       main(cls := "page-menu page-small")(
         bits.menu(none),
         div(cls := "page-menu__content box box-pad")(
           h1(title),
-          p("Who do you want to kick out of the team?"),
-          br, br,
+          p(whoToKick()),
+          br,
+          br,
           postForm(cls := "kick", action := routes.Team.kick(t.id))(
             userIds.toList.sorted.map { userId =>
               button(name := "userId", cls := "button button-empty button-no-upper confirm", value := userId)(

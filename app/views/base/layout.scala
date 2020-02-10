@@ -225,7 +225,7 @@ object layout {
       a(cls := "link data-count link-center", title := "Moderation", href := routes.Report.list, dataCount := reportNbOpen, dataIcon := "")
 
     private def teamRequests(implicit ctx: Context) = ctx.teamNbRequests > 0 option
-      a(cls := "link data-count link-center", href := routes.Team.requests, dataCount := ctx.teamNbRequests, dataIcon := "f", title := trans.teams.txt())
+      a(cls := "link data-count link-center", href := routes.Team.requests, dataCount := ctx.teamNbRequests, dataIcon := "f", title := trans.team.teams.txt())
 
     def apply(playing: Boolean)(implicit ctx: Context) =
       header(id := "top")(
