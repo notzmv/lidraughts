@@ -1081,6 +1081,7 @@ val `getAWinningPositionInX` = new Translated("getAWinningPositionInX", Learn)
 
 object activity {
 val `activity` = new Translated("activity", Activity)
+val `hostedALiveStream` = new Translated("hostedALiveStream", Activity)
 val `signedUp` = new Translated("signedUp", Activity)
 val `supportedNbMonths` = new Translated("supportedNbMonths", Activity)
 val `practicedNbPositions` = new Translated("practicedNbPositions", Activity)
