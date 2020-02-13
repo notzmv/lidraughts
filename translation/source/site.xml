@@ -369,6 +369,7 @@
   <string name="siteDescription">Free online draughts server. Play draughts in a clean interface. No registration, no ads, no plugins required. Play draughts in tournaments, with friends, or with random opponents.</string>
   <string name="xJoinedTeamY">%1$s joined team %2$s</string>
   <string name="xCreatedTeamY">%1$s created team %2$s</string>
+  <string name="xStartedStreaming">%s started streaming</string>
   <string name="averageElo">Average rating</string>
   <string name="averagePerformance">Average performance</string>
   <string name="averageScore">Average score</string>
