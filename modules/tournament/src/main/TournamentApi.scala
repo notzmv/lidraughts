@@ -238,7 +238,12 @@ final class TournamentApi(
 
   def verdicts(tour: Tournament, me: Option[User], getUserTeamIds: User => Fu[TeamIdList]): Fu[Condition.All.WithVerdicts] = me match {
     case None => fuccess(tour.conditions.accepted)
-    case Some(user) => verify(tour.conditions, user, getUserTeamIds)
+    case Some(user) => {
+      tour.isStarted ?? PlayerRepo.exists(tour.id, user.id)
+    } flatMap {
+      case true => fuccess(tour.conditions.accepted)
+      case _ => verify(tour.conditions, user, getUserTeamIds)
+    }
   }
 
   def join(
