@@ -1,6 +1,7 @@
 package lidraughts.streamer
 
 import akka.actor._
+import org.joda.time.DateTime
 import play.api.libs.json._
 import play.api.libs.ws.WS
 import play.api.Play.current
@@ -132,22 +133,37 @@ private final class Streaming(
     }
   }
 
-  def fetchYouTubeStreams(streamers: List[Streamer]): Fu[List[YouTube.Stream]] = googleApiKey.nonEmpty ?? {
+  private var prevYouTubeStreams = YouTube.StreamsFetched(Nil, DateTime.now)
+
+  def fetchYouTubeStreams(streamers: List[Streamer]): Fu[List[YouTube.Stream]] = {
     val youtubeStreamers = streamers.filter(_.youTube.isDefined)
-    youtubeStreamers.nonEmpty ?? WS.url("https://www.googleapis.com/youtube/v3/search").withQueryString(
-      "part" -> "snippet",
-      "type" -> "video",
-      "eventType" -> "live",
-      "q" -> keyword.value,
-      "key" -> googleApiKey
-    ).get().map { res =>
-        res.json.validate[YouTube.Result](youtubeResultReads) match {
-          case JsSuccess(data, _) => data.streams(keyword, youtubeStreamers)
-          case JsError(err) =>
-            logger.warn(s"youtube ${res.status} $err ${~res.body.lines.toList.headOption}")
-            Nil
+    (youtubeStreamers.nonEmpty && googleApiKey.nonEmpty) ?? {
+      val now = DateTime.now
+      val res =
+        if (prevYouTubeStreams.list.isEmpty && prevYouTubeStreams.at.isAfter(now minusMinutes 2))
+          fuccess(prevYouTubeStreams)
+        else {
+          WS.url("https://www.googleapis.com/youtube/v3/search").withQueryString(
+            "part" -> "snippet",
+            "type" -> "video",
+            "eventType" -> "live",
+            "q" -> keyword.value,
+            "key" -> googleApiKey
+          ).get().map { res =>
+              res.json.validate[YouTube.Result](youtubeResultReads) match {
+                case JsSuccess(data, _) =>
+                  YouTube.StreamsFetched(data.streams(keyword, youtubeStreamers), now)
+                case JsError(err) =>
+                  logger.warn(s"youtube ${res.status} $err ${res.body.take(500)}")
+                  YouTube.StreamsFetched(Nil, now)
+              }
+            }
         }
+      res dmap { r =>
+        prevYouTubeStreams = r
+        r.list
       }
+    }
   }
 
   def dedupStreamers(streams: List[Stream]): List[Stream] = streams.foldLeft((Set.empty[Streamer.Id], List.empty[Stream])) {
