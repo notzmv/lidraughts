@@ -117,17 +117,23 @@ private final class Streaming(
             "Client-ID" -> twitchClientId
           )
         if (twitchUserIds.size > 1) logger.info(url.uri.toString)
-        url.get().map { res =>
+        url.get().flatMap { res =>
           res.json.validate[Twitch.Result](twitchResultReads) match {
-            case JsSuccess(data, _) => data.streams(
-              keyword,
-              streamers,
-              alwaysFeatured().value.map(_.toLowerCase)
-            )
+            case JsSuccess(data, _) =>
+              fuccess(
+                data.streams(
+                  keyword,
+                  streamers,
+                  alwaysFeatured().value.map(_.toLowerCase)
+                )
+              )
             case JsError(err) =>
-              logger.warn(s"twitch ${res.status} $err ${~res.body.lines.toList.headOption}")
-              Nil
+              fufail(s"twitch ${res.status} $err ${~res.body.lines.toList.headOption}")
           }
+        }.recover {
+          case e: Exception =>
+            logger.warn(e.getMessage)
+            Nil
         }
       }
     }
@@ -149,14 +155,17 @@ private final class Streaming(
             "eventType" -> "live",
             "q" -> keyword.value,
             "key" -> googleApiKey
-          ).get().map { res =>
+          ).get().flatMap { res =>
               res.json.validate[YouTube.Result](youtubeResultReads) match {
                 case JsSuccess(data, _) =>
-                  YouTube.StreamsFetched(data.streams(keyword, youtubeStreamers), now)
+                  fuccess(YouTube.StreamsFetched(data.streams(keyword, youtubeStreamers), now))
                 case JsError(err) =>
-                  logger.warn(s"youtube ${res.status} $err ${res.body.take(500)}")
-                  YouTube.StreamsFetched(Nil, now)
+                  fufail(s"youtube ${res.status} $err ${res.body.take(500)}")
               }
+            }.recover {
+              case e: Exception =>
+                logger.warn(e.getMessage)
+                YouTube.StreamsFetched(Nil, now)
             }
         }
       res dmap { r =>
