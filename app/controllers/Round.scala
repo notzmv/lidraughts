@@ -62,7 +62,7 @@ object Round extends LidraughtsController with TheftPrevention {
   private def renderPlayer(pov: Pov)(implicit ctx: Context): Fu[Result] = negotiate(
     html = if (!pov.game.started) notFound
     else PreventTheft(pov) {
-      Env.tournament.api.miniView(pov.game, true) flatMap { tour =>
+      Env.tournament.api.miniView(pov, true) flatMap { tour =>
         (pov.game.simulId ?? Env.simul.repo.find) flatMap { simul =>
           Game.preloadUsers(pov.game) zip
             getPlayerChat(pov.game, tour.map(_.tour), simul) zip
@@ -205,7 +205,7 @@ object Round extends LidraughtsController with TheftPrevention {
           if (getBool("sudo") && isGranted(_.SuperAdmin)) Redirect(routes.Round.player(pov.fullId)).fuccess
           else if (pov.game.replayable) Analyse.replay(pov, userTv = userTv, userTvGameId = userTvGameId)
           else if (HTTPRequest.isHuman(ctx.req))
-            Env.tournament.api.miniView(pov.game, false) zip
+            Env.tournament.api.miniView(pov, false) zip
               (pov.game.simulId ?? Env.simul.repo.find) zip
               getWatcherChat(pov.game) zip
               (ctx.noBlind ?? Env.game.crosstableApi.withMatchup(pov.game)) zip

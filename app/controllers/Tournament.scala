@@ -169,7 +169,7 @@ object Tournament extends LidraughtsController {
     }
   }
 
-  def teamInfo(tourId: String, teamId: String) = Open { implicit ctx =>
+  def teamInfo(tourId: String, teamId: TeamId) = Open { implicit ctx =>
     repo byId tourId flatMap {
       _ ?? { tour =>
         lidraughts.team.TeamRepo mini teamId flatMap {
@@ -222,7 +222,7 @@ object Tournament extends LidraughtsController {
     }
   }
 
-  def teamBattleForm(teamId: String) = Auth { implicit ctx => me =>
+  def teamBattleForm(teamId: TeamId) = Auth { implicit ctx => me =>
     NoLameOrBot {
       Env.team.api.owns(teamId, me.id) map {
         _ ?? {

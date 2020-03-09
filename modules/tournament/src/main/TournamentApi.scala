@@ -520,20 +520,27 @@ final class TournamentApi(
         socketReload(tour.id) >>- publish()
     }
 
+  private val tournamentTopNb = 20
   private val tournamentTopCache = asyncCache.multi[Tournament.ID, TournamentTop](
     name = "tournament.top",
-    id => PlayerRepo.bestByTour(id, 20) map TournamentTop.apply,
+    id => PlayerRepo.bestByTour(id, tournamentTopNb) map TournamentTop.apply,
     expireAfter = _.ExpireAfterWrite(3 second)
   )
 
   def tournamentTop(tourId: Tournament.ID): Fu[TournamentTop] =
     tournamentTopCache get tourId
 
-  def miniView(game: Game, withTop: Boolean): Fu[Option[TourMiniView]] =
-    withTeamVs(game) flatMap {
+  def miniView(pov: Pov, withTop: Boolean): Fu[Option[TourMiniView]] =
+    withTeamVs(pov.game) flatMap {
       _ ?? {
         case TourAndTeamVs(tour, teamVs) =>
-          withTop ?? { tournamentTop(tour.id) map some } map {
+          withTop ?? {
+            teamVs.fold(tournamentTop(tour.id) dmap some) { vs =>
+              cached.teamInfo.get(tour.id -> vs.teams(pov.color)) map2 { info: TeamBattle.TeamInfo =>
+                TournamentTop(info.topPlayers take tournamentTopNb)
+              }
+            }
+          } dmap {
             TourMiniView(tour, _, teamVs).some
           }
       }
