@@ -17,7 +17,7 @@ object watcher {
   def apply(
     pov: Pov,
     data: JsObject,
-    tour: Option[lidraughts.tournament.TourMiniView],
+    tour: Option[lidraughts.tournament.TourAndTeamVs],
     simul: Option[lidraughts.simul.Simul],
     cross: Option[lidraughts.game.Crosstable.WithMatchup],
     userTv: Option[lidraughts.user.User] = None,

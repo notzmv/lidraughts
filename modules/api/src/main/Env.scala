@@ -17,7 +17,7 @@ final class Env(
     urgentGames: lidraughts.user.User => Fu[List[lidraughts.game.Pov]],
     relationApi: lidraughts.relation.RelationApi,
     bookmarkApi: lidraughts.bookmark.BookmarkApi,
-    getTourAndRanks: lidraughts.game.Game => Fu[Option[lidraughts.tournament.TourAndRanks]],
+    tournamentApi: lidraughts.tournament.TournamentApi,
     crosstableApi: lidraughts.game.CrosstableApi,
     prefApi: lidraughts.pref.PrefApi,
     playBanApi: lidraughts.playban.PlaybanApi,
@@ -31,6 +31,7 @@ final class Env(
     getSimul: Simul.ID => Fu[Option[Simul]],
     getSimulName: Simul.ID => Fu[Option[String]],
     getTournamentName: String => Option[String],
+    getTeamName: lidraughts.team.Team.ID => Option[String],
     isStreaming: lidraughts.user.User.ID => Boolean,
     isPlaying: lidraughts.user.User.ID => Boolean,
     pools: List[lidraughts.pool.PoolConfig],
@@ -122,8 +123,10 @@ final class Env(
     forecastApi = forecastApi,
     bookmarkApi = bookmarkApi,
     swissApi = swissEnv.api,
-    getTourAndRanks = getTourAndRanks,
-    getSimul = getSimul
+    tourApi = tournamentApi,
+    getSimul = getSimul,
+    getTeamName = getTeamName,
+    getLightUser = userEnv.lightUserSync
   )
 
   val lobbyApi = new LobbyApi(
@@ -168,13 +171,14 @@ object Env {
     getSimul = lidraughts.simul.Env.current.repo.find,
     getSimulName = lidraughts.simul.Env.current.api.idToName,
     getTournamentName = lidraughts.tournament.Env.current.cached.name,
+    getTeamName = lidraughts.team.Env.current.cached.name _,
     roundJsonView = lidraughts.round.Env.current.jsonView,
     noteApi = lidraughts.round.Env.current.noteApi,
     forecastApi = lidraughts.round.Env.current.forecastApi,
     urgentGames = lidraughts.round.Env.current.proxy.urgentGames,
     relationApi = lidraughts.relation.Env.current.api,
     bookmarkApi = lidraughts.bookmark.Env.current.api,
-    getTourAndRanks = lidraughts.tournament.Env.current.tourAndRanks,
+    tournamentApi = lidraughts.tournament.Env.current.api,
     crosstableApi = lidraughts.game.Env.current.crosstableApi,
     playBanApi = lidraughts.playban.Env.current.api,
     prefApi = lidraughts.pref.Env.current.api,

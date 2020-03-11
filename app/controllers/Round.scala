@@ -62,14 +62,14 @@ object Round extends LidraughtsController with TheftPrevention {
   private def renderPlayer(pov: Pov)(implicit ctx: Context): Fu[Result] = negotiate(
     html = if (!pov.game.started) notFound
     else PreventTheft(pov) {
-      Env.tournament.api.miniView(pov, true) flatMap { tour =>
+      Env.tournament.api.gameView.player(pov) flatMap { tour =>
         (pov.game.simulId ?? Env.simul.repo.find) flatMap { simul =>
           Game.preloadUsers(pov.game) zip
             getPlayerChat(pov.game, tour.map(_.tour), simul) zip
             (ctx.noBlind ?? Env.game.crosstableApi.withMatchup(pov.game)) zip // probably what raises page mean time?
             (pov.game.isSwitchable ?? otherPovs(pov.game)) zip
             Env.bookmark.api.exists(pov.game, ctx.me) zip
-            Env.api.roundApi.player(pov, lidraughts.api.Mobile.Api.currentVersion) map {
+            Env.api.roundApi.player(pov, tour, lidraughts.api.Mobile.Api.currentVersion) map {
               case _ ~ chatOption ~ crosstable ~ playing ~ bookmarked ~ data =>
                 simul foreach Env.simul.api.onPlayerConnection(pov.game, ctx.me)
                 Ok(html.round.player(pov, data,
@@ -86,7 +86,7 @@ object Round extends LidraughtsController with TheftPrevention {
     api = apiVersion => {
       if (isTheft(pov)) fuccess(theftResponse)
       else Game.preloadUsers(pov.game) zip
-        Env.api.roundApi.player(pov, apiVersion) zip
+        Env.api.roundApi.player(pov, none, apiVersion) zip
         getPlayerChat(pov.game, none, none) map {
           case _ ~ data ~ chat => Ok {
             data.add("chat", chat.flatMap(_.game).map(c => lidraughts.chat.JsonView(c.chat)))
@@ -205,26 +205,28 @@ object Round extends LidraughtsController with TheftPrevention {
           if (getBool("sudo") && isGranted(_.SuperAdmin)) Redirect(routes.Round.player(pov.fullId)).fuccess
           else if (pov.game.replayable) Analyse.replay(pov, userTv = userTv, userTvGameId = userTvGameId)
           else if (HTTPRequest.isHuman(ctx.req))
-            Env.tournament.api.miniView(pov, false) zip
+            Env.tournament.api.gameView.watcher(pov.game) zip
               (pov.game.simulId ?? Env.simul.repo.find) zip
               getWatcherChat(pov.game) zip
               (ctx.noBlind ?? Env.game.crosstableApi.withMatchup(pov.game)) zip
-              Env.api.roundApi.watcher(
-                pov,
-                lidraughts.api.Mobile.Api.currentVersion,
-                tv = userTv.map { u => lidraughts.round.OnUserTv(u.id, userTvGameId) }
-              ) zip
-                Env.bookmark.api.exists(pov.game, ctx.me) map {
-                  case tour ~ simul ~ chat ~ crosstable ~ data ~ bookmarked =>
-                    Ok(html.round.watcher(pov, data, tour, simul, crosstable, userTv = userTv, chatOption = chat, bookmarked = bookmarked))
-                }
+              Env.bookmark.api.exists(pov.game, ctx.me) flatMap {
+                case tour ~ simul ~ chat ~ crosstable ~ bookmarked =>
+                  Env.api.roundApi.watcher(
+                    pov,
+                    tour,
+                    lidraughts.api.Mobile.Api.currentVersion,
+                    tv = userTv.map { u => lidraughts.round.OnUserTv(u.id, userTvGameId) }
+                  ) map { data =>
+                      Ok(html.round.watcher(pov, data, tour.map(_.tourAndTeamVs), simul, crosstable, userTv = userTv, chatOption = chat, bookmarked = bookmarked))
+                    }
+              }
           else for { // web crawlers don't need the full thing
             initialFen <- GameRepo.initialFen(pov.gameId)
             pdn <- Env.api.pdnDump(pov.game, initialFen, none, PdnDump.WithFlags(clocks = false))
           } yield Ok(html.round.watcher.crawler(pov, initialFen, pdn))
         }.mon(_.http.response.watcher.website),
         api = apiVersion => for {
-          data <- Env.api.roundApi.watcher(pov, apiVersion, tv = none)
+          data <- Env.api.roundApi.watcher(pov, none, apiVersion, tv = none)
           analysis <- analyser get pov.game
           chat <- getWatcherChat(pov.game)
         } yield Ok {
@@ -273,7 +275,7 @@ object Round extends LidraughtsController with TheftPrevention {
 
   def sides(gameId: String, color: String) = Open { implicit ctx =>
     OptionFuResult(proxyPov(gameId, color)) { pov =>
-      Env.tournament.api.withTeamVs(pov.game) zip
+      Env.tournament.api.gameView.withTeamVs(pov.game) zip
         (pov.game.simulId ?? Env.simul.repo.find) zip
         GameRepo.initialFen(pov.game) zip
         Env.game.crosstableApi.withMatchup(pov.game) zip

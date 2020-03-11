@@ -11,7 +11,7 @@ import lidraughts.round.{ Forecast, JsonView, logger }
 import lidraughts.security.Granter
 import lidraughts.simul.Simul
 import lidraughts.swiss.{ GameView => SwissView }
-import lidraughts.tournament.TourAndRanks
+import lidraughts.tournament.{ GameView => TourView }
 import lidraughts.tree.Node.partitionTreeJsonWriter
 import lidraughts.user.User
 
@@ -21,24 +21,25 @@ private[api] final class RoundApi(
     forecastApi: lidraughts.round.ForecastApi,
     bookmarkApi: lidraughts.bookmark.BookmarkApi,
     swissApi: lidraughts.swiss.SwissApi,
-    getTourAndRanks: Game => Fu[Option[TourAndRanks]],
-    getSimul: Simul.ID => Fu[Option[Simul]]
+    tourApi: lidraughts.tournament.TournamentApi,
+    getSimul: Simul.ID => Fu[Option[Simul]],
+    getTeamName: lidraughts.team.Team.ID => Option[String],
+    getLightUser: lidraughts.common.LightUser.GetterSync
 ) {
 
-  def player(pov: Pov, apiVersion: ApiVersion)(implicit ctx: Context): Fu[JsObject] =
+  def player(pov: Pov, tour: Option[TourView], apiVersion: ApiVersion)(implicit ctx: Context): Fu[JsObject] =
     GameRepo.initialFen(pov.game).flatMap { initialFen =>
       jsonView.playerJson(pov, ctx.pref, apiVersion, ctx.me,
         withFlags = WithFlags(blurs = ctx.me ?? Granter(_.ViewBlurs)),
         initialFen = initialFen,
         nvui = ctx.blind) zip
-        getTourAndRanks(pov.game) zip
         (pov.game.simulId ?? getSimul) zip
         swissApi.gameView(pov) zip
         (ctx.me.ifTrue(ctx.isMobileApi) ?? (me => noteApi.get(pov.gameId, me.id))) zip
         forecastApi.loadForDisplay(pov) zip
         bookmarkApi.exists(pov.game, ctx.me) map {
-          case json ~ tourOption ~ simulOption ~ swissOption ~ note ~ forecast ~ bookmarked => (
-            withTournament(pov, tourOption) _ compose
+          case json ~ simulOption ~ swissOption ~ note ~ forecast ~ bookmarked => (
+            withTournament(pov, tour) _ compose
             withSimul(pov, simulOption, true) _ compose
             withSwiss(swissOption) _ compose
             withSteps(pov, initialFen) _ compose
@@ -49,19 +50,18 @@ private[api] final class RoundApi(
         }
     }.mon(_.round.api.player)
 
-  def watcher(pov: Pov, apiVersion: ApiVersion, tv: Option[lidraughts.round.OnTv],
+  def watcher(pov: Pov, tour: Option[TourView], apiVersion: ApiVersion, tv: Option[lidraughts.round.OnTv],
     initialFenO: Option[Option[FEN]] = None)(implicit ctx: Context): Fu[JsObject] =
     initialFenO.fold(GameRepo initialFen pov.game)(fuccess).flatMap { initialFen =>
       jsonView.watcherJson(pov, ctx.pref, apiVersion, ctx.me, tv,
         initialFen = initialFen,
         withFlags = WithFlags(blurs = ctx.me ?? Granter(_.ViewBlurs))) zip
-        getTourAndRanks(pov.game) zip
         (pov.game.simulId ?? getSimul) zip
         swissApi.gameView(pov) zip
         (ctx.me.ifTrue(ctx.isMobileApi) ?? (me => noteApi.get(pov.gameId, me.id))) zip
         bookmarkApi.exists(pov.game, ctx.me) map {
-          case json ~ tourOption ~ simulOption ~ swissOption ~ note ~ bookmarked => (
-            withTournament(pov, tourOption) _ compose
+          case json ~ simulOption ~ swissOption ~ note ~ bookmarked => (
+            withTournament(pov, tour) _ compose
             withSimul(pov, simulOption, false) _ compose
             withSwiss(swissOption) _ compose
             withNote(note) _ compose
@@ -80,13 +80,13 @@ private[api] final class RoundApi(
       jsonView.watcherJson(pov, ctx.pref, apiVersion, ctx.me, tv,
         initialFen = initialFen,
         withFlags = withFlags.copy(blurs = ctx.me ?? Granter(_.ViewBlurs))) zip
-        getTourAndRanks(pov.game) zip
+        tourApi.gameView.analysis(pov.game) zip
         (pov.game.simulId ?? getSimul) zip
         swissApi.gameView(pov) zip
         ctx.userId.ifTrue(ctx.isMobileApi).?? { noteApi.get(pov.gameId, _) } zip
         bookmarkApi.exists(pov.game, ctx.me) map {
-          case json ~ tourOption ~ simulOption ~ swissOption ~ note ~ bookmarked => (
-            withTournament(pov, tourOption) _ compose
+          case json ~ tour ~ simulOption ~ swissOption ~ note ~ bookmarked => (
+            withTournament(pov, tour) _ compose
             withSimul(pov, simulOption, false) _ compose
             withSwiss(swissOption) _ compose
             withNote(note) _ compose
@@ -181,22 +181,30 @@ private[api] final class RoundApi(
   private def withAnalysis(g: Game, o: Option[Analysis], modStats: Boolean = false)(json: JsObject) =
     json.add("analysis", o.map { a => analysisJson.bothPlayers(g, a, modStats) })
 
-  private def withTournament(pov: Pov, tourOption: Option[TourAndRanks])(json: JsObject) =
-    json.add("tournament" -> tourOption.map { data =>
+  private def withTournament(pov: Pov, viewO: Option[TourView])(json: JsObject) =
+    json.add("tournament" -> viewO.map { v =>
       Json.obj(
-        "id" -> data.tour.id,
-        "name" -> data.tour.name,
-        "running" -> data.tour.isStarted
-      ).add("secondsToFinish" -> data.tour.isStarted.option(data.tour.secondsToFinish))
-        .add("berserkable" -> data.tour.isStarted.option(data.tour.berserkable))
+        "id" -> v.tour.id,
+        "name" -> v.tour.name,
+        "running" -> v.tour.isStarted
+      ).add("secondsToFinish" -> v.tour.isStarted.option(v.tour.secondsToFinish))
+        .add("berserkable" -> v.tour.isStarted.option(v.tour.berserkable))
         // mobile app API BC / should use game.expiration instead
-        .add("nbSecondsForFirstMove" -> data.tour.isStarted.option {
+        .add("nbSecondsForFirstMove" -> v.tour.isStarted.option {
           pov.game.timeForFirstMove.toSeconds
         })
-        .add("ranks" -> data.tour.isStarted.option(Json.obj(
-          "white" -> data.whiteRank,
-          "black" -> data.blackRank
-        )))
+        .add("ranks" -> v.ranks.map { r =>
+          Json.obj(
+            "white" -> r.whiteRank,
+            "black" -> r.blackRank
+          )
+        })
+        .add("top", v.top.map {
+          lidraughts.tournament.JsonView.top(_, getLightUser)
+        })
+        .add("team", v.teamVs.map(_.teams(pov.color)) map { id =>
+          Json.obj("name" -> getTeamName(id))
+        })
     })
 
   def withSwiss(sv: Option[SwissView])(json: JsObject) =

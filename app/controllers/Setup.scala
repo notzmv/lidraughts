@@ -230,7 +230,7 @@ object Setup extends LidraughtsController with TheftPrevention {
           config => op(config)(ctx) flatMap { pov =>
             negotiate(
               html = fuccess(redirectPov(pov)),
-              api = apiVersion => Env.api.roundApi.player(pov, apiVersion) map { data =>
+              api = apiVersion => Env.api.roundApi.player(pov, none, apiVersion) map { data =>
                 Created(data) as JSON
               }
             )

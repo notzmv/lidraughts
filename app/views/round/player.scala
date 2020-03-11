@@ -17,7 +17,7 @@ object player {
   def apply(
     pov: Pov,
     data: play.api.libs.json.JsObject,
-    tour: Option[lidraughts.tournament.TourMiniView],
+    tour: Option[lidraughts.tournament.GameView],
     simul: Option[lidraughts.simul.Simul],
     cross: Option[lidraughts.game.Crosstable.WithMatchup],
     playing: List[Pov],
@@ -57,9 +57,7 @@ LidraughtsRound.boot(${
             "i18n" -> jsI18n(pov.game),
             "userId" -> ctx.userId,
             "chat" -> chatJson
-          ) ++ tour.flatMap(_.top).??(top => Json.obj(
-              "tour" -> lidraughts.tournament.JsonView.top(top, lightUser)
-            )))
+          ))
         })}""")
       ),
       openGraph = povOpenGraph(pov).some,
@@ -68,7 +66,7 @@ LidraughtsRound.boot(${
     )(
         main(cls := "round")(
           st.aside(cls := "round__side")(
-            bits.side(pov, data, tour, simul, bookmarked = bookmarked),
+            bits.side(pov, data, tour.map(_.tourAndTeamVs), simul, bookmarked = bookmarked),
             chatOption.map(_ => chat.frag)
           ),
           bits.roundAppPreload(pov, true),

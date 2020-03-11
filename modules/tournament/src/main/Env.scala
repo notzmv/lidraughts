@@ -115,8 +115,6 @@ final class Env(
 
   lazy val crudApi = new crud.CrudApi
 
-  val tourAndRanks = api tourAndRanks _
-
   lazy val socketHandler = new SocketHandler(
     hub = hub,
     socketMap = socketMap,

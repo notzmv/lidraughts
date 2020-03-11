@@ -189,14 +189,14 @@ object bits {
   private[round] def side(
     pov: Pov,
     data: play.api.libs.json.JsObject,
-    tour: Option[lidraughts.tournament.TourMiniView],
+    tour: Option[lidraughts.tournament.TourAndTeamVs],
     simul: Option[lidraughts.simul.Simul],
     userTv: Option[lidraughts.user.User] = None,
     bookmarked: Boolean
   )(implicit ctx: Context) = views.html.game.side(
     pov,
     (data \ "game" \ "initialFen").asOpt[String].map(draughts.format.FEN),
-    tour.map(_.tourAndTeamVs),
+    tour,
     simul = simul,
     userTv = userTv,
     bookmarked = bookmarked

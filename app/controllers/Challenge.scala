@@ -75,7 +75,7 @@ object Challenge extends LidraughtsController {
       isForMe(c) ?? env.api.accept(c, ctx.me).flatMap {
         case Some(pov) => negotiate(
           html = Redirect(routes.Round.watcher(pov.gameId, "white")).fuccess,
-          api = apiVersion => Env.api.roundApi.player(pov, apiVersion) map { Ok(_) }
+          api = apiVersion => Env.api.roundApi.player(pov, none, apiVersion) map { Ok(_) }
         ) flatMap withChallengeAnonCookie(ctx.isAnon, c, false)
         case None => negotiate(
           html = Redirect(routes.Round.watcher(c.id, "white")).fuccess,

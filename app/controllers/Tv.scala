@@ -38,8 +38,8 @@ object Tv extends LidraughtsController {
         val pov = if (flip) Pov second game else Pov first game
         val onTv = lidraughts.round.OnLidraughtsTv(channel.key, flip)
         negotiate(
-          html = {
-            Env.api.roundApi.watcher(pov, lidraughts.api.Mobile.Api.currentVersion, tv = onTv.some) zip
+          html = Env.tournament.api.gameView.watcher(pov.game) flatMap { tour =>
+            Env.api.roundApi.watcher(pov, tour, lidraughts.api.Mobile.Api.currentVersion, tv = onTv.some) zip
               Env.game.crosstableApi.withMatchup(game) zip
               Env.tv.tv.getChampions map {
                 case data ~ cross ~ champions => NoCache {
@@ -47,7 +47,7 @@ object Tv extends LidraughtsController {
                 }
               }
           },
-          api = apiVersion => Env.api.roundApi.watcher(pov, apiVersion, tv = onTv.some) map { Ok(_) }
+          api = apiVersion => Env.api.roundApi.watcher(pov, none, apiVersion, tv = onTv.some) map { Ok(_) }
         )
       case _ => negotiate(
         html = Env.tv.tv.getChampions map { champions =>
