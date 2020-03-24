@@ -85,13 +85,15 @@ object Round extends LidraughtsController with TheftPrevention {
     }.mon(_.http.response.player.website),
     api = apiVersion => {
       if (isTheft(pov)) fuccess(theftResponse)
-      else Game.preloadUsers(pov.game) zip
-        Env.api.roundApi.player(pov, none, apiVersion) zip
-        getPlayerChat(pov.game, none, none) map {
-          case _ ~ data ~ chat => Ok {
-            data.add("chat", chat.flatMap(_.game).map(c => lidraughts.chat.JsonView(c.chat)))
+      else Env.tournament.api.gameView.mobile(pov.game) flatMap { tour =>
+        Game.preloadUsers(pov.game) zip
+          Env.api.roundApi.player(pov, tour, apiVersion) zip
+          getPlayerChat(pov.game, none, none) map {
+            case _ ~ data ~ chat => Ok {
+              data.add("chat", chat.flatMap(_.game).map(c => lidraughts.chat.JsonView(c.chat)))
+            }
           }
-        }
+      }
     }.mon(_.http.response.player.mobile)
   ) map NoCache
 
