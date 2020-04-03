@@ -1,6 +1,7 @@
 package lidraughts.team
 
 import reactivemongo.bson._
+import reactivemongo.api.commands.WriteResult
 
 import lidraughts.db.dsl._
 import lidraughts.user.User
@@ -33,8 +34,8 @@ object MemberRepo {
   def add(teamId: ID, userId: User.ID): Funit =
     coll.insert(Member.make(team = teamId, user = userId)).void
 
-  def remove(teamId: ID, userId: User.ID): Funit =
-    coll.remove(selectId(teamId, userId)).void
+  def remove(teamId: ID, userId: User.ID): Fu[WriteResult] =
+    coll.remove(selectId(teamId, userId))
 
   def countByTeam(teamId: ID): Fu[Int] =
     coll.countSel(teamQuery(teamId))

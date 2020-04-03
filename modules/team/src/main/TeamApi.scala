@@ -158,9 +158,10 @@ final class TeamApi(
 
   def doQuit(team: Team, userId: User.ID): Funit = belongsTo(team.id, userId) flatMap {
     _ ?? {
-      MemberRepo.remove(team.id, userId) >>
-        TeamRepo.incMembers(team.id, -1) >>-
-        (cached invalidateTeamIds userId)
+      MemberRepo.remove(team.id, userId) map { res =>
+        if (res.n == 1) TeamRepo.incMembers(team.id, -1)
+        cached.invalidateTeamIds(userId)
+      }
     }
   }
 
