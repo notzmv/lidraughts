@@ -4,6 +4,7 @@ import draughts.Color
 import reactivemongo.api.ReadPreference
 import scala.concurrent.duration._
 
+import lidraughts.common.String.noShouting
 import lidraughts.db.dsl._
 import lidraughts.hub.actorApi.shutup.{ PublicSource, RecordPublicChat, RecordPrivateChat }
 import lidraughts.user.{ User, UserRepo }
@@ -224,20 +225,7 @@ final class ChatApi(
     private val gameUrlRegex = (Pattern.quote(netDomain) + """\b/(\w{8})\w{4}\b""").r
     private val gameUrlReplace = Matcher.quoteReplacement(netDomain) + "/$1";
     private def noPrivateUrl(str: String): String = gameUrlRegex.replaceAllIn(str, gameUrlReplace)
-    private def noShouting(str: String): String = if (isShouting(str)) str.toLowerCase else str
     private val multilineRegex = """\n\n{2,}+""".r
     private def multiline(str: String) = multilineRegex.replaceAllIn(str, """\n\n""")
-  }
-
-  private def isShouting(text: String) = text.length >= 5 && {
-    import java.lang.Character._
-    // true if >1/2 of the latin letters are uppercase
-    (text take 80).foldLeft(0) { (i, c) =>
-      getType(c) match {
-        case UPPERCASE_LETTER => i + 1
-        case LOWERCASE_LETTER => i - 1
-        case _ => i
-      }
-    } > 0
   }
 }

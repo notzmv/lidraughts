@@ -4,6 +4,7 @@ import actorApi._
 import akka.actor.ActorSelection
 
 import lidraughts.common.paginator._
+import lidraughts.common.String.noShouting
 import lidraughts.db.dsl._
 import lidraughts.db.paginator._
 import lidraughts.hub.actorApi.timeline.{ Propagate, ForumPost }
@@ -48,7 +49,7 @@ private[forum] final class TopicApi(
         val topic = Topic.make(
           categId = categ.slug,
           slug = slug,
-          name = data.name,
+          name = noShouting(data.name),
           troll = ctx.troll,
           hidden = categ.quiet || data.looksLikeVenting
         )
