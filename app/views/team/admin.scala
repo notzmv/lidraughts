@@ -60,7 +60,11 @@ object admin {
     }
   }
 
-  def pmAll(t: lidraughts.team.Team, form: Form[_])(implicit ctx: Context) = {
+  def pmAll(
+    t: lidraughts.team.Team,
+    form: Form[_],
+    tours: List[lidraughts.tournament.Tournament]
+  )(implicit ctx: Context) = {
 
     val title = s"${t.name} - ${messageAllMembers.txt()}"
 
@@ -73,6 +77,24 @@ object admin {
           div(cls := "page-menu__content box box-pad")(
             h1(title),
             p(messageAllMembersLongDescription()),
+            tours.nonEmpty option div(cls := "tournaments")(
+              p(youMayWantToLinkOneOfTheseTournaments()),
+              p(
+                ul(
+                  tours.map { t =>
+                    li(
+                      tournamentLink(t),
+                      " ",
+                      momentFromNow(t.startsAt),
+                      " - ",
+                      netDomain,
+                      routes.Tournament.show(t.id).url
+                    )
+                  }
+                )
+              ),
+              br
+            ),
             postForm(cls := "form3", action := routes.Team.pmAllSubmit(t.id))(
               form3.group(form("message"), trans.message())(form3.textarea(_)(rows := 10)),
               form3.actions(
