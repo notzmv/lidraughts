@@ -2,6 +2,7 @@ package controllers
 
 import play.api.libs.json._
 import play.api.mvc._
+import scala.concurrent.duration._
 
 import lidraughts.api.Context
 import lidraughts.app._
@@ -89,39 +90,35 @@ object Team extends LidraughtsController {
   }
 
   def edit(id: String) = Auth { implicit ctx => me =>
-    OptionFuResult(api team id) { team =>
-      Owner(team) { fuccess(html.team.form.edit(team, forms edit team)) }
+    WithOwnedTeam(id) { team =>
+      fuccess(html.team.form.edit(team, forms edit team))
     }
   }
 
-  def update(id: String) = AuthBody { implicit ctx => implicit me =>
-    OptionFuResult(api team id) { team =>
-      Owner(team) {
-        implicit val req = ctx.body
-        forms.edit(team).bindFromRequest.fold(
-          err => BadRequest(html.team.form.edit(team, err)).fuccess,
-          data => api.update(team, data, me) inject Redirect(routes.Team.show(team.id))
-        )
-      }
+  def update(id: String) = AuthBody { implicit ctx => me =>
+    WithOwnedTeam(id) { team =>
+      implicit val req = ctx.body
+      forms.edit(team).bindFromRequest.fold(
+        err => BadRequest(html.team.form.edit(team, err)).fuccess,
+        data => api.update(team, data, me) inject Redirect(routes.Team.show(team.id))
+      )
     }
   }
 
   def kickForm(id: String) = Auth { implicit ctx => me =>
-    OptionFuResult(api team id) { team =>
-      Owner(team) {
-        MemberRepo userIdsByTeam team.id map { userIds =>
-          html.team.admin.kick(team, userIds - me.id)
-        }
+    WithOwnedTeam(id) { team =>
+      MemberRepo userIdsByTeam team.id map { userIds =>
+        html.team.admin.kick(team, userIds - me.id)
       }
     }
   }
 
   def kick(id: String) = AuthBody { implicit ctx => me =>
-    OptionFuResult(api team id) { team =>
-      Owner(team) {
-        implicit val req = ctx.body
-        forms.selectMember.bindFromRequest.value ?? { api.kick(team, _, me) } inject Redirect(routes.Team.show(team.id))
-      }
+    WithOwnedTeam(id) { team =>
+      implicit val req = ctx.body
+      forms.selectMember.bindFromRequest.value ?? { api.kick(team, _, me) } inject Redirect(
+        routes.Team.show(team.id)
+      )
     }
   }
   def kickUser(teamId: String, userId: String) = Scoped(_.Team.Write) { req => me =>
@@ -133,22 +130,20 @@ object Team extends LidraughtsController {
     }
   }
 
-  def changeOwnerForm(id: String) = Auth { implicit ctx => me =>
-    OptionFuResult(api team id) { team =>
-      Owner(team) {
-        MemberRepo userIdsByTeam team.id map { userIds =>
-          html.team.admin.changeOwner(team, userIds - team.createdBy)
-        }
+  def changeOwnerForm(id: String) = Auth { implicit ctx => _ =>
+    WithOwnedTeam(id) { team =>
+      MemberRepo userIdsByTeam team.id map { userIds =>
+        html.team.admin.changeOwner(team, userIds - team.createdBy)
       }
     }
   }
 
   def changeOwner(id: String) = AuthBody { implicit ctx => me =>
-    OptionFuResult(api team id) { team =>
-      Owner(team) {
-        implicit val req = ctx.body
-        forms.selectMember.bindFromRequest.value ?? { api.changeOwner(team, _, me) } inject Redirect(routes.Team.show(team.id))
-      }
+    WithOwnedTeam(id) { team =>
+      implicit val req = ctx.body
+      forms.selectMember.bindFromRequest.value ?? { api.changeOwner(team, _, me) } inject Redirect(
+        routes.Team.show(team.id)
+      )
     }
   }
 
@@ -229,7 +224,7 @@ object Team extends LidraughtsController {
       requestOption ← api request requestId
       teamOption ← requestOption.??(req => TeamRepo.owned(req.team, me.id))
     } yield (teamOption |@| requestOption).tupled) {
-      case (team, request) => {
+      case (team, request) =>
         implicit val req = ctx.body
         forms.processRequest.bindFromRequest.fold(
           _ => fuccess(routes.Team.show(team.id).toString), {
@@ -237,7 +232,6 @@ object Team extends LidraughtsController {
               api.processRequest(team, request, (decision === "accept")) inject url
           }
         )
-      }
     }
   }
 
@@ -269,15 +263,48 @@ object Team extends LidraughtsController {
     }
   }
 
+  def pmAll(id: String) = Auth { implicit ctx => _ =>
+    WithOwnedTeam(id) { team =>
+      Ok(html.team.admin.pmAll(team, forms.pmAll)).fuccess
+    }
+  }
+
+  def pmAllSubmit(id: String) = AuthBody { implicit ctx => me =>
+    WithOwnedTeam(id) { team =>
+      implicit val req = ctx.body
+      forms.pmAll.bindFromRequest.fold(
+        err => BadRequest(html.team.admin.pmAll(team, err)).fuccess,
+        msg =>
+          PmAllLimitPerUser(me.id) {
+            val full = s"""$msg
+---
+You received this message because you are part of the team lidraughts.org${routes.Team.show(team.id)}."""
+            MemberRepo.userIdsByTeam(team.id) flatMap {
+              Env.message.api.multiPost(me, _, "Team message", full)
+            } inject Redirect(routes.Team.show(team.id))
+          }
+      )
+    }
+  }
+
+  private val PmAllLimitPerUser = new lidraughts.memo.RateLimit[lidraughts.user.User.ID](
+    credits = 6,
+    duration = 24 hours,
+    name = "team pm all per user",
+    key = "team.pmAll"
+  )
+
   private def OnePerWeek[A <: Result](me: UserModel)(a: => Fu[A])(implicit ctx: Context): Fu[Result] =
     api.hasCreatedRecently(me) flatMap { did =>
       if (did && !Granter(_.ManageTeam)(me)) Forbidden(views.html.site.message.teamCreateLimit).fuccess
       else a
     }
 
-  private def Owner(team: TeamModel)(a: => Fu[Result])(implicit ctx: Context): Fu[Result] =
-    if (ctx.me.??(me => team.isCreator(me.id) || isGranted(_.ManageTeam))) a
-    else renderTeam(team) map { Forbidden(_) }
+  private def WithOwnedTeam(teamId: String)(f: TeamModel => Fu[Result])(implicit ctx: Context): Fu[Result] =
+    OptionFuResult(api team teamId) { team =>
+      if (ctx.userId.exists(team.isCreator) || isGranted(_.ManageTeam)) f(team)
+      else renderTeam(team) map { Forbidden(_) }
+    }
 
   private[controllers] def teamsIBelongTo(me: lidraughts.user.User): Fu[List[LightTeam]] =
     api mine me map { _.map(_.light) }

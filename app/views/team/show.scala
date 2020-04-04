@@ -106,6 +106,12 @@ object show {
                       strong(teamTournament()),
                       em(teamTournamentOverview())
                     )
+                  ),
+                  a(href := routes.Team.pmAll(t.id), cls := "button button-empty text", dataIcon := "e")(
+                    span(
+                      strong(messageAllMembers()),
+                      em(messageAllMembersOverview())
+                    )
                   )
                 ),
                 (info.createdByMe || isGranted(_.Admin)) option

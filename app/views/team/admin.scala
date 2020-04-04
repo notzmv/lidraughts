@@ -1,5 +1,7 @@
 package views.html.team
 
+import play.api.data.Form
+
 import lidraughts.api.Context
 import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
@@ -56,5 +58,30 @@ object admin {
         )
       )
     }
+  }
+
+  def pmAll(t: lidraughts.team.Team, form: Form[_])(implicit ctx: Context) = {
+
+    val title = s"${t.name} - ${messageAllMembers.txt()}"
+
+    views.html.base.layout(
+      title = title,
+      moreCss = cssTag("team")
+    ) {
+        main(cls := "page-menu page-small")(
+          bits.menu(none),
+          div(cls := "page-menu__content box box-pad")(
+            h1(title),
+            p(messageAllMembersLongDescription()),
+            postForm(cls := "form3", action := routes.Team.pmAllSubmit(t.id))(
+              form3.group(form("message"), trans.message())(form3.textarea(_)(rows := 10)),
+              form3.actions(
+                a(href := routes.Team.show(t.slug))(trans.cancel()),
+                form3.submit(trans.send())
+              )
+            )
+          )
+        )
+      }
   }
 }
