@@ -69,8 +69,20 @@ object show {
                   ),
                 (info.createdByMe || isGranted(_.Admin)) option
                   a(href := routes.Team.edit(t.id), cls := "button button-empty text", dataIcon := "%")(trans.settings()),
-                info.createdByMe option
-                  a(href := routes.Tournament.teamBattleForm(t.id), cls := "button button-empty text", dataIcon := "g")("Team Battle")
+                info.createdByMe option frag(
+                  a(href := routes.Tournament.teamBattleForm(t.id), cls := "button button-empty text", dataIcon := "g")(
+                    span(
+                      strong("Team battle"),
+                      em("A battle of multiple teams, each players scores points for their team")
+                    )
+                  ),
+                  a(href := s"${routes.Tournament.form()}?team=${t.id}", cls := "button button-empty text", dataIcon := "g")(
+                    span(
+                      strong("Team tournament"),
+                      em("An arena tournament that only members of your team can join")
+                    )
+                  )
+                )
               ),
               div(cls := "team-show__tour-forum")(
                 info.teamBattles.nonEmpty option frag(

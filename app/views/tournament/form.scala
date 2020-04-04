@@ -146,7 +146,12 @@ object form {
       }
     ),
     (auto && teams.size > 0) option {
-      form3.group(form("conditions.teamMember.teamId"), trans.onlyMembersOfTeam())(
+      val baseField = form("conditions.teamMember.teamId")
+      val field = ctx.req.queryString get "team" flatMap (_.headOption) match {
+        case None => baseField
+        case Some(team) => baseField.copy(value = team.some)
+      }
+      form3.group(field, trans.onlyMembersOfTeam())(
         form3.select(_, List(("", trans.noRestriction.txt())) ::: teams.map(_.pair))
       )
     }
