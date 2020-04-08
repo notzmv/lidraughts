@@ -114,6 +114,17 @@ final class PostApi(
     } yield topic -> post
   } run
 
+  def react(postId: String, me: User, reaction: String, v: Boolean): Fu[Option[Post]] =
+    Post.reactions(reaction) ??
+      PostRepo.coll.findAndUpdate(
+        selector = $id(postId),
+        update = {
+          if (v) $addToSet(s"reactions.$reaction" -> me.id)
+          else $pull(s"reactions.$reaction" -> me.id)
+        },
+        fetchNewObject = true
+      ).map(_.value) map2 BSONHandlers.PostBSONHandler.read
+
   def views(posts: List[Post]): Fu[List[PostView]] = for {
     topics ← env.topicColl.byIds[Topic](posts.map(_.topicId).distinct)
     categs ← env.categColl.byIds[Categ](topics.map(_.categId).distinct)
