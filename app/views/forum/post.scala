@@ -30,7 +30,8 @@ object post {
     topic: lidraughts.forum.Topic,
     post: lidraughts.forum.Post,
     url: String,
-    canModCateg: Boolean
+    canModCateg: Boolean,
+    canReact: Boolean
   )(implicit ctx: Context) = {
     st.article(cls := List("forum-post" -> true, "erased" -> post.erased), id := post.number)(
       div(cls := "forum-post__metas")(
@@ -62,7 +63,7 @@ object post {
         if (post.erased) "<erased>"
         else richText(post.text)
       ),
-      reactions(post),
+      reactions(post, canReact),
       ctx.userId.exists(post.shouldShowEditForm(_)) option
         postForm(cls := "edit-post-form", action := routes.ForumPost.edit(post.id))(
           textarea(
@@ -82,14 +83,14 @@ object post {
     )
   }
 
-  def reactions(post: Post)(implicit ctx: Context) = {
+  def reactions(post: Post, canReact: Boolean)(implicit ctx: Context) = {
     val mine = ctx.me ?? { Post.reactionsOf(~post.reactions, _) }
-    div(cls := List("reactions" -> true, "reactions-auth" -> ctx.isAuth))(
+    div(cls := List("reactions" -> true, "reactions-auth" -> (ctx.isAuth && canReact)))(
       Post.reactionsList.map { r =>
         val users = ~post.reactions.flatMap(_ get r)
         val size = users.size
         button(
-          dataHref := ctx.isAuth option routes.ForumPost.react(post.id, r, !mine(r)).url,
+          dataHref := (ctx.isAuth && canReact) option routes.ForumPost.react(post.id, r, !mine(r)).url,
           cls := List("mine" -> mine(r), "yes" -> (size > 0), "no" -> (size < 1)),
           title := size > 0 option {
             val who =

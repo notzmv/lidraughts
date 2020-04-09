@@ -74,6 +74,7 @@ object topic {
       description = shorten(posts.currentPageResults.headOption.??(_.text), 152)
     ).some
   ) {
+      val teamOnly = categ.team.filterNot(myTeam)
       val pager = bits.pagination(routes.ForumTopic.show(categ.slug, topic.slug, 1), posts, showPost = true)
       val content = frag(
         h1(
@@ -92,7 +93,8 @@ object topic {
               topic,
               p,
               s"${routes.ForumTopic.show(categ.slug, topic.slug, posts.currentPage)}#${p.number}",
-              canModCateg = canModCateg
+              canModCateg = canModCateg,
+              canReact = teamOnly.isEmpty
             )
           }
         ),
@@ -104,7 +106,7 @@ object topic {
           else if (formWithCaptcha.isDefined)
             h2(id := "reply")(trans.replyToThisTopic())
           else if (topic.closed) p(trans.thisTopicIsNowClosed())
-          else categ.team.filterNot(myTeam).map { teamId =>
+          else teamOnly.map { teamId =>
             p(
               "Join the ",
               a(href := routes.Team.show(teamId))(teamIdToName(teamId), " team"),

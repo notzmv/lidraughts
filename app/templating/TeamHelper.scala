@@ -12,7 +12,7 @@ trait TeamHelper {
   private def api = teamEnv.api
 
   def myTeam(teamId: String)(implicit ctx: Context): Boolean =
-    ctx.me.??(me => api.syncBelongsTo(teamId, me.id))
+    ctx.userId.?? { api.syncBelongsTo(teamId, _) }
 
   def teamIdToName(id: String): Frag = StringFrag(api.teamName(id).getOrElse(id))
 
