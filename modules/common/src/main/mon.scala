@@ -492,6 +492,7 @@ object mon {
     object topic {
       val view = inc("forum.topic.view")
     }
+    def reaction(r: String) = inc(s"forum.reaction.$r")
   }
   object puzzle {
     object selector {
