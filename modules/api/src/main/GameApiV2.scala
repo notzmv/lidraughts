@@ -25,7 +25,13 @@ final class GameApiV2(
 
   import GameApiV2._
 
-  def exportOne(game: Game, config: OneConfig): Fu[String] =
+  def exportOne(game: Game, configInput: OneConfig): Fu[String] = {
+    val config = configInput.copy(
+      flags = configInput.flags.copy(
+        delayMoves = game.playable ?? 3,
+        evals = configInput.flags.evals && !game.playable
+      )
+    )
     game.pdnImport ifTrue config.imported match {
       case Some(imported) => fuccess(imported.pdn)
       case None => enrich(config.flags)(game) flatMap {
@@ -35,6 +41,7 @@ final class GameApiV2(
         }
       }
     }
+  }
 
   private val fileR = """[\s,]""".r
   def filename(game: Game, format: Format): Fu[String] = gameLightUsers(game) map {
@@ -128,8 +135,8 @@ final class GameApiV2(
 
   private def enrich(flags: WithFlags)(game: Game) =
     GameRepo initialFen game flatMap { initialFen =>
-      (flags.evals ?? AnalysisRepo.byGame(game)) map { analysis =>
-        (game, initialFen, analysis)
+      (flags.evals ?? AnalysisRepo.byGame(game)) dmap {
+        (game, initialFen, _)
       }
     }
 

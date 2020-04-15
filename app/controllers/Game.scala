@@ -29,22 +29,19 @@ object Game extends LidraughtsController {
   }
 
   def exportOne(id: String) = Open { implicit ctx =>
-    OptionFuResult(GameRepo game id) { game =>
-      if (game.playable) BadRequest("Can't export PDN of game in progress").fuccess
-      else {
-        val config = GameApiV2.OneConfig(
-          format = if (HTTPRequest acceptsJson ctx.req) GameApiV2.Format.JSON else GameApiV2.Format.PDN,
-          imported = getBool("imported"),
-          flags = requestPdnFlags(ctx.req, ctx.pref.draughtsResult, extended = true, ctx.pref.canAlgebraic)
-        )
-        lidraughts.mon.export.pdn.game()
-        Env.api.gameApiV2.exportOne(game, config) flatMap { content =>
-          Env.api.gameApiV2.filename(game, config.format) map { filename =>
-            Ok(content).withHeaders(
-              CONTENT_TYPE -> gameContentType(config),
-              CONTENT_DISPOSITION -> s"attachment; filename=$filename"
-            )
-          }
+    OptionFuResult(Env.round.proxy.gameIfPresent(id) orElse GameRepo.game(id)) { game =>
+      val config = GameApiV2.OneConfig(
+        format = if (HTTPRequest acceptsJson ctx.req) GameApiV2.Format.JSON else GameApiV2.Format.PDN,
+        imported = getBool("imported"),
+        flags = requestPdnFlags(ctx.req, ctx.pref.draughtsResult, extended = true, ctx.pref.canAlgebraic)
+      )
+      lidraughts.mon.export.pdn.game()
+      Env.api.gameApiV2.exportOne(game, config) flatMap { content =>
+        Env.api.gameApiV2.filename(game, config.format) map { filename =>
+          Ok(content).withHeaders(
+            CONTENT_TYPE -> gameContentType(config),
+            CONTENT_DISPOSITION -> s"attachment; filename=$filename"
+          )
         }
       }
     }
