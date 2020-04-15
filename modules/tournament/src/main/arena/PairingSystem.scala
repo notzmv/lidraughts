@@ -25,7 +25,7 @@ private[tournament] object PairingSystem extends AbstractPairingSystem {
   def createPairings(tour: Tournament, users: WaitingUsers, ranking: Ranking): Fu[Pairings] = {
     for {
       lastOpponents <- PairingRepo.lastOpponents(tour.id, users.all, Math.min(120, users.size * 4))
-      onlyTwoActivePlayers <- (tour.nbPlayers <= 20) ?? PlayerRepo.countActive(tour.id).map(2==)
+      onlyTwoActivePlayers <- (tour.nbPlayers <= 20) ?? PlayerRepo.countActive(tour.id).dmap(2==)
       data = Data(tour, lastOpponents, if (tour.isUnique) Nil else users.waitingLong, ranking, onlyTwoActivePlayers)
       preps <- if (data.isFirstRound) evenOrAll(data, users)
       else makePreps(data, users.waiting) flatMap {
@@ -64,7 +64,7 @@ private[tournament] object PairingSystem extends AbstractPairingSystem {
   }.result
 
   private def prepsToPairings(preps: List[Pairing.Prep]): Fu[List[Pairing]] =
-    if (preps.size < 50) preps.map { prep =>
+    if (preps.size <= 50) preps.map { prep =>
       UserRepo.firstGetsWhite(prep.user1.some, prep.user2.some) flatMap prep.toPairing
     }.sequenceFu
     else preps.map(_ toPairing Random.nextBoolean).sequenceFu

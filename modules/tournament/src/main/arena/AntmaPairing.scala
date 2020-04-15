@@ -23,14 +23,20 @@ private object AntmaPairing {
           Math.abs(a.player.rating - b.player.rating)
       }
 
-    WMMatching(players.toArray, pairScore).fold(
-      err => {
-        logger.error("WMMatching", err)
-        Nil
-      },
-      _ map {
-        case (a, b) => Pairing.prep(tour, a.player, b.player)
-      }
-    )
+    def duelScore: (RankedPlayer, RankedPlayer) => Option[Int] = (_, _) => Some(1)
+
+    WMMatching(
+      players.toArray,
+      if (data.onlyTwoActivePlayers) duelScore
+      else pairScore
+    ).fold(
+        err => {
+          logger.error("WMMatching", err)
+          Nil
+        },
+        _ map {
+          case (a, b) => Pairing.prep(tour, a.player, b.player)
+        }
+      )
   }
 }
