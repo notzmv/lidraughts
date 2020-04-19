@@ -48,6 +48,16 @@ final class GameApiV2(
       ), "_"
     )
   }
+  def filename(tour: Tournament, format: Format): String =
+    fileR.replaceAllIn(
+      "lidraughts_tournament_%s_%s_%s.%s".format(
+        Tag.UTCDate.format.print(tour.startsAt),
+        tour.id,
+        lidraughts.common.String.slugify(tour.name),
+        format.toString.toLowerCase
+      ),
+      "_"
+    )
 
   def exportByUser(config: ByUserConfig): Enumerator[String] = {
 

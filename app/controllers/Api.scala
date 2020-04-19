@@ -249,9 +249,11 @@ object Api extends LidraughtsController {
             flags = flags,
             perSecond = MaxPerSecond(20)
           )
+          val filename = Env.api.gameApiV2.filename(tour, config.format)
           Ok.chunked(Env.api.gameApiV2.exportByTournament(config)).withHeaders(
             noProxyBufferHeader,
-            CONTENT_TYPE -> Game.gameContentType(config)
+            CONTENT_TYPE -> Game.gameContentType(config),
+            CONTENT_DISPOSITION -> s"attachment; filename=$filename"
           ).fuccess
         }
       }
