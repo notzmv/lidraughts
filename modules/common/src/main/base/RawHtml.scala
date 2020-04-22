@@ -16,12 +16,12 @@ final object RawHtml {
       if (char == '\n') {
         counter += 1
         if (counter < 3) {
-          sb.append("<br />")
+          sb.append("<br>")
         }
       } else if (char != '\r') {
         counter = 0
         sb.append(char)
-        }
+      }
     }
     sb.toString
   }
