@@ -57,16 +57,14 @@ export function view(ctrl: LangsCtrl): VNode {
     header(ctrl.trans.noarg('language'), ctrl.close),
     list ? h('form', {
       attrs: { method: 'post', action: '/translation/select' }
-    }, langLinks(ctrl, list)) : spinner()
+    }, list.map(langView(ctrl.data.current, ctrl.data.accepted))) : spinner(),
+    h('a.help.text', {
+      attrs: {
+        href: 'https://crowdin.com/project/lidraughts',
+        'data-icon': ''
+      }
+    }, 'Help translate Lidraughts')
   ]);
-}
-
-function langLinks(ctrl: LangsCtrl, list: Lang[]) {
-  const links = list.map(langView(ctrl.data.current, ctrl.data.accepted));
-  /*links.push(h('a', {
-    attrs: { href: 'https://crowdin.com/project/lidraughts' }
-  }, 'Help translate lidraughts'));*/
-  return links;
 }
 
 function langView(current: Code, accepted: Code[]) {
