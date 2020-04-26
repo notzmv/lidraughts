@@ -53,7 +53,9 @@ object Team extends LidraughtsController {
     } yield html.team.show(team, members, info, chat, version)
 
   private def canHaveChat(team: TeamModel, info: lidraughts.app.mashup.TeamInfo)(implicit ctx: Context): Boolean =
-    team.chat && info.mine && !ctx.kid // no chats for kids
+    team.chat && {
+      (info.mine && !ctx.kid) || isGranted(_.ChatTimeout)
+    }
 
   def websocket(id: String, apiVersion: Int) = SocketOption[JsValue] { implicit ctx =>
     getSocketUid("sri") ?? { uid =>
