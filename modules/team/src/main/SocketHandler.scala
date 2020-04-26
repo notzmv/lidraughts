@@ -41,6 +41,11 @@ private[team] final class SocketHandler(
               chatId = Chat.Id(teamId),
               member = member,
               chat = chat,
+              canTimeout = Some { suspectId =>
+                user.?? { u =>
+                  TeamRepo.isCreator(teamId, u.id) >>& !TeamRepo.isCreator(teamId, suspectId)
+                }
+              },
               publicSource = lidraughts.hub.actorApi.shutup.PublicSource.Team(teamId).some
             ),
             member,

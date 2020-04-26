@@ -65,7 +65,7 @@ object Team extends LidraughtsController {
 
   def users(teamId: String) = Action.async { req =>
     import Api.limitedDefault
-    Env.team.api.team(teamId) flatMap {
+    api.team(teamId) flatMap {
       _ ?? { team =>
         Api.GlobalLinearLimitPerIP(HTTPRequest lastRemoteAddress req) {
           import play.api.libs.iteratee._
@@ -73,6 +73,16 @@ object Team extends LidraughtsController {
             Env.team.memberStream(team, MaxPerSecond(20)) &>
               Enumeratee.map(Env.api.userApi.one)
           } |> fuccess
+        }
+      }
+    }
+  }
+
+  def tournaments(teamId: String) = Open { implicit ctx =>
+    TeamRepo.enabled(teamId) flatMap {
+      _ ?? { team =>
+        lidraughts.tournament.TournamentRepo.byTeam(team.id, 50) map { tours =>
+          Ok(html.team.bits.tournaments(team, tours))
         }
       }
     }

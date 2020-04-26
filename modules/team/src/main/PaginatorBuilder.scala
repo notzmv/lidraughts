@@ -19,7 +19,7 @@ private[team] final class PaginatorBuilder(
   def popularTeams(page: Int): Fu[Paginator[Team]] = Paginator(
     adapter = new Adapter(
       collection = coll.team,
-      selector = TeamRepo.enabledQuery,
+      selector = TeamRepo.enabledSelect,
       projection = $empty,
       sort = TeamRepo.sortPopular
     ),
