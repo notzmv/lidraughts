@@ -22,6 +22,7 @@ object PublicLine {
       case Array("s", id) => Source.Simul(id)
       case Array("w", gameId) => Source.Watcher(gameId)
       case Array("u", id) => Source.Study(id)
+      case Array("e", id) => Source.Team(id)
       case a => sys error s"Invalid PublicLine source ${bs.value}"
     }
     def write(x: Source) = BSONString {
@@ -30,6 +31,7 @@ object PublicLine {
         case Source.Simul(id) => s"s:$id"
         case Source.Study(id) => s"u:$id"
         case Source.Watcher(gameId) => s"w:$gameId"
+        case Source.Team(id) => s"e:$id"
       }
     }
   }

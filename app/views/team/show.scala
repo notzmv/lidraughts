@@ -1,27 +1,60 @@
 package views.html.team
 
+import play.api.libs.json.Json
+
 import lidraughts.api.Context
 import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
 import lidraughts.common.paginator.Paginator
-import lidraughts.common.String.html.richText
+import lidraughts.common.String.html.{ richText, safeJsonValue }
+import lidraughts.team.Team
 
 import controllers.routes
 
 object show {
 
-  def apply(t: lidraughts.team.Team, members: Paginator[lidraughts.team.MemberWithUser], info: lidraughts.app.mashup.TeamInfo)(implicit ctx: Context) =
+  def apply(
+    t: Team,
+    members: Paginator[lidraughts.team.MemberWithUser],
+    info: lidraughts.app.mashup.TeamInfo,
+    chatOption: Option[lidraughts.chat.UserChat.Mine],
+    socketVersion: Option[lidraughts.socket.Socket.SocketVersion]
+  )(implicit ctx: Context) =
     bits.layout(
       title = t.name,
       openGraph = lidraughts.app.ui.OpenGraph(
         title = s"${t.name} team",
         url = s"$netBaseUrl${routes.Team.show(t.id).url}",
         description = shorten(t.description, 152)
-      ).some
+      ).some,
+      moreJs =
+        for {
+          v <- socketVersion
+          chat <- chatOption
+        } yield frag(
+          jsAt(s"compiled/lidraughts.chat${isProd ?? (".min")}.js"),
+          embedJsUnsafe(s"""lidraughts.team=${
+            safeJsonValue(
+              Json.obj(
+                "id" -> t.id,
+                "socketVersion" -> v.value,
+                "chat" -> views.html.chat.json(
+                  chat.chat,
+                  name = trans.chatRoom.txt(),
+                  timeout = chat.timeout,
+                  public = true,
+                  resourceId = lidraughts.chat.Chat.ResourceId(s"team/${chat.chat.id}")
+                )
+              )
+            )
+          }""")
+        )
     )(
         main(cls := "page-menu")(
           bits.menu(none),
-          div(cls := "team-show page-menu__content box team-show")(
+          div(cls := "team-show page-menu__content box team-show", socketVersion.map { v =>
+            data("socket-version") := v.value
+          })(
             div(cls := "box__top")(
               h1(cls := "text", dataIcon := "f")(t.name, " ", em("TEAM")),
               div(
@@ -118,7 +151,8 @@ object show {
                     },
                     a(cls := "more", href := teamForumUrl(t.id))(t.name, " ", trans.forum(), " »")
                   )
-                }
+                },
+                chatOption.isDefined option views.html.chat.frag
               )
             )
           )

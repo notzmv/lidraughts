@@ -38,11 +38,21 @@ object Team extends LidraughtsController {
     else Env.teamSearch(text, page) map { html.team.list.search(text, _) }
   }
 
-  private def renderTeam(team: TeamModel, page: Int = 1)(implicit ctx: Context) = for {
-    info <- Env.current.teamInfo(team, ctx.me)
-    members <- paginator.teamMembers(team, page)
-    _ <- Env.user.lightUserApi preloadMany info.userIds
-  } yield html.team.show(team, members, info)
+  private def renderTeam(team: TeamModel, page: Int = 1)(implicit ctx: Context) =
+    for {
+      info <- Env.current.teamInfo(team, ctx.me)
+      members <- paginator.teamMembers(team, page)
+      chat <- canHaveChat(info) ?? Env.chat.api.userChat.cached
+        .findMine(lidraughts.chat.Chat.Id(team.id), ctx.me)
+        .map(some)
+      _ <- Env.user.lightUserApi preloadMany {
+        info.userIds ::: chat.??(_.chat.userIds)
+      }
+      version <- info.mine ?? Env.team.version(team.id).dmap(some)
+    } yield html.team.show(team, members, info, chat, version)
+
+  private def canHaveChat(info: lidraughts.app.mashup.TeamInfo)(implicit ctx: Context): Boolean =
+    info.mine && !ctx.kid // no chats for kids
 
   def users(teamId: String) = Action.async { req =>
     import Api.limitedDefault
