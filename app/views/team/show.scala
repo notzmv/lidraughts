@@ -112,11 +112,11 @@ object show {
                 richText(t.description),
                 t.location.map { loc =>
                   frag(br, trans.location(), ": ", richText(loc))
-                },
-                info.hasRequests option div(cls := "requests")(
-                  h2(info.requests.size, " join requests"),
-                  views.html.team.request.list(info.requests, t.some)
-                )
+                }
+              ),
+              info.hasRequests option div(cls := "team-show__requests")(
+                h2(info.requests.size, " join requests"),
+                views.html.team.request.list(info.requests, t.some)
               ),
               div(cls := "team-show__tour-forum")(
                 info.tournaments.nonEmpty option frag(
