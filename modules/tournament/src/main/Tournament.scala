@@ -40,6 +40,8 @@ case class Tournament(
   def isStarted = status == Status.Started
   def isFinished = status == Status.Finished
 
+  def isEnterable = !isFinished
+
   def isPrivate = password.isDefined
   def isHidden = isPrivate && !isUnique
   def isWipable = !isPrivate && !isScheduled

@@ -57,7 +57,8 @@ final class Env(
   lazy val paginator = new PaginatorBuilder(
     coll = colls,
     maxPerPage = MaxPerPage(PaginatorMaxPerPage),
-    maxUserPerPage = MaxPerPage(PaginatorMaxUserPerPage)
+    maxUserPerPage = MaxPerPage(PaginatorMaxUserPerPage),
+    lightUserApi = lightUserApi
   )
 
   private val socketMap: SocketMap = lidraughts.socket.SocketMap[TeamSocket](
