@@ -42,17 +42,18 @@ object Team extends LidraughtsController {
     for {
       info <- Env.current.teamInfo(team, ctx.me)
       members <- paginator.teamMembers(team, page)
-      chat <- canHaveChat(info) ?? Env.chat.api.userChat.cached
+      hasChat = canHaveChat(team, info)
+      chat <- hasChat ?? Env.chat.api.userChat.cached
         .findMine(lidraughts.chat.Chat.Id(team.id), ctx.me)
         .map(some)
       _ <- Env.user.lightUserApi preloadMany {
         info.userIds ::: chat.??(_.chat.userIds)
       }
-      version <- info.mine ?? Env.team.version(team.id).dmap(some)
+      version <- hasChat ?? Env.team.version(team.id).dmap(some)
     } yield html.team.show(team, members, info, chat, version)
 
-  private def canHaveChat(info: lidraughts.app.mashup.TeamInfo)(implicit ctx: Context): Boolean =
-    info.mine && !ctx.kid // no chats for kids
+  private def canHaveChat(team: TeamModel, info: lidraughts.app.mashup.TeamInfo)(implicit ctx: Context): Boolean =
+    team.chat && info.mine && !ctx.kid // no chats for kids
 
   def websocket(id: String, apiVersion: Int) = SocketOption[JsValue] { implicit ctx =>
     getSocketUid("sri") ?? { uid =>
