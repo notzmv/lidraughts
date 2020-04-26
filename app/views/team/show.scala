@@ -65,7 +65,20 @@ object show {
               st.section(cls := "team-show__meta")(
                 p(trans.teamLeader(), ": ", userIdLink(t.createdBy.some))
               ),
-              chatOption.isDefined option views.html.chat.frag,
+              chatOption.isDefined option frag(
+                views.html.chat.frag,
+                div(
+                  cls := "chat__members",
+                  aria.live := "off",
+                  aria.relevant := "additions removals text"
+                )(
+                    span(cls := "number")(nbsp),
+                    " ",
+                    trans.spectators.txt().replace(":", ""),
+                    " ",
+                    span(cls := "list")
+                  )
+              ),
               div(cls := "team-show__actions")(
                 (t.enabled && !info.mine) option frag(
                   if (info.requestedByMe) strong("Your join request is being reviewed by the team leader")
