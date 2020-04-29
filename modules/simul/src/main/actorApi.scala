@@ -31,7 +31,7 @@ private[simul] case class Join(
     version: Option[SocketVersion],
     promise: Promise[Connected]
 )
-private[simul] case class Talk(tourId: String, u: String, t: String, troll: Boolean)
+private[simul] case class Talk(simulId: String, u: String, t: String, troll: Boolean)
 private[simul] case class StartGame(game: Game, hostId: String)
 private[simul] case class StartSimul(firstGame: Game, hostId: String)
 private[simul] case class HostIsOn(gameId: String)

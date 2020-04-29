@@ -88,7 +88,9 @@ private[simul] final class Socket(
 
     case NotifyCrowd =>
       delayedCrowdNotification = false
-      showSpectators(lightUser)(members.values) foreach { notifyAll("crowd", _) }
+      showSpectators(lightUser)(members.values) foreach {
+        notifyAll("crowd", _)
+      }
 
   }: Trouper.Receive) orElse lidraughts.chat.Socket.out(
     send = (t, d, trollish) => notifyVersion(t, d, Messadata(trollish))

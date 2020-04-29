@@ -68,6 +68,7 @@ package shutup {
     case class Simul(id: String) extends PublicSource
     case class Study(id: String) extends PublicSource
     case class Watcher(gameId: String) extends PublicSource
+    case class Swiss(id: String) extends PublicSource
   }
 }
 

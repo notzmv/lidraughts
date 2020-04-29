@@ -87,6 +87,7 @@ object Chat {
 
   def tournamentSetup(tourId: String) = Setup(Id(tourId), PublicSource.Tournament(tourId))
   def simulSetup(simulId: String) = Setup(Id(simulId), PublicSource.Simul(simulId))
+  def swissSetup(swissId: String) = Setup(Id(swissId), PublicSource.Swiss(swissId))
 
   // if restricted, only presets are available
   case class Restricted(chat: MixedChat, restricted: Boolean)
