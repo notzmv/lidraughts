@@ -14,6 +14,8 @@ final class SwissApi(
 
   import BsonHandlers._
 
+  def byId(id: Swiss.Id) = swissColl.byId[Swiss](id.value)
+
   def create(data: SwissForm.SwissData, me: User, teamId: TeamId): Fu[Swiss] = {
     val swiss = Swiss(
       _id = Swiss.makeId,
@@ -34,6 +36,9 @@ final class SwissApi(
     )
     swissColl.insert(swiss) inject swiss
   }
+
+  def roundsOf(swiss: Swiss) =
+    roundColl.find($doc("swissId" $startsWith s"${swiss.id}:")).list[SwissRound]()
 
   def featuredInTeam(teamId: TeamId): Fu[List[Swiss]] =
     swissColl.find($doc("teamId" -> teamId)).sort($sort desc "startsAt").list[Swiss](5)

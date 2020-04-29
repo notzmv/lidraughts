@@ -2,6 +2,8 @@ package lidraughts.swiss
 
 import com.typesafe.config.Config
 
+import lidraughts.socket.Socket.{ GetVersion, SocketVersion }
+
 final class Env(
     config: Config,
     db: lidraughts.db.Env
@@ -17,6 +19,12 @@ final class Env(
     swissColl = swissColl,
     roundColl = roundColl
   )
+
+  def version(tourId: Swiss.Id): Fu[SocketVersion] =
+    fuccess(SocketVersion(0))
+  // socketMap.askIfPresentOrZero[SocketVersion](tourId)(GetVersion)
+
+  lazy val json = new SwissJson
 
   lazy val forms = new SwissForm
 

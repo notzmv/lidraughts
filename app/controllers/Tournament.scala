@@ -103,7 +103,9 @@ object Tournament extends LidraughtsController {
               lang = ctx.lang,
               ctx.pref.some
             )
-            chat <- canHaveChat(tour, json.some) ?? Env.chat.api.userChat.cached.findMine(Chat.Id(tour.id), ctx.me).map(some)
+            chat <- canHaveChat(tour, json.some) ?? Env.chat.api.userChat.cached
+              .findMine(Chat.Id(tour.id), ctx.me)
+              .dmap(some)
             _ <- chat ?? { c => Env.user.lightUserApi.preloadMany(c.chat.userIds) }
             _ <- tour.teamBattle ?? { b => Env.team.cached.preloadSet(b.teams) }
             streamers <- streamerCache get tour.id
@@ -239,6 +241,21 @@ object Tournament extends LidraughtsController {
     fuccess(Redirect(routes.Tournament.home(1)))
   }
 
+  private[controllers] def rateLimitCreation(me: UserModel, isPrivate: Boolean, req: RequestHeader)(
+    create: => Fu[Result]
+  ): Fu[Result] = {
+    val cost = if (me.hasTitle ||
+      Env.streamer.liveStreamApi.isStreaming(me.id) ||
+      isGranted(_.ManageTournament, me) ||
+      me.isVerified ||
+      isPrivate) 1 else 2
+    CreateLimitPerUser(me.id, cost = cost) {
+      CreateLimitPerIP(HTTPRequest lastRemoteAddress req, cost = cost) {
+        create
+      }(rateLimited)
+    }(rateLimited)
+  }
+
   def create = AuthBody { implicit ctx => me =>
     NoLameOrBot {
       teamsIBelongTo(me) flatMap { teams =>
@@ -247,21 +264,14 @@ object Tournament extends LidraughtsController {
           html = env.forms.create(me).bindFromRequest.fold(
             err => BadRequest(html.tournament.form.create(err, env.forms, me, teams)).fuccess,
             setup => {
-              val cost = if (me.hasTitle ||
-                Env.streamer.liveStreamApi.isStreaming(me.id) ||
-                isGranted(_.ManageTournament) ||
-                me.isVerified ||
-                setup.password.isDefined) 1 else 2
-              CreateLimitPerUser(me.id, cost) {
-                CreateLimitPerIP(HTTPRequest lastRemoteAddress ctx.req, cost = 1) {
-                  env.api.createTournament(setup, me, teams, getUserTeamIds) map { tour =>
-                    Redirect {
-                      if (tour.isTeamBattle) routes.Tournament.teamBattleEdit(tour.id)
-                      else routes.Tournament.show(tour.id)
-                    }
+              rateLimitCreation(me, setup.password.isDefined, ctx.req) {
+                env.api.createTournament(setup, me, teams, getUserTeamIds) map { tour =>
+                  Redirect {
+                    if (tour.isTeamBattle) routes.Tournament.teamBattleEdit(tour.id)
+                    else routes.Tournament.show(tour.id)
                   }
-                }(rateLimited)
-              }(rateLimited)
+                }
+              }
             }
           ),
           api = _ => doApiCreate(me, teams)
@@ -275,12 +285,14 @@ object Tournament extends LidraughtsController {
     else teamsIBelongTo(me) flatMap { teams => doApiCreate(me, teams) }
   }
 
-  private def doApiCreate(me: lidraughts.user.User, teams: List[lidraughts.hub.lightTeam.LightTeam])(implicit req: Request[_]): Fu[Result] =
+  private def doApiCreate(me: UserModel, teams: List[lidraughts.hub.lightTeam.LightTeam])(implicit req: Request[_]): Fu[Result] =
     env.forms.create(me).bindFromRequest.fold(
       jsonFormErrorDefaultLang,
-      setup => env.api.createTournament(setup, me, teams, getUserTeamIds) flatMap { tour =>
-        Env.tournament.jsonView(tour, none, none, getUserTeamIds, Env.team.cached.name, none, none, partial = false, lidraughts.i18n.defaultLang, none)
-      } map { Ok(_) }
+      setup => rateLimitCreation(me, setup.password.isDefined, req) {
+        env.api.createTournament(setup, me, teams, getUserTeamIds) flatMap { tour =>
+          Env.tournament.jsonView(tour, none, none, getUserTeamIds, Env.team.cached.name, none, none, partial = false, lidraughts.i18n.defaultLang, none)
+        } map { Ok(_) }
+      }
     )
 
   def teamBattleEdit(id: String) = Auth { implicit ctx => me =>
