@@ -120,6 +120,7 @@ final class Env(
     Env.socket,
     Env.site,
     Env.tournament,
+    Env.swiss,
     Env.lobby,
     Env.game,
     Env.setup,
@@ -234,4 +235,5 @@ object Env {
   def bot = lidraughts.bot.Env.current
   def evalCache = lidraughts.evalCache.Env.current
   def rating = lidraughts.rating.Env.current
+  def swiss = lidraughts.swiss.Env.current
 }
