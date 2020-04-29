@@ -1,12 +1,12 @@
 {
-  "name": "tournament",
-  "version": "1.0.0",
-  "description": "lidraughts.org arena tournament",
+  "name": "swiss",
+  "version": "2.0.0",
+  "description": "lidraughts.org swiss tournament",
   "main": "src/main.js",
   "keywords": [
     "draughts",
     "lidraughts",
-    "arena",
+    "swiss",
     "tournament"
   ],
   "author": "Stefan Schermann (modified original by Thibault Duplessis)",

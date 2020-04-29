@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-# Starts a dev console to compile and run lichess.
+# Starts a dev console to compile and run lidraughts.
 #
 # To edit this file, copy it to bin/dev. It will not be tracked by Git:
 # cp bin/dev.default bin/dev
