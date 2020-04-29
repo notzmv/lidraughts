@@ -5,7 +5,7 @@ import lidraughts.game.{ IdGenerator, Game }
 import lidraughts.user.User
 
 case class Pairing(
-    id: Game.ID, // game Id
+    id: Game.ID,
     tourId: Tournament.ID,
     status: draughts.Status,
     user1: User.ID,
