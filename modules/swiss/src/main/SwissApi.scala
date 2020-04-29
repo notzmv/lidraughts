@@ -9,7 +9,7 @@ import lidraughts.common.GreatPlayer
 
 final class SwissApi(
     swissColl: Coll,
-    roundColl: Coll
+    pairingColl: Coll
 ) {
 
   import BsonHandlers._
@@ -24,6 +24,7 @@ final class SwissApi(
       clock = data.clock,
       variant = data.realVariant,
       rated = data.rated | true,
+      round = SwissRound.Number(0),
       nbRounds = data.nbRounds,
       nbPlayers = 0,
       createdAt = DateTime.now,
@@ -37,8 +38,8 @@ final class SwissApi(
     swissColl.insert(swiss) inject swiss
   }
 
-  def roundsOf(swiss: Swiss) =
-    roundColl.find($doc("swissId" $startsWith s"${swiss.id}:")).list[SwissRound]()
+  def pairingsOf(swiss: Swiss) =
+    pairingColl.find($doc("s" -> swiss.id)).sort($sort asc "r").list[SwissPairing]()
 
   def featuredInTeam(teamId: TeamId): Fu[List[Swiss]] =
     swissColl.find($doc("teamId" -> teamId)).sort($sort desc "startsAt").list[Swiss](5)

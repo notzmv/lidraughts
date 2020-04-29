@@ -11,13 +11,14 @@ final class Env(
 
   private val settings = new {
     val CollectionSwiss = config getString "collection.swiss"
-    val CollectionRound = config getString "collection.round"
+    val CollectionPlayer = config getString "collection.player"
+    val CollectionPairing = config getString "collection.pairing"
   }
   import settings._
 
   lazy val api = new SwissApi(
     swissColl = swissColl,
-    roundColl = roundColl
+    pairingColl = pairingColl
   )
 
   def version(tourId: Swiss.Id): Fu[SocketVersion] =
@@ -29,7 +30,8 @@ final class Env(
   lazy val forms = new SwissForm
 
   private[swiss] lazy val swissColl = db(CollectionSwiss)
-  private[swiss] lazy val roundColl = db(CollectionRound)
+  private[swiss] lazy val playerColl = db(CollectionPlayer)
+  private[swiss] lazy val pairingColl = db(CollectionPairing)
 }
 
 object Env {
