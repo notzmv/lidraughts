@@ -81,18 +81,36 @@ object show {
                       strong("Team tournament"),
                       em("An arena tournament that only members of your team can join")
                     )
+                  ),
+                  a(href := s"${routes.Swiss.form(t.id)}", cls := "button button-empty text", dataIcon := "g")(
+                    span(
+                      strong("Swiss tournament"),
+                      em("Slow and clunky, a boomer's favourite")
+                    )
                   )
                 )
               ),
               div(cls := "team-show__tour-forum")(
                 info.tournaments.nonEmpty option frag(
-                  st.section(cls := "team-show__tour")(
+                  st.section(cls := "team-show__tour team-tournaments")(
                     h2(dataIcon := "g", cls := "text")(trans.tournaments()),
                     info.tournaments.span(_.isCreated) match {
                       case (created, started) =>
                         frag(
                           views.html.tournament.bits.forTeam(created.sortBy(_.startsAt)),
                           views.html.tournament.bits.forTeam(started)
+                        )
+                    }
+                  )
+                ),
+                info.swisses.nonEmpty option frag(
+                  st.section(cls := "team-show__tour team-swisses")(
+                    h2(dataIcon := "g", "Swiss tournaments"),
+                    info.swisses.span(_.isCreated) match {
+                      case (created, started) =>
+                        frag(
+                          views.html.swiss.bits.forTeam(created.sortBy(_.startsAt)),
+                          views.html.swiss.bits.forTeam(started)
                         )
                     }
                   )

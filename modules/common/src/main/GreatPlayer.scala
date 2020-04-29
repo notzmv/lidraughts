@@ -1,4 +1,4 @@
-package lidraughts.tournament
+package lidraughts.common
 
 object GreatPlayer {
 

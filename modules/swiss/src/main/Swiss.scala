@@ -1,11 +1,14 @@
 package lidraughts.swiss
 
-import org.joda.time.DateTime
 import draughts.Clock.{ Config => ClockConfig }
-import lidraughts.hub.lightTeam.TeamId
+import draughts.Speed
+import org.joda.time.DateTime
+import scala.concurrent.duration._
 
+import lidraughts.game.{ Game, PerfPicker }
+import lidraughts.hub.lightTeam.TeamId
+import lidraughts.rating.PerfType
 import lidraughts.user.User
-import lidraughts.game.Game
 
 case class Swiss(
     _id: Swiss.Id,
@@ -25,6 +28,27 @@ case class Swiss(
     hasChat: Boolean = true
 ) {
   def id = _id
+
+  def isCreated = status == Status.Created
+  def isStarted = status == Status.Started
+  def isFinished = status == Status.Finished
+  def isEnterable = !isFinished
+
+  def isNowOrSoon = startsAt.isBefore(DateTime.now plusMinutes 15) && !isFinished
+
+  def speed = Speed(clock)
+
+  def perfType: Option[PerfType] = PerfPicker.perfType(speed, variant, none)
+
+  def estimatedDuration: FiniteDuration = {
+    (clock.limit.toSeconds + clock.increment.toSeconds * 80 + 10) * nbRounds
+  }.toInt.seconds
+
+  def estimatedDurationString = {
+    val minutes = estimatedDuration.toMinutes
+    if (minutes < 60) s"${minutes}m"
+    else s"${minutes / 60}h" + (if (minutes % 60 != 0) s" ${(minutes % 60)}m" else "")
+  }
 }
 
 object Swiss {

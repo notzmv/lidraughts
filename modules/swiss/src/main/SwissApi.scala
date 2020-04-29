@@ -4,8 +4,8 @@ import org.joda.time.DateTime
 
 import lidraughts.hub.lightTeam.TeamId
 import lidraughts.user.User
-
 import lidraughts.db.dsl._
+import lidraughts.common.GreatPlayer
 
 final class SwissApi(
     swissColl: Coll,
@@ -17,7 +17,7 @@ final class SwissApi(
   def create(data: SwissForm.SwissData, me: User, teamId: TeamId): Fu[Swiss] = {
     val swiss = Swiss(
       _id = Swiss.makeId,
-      name = data.name,
+      name = data.name | GreatPlayer.randomName,
       status = Status.Created,
       clock = data.clock,
       variant = data.realVariant,
@@ -34,4 +34,7 @@ final class SwissApi(
     )
     swissColl.insert(swiss) inject swiss
   }
+
+  def featuredInTeam(teamId: TeamId): Fu[List[Swiss]] =
+    swissColl.find($doc("teamId" -> teamId)).sort($sort desc "startsAt").list[Swiss](5)
 }

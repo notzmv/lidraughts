@@ -5,7 +5,7 @@ import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.json._
 import scala.concurrent.duration._
 
-import lidraughts.common.{ Lang, LightUser }
+import lidraughts.common.{ GreatPlayer, Lang, LightUser }
 import lidraughts.game.JsonView.boardSizeWriter
 import lidraughts.game.{ LightPov, Game }
 import lidraughts.hub.lightTeam._

@@ -2,6 +2,7 @@ package lidraughts.app
 package templating
 
 import draughts.{ Mode, Speed }
+import draughts.variant.Variant
 import lidraughts.api.Context
 import lidraughts.i18n.{ I18nKeys => trans }
 import lidraughts.pref.Pref
@@ -129,37 +130,48 @@ trait SetupHelper { self: I18nHelper =>
     d -> trans.nbSeconds.pluralSameTxt(d)
   }
 
-  private def variantTuple(variant: draughts.variant.Variant)(implicit ctx: Context): SelectChoice =
-    (variant.id.toString, variant.name, variant.title.some)
+  private val encodeId = (v: Variant) => v.id.toString
 
-  def translatedVariantChoices(implicit ctx: Context) = List(
-    (draughts.variant.Standard.id.toString, trans.standard.txt(), draughts.variant.Standard.title.some)
+  private def variantTupleId = variantTuple(encodeId) _
+
+  private def variantTuple(encode: Variant => String)(variant: Variant) =
+    (encode(variant), variant.name, variant.title.some)
+
+  def translatedVariantChoices(implicit ctx: Context): List[SelectChoice] =
+    translatedVariantChoices(encodeId)
+
+  def translatedVariantChoices(encode: Variant => String)(implicit ctx: Context): List[SelectChoice] = List(
+    (encode(draughts.variant.Standard), trans.standard.txt(), draughts.variant.Standard.title.some)
   )
 
-  def translatedVariantChoicesWithVariants(implicit ctx: Context) =
-    translatedVariantChoices(ctx) :+
-      variantTuple(draughts.variant.Frisian) :+
-      variantTuple(draughts.variant.Frysk) :+
-      variantTuple(draughts.variant.Antidraughts) :+
-      variantTuple(draughts.variant.Breakthrough) :+
-      variantTuple(draughts.variant.Russian) :+
-      variantTuple(draughts.variant.Brazilian)
+  def translatedVariantChoicesWithVariants(implicit ctx: Context): List[SelectChoice] =
+    translatedVariantChoicesWithVariants(encodeId)
+
+  def translatedVariantChoicesWithVariants(encode: Variant => String)(implicit ctx: Context) =
+    translatedVariantChoices(encode) ::: List(
+      draughts.variant.Frisian,
+      draughts.variant.Frysk,
+      draughts.variant.Antidraughts,
+      draughts.variant.Breakthrough,
+      draughts.variant.Russian,
+      draughts.variant.Brazilian
+    ).map(variantTuple(encode))
 
   def translatedVariantChoicesWithFen(implicit ctx: Context) =
     translatedVariantChoices(ctx) :+
-      variantTuple(draughts.variant.FromPosition)
+      variantTupleId(draughts.variant.FromPosition)
 
   def translatedAiVariantChoices(implicit ctx: Context) =
     translatedVariantChoices(ctx) :+
-      variantTuple(draughts.variant.Frisian) :+
-      variantTuple(draughts.variant.Frysk) :+
-      variantTuple(draughts.variant.Antidraughts) :+
-      variantTuple(draughts.variant.Breakthrough) :+
-      variantTuple(draughts.variant.FromPosition)
+      variantTupleId(draughts.variant.Frisian) :+
+      variantTupleId(draughts.variant.Frysk) :+
+      variantTupleId(draughts.variant.Antidraughts) :+
+      variantTupleId(draughts.variant.Breakthrough) :+
+      variantTupleId(draughts.variant.FromPosition)
 
   def translatedVariantChoicesWithVariantsAndFen(implicit ctx: Context) =
     translatedVariantChoicesWithVariants :+
-      variantTuple(draughts.variant.FromPosition)
+      variantTupleId(draughts.variant.FromPosition)
 
   def translatedSpeedChoices(implicit ctx: Context) = Speed.limited map { s =>
     val minutes = s.range.max / 60 + 1

@@ -5,6 +5,7 @@ import ornicar.scalalib.Random
 
 import draughts.Clock.{ Config => ClockConfig }
 import draughts.{ Speed, Mode, StartingPosition, OpeningTable }
+import lidraughts.common.GreatPlayer
 import lidraughts.game.PerfPicker
 import lidraughts.rating.PerfType
 import lidraughts.user.User

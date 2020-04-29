@@ -5,6 +5,7 @@ import lidraughts.forum.MiniForumPost
 import lidraughts.team.{ Team, RequestRepo, MemberRepo, RequestWithUser, TeamApi }
 import lidraughts.tournament.{ Tournament, TournamentRepo }
 import lidraughts.user.{ User, UserRepo }
+import lidraughts.swiss.{ Swiss, SwissApi }
 
 case class TeamInfo(
     mine: Boolean,
@@ -13,7 +14,8 @@ case class TeamInfo(
     requests: List[RequestWithUser],
     forumNbPosts: Int,
     forumPosts: List[MiniForumPost],
-    tournaments: List[Tournament]
+    tournaments: List[Tournament],
+    swisses: List[Swiss]
 ) {
 
   def hasRequests = requests.nonEmpty
@@ -23,6 +25,7 @@ case class TeamInfo(
 
 final class TeamInfoApi(
     api: TeamApi,
+    swissApi: SwissApi,
     getForumNbPosts: String => Fu[Int],
     getForumPosts: String => Fu[List[MiniForumPost]],
     preloadTeams: Set[Team.ID] => Funit
@@ -38,6 +41,7 @@ final class TeamInfoApi(
     _ <- tours.nonEmpty ?? {
       preloadTeams(tours.flatMap(_.teamBattle.??(_.teams)).toSet)
     }
+    swisses <- swissApi.featuredInTeam(team.id)
   } yield TeamInfo(
     mine = mine,
     createdByMe = ~me.map(m => team.isCreator(m.id)),
@@ -45,6 +49,7 @@ final class TeamInfoApi(
     requests = requests,
     forumNbPosts = forumNbPosts,
     forumPosts = forumPosts,
-    tournaments = tours
+    tournaments = tours,
+    swisses = swisses
   )
 }
