@@ -19,10 +19,10 @@ object Swiss extends LidraughtsController {
       _.fold(swissNotFound.fuccess) { swiss =>
         for {
           version <- env.version(swiss.id)
-          // rounds  <- env.roundsOf(swiss)
+          leaderboard <- env.api.leaderboard(swiss, page = 1)
           json <- env.json(
             swiss = swiss,
-            // rounds = rounds,
+            leaderboard = leaderboard,
             me = ctx.me,
             socketVersion = version.some
           )

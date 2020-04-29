@@ -3,10 +3,12 @@ package lidraughts.swiss
 import com.typesafe.config.Config
 
 import lidraughts.socket.Socket.{ GetVersion, SocketVersion }
+import lidraughts.user.LightUserApi
 
 final class Env(
     config: Config,
-    db: lidraughts.db.Env
+    db: lidraughts.db.Env,
+    lightUserApi: lidraughts.user.LightUserApi
 ) {
 
   private val settings = new {
@@ -18,6 +20,7 @@ final class Env(
 
   lazy val api = new SwissApi(
     swissColl = swissColl,
+    playerColl = playerColl,
     pairingColl = pairingColl
   )
 
@@ -25,7 +28,7 @@ final class Env(
     fuccess(SocketVersion(0))
   // socketMap.askIfPresentOrZero[SocketVersion](tourId)(GetVersion)
 
-  lazy val json = new SwissJson
+  lazy val json = new SwissJson(lightUserApi = lightUserApi)
 
   lazy val forms = new SwissForm
 
@@ -38,6 +41,7 @@ object Env {
 
   lazy val current = "swiss" boot new Env(
     config = lidraughts.common.PlayApp loadConfig "swiss",
-    db = lidraughts.db.Env.current
+    db = lidraughts.db.Env.current,
+    lightUserApi = lidraughts.user.Env.current.lightUserApi
   )
 }
