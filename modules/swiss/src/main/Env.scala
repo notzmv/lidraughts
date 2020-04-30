@@ -12,6 +12,7 @@ final class Env(
     config: Config,
     system: ActorSystem,
     db: lidraughts.db.Env,
+    asyncCache: lidraughts.memo.AsyncCache.Builder,
     lightUserApi: lidraughts.user.LightUserApi
 ) {
 
@@ -58,6 +59,13 @@ final class Env(
 
   lazy val forms = new SwissForm
 
+  private lazy val cache = new SwissCache(
+    asyncCache = asyncCache,
+    swissColl = swissColl
+  )(system)
+
+  lazy val getName = new GetSwissName(cache.name.sync)
+
   private[swiss] lazy val swissColl = db(CollectionSwiss)
   private[swiss] lazy val playerColl = db(CollectionPlayer)
   private[swiss] lazy val pairingColl = db(CollectionPairing)
@@ -69,6 +77,7 @@ object Env {
     config = lidraughts.common.PlayApp loadConfig "swiss",
     system = lidraughts.common.PlayApp.system,
     db = lidraughts.db.Env.current,
+    asyncCache = lidraughts.memo.Env.current.asyncCache,
     lightUserApi = lidraughts.user.Env.current.lightUserApi
   )
 }

@@ -19,7 +19,7 @@ object bits {
       href := routes.Swiss.show(swissId.value).url
     )(name)
 
-  def idToName(id: Swiss.Id): String = "Swiss"
+  def idToName(id: Swiss.Id): String = lidraughts.swiss.Env.current.getName(id) getOrElse "Tournament"
   def iconChar(swiss: Swiss): String = swiss.perfType.fold('g')(_.iconChar).toString
 
   def notFound()(implicit ctx: Context) =

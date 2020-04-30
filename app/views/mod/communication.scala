@@ -63,7 +63,7 @@ object communication {
           else ul(cls := "public_chats")(
             publicLines.reverse.map { line =>
               li(
-                line.date.map(momentFromNowOnce(_)).getOrElse("[OLD]"),
+                line.date.fold[Frag]("[OLD]")(momentFromNowOnce),
                 " ",
                 line.from.map {
                   case PublicSource.Tournament(id) => tournamentLink(id)
