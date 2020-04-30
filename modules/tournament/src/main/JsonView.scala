@@ -50,7 +50,7 @@ final class JsonView(
     pref: Option[Pref]
   ): Fu[JsObject] = for {
     data <- cachableData get tour.id
-    myInfo <- me ?? { myInfo(tour, _) }
+    myInfo <- me ?? { fetchMyInfo(tour, _) }
     pauseDelay = me flatMap { u => pause.remainingDelay(u.id, tour) }
     full = !partial
     stand <- (myInfo, page) match {
@@ -137,7 +137,7 @@ final class JsonView(
     cachableData invalidate id
   }
 
-  def myInfo(tour: Tournament, me: User): Fu[Option[MyInfo]] =
+  def fetchMyInfo(tour: Tournament, me: User): Fu[Option[MyInfo]] =
     PlayerRepo.find(tour.id, me.id) flatMap {
       _ ?? { player =>
         fetchCurrentGameId(tour, me) flatMap { gameId =>
