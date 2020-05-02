@@ -7,8 +7,10 @@ import lidraughts.app.ui.ScalatagsTemplate._
 
 object lag {
 
+  import trans.lag._
+
   def apply()(implicit ctx: Context) = help.layout(
-    title = "Is Lidraughts lagging?",
+    title = isLidraughtsLagging.txt(),
     active = "lag",
     moreCss = cssTag("lag"),
     moreJs = frag(
@@ -19,48 +21,45 @@ object lag {
   ) {
       div(cls := "box box-pad lag")(
         h1(
-          "Is Lidraughts lagging?",
+          isLidraughtsLagging(),
           span(cls := "answer short")(
-            span(cls := "waiting")("Measurements in progress..."),
-            span(cls := "nope-nope none")(strong("No."), " And your network is good."),
-            span(cls := "nope-yep none")(strong("No."), " But your network is bad."),
-            span(cls := "yep none")(strong("Yes."), " It will be fixed soon!")
+            span(cls := "waiting")(measurementInProgressThreeDot()),
+            span(cls := "nope-nope none")(strong(trans.no(), "."), " ", andYourNetworkIsGood()),
+            span(cls := "nope-yep none")(strong(trans.no(), "."), " ", andYourNetworkIsBad()),
+            span(cls := "yep none")(strong(trans.yes(), "."), " ", itWillBeFixedSoon())
           )
         ),
         div(cls := "answer long")(
-          "And now, the long answer! Game lag is composed of two unrelated values (lower is better):"
+          andNowTheLongAnswerLagComposedOfTwoValues()
         ),
         div(cls := "sections")(
           st.section(cls := "server")(
-            h2("Lidraughts server latency"),
+            h2(lidraughtsServerLatency()),
             div(cls := "meter"),
             p(
-              "The time it takes to process a move on the server. ",
-              "It's the ", strong("same for everybody"), ", and only depends on the server load. ",
-              "The more players and the higher it gets, but Lidraughts developers ",
-              "do their best to keep it low. It rarely exceeds 10ms."
+              lidraughtsServerLatencyExplanation(
+                strong(sameForEverybody())
+              )
             )
           ),
           st.section(cls := "network")(
-            h2("Network between Lidraughts and you"),
+            h2(networkBetweenLidraughtsAndYou),
             div(cls := "meter"),
             p(
-              "The time it takes to send a move from your computer to Lidraughts server, ",
-              "and get the response back. ",
-              "It's specific to your ", strong("distance to Lidraughts (France)"), ", and ",
-              "to the ", strong("quality of your Internet connection"), ". ",
-              "Lidraughts developers can not fix your wifi or make light go faster."
+              networkBetweenLidraughtsAndYouExplanation(
+                strong(distanceToLidraughtsFrance()),
+                strong(qualityOfYourInternetConnection())
+              )
             )
           )
         ),
         div(cls := "last-word")(
-          p("You can find both these values at any time, by clicking your username in the top bar."),
-          h2("Lag compensation"),
+          p(youCanFindTheseValuesAtAnyTimeByClickingOnYourUsername()),
+          h2(lagCompensation()),
           p(
-            "Lidraughts compensates network lag. This includes sustained lag and occasional lag spikes. ",
-            "There are limits and heuristics based on time control and the compensated lag so far, ",
-            "so that the result should feel reasonable for both players. ",
-            "As a result, having a higher network lag than your opponent is ", strong("not a handicap"), "!"
+            lagCompensationExplanation(
+              strong(notAHandicap())
+            )
           )
         )
       )
