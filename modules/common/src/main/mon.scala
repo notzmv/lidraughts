@@ -460,6 +460,9 @@ object mon {
     def apiShowPartial(partial: Boolean) = inc(s"tournament.api.show.partial.$partial")
     val trouperCount = rec("tournament.trouper.count")
   }
+  object swiss {
+    def standingOverload = counter("swiss.standing.overload").withoutTags
+  }
   object plan {
     object amount {
       val paypal = incX("plan.amount.paypal")

@@ -8,11 +8,6 @@ import reactivemongo.bson._
 
 private object BsonHandlers {
 
-  private[swiss] implicit val statusBSONHandler: BSONHandler[BSONInteger, Status] = new BSONHandler[BSONInteger, Status] {
-    def read(bsonInt: BSONInteger): Status = Status(bsonInt.value) err s"No such status: ${bsonInt.value}"
-    def write(x: Status) = BSONInteger(x.id)
-  }
-
   implicit val clockHandler = new BSONHandler[BSONDocument, ClockConfig] {
     def read(doc: BSONDocument) = ClockConfig(
       doc.getAs[Int]("limit").get,
@@ -58,6 +53,18 @@ private object BsonHandlers {
     )
   }
 
+  implicit val pairingStatusHandler: BSONHandler[BSONValue, SwissPairing.Status] = new BSONHandler[BSONValue, SwissPairing.Status] {
+    def read(v: BSONValue): SwissPairing.Status = v match {
+      case BSONNumber(n) => Right(n.some)
+      case BSONBoolean(true) => Left(SwissPairing.Ongoing)
+      case _ => Right(none)
+    }
+    def write(x: Status) = x match {
+      case Left(_) => BSONBoolean(true)
+      case Right(Some(n)) => BSONNumber(n)
+      case _ => BSONNull
+    }
+  }
   implicit val pairingHandler = new BSON[SwissPairing] {
     def reads(r: BSON.Reader) =
       r.get[List[SwissPlayer.Number]]("u") match {
@@ -68,10 +75,7 @@ private object BsonHandlers {
             round = r.get[SwissRound.Number]("r"),
             white = white,
             black = black,
-            winner = r boolO "w" map {
-              case true => white
-              case _ => black
-            }
+            status = r.get[SwissPairing.Status]("t")
           )
         case _ => sys error "Invalid swiss pairing users"
       }
@@ -81,7 +85,7 @@ private object BsonHandlers {
       "r" -> o.round,
       "g" -> o.gameId,
       "u" -> o.players,
-      "w" -> o.winner.map(o.white ==)
+      "t" -> o.status
     )
   }
 

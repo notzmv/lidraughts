@@ -22,7 +22,7 @@ object show {
       title = s"${s.name} #${s.id}",
       moreJs = frag(
         jsAt(s"compiled/lidraughts.swiss${isProd ?? (".min")}.js"),
-        embedJsUnsafe(s"""LidraughtsSwiss.boot(${
+        embedJsUnsafe(s"""LidraughtsSwiss.start(${
           safeJsonValue(
             Json.obj(
               "data" -> data,

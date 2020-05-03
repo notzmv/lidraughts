@@ -31,16 +31,10 @@ final private class PairingSystem(executable: String) {
   private object writer {
 
     private type Bits = List[(Int, String)]
-    private type PairingMap = Map[SwissPlayer.Number, Map[SwissRound.Number, SwissPairing]]
 
     def apply(swiss: Swiss, players: List[SwissPlayer], pairings: List[SwissPairing]): String = {
-      val pairingMap: PairingMap = pairings.foldLeft[PairingMap](Map.empty) {
-        case (acc, pairing) =>
-          pairing.players.foldLeft(acc) {
-            case (acc, player) => acc
-          }
-      }
-      s"XXR ${swiss.nbRounds}" :: players.map(player(swiss, pairingMap)).map(format)
+      s"XXR ${swiss.nbRounds}" ::
+        players.map(player(swiss, SwissPairing.toMap(pairings))).map(format)
     } mkString "\n"
 
     // https://www.fide.com/FIDE/handbook/C04Annex2_TRF16.pdf
