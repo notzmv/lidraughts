@@ -51,9 +51,18 @@ final class Env(
   def version(swissId: Swiss.Id): Fu[SocketVersion] =
     socketMap.askIfPresentOrZero[SocketVersion](swissId.value)(GetVersion)
 
+  private lazy val standingApi = new SwissStandingApi(
+    swissColl = swissColl,
+    playerColl = playerColl,
+    pairingColl = pairingColl,
+    asyncCache = asyncCache,
+    lightUserApi = lightUserApi
+  )
+
   lazy val json = new SwissJson(
     swissColl = swissColl,
     pairingColl = pairingColl,
+    standingApi = standingApi,
     lightUserApi = lightUserApi
   )
 

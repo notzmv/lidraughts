@@ -17,13 +17,13 @@ object Swiss extends LidraughtsController {
   def show(id: String) = Open { implicit ctx =>
     env.api.byId(SwissModel.Id(id)) flatMap {
       _.fold(swissNotFound.fuccess) { swiss =>
+        val page = getInt("page") | 1
         for {
           version <- env.version(swiss.id)
-          leaderboard <- env.api.leaderboard(swiss, page = 1)
           json <- env.json(
             swiss = swiss,
-            leaderboard = leaderboard,
             me = ctx.me,
+            page = page,
             socketVersion = version.some
           )
           canChat <- canHaveChat(swiss)

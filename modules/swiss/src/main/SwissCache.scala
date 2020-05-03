@@ -1,11 +1,9 @@
 package lidraughts.swiss
 
-import play.api.i18n.Lang
 import scala.concurrent.duration._
 
 import lidraughts.memo._
 import lidraughts.db.dsl._
-import lidraughts.user.User
 
 final private class SwissCache(
     asyncCache: lidraughts.memo.AsyncCache.Builder,

@@ -1,5 +1,7 @@
 package lidraughts.swiss
 
+import lidraughts.game.Game
+
 case class SwissPairing(
     _id: Game.ID,
     swissId: Swiss.Id,
@@ -11,13 +13,21 @@ case class SwissPairing(
   def gameId = _id
   def players = List(white, black)
   def has(number: SwissPlayer.Number) = white == number || black == number
-  def colorOf(number: SwissPlayer.Number) = chess.Color(white == number)
+  def colorOf(number: SwissPlayer.Number) = draughts.Color(white == number)
   def opponentOf(number: SwissPlayer.Number) = if (white == number) black else white
+  def winner: Option[SwissPlayer.Number] = ~(status match {
+    case Right(v) => Some(v)
+    case Left(_) => None
+  })
+  def isOngoing = status.isLeft
+  def isWinFor(number: SwissPlayer.Number) = winner has number
 }
 
 object SwissPairing {
 
-  type Status = Either[Ongoing, Opiton[SwissPlayer.Number]]
+  sealed trait Ongoing
+  case object Ongoing extends Ongoing
+  type Status = Either[Ongoing, Option[SwissPlayer.Number]]
 
   case class Pending(
       white: SwissPlayer.Number,
@@ -31,10 +41,10 @@ object SwissPairing {
     pairings.foldLeft[PairingMap](Map.empty) {
       case (acc, pairing) =>
         pairing.players.foldLeft(acc) {
-          case (acc, player) =>
-            acc.updatedWith(player) { acc =>
-              (~acc).updated(pairing.round, pairing).some
-            }
+          case (acc, player) => {
+            def f = (v: Option[Map[SwissRound.Number, SwissPairing]]) => (~v).updated(pairing.round, pairing)
+            acc.updated(player, f(acc.get(player)))
+          }
         }
     }
 }

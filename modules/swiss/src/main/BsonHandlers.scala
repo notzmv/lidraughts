@@ -55,13 +55,13 @@ private object BsonHandlers {
 
   implicit val pairingStatusHandler: BSONHandler[BSONValue, SwissPairing.Status] = new BSONHandler[BSONValue, SwissPairing.Status] {
     def read(v: BSONValue): SwissPairing.Status = v match {
-      case BSONNumber(n) => Right(n.some)
+      case BSONInteger(n) => Right(SwissPlayer.Number(n).some)
       case BSONBoolean(true) => Left(SwissPairing.Ongoing)
       case _ => Right(none)
     }
-    def write(x: Status) = x match {
+    def write(s: SwissPairing.Status) = s match {
       case Left(_) => BSONBoolean(true)
-      case Right(Some(n)) => BSONNumber(n)
+      case Right(Some(n)) => BSONInteger(n.value)
       case _ => BSONNull
     }
   }

@@ -13,10 +13,10 @@ import lidraughts.pref.Pref
 import lidraughts.quote.Quote.quoteWriter
 import lidraughts.rating.PerfType
 import lidraughts.socket.Socket.SocketVersion
-import lidraughts.user.User
+import lidraughts.user.{ LightUserApi, User }
 
 final class JsonView(
-    lightUserApi: lidraughts.user.LightUserApi,
+    lightUserApi: LightUserApi,
     cached: Cached,
     statsApi: TournamentStatsApi,
     shieldApi: TournamentShieldApi,

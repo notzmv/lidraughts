@@ -461,7 +461,7 @@ object mon {
     val trouperCount = rec("tournament.trouper.count")
   }
   object swiss {
-    def standingOverload = counter("swiss.standing.overload").withoutTags
+    def standingOverload = inc("swiss.standing.overload")
   }
   object plan {
     object amount {
