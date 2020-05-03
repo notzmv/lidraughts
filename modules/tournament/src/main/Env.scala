@@ -5,7 +5,7 @@ import com.typesafe.config.Config
 import scala.concurrent.duration._
 import scala.concurrent.Promise
 
-import lidraughts.hub.{ Duct, DuctMap, TrouperMap }
+import lidraughts.hub.{ Duct, DuctMap }
 import lidraughts.game.Game
 import lidraughts.socket.History
 import lidraughts.socket.Socket.{ GetVersion, SocketVersion }

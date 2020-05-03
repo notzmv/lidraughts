@@ -267,6 +267,7 @@ GET   /swiss/new/:teamId                      controllers.Swiss.form(teamId: Str
 POST  /swiss/new/:teamId                      controllers.Swiss.create(teamId: String)
 GET   /swiss/$id<\w{8}>                       controllers.Swiss.show(id: String)
 GET   /swiss/$id<\w{8}>/socket/v:apiVersion   controllers.Swiss.websocket(id: String, apiVersion: Int)
+POST  /swiss/$id<\w{8}>/join                  controllers.Swiss.join(id: String)
 
 # Simul
 GET   /simul                                  controllers.Simul.home

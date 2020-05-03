@@ -23,6 +23,7 @@ private[swiss] final class SwissSocket(
 ) extends SocketTrouper[Member](system, uidTtl) with Historical[Member, Messadata] {
 
   private var delayedCrowdNotification = false
+  private var delayedReloadNotification = false
 
   private def chatClassifier = Chat classify Chat.Id(swissId)
 
@@ -47,11 +48,17 @@ private[swiss] final class SwissSocket(
         member
       )
 
+    case Reload => notifyReload
+
     case NotifyCrowd =>
       delayedCrowdNotification = false
       showSpectators(lightUser)(members.values) foreach {
         notifyAll("crowd", _)
       }
+
+    case NotifyReload =>
+      delayedReloadNotification = false
+      notifyAll("reload")
 
   }: Trouper.Receive) orElse lidraughts.chat.Socket.out(
     send = (t, d, trollish) => notifyVersion(t, d, Messadata(trollish))
@@ -68,6 +75,14 @@ private[swiss] final class SwissSocket(
     if (!delayedCrowdNotification) {
       delayedCrowdNotification = true
       system.scheduler.scheduleOnce(1 second)(this ! NotifyCrowd)
+    }
+
+  private def notifyReload: Unit =
+    if (!delayedReloadNotification) {
+      delayedReloadNotification = true
+      // keep the delay low for immediate response to join/withdraw,
+      // but still debounce to avoid tourney start message rush
+      system.scheduler.scheduleOnce(1 second)(this ! NotifyReload)
     }
 
   protected def shouldSkipMessageFor(message: Message, member: Member) =

@@ -36,4 +36,4 @@ private[swiss] case class StartGame(game: Game)
 private[swiss] case class Connected(enumerator: JsEnumerator, member: Member)
 
 private[swiss] case object NotifyCrowd
-
+private[swiss] case object NotifyReload

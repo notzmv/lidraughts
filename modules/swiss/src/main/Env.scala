@@ -4,6 +4,7 @@ import akka.actor._
 import com.typesafe.config.Config
 import scala.concurrent.duration._
 
+import lidraughts.hub.{ Duct, DuctMap }
 import lidraughts.socket.History
 import lidraughts.socket.Socket.{ GetVersion, SocketVersion }
 import lidraughts.user.LightUserApi
@@ -26,13 +27,17 @@ final class Env(
     val UidTimeout = config duration "uid.timeout"
     val SocketTimeout = config duration "socket.timeout"
     val SocketName = config getString "socket.name"
+    val SequencerTimeout = config duration "sequencer.timeout"
   }
   import settings._
 
   lazy val api = new SwissApi(
     swissColl = swissColl,
     playerColl = playerColl,
-    pairingColl = pairingColl
+    pairingColl = pairingColl,
+    system = system,
+    sequencers = sequencerMap,
+    socketMap = socketMap
   )
 
   private val socketMap: SocketMap = lidraughts.socket.SocketMap[SwissSocket](
@@ -48,6 +53,11 @@ final class Env(
     accessTimeout = SocketTimeout,
     monitoringName = "swiss.socketMap",
     broomFrequency = 3701 millis
+  )
+
+  private val sequencerMap = new DuctMap(
+    mkDuct = _ => Duct.extra.lazyFu(5.seconds)(system),
+    accessTimeout = SequencerTimeout
   )
 
   def version(swissId: Swiss.Id): Fu[SocketVersion] =

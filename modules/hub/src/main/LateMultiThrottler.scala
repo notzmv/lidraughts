@@ -44,6 +44,12 @@ final class LateMultiThrottler(
 
 object LateMultiThrottler {
 
+  def apply(
+    executionTimeout: Option[FiniteDuration] = None,
+    logger: lidraughts.log.Logger
+  )(implicit system: ActorSystem) =
+    system.actorOf(Props(new LateMultiThrottler(executionTimeout, logger)))
+
   case class Work(
       id: String,
       run: () => Funit,

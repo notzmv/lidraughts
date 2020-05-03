@@ -23,10 +23,7 @@ final class Env(
 
   private val client = makeClient(Index(IndexName))
 
-  private val indexThrottler = system.actorOf(Props(new LateMultiThrottler(
-    executionTimeout = 3.seconds.some,
-    logger = logger
-  )))
+  private val indexThrottler = LateMultiThrottler(executionTimeout = 3.seconds.some, logger = logger)(system)
 
   val api = new StudySearchApi(
     client = client,
