@@ -22,11 +22,13 @@ object Swiss extends LidraughtsController {
         val page = getInt("page") | 1
         for {
           version <- env.version(swiss.id)
+          isInTeam <- ctx.userId.??(u => Env.team.cached.teamIds(u).dmap(_ contains swiss.teamId))
           json <- env.json(
             swiss = swiss,
             me = ctx.me,
             page = page,
-            socketVersion = version.some
+            socketVersion = version.some,
+            isInTeam = isInTeam
           )
           canChat <- canHaveChat(swiss)
           chat <- canChat ?? Env.chat.api.userChat.cached
@@ -62,20 +64,18 @@ object Swiss extends LidraughtsController {
     }
   }
 
-  def join(id: String) = AuthBody(parse.json) { implicit ctx => implicit me =>
+  def join(id: String) = AuthBody { implicit ctx => me =>
     NoLameOrBot {
-      NoPlayban {
-        Env.team.cached.teamIds(me.id) flatMap { teamIds =>
-          env.api.joinWithResult(SwissId(id), me, teamIds.contains) flatMap { result =>
-            negotiate(
-              html = Redirect(routes.Swiss.show(id)).fuccess,
-              api = _ =>
-                fuccess {
-                  if (result) jsonOkResult
-                  else BadRequest(Json.obj("joined" -> false))
-                }
-            )
-          }
+      Env.team.cached.teamIds(me.id) flatMap { teamIds =>
+        env.api.joinWithResult(SwissId(id), me, teamIds.contains) flatMap { result =>
+          negotiate(
+            html = Redirect(routes.Swiss.show(id)).fuccess,
+            api = _ =>
+              fuccess {
+                if (result) jsonOkResult
+                else BadRequest(Json.obj("joined" -> false))
+              }
+          )
         }
       }
     }

@@ -16,7 +16,7 @@ import lidraughts.socket.Socket.SocketVersion
 import lidraughts.user.{ LightUserApi, User }
 
 final class SwissJson(
-    swissColl: Coll,
+    playerColl: Coll,
     pairingColl: Coll,
     standingApi: SwissStandingApi,
     lightUserApi: lidraughts.user.LightUserApi
@@ -29,7 +29,8 @@ final class SwissJson(
     swiss: Swiss,
     me: Option[User],
     page: Int,
-    socketVersion: Option[SocketVersion]
+    socketVersion: Option[SocketVersion],
+    isInTeam: Boolean
   ): Fu[JsObject] =
     for {
       myInfo <- me.?? { fetchMyInfo(swiss, _) }
@@ -59,32 +60,39 @@ final class SwissJson(
       .add("description" -> swiss.description)
       .add("secondsToStart" -> swiss.isCreated.option(swiss.secondsToStart))
       .add("me" -> myInfo.map(myInfoJson))
+      .add("canJoin" -> (myInfo.isEmpty && isInTeam && swiss.isEnterable))
       .add("greatPlayer" -> GreatPlayer.wikiUrl(swiss.name).map { url =>
         Json.obj("name" -> swiss.name, "url" -> url)
       })
 
   def fetchMyInfo(swiss: Swiss, me: User): Fu[Option[MyInfo]] =
-    swissColl.find($doc("s" -> swiss.id, "u" -> me.id)).uno[SwissPlayer] flatMap {
+    SwissPlayer.fields { f =>
+      playerColl.find($doc(f.swissId -> swiss.id, f.userId -> me.id)).uno[SwissPlayer]
+    } flatMap {
       _ ?? { player =>
-        pairingColl
-          .find(
-            $doc("s" -> swiss.id, "u" -> me.id),
-            $doc("_id" -> true)
-          )
-          .sort($sort desc "d")
-          .uno[Bdoc]
-          .map { _.flatMap(_.getAs[Game.ID]("_id")) }
-          .flatMap { gameId =>
-            getOrGuessRank(swiss, player) dmap { rank =>
-              MyInfo(rank + 1, false, gameId, me).some
+        SwissPairing.fields { f =>
+          pairingColl
+            .find(
+              $doc(f.swissId -> swiss.id, f.players -> player.number),
+              $doc(f.id -> true)
+            )
+            .sort($sort desc f.date)
+            .uno[Bdoc]
+            .map { _.flatMap(_.getAs[Game.ID](f.id)) }
+            .flatMap { gameId =>
+              getOrGuessRank(swiss, player) dmap { rank =>
+                MyInfo(rank + 1, gameId, me).some
+              }
             }
-          }
+        }
       }
     }
 
   // if the user is not yet in the cached ranking,
   // guess its rank based on other players scores in the DB
-  private def getOrGuessRank(swiss: Swiss, player: SwissPlayer): Fu[Int] = ???
+  private def getOrGuessRank(swiss: Swiss, player: SwissPlayer): Fu[Int] = SwissPlayer.fields { f =>
+    playerColl.countSel($doc(f.swissId -> player.swissId, f.score $gt player.score))
+  }
   // cached ranking swiss flatMap {
   //   _ get player.userId match {
   //     case Some(rank) => fuccess(rank)
@@ -98,7 +106,6 @@ final class SwissJson(
     Json
       .obj(
         "rank" -> i.rank,
-        "withdraw" -> i.withdraw,
         "gameId" -> i.gameId,
         "id" -> i.user.id
       )

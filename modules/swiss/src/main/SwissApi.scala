@@ -79,14 +79,18 @@ final class SwissApi(
     promise.future.withTimeoutDefault(5.seconds, false)(system)
   }
 
-  def pairingsOf(swiss: Swiss) =
-    pairingColl.find($doc("s" -> swiss.id)).sort($sort asc "r").list[SwissPairing]()
+  def pairingsOf(swiss: Swiss) = SwissPairing.fields { f =>
+    pairingColl
+      .find($doc(f.swissId -> swiss.id))
+      .sort($sort asc f.round)
+      .list[SwissPairing]()
+  }
 
   def featuredInTeam(teamId: TeamId): Fu[List[Swiss]] =
     swissColl.find($doc("teamId" -> teamId)).sort($sort desc "startsAt").list[Swiss](5)
 
   private def updateNbPlayers(swissId: Swiss.Id): Funit =
-    playerColl.countSel($doc("s" -> swissId)) flatMap {
+    playerColl.countSel($doc(SwissPlayer.Fields.swissId -> swissId)) flatMap {
       swissColl.updateField($id(swissId), "nbPlayers", _).void
     }
 
@@ -105,7 +109,7 @@ final class SwissApi(
 
   private def insertPairing(pairing: SwissPairing) =
     pairingColl.insert {
-      pairingHandler.write(pairing) ++ $doc("d" -> DateTime.now)
+      pairingHandler.write(pairing) ++ $doc(SwissPairing.Fields.date -> DateTime.now)
     }.void
 
 }

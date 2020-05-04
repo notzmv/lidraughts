@@ -53,11 +53,13 @@ final class SwissStandingApi(
   private def compute(swiss: Swiss, page: Int): Fu[JsObject] =
     for {
       rankedPlayers <- bestWithRankByPage(swiss.id, 10, page atLeast 1)
-      pairings <- pairingColl
-        .find($doc("s" -> swiss.id, "u" $in rankedPlayers.map(_.player.id)))
-        .sort($sort asc "r")
-        .list[SwissPairing]()
-        .map(SwissPairing.toMap)
+      pairings <- SwissPairing.fields { f =>
+        pairingColl
+          .find($doc(f.swissId -> swiss.id, f.players $in rankedPlayers.map(_.player.number)))
+          .sort($sort asc f.round)
+          .list[SwissPairing]()
+          .map(SwissPairing.toMap)
+      }
       users <- lightUserApi asyncMany rankedPlayers.map(_.player.userId)
     } yield Json.obj(
       "page" -> page,
