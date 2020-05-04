@@ -18,6 +18,8 @@ object jsI18n {
       g.isSimul ?? simulTranslations
     } ++ {
       g.metadata.drawLimit.isDefined ?? drawLimitTranslations
+    } ++ {
+      g.isSwiss ?? swissTranslations
     }
   }
 
@@ -55,6 +57,11 @@ object jsI18n {
     trans.currentWinningPercentage,
     trans.relativeScoreRequired,
     trans.nbMinutes
+  )
+
+  private val swissTranslations = Vector(
+    trans.backToTournament,
+    trans.viewTournament
   )
 
   private val baseTranslations = Vector(

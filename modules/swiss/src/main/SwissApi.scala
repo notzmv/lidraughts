@@ -5,6 +5,7 @@ import org.joda.time.DateTime
 import ornicar.scalalib.Zero
 import reactivemongo.api._
 import reactivemongo.api.collections.bson.BSONBatchCommands.AggregationFramework._
+import reactivemongo.bson._
 import scala.concurrent.duration._
 import scala.concurrent.Promise
 
@@ -13,6 +14,7 @@ import lidraughts.db.dsl._
 import lidraughts.common.GreatPlayer
 import lidraughts.hub.lightTeam.TeamId
 import lidraughts.hub.{ Duct, DuctMap }
+import lidraughts.game.Game
 import lidraughts.user.User
 
 final class SwissApi(
@@ -107,6 +109,34 @@ final class SwissApi(
 
   def featuredInTeam(teamId: TeamId): Fu[List[Swiss]] =
     swissColl.find($doc("teamId" -> teamId)).sort($sort desc "startsAt").list[Swiss](5)
+
+  private[swiss] def finishGame(game: Game): Unit = game.swissId foreach { swissId =>
+    Sequencing(Swiss.Id(swissId))(startedById) { swiss =>
+      pairingColl.byId[SwissPairing](game.id) flatMap {
+        _ ?? { pairing =>
+          val winner = game.winnerColor
+            .map(_.fold(pairing.white, pairing.black))
+            .flatMap(playerNumberHandler.writeOpt)
+          winner.fold(pairingColl.updateField($id(game.id), SwissPairing.Fields.status, BSONNull))(
+            pairingColl.updateField($id(game.id), SwissPairing.Fields.status, _)
+          ).void >>
+            scoring.recompute(swiss) >>
+            isReadyForNextRound(swiss).flatMap {
+              _ ?? swissColl.updateField($id(swiss.id), "nextRoundAt", DateTime.now.plusSeconds(10)).void
+            } >>-
+            socketReload(swiss.id)
+        }
+      }
+    }
+  }
+
+  private def isReadyForNextRound(swiss: Swiss) =
+    SwissPairing
+      .fields { f =>
+        !pairingColl.exists(
+          $doc(f.swissId -> swiss.id, f.round -> swiss.round, f.status -> SwissPairing.ongoing)
+        )
+      }
 
   private[swiss] def destroy(swiss: Swiss): Funit =
     swissColl.remove($id(swiss.id)) >>

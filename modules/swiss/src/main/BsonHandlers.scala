@@ -24,7 +24,9 @@ private object BsonHandlers {
     def write(x: Variant) = BSONInteger(x.id)
   }
   implicit val swissPointsHandler = intAnyValHandler[Swiss.Points](_.double, Swiss.Points.apply)
-  implicit val swissScoreHandler = doubleAnyValHandler[Swiss.Score](_.value, Swiss.Score.apply)
+  implicit val swissTieBreakHandler = doubleAnyValHandler[Swiss.TieBreak](_.value, Swiss.TieBreak.apply)
+  implicit val swissPerformanceHandler = doubleAnyValHandler[Swiss.Performance](_.value, Swiss.Performance.apply)
+  implicit val swissScoreHandler = intAnyValHandler[Swiss.Score](_.value, Swiss.Score.apply)
   implicit val playerNumberHandler = intAnyValHandler[SwissPlayer.Number](_.value, SwissPlayer.Number.apply)
   implicit val roundNumberHandler = intAnyValHandler[SwissRound.Number](_.value, SwissRound.Number.apply)
   implicit val swissIdHandler = stringAnyValHandler[Swiss.Id](_.value, Swiss.Id.apply)
@@ -40,6 +42,8 @@ private object BsonHandlers {
       rating = r int rating,
       provisional = r boolD provisional,
       points = r.get[Swiss.Points](points),
+      tieBreak = r.get[Swiss.TieBreak](tieBreak),
+      performance = r.getO[Swiss.Performance](performance),
       score = r.get[Swiss.Score](score)
     )
     def writes(w: BSON.Writer, o: SwissPlayer) = $doc(
@@ -50,6 +54,8 @@ private object BsonHandlers {
       rating -> o.rating,
       provisional -> w.boolO(o.provisional),
       points -> o.points,
+      tieBreak -> o.tieBreak,
+      performance -> o.performance,
       score -> o.score
     )
   }

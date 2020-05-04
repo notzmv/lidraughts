@@ -77,7 +77,15 @@ object replay {
     )(frag(
         main(cls := "analyse")(
           st.aside(cls := "analyse__side")(
-            views.html.game.side(pov, initialFen, none, simul = simul, userTv = userTv, bookmarked = bookmarked)
+            views.html.game
+              .side(
+                pov,
+                initialFen,
+                none,
+                simul = simul,
+                userTv = userTv,
+                bookmarked = bookmarked
+              )
           ),
           chatOption.map(_ => views.html.chat.frag),
           div(cls := "analyse__board main-board")(draughtsgroundBoard),

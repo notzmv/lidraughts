@@ -127,6 +127,14 @@ final class Env(
   private[swiss] lazy val playerColl = db(CollectionPlayer)
   private[swiss] lazy val pairingColl = db(CollectionPairing)
 
+  system.lidraughtsBus.subscribeFun(
+    'finishGame, 'adjustCheater, 'adjustBooster
+  ) {
+      case lidraughts.game.actorApi.FinishGame(game, _, _) => api finishGame game
+      // case lidraughts.hub.actorApi.mod.MarkCheater(userId, true) => api.ejectLame(userId, _)
+      // case lidraughts.hub.actorApi.mod.MarkBooster(userId)       => api.ejectLame(userId, Nil)
+    }
+
   ResilientScheduler(
     every = Every(2 seconds),
     atMost = AtMost(15 seconds),
