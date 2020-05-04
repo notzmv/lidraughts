@@ -17,28 +17,49 @@ object Swiss extends LidraughtsController {
   private def swissNotFound(implicit ctx: Context) = NotFound(html.swiss.bits.notFound())
 
   def show(id: String) = Open { implicit ctx =>
-    env.api.byId(SwissId(id)) flatMap {
-      _.fold(swissNotFound.fuccess) { swiss =>
-        val page = getInt("page") | 1
-        for {
-          version <- env.version(swiss.id)
-          isInTeam <- ctx.userId.??(u => Env.team.cached.teamIds(u).dmap(_ contains swiss.teamId))
-          json <- env.json(
-            swiss = swiss,
-            me = ctx.me,
-            page = page,
-            socketVersion = version.some,
-            isInTeam = isInTeam
-          )
-          canChat <- canHaveChat(swiss)
-          chat <- canChat ?? Env.chat.api.userChat.cached
-            .findMine(Chat.Id(swiss.id.value), ctx.me)
-            .dmap(some)
-          _ <- chat ?? { c => Env.user.lightUserApi.preloadMany(c.chat.userIds) }
-        } yield Ok(html.swiss.show(swiss, json, chat))
-      }
+    env.api.byId(SwissId(id)) flatMap { swissOption =>
+      val page = getInt("page")
+      negotiate(
+        html = swissOption.fold(swissNotFound.fuccess) { swiss =>
+          for {
+            version <- env.version(swiss.id)
+            isInTeam <- isCtxInTheTeam(swiss.teamId)
+            json <- env.json(
+              swiss = swiss,
+              me = ctx.me,
+              reqPage = page,
+              socketVersion = version.some,
+              isInTeam = isInTeam
+            )
+            canChat <- canHaveChat(swiss)
+            chat <- canChat ?? Env.chat.api.userChat.cached
+              .findMine(lidraughts.chat.Chat.Id(swiss.id.value), ctx.me)
+              .dmap(some)
+            _ <- chat ?? { c =>
+              Env.user.lightUserApi.preloadMany(c.chat.userIds)
+            }
+          } yield Ok(html.swiss.show(swiss, json, chat))
+        },
+        api = _ =>
+          swissOption.fold(notFoundJson("No such swiss tournament")) { swiss =>
+            for {
+              socketVersion <- getBool("socketVersion").??(env version swiss.id dmap some)
+              isInTeam <- isCtxInTheTeam(swiss.teamId)
+              json <- env.json(
+                swiss = swiss,
+                me = ctx.me,
+                reqPage = page,
+                socketVersion = socketVersion,
+                isInTeam = isInTeam
+              )
+            } yield Ok(json)
+          }
+      )
     }
   }
+
+  private def isCtxInTheTeam(teamId: lidraughts.team.Team.ID)(implicit ctx: Context) =
+    ctx.userId.??(u => Env.team.cached.teamIds(u).dmap(_ contains teamId))
 
   def form(teamId: String) = Auth { implicit ctx => me =>
     Ok(html.swiss.form.create(env.forms.create, teamId)).fuccess

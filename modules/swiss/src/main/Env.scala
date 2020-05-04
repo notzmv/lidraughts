@@ -79,10 +79,16 @@ final class Env(
     lightUserApi = lightUserApi
   )
 
+  private lazy val rankingApi = new SwissRankingApi(
+    playerColl = playerColl,
+    asyncCache = asyncCache
+  )
+
   lazy val json = new SwissJson(
     playerColl = playerColl,
     pairingColl = pairingColl,
     standingApi = standingApi,
+    rankingApi = rankingApi,
     lightUserApi = lightUserApi
   )
 
