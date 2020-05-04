@@ -9,7 +9,7 @@ final private class PairingSystem(executable: String) {
     players: List[SwissPlayer],
     pairings: List[SwissPairing]
   ): List[SwissPairing.Pending] =
-    writer(swiss, players, pairings) |> invoke |> reader
+    writer(swiss, players, pairings).pp |> invoke |> reader
 
   private def invoke(input: String): String =
     withTempFile(input) { file =>
@@ -34,6 +34,7 @@ final private class PairingSystem(executable: String) {
 
     def apply(swiss: Swiss, players: List[SwissPlayer], pairings: List[SwissPairing]): String = {
       s"XXR ${swiss.nbRounds}" ::
+        s"XXC ${draughts.Color(scala.util.Random.nextBoolean).name}1" ::
         players.map(player(swiss, SwissPairing.toMap(pairings))).map(format)
     } mkString "\n"
 
@@ -72,11 +73,12 @@ final private class PairingSystem(executable: String) {
     val p = new PrintWriter(file, "UTF-8")
     try {
       p.write(contents)
+      p.flush()
       val res = f(file)
-      file.delete()
       res
     } finally {
       p.close()
+      file.delete()
     }
   }
 

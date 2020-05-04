@@ -21,14 +21,16 @@ final class SwissApi(
     pairingColl: Coll,
     system: ActorSystem,
     sequencers: DuctMap[_],
-    socketMap: SocketMap
+    socketMap: SocketMap,
+    director: SwissDirector
 ) {
 
   import BsonHandlers._
 
   def byId(id: Swiss.Id) = swissColl.byId[Swiss](id.value)
-  def enterableById(id: Swiss.Id) = swissColl.byId[Swiss](id.value).dmap(_.filter(_.isEnterable))
-  def startedById(id: Swiss.Id) = swissColl.byId[Swiss](id.value).dmap(_.filter(_.isStarted))
+  def enterableById(id: Swiss.Id) = byId(id).dmap(_.filter(_.isEnterable))
+  def createdById(id: Swiss.Id) = byId(id).dmap(_.filter(_.isCreated))
+  def startedById(id: Swiss.Id) = byId(id).dmap(_.filter(_.isStarted))
 
   def create(data: SwissForm.SwissData, me: User, teamId: TeamId): Fu[Swiss] = {
     val swiss = Swiss(
@@ -74,9 +76,9 @@ final class SwissApi(
   ): Unit = Sequencing(id)(enterableById) { swiss =>
     val fuJoined =
       isInTeam(swiss.teamId) ?? {
-        val number = SwissPlayer.Number(swiss.nbPlayers + 1)
-        playerColl.insert(SwissPlayer.make(swiss.id, number, me, swiss.perfLens)) >>
-          updateNbPlayers(swiss.id) >>-
+        val number = SwissPlayer.Number(swiss.nbPlayers + 1).pp
+        playerColl.insert(SwissPlayer.make(swiss.id, number, me, swiss.perfLens)) zip
+          swissColl.updateField($id(swiss.id), "nbPlayers", number) >>-
           socketReload(swiss.id) inject true
       }
     fuJoined map {
@@ -134,10 +136,18 @@ final class SwissApi(
     else if (swiss.isCreated) destroy(swiss)
   }
 
-  private def updateNbPlayers(swissId: Swiss.Id): Funit =
-    playerColl.countSel($doc(SwissPlayer.Fields.swissId -> swissId)) flatMap {
-      swissColl.updateField($id(swissId), "nbPlayers", _).void
-    }
+  private[swiss] def tick: Funit = funit
+  /*swissColl
+      .find($doc("startsAt" $lt DateTime.now, "finishedAt" $exists false))
+      .batchSize(1)
+      .cursor[Swiss]()
+      .documentSource()
+      .mapAsync(2)(director.apply)
+      .log(getClass.getName)
+      .toMat(Sink.ignore)(Keep.right)
+      .run
+      .monSuccess(_.swiss.tick)
+      .void*/
 
   private def Sequencing(swissId: Swiss.Id)(fetch: Swiss.Id => Fu[Option[Swiss]])(run: Swiss => Funit): Unit =
     doSequence(swissId) {

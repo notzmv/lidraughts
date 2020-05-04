@@ -4,6 +4,7 @@ import akka.actor._
 import com.typesafe.config.Config
 import scala.concurrent.duration._
 
+import lidraughts.common.{ AtMost, Every, ResilientScheduler }
 import lidraughts.hub.{ Duct, DuctMap }
 import lidraughts.socket.History
 import lidraughts.socket.Socket.{ GetVersion, SocketVersion }
@@ -28,8 +29,19 @@ final class Env(
     val SocketTimeout = config duration "socket.timeout"
     val SocketName = config getString "socket.name"
     val SequencerTimeout = config duration "sequencer.timeout"
+    val PairingExecutable = config getString "bbpairing"
   }
   import settings._
+
+  private val pairingSystem = new PairingSystem(
+    executable = PairingExecutable
+  )
+
+  private val director = new SwissDirector(
+    pairingColl = pairingColl,
+    playerColl = playerColl,
+    pairingSystem = pairingSystem
+  )
 
   lazy val api = new SwissApi(
     swissColl = swissColl,
@@ -37,7 +49,8 @@ final class Env(
     pairingColl = pairingColl,
     system = system,
     sequencers = sequencerMap,
-    socketMap = socketMap
+    socketMap = socketMap,
+    director = director
   )
 
   private val socketMap: SocketMap = lidraughts.socket.SocketMap[SwissSocket](
@@ -104,6 +117,13 @@ final class Env(
   private[swiss] lazy val swissColl = db(CollectionSwiss)
   private[swiss] lazy val playerColl = db(CollectionPlayer)
   private[swiss] lazy val pairingColl = db(CollectionPairing)
+
+  ResilientScheduler(
+    every = Every(2 seconds),
+    atMost = AtMost(15 seconds),
+    logger = logger branch "pairings",
+    initialDelay = 5 seconds
+  ) { api.tick }(system)
 }
 
 object Env {

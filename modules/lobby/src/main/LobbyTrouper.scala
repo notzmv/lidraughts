@@ -6,7 +6,7 @@ import scala.concurrent.Promise
 import org.joda.time.DateTime
 
 import actorApi._
-import lidraughts.common.{ Every, AtMost }
+import lidraughts.common.{ AtMost, Every, ResilientScheduler }
 import lidraughts.game.Game
 import lidraughts.hub.Trouper
 import lidraughts.socket.Socket
@@ -194,7 +194,7 @@ private object LobbyTrouper {
     val trouper = makeTrouper()
     system.lidraughtsBus.subscribe(trouper, 'lobbyTrouper)
     system.scheduler.schedule(15 seconds, resyncIdsPeriod)(trouper ! actorApi.Resync)
-    lidraughts.common.ResilientScheduler(
+    ResilientScheduler(
       every = Every(broomPeriod),
       atMost = AtMost(10 seconds),
       logger = logger branch "trouper.broom",

@@ -3,7 +3,7 @@ package lidraughts.memo
 import akka.actor.ActorSystem
 import scala.concurrent.duration._
 
-import lidraughts.common.{ Every, AtMost }
+import lidraughts.common.{ AtMost, Every, ResilientScheduler }
 
 final class PeriodicRefreshCache[A](
     every: Every,
@@ -18,7 +18,7 @@ final class PeriodicRefreshCache[A](
 
   private var cache: A = default
 
-  lidraughts.common.ResilientScheduler(every, atMost, logger, initialDelay) {
+  ResilientScheduler(every, atMost, logger, initialDelay) {
     f() map { a =>
       cache = a
     }
