@@ -106,6 +106,20 @@ object Player {
 
   def make(
     color: Color,
+    userId: User.ID,
+    rating: Int,
+    provisional: Boolean
+  ): Player = Player(
+    id = IdGenerator.player(color),
+    color = color,
+    aiLevel = none,
+    userId = userId.some,
+    rating = rating.some,
+    provisional = provisional
+  )
+
+  def make(
+    color: Color,
     user: Option[User],
     perfPicker: lidraughts.user.Perfs => lidraughts.rating.Perf
   ): Player = user.fold(make(color)) { u =>

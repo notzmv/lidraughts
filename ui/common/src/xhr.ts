@@ -1,6 +1,6 @@
 export function json(url: string, init: RequestInit = {}): Promise<any> {
   return fetch(url, {
-    headers: { 'Accept': 'application/vnd.lichess.v5+json' },
+    headers: { 'Accept': 'application/vnd.lidraughts.v3+json' },
     cache: 'no-cache',
     credentials: 'same-origin',
     ...init

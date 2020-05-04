@@ -28,7 +28,7 @@ final class SwissApi(
   import BsonHandlers._
 
   def byId(id: Swiss.Id) = swissColl.byId[Swiss](id.value)
-  def enterableById(id: Swiss.Id) = byId(id).dmap(_.filter(_.isEnterable))
+  def notFinishedById(id: Swiss.Id) = byId(id).dmap(_.filter(_.isNotFinished))
   def createdById(id: Swiss.Id) = byId(id).dmap(_.filter(_.isCreated))
   def startedById(id: Swiss.Id) = byId(id).dmap(_.filter(_.isStarted))
 
@@ -45,6 +45,7 @@ final class SwissApi(
       createdAt = DateTime.now,
       createdBy = me.id,
       teamId = teamId,
+      nextRoundAt = data.startsAt.some,
       startsAt = data.startsAt,
       finishedAt = none,
       winnerId = none,
@@ -73,7 +74,7 @@ final class SwissApi(
     me: User,
     isInTeam: TeamId => Boolean,
     promise: Option[Promise[Boolean]]
-  ): Unit = Sequencing(id)(enterableById) { swiss =>
+  ): Unit = Sequencing(id)(notFinishedById) { swiss =>
     val fuJoined =
       isInTeam(swiss.teamId) ?? {
         val number = SwissPlayer.Number(swiss.nbPlayers + 1).pp
@@ -136,18 +137,16 @@ final class SwissApi(
     else if (swiss.isCreated) destroy(swiss)
   }
 
-  private[swiss] def tick: Funit = funit
-  /*swissColl
-      .find($doc("startsAt" $lt DateTime.now, "finishedAt" $exists false))
-      .batchSize(1)
-      .cursor[Swiss]()
-      .documentSource()
-      .mapAsync(2)(director.apply)
-      .log(getClass.getName)
-      .toMat(Sink.ignore)(Keep.right)
-      .run
-      .monSuccess(_.swiss.tick)
-      .void*/
+  private[swiss] def tick: Funit =
+    swissColl
+      .find($doc("nextRoundAt" $lt DateTime.now), $id(true))
+      .list[Bdoc](10)
+      .map(_.flatMap(_.getAs[Swiss.Id]("_id")))
+      .flatMap { ids =>
+        lidraughts.common.Future.applySequentially(ids) { id =>
+          Sequencing(id)(notFinishedById)(director.startRound)
+        }
+      }
 
   private def Sequencing(swissId: Swiss.Id)(fetch: Swiss.Id => Fu[Option[Swiss]])(run: Swiss => Funit): Unit =
     doSequence(swissId) {
@@ -160,11 +159,6 @@ final class SwissApi(
   private def doSequence(swissId: Swiss.Id)(fu: => Funit): Unit =
     sequencers.tell(swissId.value, Duct.extra.LazyFu(() => fu))
 
-  private def socketReload(swissId: Swiss.Id): Unit = socketMap.tell(swissId.value, Reload)
-
-  private def insertPairing(pairing: SwissPairing) =
-    pairingColl.insert {
-      pairingHandler.write(pairing) ++ $doc(SwissPairing.Fields.date -> DateTime.now)
-    }.void
-
+  private def socketReload(swissId: Swiss.Id): Unit =
+    socketMap.tell(swissId.value, Reload)
 }

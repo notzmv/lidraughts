@@ -463,6 +463,7 @@ object mon {
   object swiss {
     def standingOverload = inc("swiss.standing.overload")
     val tick = rec("swiss.tick")
+    val bbpairing = rec("swiss.bbpairing")
   }
   object plan {
     object amount {

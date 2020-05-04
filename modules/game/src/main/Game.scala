@@ -638,6 +638,7 @@ case class Game(
   def withTournamentId(id: String, tableId: Option[Int]) =
     if (tableId.isDefined) copy(metadata = metadata.copy(tournamentId = id.some, simulPairing = tableId))
     else copy(metadata = metadata.copy(tournamentId = id.some))
+  def withSwissId(id: String) = copy(metadata = metadata.copy(swissId = id.some))
 
   def withSimul(id: String, pairing: Int) = copy(metadata = metadata.copy(simulId = id.some, simulPairing = pairing.some))
 
@@ -753,6 +754,7 @@ object Game {
         source = source.some,
         pdnImport = pdnImport,
         tournamentId = none,
+        swissId = none,
         simulId = none,
         simulPairing = none,
         timeOutUntil = none,
@@ -796,6 +798,7 @@ object Game {
     val source = "so"
     val pdnImport = "pdni"
     val tournamentId = "tid"
+    val swissId = "iid"
     val simulId = "sid"
     val simulPairing = "sp"
     val tvAt = "tv"

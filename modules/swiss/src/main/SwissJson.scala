@@ -5,7 +5,7 @@ import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.json._
 import scala.concurrent.ExecutionContext
 
-import lidraughts.common.{ GreatPlayer, LightUser }
+import lidraughts.common.GreatPlayer
 import lidraughts.db.dsl._
 import lidraughts.game.Game
 import lidraughts.hub.lightTeam.TeamId
@@ -61,7 +61,7 @@ final class SwissJson(
       .add("description" -> swiss.description)
       .add("secondsToStart" -> swiss.isCreated.option(swiss.secondsToStart))
       .add("me" -> myInfo.map(myInfoJson))
-      .add("canJoin" -> (myInfo.isEmpty && isInTeam && swiss.isEnterable))
+      .add("canJoin" -> (myInfo.isEmpty && isInTeam && swiss.isNotFinished))
       .add("greatPlayer" -> GreatPlayer.wikiUrl(swiss.name).map { url =>
         Json.obj("name" -> swiss.name, "url" -> url)
       })

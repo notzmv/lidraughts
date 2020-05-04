@@ -17,7 +17,8 @@ final class Env(
     flood: lidraughts.security.Flood,
     hub: lidraughts.hub.Env,
     asyncCache: lidraughts.memo.AsyncCache.Builder,
-    lightUserApi: lidraughts.user.LightUserApi
+    lightUserApi: lidraughts.user.LightUserApi,
+    onStart: String => Unit
 ) {
 
   private val settings = new {
@@ -38,9 +39,11 @@ final class Env(
   )
 
   private val director = new SwissDirector(
-    pairingColl = pairingColl,
+    swissColl = swissColl,
     playerColl = playerColl,
-    pairingSystem = pairingSystem
+    pairingColl = pairingColl,
+    pairingSystem = pairingSystem,
+    onStart = onStart
   )
 
   lazy val api = new SwissApi(
@@ -135,6 +138,7 @@ object Env {
     flood = lidraughts.security.Env.current.flood,
     hub = lidraughts.hub.Env.current,
     asyncCache = lidraughts.memo.Env.current.asyncCache,
-    lightUserApi = lidraughts.user.Env.current.lightUserApi
+    lightUserApi = lidraughts.user.Env.current.lightUserApi,
+    onStart = lidraughts.round.Env.current.onStart
   )
 }
