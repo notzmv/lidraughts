@@ -20,7 +20,7 @@ case class SwissPairing(
     case Left(_) => None
   })
   def isOngoing = status.isLeft
-  def isWinFor(number: SwissPlayer.Number) = winner has number
+  def resultFor(number: SwissPlayer.Number) = winner.map(number.==)
 }
 
 object SwissPairing {
