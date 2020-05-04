@@ -145,7 +145,7 @@ final class SwissApi(
         lidraughts.common.Future.applySequentially(ids) { id =>
           val promise = Promise[Boolean]
           Sequencing(id)(notFinishedById) { swiss =>
-            val fuRound = director.startRound(swiss).flatMap { scoring.recompute _ } >>-
+            val fuRound = director.startRound(swiss).flatMap(scoring.recompute) >>-
               socketReload(swiss.id) inject true
             fuRound map promise.success
           }

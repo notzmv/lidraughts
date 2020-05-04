@@ -83,7 +83,7 @@ final private class PairingSystem(executable: String) {
    * suffix must be at least 3 characters long, otherwise this function throws an IllegalArgumentException.
    */
   def withTempFile[A](contents: String)(f: File => A): A = {
-    val file = File.createTempFile("lidraughts-", "-swiss").pp
+    val file = File.createTempFile("lidraughts-", "-swiss")
     val p = new PrintWriter(file, "UTF-8")
     try {
       p.write(contents)
@@ -92,7 +92,7 @@ final private class PairingSystem(executable: String) {
       res
     } finally {
       p.close()
-      // file.delete()
+      file.delete()
     }
   }
 

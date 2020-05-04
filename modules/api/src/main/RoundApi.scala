@@ -10,6 +10,7 @@ import lidraughts.round.JsonView.WithFlags
 import lidraughts.round.{ Forecast, JsonView, logger }
 import lidraughts.security.Granter
 import lidraughts.simul.Simul
+import lidraughts.swiss.Swiss
 import lidraughts.tournament.TourAndRanks
 import lidraughts.tree.Node.partitionTreeJsonWriter
 import lidraughts.user.User
@@ -20,7 +21,8 @@ private[api] final class RoundApi(
     forecastApi: lidraughts.round.ForecastApi,
     bookmarkApi: lidraughts.bookmark.BookmarkApi,
     getTourAndRanks: Game => Fu[Option[TourAndRanks]],
-    getSimul: Simul.ID => Fu[Option[Simul]]
+    getSimul: Simul.ID => Fu[Option[Simul]],
+    getSwiss: Swiss.Id => Fu[Option[Swiss]]
 ) {
 
   def player(pov: Pov, apiVersion: ApiVersion)(implicit ctx: Context): Fu[JsObject] =
@@ -31,12 +33,14 @@ private[api] final class RoundApi(
         nvui = ctx.blind) zip
         getTourAndRanks(pov.game) zip
         (pov.game.simulId ?? getSimul) zip
+        fetchSwiss(pov) zip
         (ctx.me.ifTrue(ctx.isMobileApi) ?? (me => noteApi.get(pov.gameId, me.id))) zip
         forecastApi.loadForDisplay(pov) zip
         bookmarkApi.exists(pov.game, ctx.me) map {
-          case json ~ tourOption ~ simulOption ~ note ~ forecast ~ bookmarked => (
+          case json ~ tourOption ~ simulOption ~ swissOption ~ note ~ forecast ~ bookmarked => (
             withTournament(pov, tourOption) _ compose
             withSimul(pov, simulOption, true) _ compose
+            withSwiss(swissOption) _ compose
             withSteps(pov, initialFen) _ compose
             withNote(note) _ compose
             withBookmark(bookmarked) _ compose
@@ -53,14 +57,16 @@ private[api] final class RoundApi(
         withFlags = WithFlags(blurs = ctx.me ?? Granter(_.ViewBlurs))) zip
         getTourAndRanks(pov.game) zip
         (pov.game.simulId ?? getSimul) zip
+        fetchSwiss(pov) zip
         (ctx.me.ifTrue(ctx.isMobileApi) ?? (me => noteApi.get(pov.gameId, me.id))) zip
         bookmarkApi.exists(pov.game, ctx.me) map {
-          case json ~ tourOption ~ simulOption ~ note ~ bookmarked => (
-            withTournament(pov, tourOption)_ compose
-            withSimul(pov, simulOption, false)_ compose
-            withNote(note)_ compose
+          case json ~ tourOption ~ simulOption ~ swissOption ~ note ~ bookmarked => (
+            withTournament(pov, tourOption) _ compose
+            withSimul(pov, simulOption, false) _ compose
+            withSwiss(swissOption) _ compose
+            withNote(note) _ compose
             withBookmark(bookmarked)_ compose
-            withSteps(pov, initialFen)_
+            withSteps(pov, initialFen) _
           )(json)
         }
     }.mon(_.round.api.watcher)
@@ -76,15 +82,17 @@ private[api] final class RoundApi(
         withFlags = withFlags.copy(blurs = ctx.me ?? Granter(_.ViewBlurs))) zip
         getTourAndRanks(pov.game) zip
         (pov.game.simulId ?? getSimul) zip
-        (ctx.me.ifTrue(ctx.isMobileApi) ?? (me => noteApi.get(pov.gameId, me.id))) zip
+        fetchSwiss(pov) zip
+        ctx.userId.ifTrue(ctx.isMobileApi).?? { noteApi.get(pov.gameId, _) } zip
         bookmarkApi.exists(pov.game, ctx.me) map {
-          case json ~ tourOption ~ simulOption ~ note ~ bookmarked => (
-            withTournament(pov, tourOption)_ compose
-            withSimul(pov, simulOption, false)_ compose
-            withNote(note)_ compose
-            withBookmark(bookmarked)_ compose
-            withTree(pov, analysis, initialFen, withFlags, pov.game.metadata.pdnImport.isDefined)_ compose
-            withAnalysis(pov.game, analysis, ctx.me ?? Granter(_.Hunter))_
+          case json ~ tourOption ~ simulOption ~ swissOption ~ note ~ bookmarked => (
+            withTournament(pov, tourOption) _ compose
+            withSimul(pov, simulOption, false) _ compose
+            withSwiss(swissOption) _ compose
+            withNote(note) _ compose
+            withBookmark(bookmarked) _ compose
+            withTree(pov, analysis, initialFen, withFlags, pov.game.metadata.pdnImport.isDefined) _ compose
+            withAnalysis(pov.game, analysis, ctx.me ?? Granter(_.Hunter)) _
           )(json)
         }
     }.mon(_.round.api.watcher)
@@ -191,6 +199,15 @@ private[api] final class RoundApi(
         )))
     })
 
+  def withSwiss(swiss: Option[Swiss])(json: JsObject) =
+    json.add("swiss" -> swiss.map { s =>
+      Json
+        .obj(
+          "id" -> s.id.value,
+          "running" -> s.isStarted
+        )
+    })
+
   private def withSimul(pov: Pov, simulOption: Option[Simul], player: Boolean)(json: JsObject) =
     json.add("simul", simulOption.map { simul =>
       Json.obj(
@@ -202,4 +219,6 @@ private[api] final class RoundApi(
         .add("isUnique" -> simul.isUnique.option(true))
         .add("noAssistance" -> simul.spotlight.flatMap(_.noAssistance).ifTrue(player))
     })
+
+  private def fetchSwiss(pov: Pov) = pov.game.swissId.map(Swiss.Id.apply) ?? getSwiss
 }

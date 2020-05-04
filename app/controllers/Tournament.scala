@@ -137,8 +137,8 @@ object Tournament extends LidraughtsController {
 
   def standing(id: String, page: Int) = Open { implicit ctx =>
     OptionFuResult(repo byId id) { tour =>
-      env.jsonView.standing(tour, page) map { data =>
-        Ok(data) as JSON
+      JsonOk {
+        env.jsonView.standing(tour, page)
       }
     }
   }

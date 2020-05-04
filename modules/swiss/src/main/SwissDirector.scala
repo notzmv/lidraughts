@@ -25,9 +25,9 @@ final private class SwissDirector(
       _ <- pendings.isEmpty ?? fufail[Unit](s"BBPairing empty for ${from.id}")
       pairings <- pendings.collect {
         case Right(SwissPairing.Pending(w, b)) =>
-          IdGenerator.game map { id =>
+          IdGenerator.game dmap { id =>
             SwissPairing(
-              _id = id,
+              id = id,
               swissId = swiss.id,
               round = swiss.round,
               white = w,

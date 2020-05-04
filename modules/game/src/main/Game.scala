@@ -88,9 +88,11 @@ case class Game(
 
   def tournamentId = metadata.tournamentId
   def simulId = metadata.simulId
+  def swissId = metadata.swissId
 
   def isTournament = tournamentId.isDefined
   def isSimul = simulId.isDefined
+  def isSwiss = swissId.isDefined
   def isMandatory = isTournament || isSimul
   def isClassical = perfType contains lidraughts.rating.PerfType.Classical
   def nonMandatory = !isMandatory

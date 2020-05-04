@@ -4,6 +4,7 @@ import akka.actor._
 import com.typesafe.config.Config
 
 import lidraughts.simul.Simul
+import lidraughts.swiss.Swiss
 
 final class Env(
     config: Config,
@@ -29,6 +30,7 @@ final class Env(
     setupEnv: lidraughts.setup.Env,
     getSimul: Simul.ID => Fu[Option[Simul]],
     getSimulName: Simul.ID => Fu[Option[String]],
+    getSwiss: Swiss.Id => Fu[Option[Swiss]],
     getTournamentName: String => Option[String],
     isStreaming: lidraughts.user.User.ID => Boolean,
     isPlaying: lidraughts.user.User.ID => Boolean,
@@ -119,7 +121,8 @@ final class Env(
     forecastApi = forecastApi,
     bookmarkApi = bookmarkApi,
     getTourAndRanks = getTourAndRanks,
-    getSimul = getSimul
+    getSimul = getSimul,
+    getSwiss = getSwiss
   )
 
   val lobbyApi = new LobbyApi(
@@ -162,6 +165,7 @@ object Env {
     setupEnv = lidraughts.setup.Env.current,
     getSimul = lidraughts.simul.Env.current.repo.find,
     getSimulName = lidraughts.simul.Env.current.api.idToName,
+    getSwiss = lidraughts.swiss.Env.current.api.byId,
     getTournamentName = lidraughts.tournament.Env.current.cached.name,
     roundJsonView = lidraughts.round.Env.current.jsonView,
     noteApi = lidraughts.round.Env.current.noteApi,

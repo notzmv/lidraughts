@@ -3,14 +3,14 @@ package lidraughts.swiss
 import lidraughts.game.Game
 
 case class SwissPairing(
-    _id: Game.ID,
+    id: Game.ID,
     swissId: Swiss.Id,
     round: SwissRound.Number,
     white: SwissPlayer.Number,
     black: SwissPlayer.Number,
     status: SwissPairing.Status
 ) {
-  def gameId = _id
+  def gameId = id
   def players = List(white, black)
   def has(number: SwissPlayer.Number) = white == number || black == number
   def colorOf(number: SwissPlayer.Number) = draughts.Color(white == number)

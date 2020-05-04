@@ -93,7 +93,7 @@ final class Env(
     flood = flood
   )
 
-  private lazy val standingApi = new SwissStandingApi(
+  lazy val standingApi = new SwissStandingApi(
     swissColl = swissColl,
     playerColl = playerColl,
     pairingColl = pairingColl,

@@ -209,7 +209,7 @@ export function submitMove(ctrl: RoundController): VNode | undefined {
 
 export function backToTournament(ctrl: RoundController): VNode | undefined {
   const d = ctrl.data;
-  return (d.tournament && d.tournament.running) ? h('div.follow-up', [
+  return d.tournament?.running ? h('div.follow-up', [
     h('a.text.fbt.strong.glowing', {
       attrs: {
         'data-icon': 'G',
@@ -229,6 +229,20 @@ export function backToTournament(ctrl: RoundController): VNode | undefined {
   ]) : undefined;
 }
 
+export function backToSwiss(ctrl: RoundController): VNode | undefined {
+  const d = ctrl.data;
+  return d.swiss?.running ? h('div.follow-up', [
+    h('a.text.fbt.strong.glowing', {
+      attrs: {
+        'data-icon': 'G',
+        href: '/swiss/' + d.swiss.id
+      },
+      hook: util.bind('click', ctrl.setRedirecting)
+    }, ctrl.noarg('backToTournament')),
+    analysisButton(ctrl)
+  ]) : undefined;
+}
+
 export function moretime(ctrl: RoundController) {
   return game.moretimeable(ctrl.data) ? h('a.moretime', {
     attrs: {
@@ -242,7 +256,7 @@ export function moretime(ctrl: RoundController) {
 
 export function followUp(ctrl: RoundController): VNode {
   const d = ctrl.data,
-    rematchable = !d.game.rematch && (status.finished(d) || status.aborted(d)) && !d.tournament && !d.simul && !d.game.boosted,
+    rematchable = !d.game.rematch && (status.finished(d) || status.aborted(d)) && !d.tournament && !d.simul && !d.swiss && !d.game.boosted,
     newable = (status.finished(d) || status.aborted(d)) && (
       d.game.source === 'lobby' ||
       d.game.source === 'pool'),
@@ -255,6 +269,9 @@ export function followUp(ctrl: RoundController): VNode {
     ...rematchZone,
     d.tournament ? h('a.fbt', {
       attrs: {href: '/tournament/' + d.tournament.id}
+    }, ctrl.noarg('viewTournament')) : null,
+    d.swiss ? h('a.fbt', {
+      attrs: {href: '/swiss/' + d.swiss.id}
     }, ctrl.noarg('viewTournament')) : null,
     newable ? h('a.fbt', {
       attrs: { href: d.game.source === 'pool' ? poolUrl(d.clock!, d.opponent.user) : '/?hook_like=' + d.game.id },
@@ -274,6 +291,9 @@ export function watcherFollowUp(ctrl: RoundController): VNode | null {
     }, ctrl.noarg('viewRematch')) : null,
     d.tournament ? h('a.fbt', {
       attrs: {href: '/tournament/' + d.tournament.id}
+    }, ctrl.noarg('viewTournament')) : null,
+    d.swiss ? h('a.fbt', {
+      attrs: {href: '/swiss/' + d.swiss.id}
     }, ctrl.noarg('viewTournament')) : null,
     analysisButton(ctrl)
   ];

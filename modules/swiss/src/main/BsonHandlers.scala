@@ -33,7 +33,7 @@ private object BsonHandlers {
   implicit val playerHandler = new BSON[SwissPlayer] {
     import SwissPlayer.Fields._
     def reads(r: BSON.Reader) = SwissPlayer(
-      _id = r.get[SwissPlayer.Id](id),
+      id = r.get[SwissPlayer.Id](id),
       swissId = r.get[Swiss.Id](swissId),
       number = r.get[SwissPlayer.Number](number),
       userId = r str userId,
@@ -43,7 +43,7 @@ private object BsonHandlers {
       score = r.get[Swiss.Score](score)
     )
     def writes(w: BSON.Writer, o: SwissPlayer) = $doc(
-      id -> o._id,
+      id -> o.id,
       swissId -> o.swissId,
       number -> o.number,
       userId -> o.userId,
@@ -72,7 +72,7 @@ private object BsonHandlers {
       r.get[List[SwissPlayer.Number]](players) match {
         case List(w, b) =>
           SwissPairing(
-            _id = r str id,
+            id = r str id,
             swissId = r.get[Swiss.Id](swissId),
             round = r.get[SwissRound.Number](round),
             white = w,
@@ -82,7 +82,7 @@ private object BsonHandlers {
         case _ => sys error "Invalid swiss pairing users"
       }
     def writes(w: BSON.Writer, o: SwissPairing) = $doc(
-      id -> o._id,
+      id -> o.id,
       swissId -> o.swissId,
       round -> o.round,
       gameId -> o.gameId,

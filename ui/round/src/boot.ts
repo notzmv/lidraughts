@@ -64,7 +64,7 @@ export default function(opts: RoundOpts): void {
     });
 
   function startTournamentClock() {
-    if (opts.data.tournament) $('.game__tournament .clock').each(function(this: HTMLElement) {
+    if (data.tournament) $('.game__tournament .clock').each(function(this: HTMLElement) {
       $(this).clock({
         time: parseFloat($(this).data('time'))
       });
@@ -80,7 +80,7 @@ export default function(opts: RoundOpts): void {
 
   opts.element = element;
   opts.socketSend = li.socket.send;
-  if (!opts.tour && !data.simul) opts.onChange = (d: RoundData) => {
+  if (!opts.tour && !data.simul && !data.swiss) opts.onChange = (d: RoundData) => {
     if (chat) chat.preset.setGroup(getPresetGroup(d));
   };
 
@@ -90,7 +90,7 @@ export default function(opts: RoundOpts): void {
       opts.chat.plugin = tourStandingCtrl(opts.tour, opts.i18n.standing);
       opts.chat.alwaysEnabled = true;
     } else if (!data.simul) {
-      opts.chat.preset = getPresetGroup(opts.data);
+      opts.chat.preset = getPresetGroup(data);
       opts.chat.parseMoves = true;
     }
     li.makeChat(opts.chat, function(c) {
