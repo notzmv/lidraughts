@@ -24,9 +24,9 @@ object lag {
           isLidraughtsLagging(),
           span(cls := "answer short")(
             span(cls := "waiting")(measurementInProgressThreeDot()),
-            span(cls := "nope-nope none")(strong(trans.no(), "."), " ", andYourNetworkIsGood()),
-            span(cls := "nope-yep none")(strong(trans.no(), "."), " ", andYourNetworkIsBad()),
-            span(cls := "yep none")(strong(trans.yes(), "."), " ", itWillBeFixedSoon())
+            span(cls := "nope-nope none")(noAndYourNetworkIsGood()),
+            span(cls := "nope-yep none")(noAndYourNetworkIsBad()),
+            span(cls := "yep none")(yesItWillBeFixedSoon())
           )
         ),
         div(cls := "answer long")(
@@ -37,19 +37,14 @@ object lag {
             h2(lidraughtsServerLatency()),
             div(cls := "meter"),
             p(
-              lidraughtsServerLatencyExplanation(
-                strong(sameForEverybody())
-              )
+              lidraughtsServerLatencyExplanation()
             )
           ),
           st.section(cls := "network")(
-            h2(networkBetweenLidraughtsAndYou),
+            h2(networkBetweenLidraughtsAndYou()),
             div(cls := "meter"),
             p(
-              networkBetweenLidraughtsAndYouExplanation(
-                strong(distanceToLidraughtsFrance()),
-                strong(qualityOfYourInternetConnection())
-              )
+              networkBetweenLidraughtsAndYouExplanation()
             )
           )
         ),
@@ -57,9 +52,7 @@ object lag {
           p(youCanFindTheseValuesAtAnyTimeByClickingOnYourUsername()),
           h2(lagCompensation()),
           p(
-            lagCompensationExplanation(
-              strong(notAHandicap())
-            )
+            lagCompensationExplanation()
           )
         )
       )
