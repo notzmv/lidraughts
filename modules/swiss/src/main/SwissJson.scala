@@ -67,9 +67,7 @@ final class SwissJson(
       })
 
   def fetchMyInfo(swiss: Swiss, me: User): Fu[Option[MyInfo]] =
-    SwissPlayer.fields { f =>
-      playerColl.find($doc(f.swissId -> swiss.id, f.userId -> me.id)).uno[SwissPlayer]
-    } flatMap {
+    playerColl.byId[SwissPlayer](SwissPlayer.makeId(swiss.id, me.id).value) flatMap {
       _ ?? { player =>
         SwissPairing.fields { f =>
           pairingColl

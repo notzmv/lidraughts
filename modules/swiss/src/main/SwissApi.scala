@@ -28,6 +28,7 @@ final class SwissApi(
 
   def byId(id: Swiss.Id) = swissColl.byId[Swiss](id.value)
   def enterableById(id: Swiss.Id) = swissColl.byId[Swiss](id.value).dmap(_.filter(_.isEnterable))
+  def startedById(id: Swiss.Id) = swissColl.byId[Swiss](id.value).dmap(_.filter(_.isStarted))
 
   def create(data: SwissForm.SwissData, me: User, teamId: TeamId): Fu[Swiss] = {
     val swiss = Swiss(
@@ -49,6 +50,20 @@ final class SwissApi(
       hasChat = data.hasChat | true
     )
     swissColl.insert(swiss) inject swiss
+  }
+
+  def update(old: Swiss, data: SwissForm.SwissData): Funit = {
+    val swiss = old.copy(
+      name = data.name | old.name,
+      clock = data.clock,
+      variant = data.realVariant,
+      rated = data.rated | old.rated,
+      nbRounds = data.nbRounds,
+      startsAt = data.startsAt,
+      description = data.description,
+      hasChat = data.hasChat | old.hasChat
+    )
+    swissColl.update($id(swiss.id), swiss).void
   }
 
   def join(
@@ -88,6 +103,36 @@ final class SwissApi(
 
   def featuredInTeam(teamId: TeamId): Fu[List[Swiss]] =
     swissColl.find($doc("teamId" -> teamId)).sort($sort desc "startsAt").list[Swiss](5)
+
+  private[swiss] def destroy(swiss: Swiss): Funit =
+    swissColl.remove($id(swiss.id)) >>
+      pairingColl.remove($doc(SwissPairing.Fields.swissId -> swiss.id)) >>
+      playerColl.remove($doc(SwissPairing.Fields.swissId -> swiss.id)).void >>-
+      socketReload(swiss.id)
+
+  private[swiss] def finish(oldSwiss: Swiss): Unit =
+    Sequencing(oldSwiss.id)(startedById) { swiss =>
+      pairingColl.countSel($doc(SwissPairing.Fields.swissId -> swiss.id)) flatMap {
+        case 0 => destroy(swiss)
+        case _ =>
+          for {
+            _ <- swissColl.updateField($id(swiss.id), "finishedAt", DateTime.now).void
+            winner <- SwissPlayer.fields { f =>
+              playerColl.find($doc(f.swissId -> swiss.id)).sort($sort desc f.score).one[SwissPlayer]
+            }
+            _ <- winner.?? { p =>
+              swissColl.updateField($id(swiss.id), "winnerId", p.userId).void
+            }
+          } yield {
+            socketReload(swiss.id)
+          }
+      }
+    }
+
+  def kill(swiss: Swiss): Unit = {
+    if (swiss.isStarted) finish(swiss)
+    else if (swiss.isCreated) destroy(swiss)
+  }
 
   private def updateNbPlayers(swissId: Swiss.Id): Funit =
     playerColl.countSel($doc(SwissPlayer.Fields.swissId -> swissId)) flatMap {

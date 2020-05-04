@@ -102,6 +102,41 @@ object Swiss extends LidraughtsController {
     }
   }
 
+  def edit(id: String) = Auth { implicit ctx => me =>
+    WithEditableSwiss(id, me) { swiss =>
+      Ok(html.swiss.form.edit(swiss, env.forms.edit(swiss))).fuccess
+    }
+  }
+
+  def update(id: String) = AuthBody { implicit ctx => me =>
+    WithEditableSwiss(id, me) { swiss =>
+      implicit val req = ctx.body
+      env.forms.edit(swiss)
+        .bindFromRequest
+        .fold(
+          err => BadRequest(html.swiss.form.edit(swiss, err)).fuccess,
+          data => env.api.update(swiss, data) inject Redirect(routes.Swiss.show(id))
+        )
+    }
+
+  }
+  def terminate(id: String) = Auth { implicit ctx => me =>
+    WithEditableSwiss(id, me) { swiss =>
+      env.api kill swiss
+      Redirect(routes.Team.show(swiss.teamId)).fuccess
+    }
+  }
+
+  private def WithEditableSwiss(id: String, me: lidraughts.user.User)(
+    f: SwissModel => Fu[Result]
+  )(implicit ctx: Context): Fu[Result] =
+    env.api byId SwissId(id) flatMap {
+      case Some(t) if (t.createdBy == me.id && !t.isFinished) || isGranted(_.ManageTournament) =>
+        f(t)
+      case Some(t) => Redirect(routes.Swiss.show(t.id.value)).fuccess
+      case _ => notFound
+    }
+
   private def canHaveChat(swiss: SwissModel)(implicit ctx: Context): Fu[Boolean] =
     (swiss.hasChat && ctx.noKid) ?? ctx.userId.?? {
       Env.team.api.belongsTo(swiss.teamId, _)
