@@ -22,7 +22,8 @@ final class SwissApi(
     system: ActorSystem,
     sequencers: DuctMap[_],
     socketMap: SocketMap,
-    director: SwissDirector
+    director: SwissDirector,
+    scoring: SwissScoring
 ) {
 
   import BsonHandlers._
@@ -126,9 +127,7 @@ final class SwissApi(
             _ <- winner.?? { p =>
               swissColl.updateField($id(swiss.id), "winnerId", p.userId).void
             }
-          } yield {
-            socketReload(swiss.id)
-          }
+          } yield socketReload(swiss.id)
       }
     }
 
@@ -144,7 +143,13 @@ final class SwissApi(
       .map(_.flatMap(_.getAs[Swiss.Id]("_id")))
       .flatMap { ids =>
         lidraughts.common.Future.applySequentially(ids) { id =>
-          Sequencing(id)(notFinishedById)(director.startRound)
+          val promise = Promise[Boolean]
+          Sequencing(id)(notFinishedById) { swiss =>
+            val fuRound = director.startRound(swiss).flatMap { scoring.recompute _ } >>-
+              socketReload(swiss.id) inject true
+            fuRound map promise.success
+          }
+          promise.future.withTimeoutDefault(15.seconds, false)(system).void
         }
       }
 

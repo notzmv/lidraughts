@@ -12,7 +12,7 @@ import lidraughts.hub.lightTeam.TeamId
 import lidraughts.quote.Quote.quoteWriter
 import lidraughts.rating.PerfType
 import lidraughts.socket.Socket.SocketVersion
-import lidraughts.user.{ LightUserApi, User }
+import lidraughts.user.User
 
 final class SwissJson(
     playerColl: Coll,
@@ -142,23 +142,14 @@ object SwissJson {
   implicit private val roundNumberWriter: Writes[SwissRound.Number] = Writes[SwissRound.Number] { n =>
     JsNumber(n.value)
   }
-  implicit private val playerNumberWriter: Writes[SwissPlayer.Number] = Writes[SwissPlayer.Number] { n =>
-    JsNumber(n.value)
-  }
+  // implicit private val playerNumberWriter: Writes[SwissPlayer.Number] = Writes[SwissPlayer.Number] { n =>
+  //   JsNumber(n.value)
+  // }
   implicit private val pointsWriter: Writes[Swiss.Points] = Writes[Swiss.Points] { p =>
     JsNumber(p.value)
   }
   implicit private val scoreWriter: Writes[Swiss.Score] = Writes[Swiss.Score] { s =>
     JsNumber(s.value)
-  }
-
-  implicit private val pairingWrites: OWrites[SwissPairing] = OWrites { p =>
-    Json.obj(
-      "gameId" -> p.gameId,
-      "white" -> p.white,
-      "black" -> p.black,
-      "winner" -> p.winner
-    )
   }
 
   implicit private val clockWrites: OWrites[draughts.Clock.Config] = OWrites { clock =>

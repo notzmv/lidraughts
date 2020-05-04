@@ -38,6 +38,11 @@ final class Env(
     executable = PairingExecutable
   )
 
+  private val scoring = new SwissScoring(
+    playerColl = playerColl,
+    pairingColl = pairingColl
+  )
+
   private val director = new SwissDirector(
     swissColl = swissColl,
     playerColl = playerColl,
@@ -53,7 +58,8 @@ final class Env(
     system = system,
     sequencers = sequencerMap,
     socketMap = socketMap,
-    director = director
+    director = director,
+    scoring = scoring
   )
 
   private val socketMap: SocketMap = lidraughts.socket.SocketMap[SwissSocket](

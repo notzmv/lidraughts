@@ -9,25 +9,36 @@ final private class PairingSystem(executable: String) {
     swiss: Swiss,
     players: List[SwissPlayer],
     pairings: List[SwissPairing]
-  ): List[SwissPairing.Pending] =
+  ): List[SwissPairing.ByeOrPending] =
     writer(swiss, players, pairings) |> invoke |> reader
 
-  private def invoke(input: String): String =
+  private def invoke(input: String): List[String] =
     blocking {
       withTempFile(input) { file =>
-        s"$executable --dutch $file -p"
+        import scala.sys.process._
+        val command = s"$executable --dutch $file -p"
+        val stdout = new collection.mutable.ListBuffer[String]
+        val stderr = new StringBuilder
+        val status = command ! ProcessLogger(stdout append _, stderr append _)
+        if (status != 0) throw new PairingSystem.BBPairingException(stderr.toString, input)
+        stdout.toList
       }
     }
 
-  private def reader(output: String): List[SwissPairing.Pending] =
-    output.lines.toList
+  private def reader(output: List[String]): List[SwissPairing.ByeOrPending] =
+    output
+      .drop(1) // first line is the number of pairings
       .map(_ split ' ')
       .collect {
+        case Array(p, "0") =>
+          parseIntOption(p) map { p =>
+            Left(SwissPairing.Bye(SwissPlayer.Number(p)))
+          }
         case Array(w, b) =>
           for {
             white <- parseIntOption(w)
             black <- parseIntOption(b)
-          } yield SwissPairing.Pending(SwissPlayer.Number(white), SwissPlayer.Number(black))
+          } yield Right(SwissPairing.Pending(SwissPlayer.Number(white), SwissPlayer.Number(black)))
       }
       .flatten
 
@@ -72,7 +83,7 @@ final private class PairingSystem(executable: String) {
    * suffix must be at least 3 characters long, otherwise this function throws an IllegalArgumentException.
    */
   def withTempFile[A](contents: String)(f: File => A): A = {
-    val file = File.createTempFile("lidraughts-", "-swiss")
+    val file = File.createTempFile("lidraughts-", "-swiss").pp
     val p = new PrintWriter(file, "UTF-8")
     try {
       p.write(contents)
@@ -81,8 +92,12 @@ final private class PairingSystem(executable: String) {
       res
     } finally {
       p.close()
-      file.delete()
+      // file.delete()
     }
   }
 
+}
+
+private object PairingSystem {
+  case class BBPairingException(val message: String, val input: String) extends lidraughts.base.LidraughtsException
 }
