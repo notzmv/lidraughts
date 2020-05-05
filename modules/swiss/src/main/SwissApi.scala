@@ -48,8 +48,8 @@ final class SwissApi(
       createdAt = DateTime.now,
       createdBy = me.id,
       teamId = teamId,
-      nextRoundAt = data.startsAt.some,
-      startsAt = data.startsAt,
+      nextRoundAt = data.realStartsAt.some,
+      startsAt = data.realStartsAt,
       finishedAt = none,
       winnerId = none,
       description = data.description,
@@ -65,7 +65,8 @@ final class SwissApi(
       variant = data.realVariant,
       rated = data.rated | old.rated,
       nbRounds = data.nbRounds,
-      startsAt = data.startsAt,
+      startsAt = data.startsAt.ifTrue(old.isCreated) | old.startsAt,
+      nextRoundAt = if (old.isCreated) Some(data.startsAt | old.startsAt) else old.nextRoundAt,
       description = data.description,
       hasChat = data.hasChat | old.hasChat
     )
@@ -79,10 +80,11 @@ final class SwissApi(
     promise: Option[Promise[Boolean]]
   ): Unit = Sequencing(id)(notFinishedById) { swiss =>
     val fuJoined =
-      isInTeam(swiss.teamId) ?? {
-        val number = SwissPlayer.Number(swiss.nbPlayers + 1).pp
+      (swiss.isEnterable && isInTeam(swiss.teamId)) ?? {
+        val number = SwissPlayer.Number(swiss.nbPlayers + 1)
         playerColl.insert(SwissPlayer.make(swiss.id, number, me, swiss.perfLens)) zip
-          swissColl.updateField($id(swiss.id), "nbPlayers", number) >>-
+          swissColl.updateField($id(swiss.id), "nbPlayers", number) >>
+          scoring.recompute(swiss) >>-
           socketReload(swiss.id) inject true
       }
     fuJoined map {
@@ -124,7 +126,7 @@ final class SwissApi(
               if (swiss.round.value == swiss.nbRounds) doFinish(swiss)
               else
                 isCurrentRoundFinished(swiss).flatMap {
-                  _ ?? swissColl.updateField($id(swiss.id), "nextRoundAt", DateTime.now.plusSeconds(10)).void
+                  _ ?? swissColl.updateField($id(swiss.id), "nextRoundAt", DateTime.now.plusMinutes(1)).void
                 }
             } >>- socketReload(swiss.id)
         }
@@ -178,8 +180,15 @@ final class SwissApi(
         lidraughts.common.Future.applySequentially(ids) { id =>
           val promise = Promise[Boolean]
           Sequencing(id)(notFinishedById) { swiss =>
-            val fuRound = director.startRound(swiss).flatMap(scoring.recompute) >>-
-              socketReload(swiss.id) inject true
+            val fuRound = {
+              if (swiss.nbPlayers >= 4)
+                director.startRound(swiss).flatMap(scoring.recompute) >>- socketReload(swiss.id)
+              else {
+                if (swiss.startsAt isBefore DateTime.now.minusMinutes(60)) destroy(swiss)
+                else
+                  swissColl.update($id(swiss.id), $set("nextRoundAt" -> DateTime.now.plusMinutes(1))).void
+              }
+            } inject true
             fuRound map promise.success
           }
           promise.future.withTimeoutDefault(15.seconds, false)(system).void
