@@ -39,7 +39,7 @@ private final class RelaySync(
    * lidraughts will create a new chapter when the game player tags differ.
    */
   private def findCorrespondingChapter(game: RelayGame, chapters: List[Chapter], nbGames: Int): Option[Chapter] =
-    if (nbGames == 1) chapters find game.staticTagsMatch
+    if (nbGames == 1 || game.looksLikeLidraughts) chapters find game.staticTagsMatch
     else chapters.find(_.relay.exists(_.index == game.index))
 
   private def updateChapter(study: Study, chapter: Chapter, game: RelayGame): Fu[NbMoves] =

@@ -80,7 +80,7 @@ object Tournament extends LidraughtsController {
         (!tour.isHidden || json.fold(true)(jsonHasMe) || ctx.userId.has(tour.createdBy) || isGranted(
           _.ChatTimeout
         )) && // private tournament that I joined or has ChatTimeout
-        Env.chat.panic.allowed(u, tighter = false)
+          Env.chat.panic.allowed(u, tighter = false)
       }
 
   private def jsonHasMe(js: JsObject): Boolean = (js \ "me").toOption.isDefined
