@@ -98,7 +98,6 @@ object bits {
     trans.blackWins,
     trans.draws,
     trans.nextXTournament,
-    trans.viewMoreTournaments,
     trans.averageOpponent,
     trans.ratedTournament,
     trans.casualTournament,

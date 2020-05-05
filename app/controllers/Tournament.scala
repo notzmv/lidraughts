@@ -155,7 +155,7 @@ object Tournament extends LidraughtsController {
     }
   }
 
-  def player(tourId: String, userId: String) = Open { implicit ctx =>
+  def player(tourId: String, userId: String) = Action.async {
     TournamentRepo byId tourId flatMap {
       _ ?? { tour =>
         JsonOk {

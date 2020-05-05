@@ -62,6 +62,7 @@ final class Env(
     director = director,
     scoring = scoring,
     chatApi = chatApi,
+    lightUserApi = lightUserApi,
     bus = system.lidraughtsBus
   )
 

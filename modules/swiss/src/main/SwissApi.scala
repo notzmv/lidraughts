@@ -11,13 +11,13 @@ import scala.concurrent.Promise
 
 import actorApi._
 import lidraughts.chat.{ Chat, ChatApi }
-import lidraughts.common.{ Bus, GreatPlayer }
+import lidraughts.common.{ Bus, GreatPlayer, LightUser }
 import lidraughts.db.dsl._
 import lidraughts.game.Game
 import lidraughts.hub.lightTeam.TeamId
 import lidraughts.hub.{ Duct, DuctMap }
 import lidraughts.round.actorApi.round.QuietFlag
-import lidraughts.user.User
+import lidraughts.user.{ User, UserRepo }
 
 final class SwissApi(
     swissColl: Coll,
@@ -29,6 +29,7 @@ final class SwissApi(
     director: SwissDirector,
     scoring: SwissScoring,
     chatApi: ChatApi,
+    lightUserApi: lidraughts.user.LightUserApi,
     bus: Bus
 ) {
 
@@ -117,6 +118,55 @@ final class SwissApi(
   def featuredInTeam(teamId: TeamId): Fu[List[Swiss]] =
     swissColl.find($doc("teamId" -> teamId)).sort($sort desc "startsAt").list[Swiss](5)
 
+  def playerInfo(swiss: Swiss, userId: User.ID): Fu[Option[SwissPlayer.ViewExt]] =
+    UserRepo named userId flatMap {
+      _ ?? { user =>
+        playerColl.byId[SwissPlayer](SwissPlayer.makeId(swiss.id, user.id).value) flatMap {
+          _ ?? { player =>
+            SwissPairing.fields { f =>
+              pairingColl
+                .find($doc(f.swissId -> swiss.id, f.players -> player.number))
+                .sort($sort desc f.date)
+                .list[SwissPairing]()
+            } flatMap {
+              pairingViews(_, player)
+            } flatMap { pairings =>
+              SwissPlayer.fields { f =>
+                playerColl.countSel($doc(f.swissId -> swiss.id, f.score $gt player.score)).dmap(1.+)
+              } map { rank =>
+                SwissPlayer
+                  .ViewExt(player, rank, user.light, pairings.view.map { p =>
+                    p.pairing.round -> p
+                  }.toMap)
+                  .some
+              }
+            }
+          }
+        }
+      }
+    }
+
+  def pairingViews(pairings: Seq[SwissPairing], player: SwissPlayer): Fu[Seq[SwissPairing.View]] =
+    pairings.headOption ?? { first =>
+      SwissPlayer.fields { f =>
+        playerColl
+          .find($doc(f.swissId -> first.swissId, f.number $in pairings.map(_ opponentOf player.number)))
+          .list[SwissPlayer]()
+      } flatMap { opponents =>
+        lightUserApi asyncMany opponents.map(_.userId) map { users =>
+          opponents.zip(users) map {
+            case (o, u) => SwissPlayer.WithUser(o, u | LightUser.fallback(o.userId))
+          }
+        } map { opponents =>
+          pairings flatMap { pairing =>
+            opponents.find(_.player.number == pairing.opponentOf(player.number)) map {
+              SwissPairing.View(pairing, _)
+            }
+          }
+        }
+      }
+    }
+
   private[swiss] def finishGame(game: Game): Unit = game.swissId foreach { swissId =>
     Sequencing(Swiss.Id(swissId))(startedById) { swiss =>
       pairingColl.byId[SwissPairing](game.id).dmap(_.filter(_.isOngoing)) flatMap {
@@ -179,7 +229,7 @@ final class SwissApi(
         )
         .void
       winner <- SwissPlayer.fields { f =>
-        playerColl.find($doc(f.swissId -> swiss.id)).sort($sort desc f.score).one[SwissPlayer]
+        playerColl.find($doc(f.swissId -> swiss.id)).sort($sort desc f.score).uno[SwissPlayer]
       }
       _ <- winner.?? { p =>
         swissColl.updateField($id(swiss.id), "winnerId", p.userId).void
@@ -209,12 +259,15 @@ final class SwissApi(
                         swiss.id,
                         s"Not enough players for round ${swiss.round.value + 1}; terminating tournament."
                       )
-                  ) { s =>
-                      scoring.recompute(s) >>-
-                        systemChat(
-                          swiss.id,
-                          s"Round ${swiss.round.value + 1} started."
-                        )
+                  ) {
+                      case s if s.nextRoundAt.isEmpty =>
+                        scoring.recompute(s) >>-
+                          systemChat(swiss.id, s"Round ${swiss.round.value + 1} started.")
+                      case s =>
+                        swissColl
+                          .update($id(swiss.id), $set("nextRoundAt" -> DateTime.now.plusSeconds(61)))
+                          .void >>-
+                          systemChat(swiss.id, s"Round ${swiss.round.value + 1} failed.", true)
                     }
                 }
               else {

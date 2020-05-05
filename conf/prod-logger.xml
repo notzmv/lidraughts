@@ -55,7 +55,7 @@
   <logger name="akka" level="INFO"><appender-ref ref="STDOUT_INFO" /></logger>
   <logger name="reactivemongo" level="INFO"><appender-ref ref="STDOUT_INFO" /></logger>
 
-  <logger name="puzzle" level="DEBUG">
+  <logger name="puzzle" level="INFO">
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <file>/var/log/lidraughts/puzzle.log</file>
       <encoder><pattern>%date %-5level %logger{30} %message%n%xException</pattern></encoder>
@@ -65,7 +65,17 @@
       </rollingPolicy>
     </appender>
   </logger>
-  <logger name="relay" level="DEBUG">
+  <logger name="swiss" level="INFO">
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <file>/var/log/lichess/swiss.log</file>
+      <encoder><pattern>%date %-5level %logger{30} %message%n%xException</pattern></encoder>
+      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <fileNamePattern>/var/log/lichess/swiss-log-%d{yyyy-MM-dd}.gz</fileNamePattern>
+        <maxHistory>7</maxHistory>
+      </rollingPolicy>
+    </appender>
+  </logger>
+  <logger name="relay" level="INFO">
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <file>/var/log/lidraughts/relay.log</file>
       <encoder><pattern>%date %-5level %logger{30} %message%n%xException</pattern></encoder>
@@ -75,7 +85,7 @@
       </rollingPolicy>
     </appender>
   </logger>
-  <logger name="lobby" level="DEBUG">
+  <logger name="lobby" level="INFO">
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <file>/var/log/lidraughts/lobby.log</file>
       <encoder><pattern>%date %-5level %logger{30} %message%n%xException</pattern></encoder>
@@ -85,7 +95,7 @@
       </rollingPolicy>
     </appender>
   </logger>
-  <logger name="pool" level="DEBUG">
+  <logger name="pool" level="INFO">
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <file>/var/log/lidraughts/pool.log</file>
       <encoder><pattern>%date %-5level %logger{30} %message%n%xException</pattern></encoder>
@@ -95,7 +105,7 @@
       </rollingPolicy>
     </appender>
   </logger>
-  <logger name="tournament" level="DEBUG">
+  <logger name="tournament" level="INFO">
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <file>/var/log/lidraughts/tournament.log</file>
       <encoder><pattern>%date %-5level %logger{30} %message%n%xException</pattern></encoder>
@@ -105,7 +115,7 @@
       </rollingPolicy>
     </appender>
   </logger>
-  <logger name="ratelimit" level="DEBUG">
+  <logger name="ratelimit" level="INFO">
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <file>/var/log/lidraughts/ratelimit.log</file>
       <encoder><pattern>%date %-5level %logger{30} %message%n%xException</pattern></encoder>
@@ -125,7 +135,7 @@
       </rollingPolicy>
     </appender>
   </logger>
-  <logger name="cheat" level="DEBUG">
+  <logger name="cheat" level="INFO">
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <file>/var/log/lidraughts/cheat.log</file>
       <encoder><pattern>%date %-5level %logger{30} %message%n%xException</pattern></encoder>
@@ -135,7 +145,7 @@
       </rollingPolicy>
     </appender>
   </logger>
-  <logger name="draughtsnet" level="DEBUG">
+  <logger name="draughtsnet" level="INFO">
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <file>/var/log/lidraughts/draughtsnet.log</file>
       <encoder><pattern>%date %-5level %logger{30} %message%n%xException</pattern></encoder>
@@ -155,7 +165,7 @@
       </rollingPolicy>
     </appender>
   </logger>
-  <logger name="csrf" level="DEBUG">
+  <logger name="csrf" level="INFO">
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <file>/var/log/lidraughts/csrf.log</file>
       <encoder><pattern>%date %-5level %logger{30} %message%n%xException</pattern></encoder>
@@ -165,7 +175,7 @@
       </rollingPolicy>
     </appender>
   </logger>
-  <logger name="http" level="DEBUG">
+  <logger name="http" level="INFO">
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <file>/var/log/lidraughts/http.log</file>
       <encoder><pattern>%date %-5level %logger{30} %message%n%xException</pattern></encoder>
@@ -175,7 +185,7 @@
       </rollingPolicy>
     </appender>
   </logger>
-  <logger name="auth" level="DEBUG">
+  <logger name="auth" level="INFO">
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <file>/var/log/lidraughts/auth.log</file>
       <encoder><pattern>%date %-5level %logger{30} %message%n%xException</pattern></encoder>
@@ -185,7 +195,7 @@
       </rollingPolicy>
     </appender>
   </logger>
-  <logger name="report" level="DEBUG">
+  <logger name="report" level="INFO">
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <file>/var/log/lidraughts/report.log</file>
       <encoder><pattern>%date %-5level %logger{30} %message%n%xException</pattern></encoder>
@@ -195,7 +205,7 @@
       </rollingPolicy>
     </appender>
   </logger>
-  <logger name="sandbag" level="DEBUG">
+  <logger name="sandbag" level="INFO">
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <file>/var/log/lidraughts/sandbag.log</file>
       <encoder><pattern>%date %-5level %logger{30} %message%n%xException</pattern></encoder>
@@ -205,7 +215,7 @@
       </rollingPolicy>
     </appender>
   </logger>
-  <logger name="security" level="DEBUG">
+  <logger name="security" level="INFO">
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <file>/var/log/lidraughts/security.log</file>
       <encoder><pattern>%date %-5level %logger{30} %message%n%xException</pattern></encoder>

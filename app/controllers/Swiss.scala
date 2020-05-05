@@ -29,6 +29,7 @@ object Swiss extends LidraughtsController {
               me = ctx.me,
               reqPage = page,
               socketVersion = version.some,
+              playerInfo = none,
               isInTeam = isInTeam
             )
             canChat <- canHaveChat(swiss)
@@ -45,11 +46,13 @@ object Swiss extends LidraughtsController {
             for {
               socketVersion <- getBool("socketVersion").??(env version swiss.id dmap some)
               isInTeam <- isCtxInTheTeam(swiss.teamId)
+              playerInfo <- get("playerInfo").?? { env.api.playerInfo(swiss, _) }
               json <- env.json(
                 swiss = swiss,
                 me = ctx.me,
                 reqPage = page,
                 socketVersion = socketVersion,
+                playerInfo = playerInfo,
                 isInTeam = isInTeam
               )
             } yield Ok(json)
@@ -135,7 +138,17 @@ object Swiss extends LidraughtsController {
     }
   }
 
-  private def WithSwiss(id: String)(f: SwissModel => Fu[Result])(implicit ctx: Context): Fu[Result] =
+  def player(id: String, userId: String) = Action.async {
+    WithSwiss(id) { swiss =>
+      env.api.playerInfo(swiss, userId) flatMap {
+        _.fold(notFoundJson()) { player =>
+          JsonOk(fuccess(lidraughts.swiss.SwissJson.playerJsonExt(swiss, player)))
+        }
+      }
+    }
+  }
+
+  private def WithSwiss(id: String)(f: SwissModel => Fu[Result]): Fu[Result] =
     env.api.byId(SwissId(id)) flatMap { _ ?? f }
 
   private def WithEditableSwiss(id: String, me: lidraughts.user.User)(

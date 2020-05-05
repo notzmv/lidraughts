@@ -41,6 +41,8 @@ object SwissPairing {
 
   type PairingMap = Map[SwissPlayer.Number, Map[SwissRound.Number, SwissPairing]]
 
+  case class View(pairing: SwissPairing, player: SwissPlayer.WithUser)
+
   object Fields {
     val id = "_id"
     val swissId = "s"

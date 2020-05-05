@@ -445,7 +445,6 @@ poproszenia o analizę komputerową, omówienia jej z innymi oraz udostępnienia
   <string name="blackWins">Wygrana czarnych</string>
   <string name="draws">Remis</string>
   <string name="nextXTournament">Następny turniej %s:</string>
-  <string name="viewMoreTournaments">Zobacz więcej turniejów</string>
   <string name="averageOpponent">Przeciwnik średnio</string>
   <string name="membersOnly">Tylko dla zarejestrowanych</string>
   <string name="boardEditor">Edytor pozycji</string>
