@@ -1,6 +1,6 @@
 package lidraughts.swiss
 
-import draughts.{ Black, Color, White }
+import draughts.{ Black, Centis, Color, White }
 import org.joda.time.DateTime
 
 import lidraughts.db.dsl._
@@ -16,43 +16,56 @@ final private class SwissDirector(
   import BsonHandlers._
 
   // sequenced by SwissApi
-  private[swiss] def startRound(from: Swiss): Fu[Swiss] = {
-    for {
-      (players, prevPairings) <- fetchPlayers(from) zip fetchPrevPairings(from)
-      swiss = from.startRound
-      pendings = pairingSystem(swiss, players, prevPairings)
-      _ <- pendings.isEmpty ?? fufail[Unit](s"BBPairing empty for ${from.id}")
-      pairings <- pendings.collect {
-        case Right(SwissPairing.Pending(w, b)) =>
-          IdGenerator.game dmap { id =>
-            SwissPairing(
-              id = id,
-              swissId = swiss.id,
-              round = swiss.round,
-              white = w,
-              black = b,
-              status = Left(SwissPairing.Ongoing)
-            )
-          }
-      }.sequenceFu
-      _ <- swissColl.update($id(swiss.id), $set("round" -> swiss.round) ++ $unset("nextRoundAt")).void
-      date = DateTime.now
-      pairingsBson = pairings.map { p =>
-        pairingHandler.write(p) ++ $doc(SwissPairing.Fields.date -> date)
+  private[swiss] def startRound(from: Swiss): Fu[Option[Swiss]] =
+    fetchPlayers(from)
+      .zip(fetchPrevPairings(from))
+      .flatMap {
+        case (players, prevPairings) =>
+          val swiss = from.startRound
+          val pendings = pairingSystem(swiss, players, prevPairings)
+          if (pendings.isEmpty) fuccess(none[Swiss]) // terminate
+          else
+            for {
+              pairings <- pendings.collect {
+                case Right(SwissPairing.Pending(w, b)) =>
+                  IdGenerator.game dmap { id =>
+                    SwissPairing(
+                      id = id,
+                      swissId = swiss.id,
+                      round = swiss.round,
+                      white = w,
+                      black = b,
+                      status = Left(SwissPairing.Ongoing)
+                    )
+                  }
+              }.sequenceFu
+              _ <- swissColl
+                .update(
+                  $id(swiss.id),
+                  $unset("nextRoundAt") ++ $set(
+                    "round" -> swiss.round,
+                    "nbOngoing" -> pairings.size
+                  )
+                )
+                .void
+              date = DateTime.now
+              pairingsBson = pairings.map { p =>
+                pairingHandler.write(p) ++ $doc(SwissPairing.Fields.date -> date)
+              }
+              _ <- pairingColl.bulkInsert(pairingsBson.toStream, ordered = true).void
+              playerMap = SwissPlayer.toMap(players)
+              games = pairings.map(makeGame(swiss, playerMap))
+              _ <- lidraughts.common.Future.applySequentially(games) { game =>
+                GameRepo.insertDenormalized(game) >>- onStart(game.id)
+              }
+            } yield swiss.some
       }
-      _ <- pairingColl.bulkInsert(pairingsBson.toStream, ordered = true).void
-      playerMap = SwissPlayer.toMap(players)
-      games = pairings.map(makeGame(swiss, playerMap))
-      _ <- lidraughts.common.Future.applySequentially(games) { game =>
-        GameRepo.insertDenormalized(game) >>- onStart(game.id)
+      .recover {
+        case PairingSystem.BBPairingException(msg, input) =>
+          logger.warn(s"BBPairing ${from.id} $msg")
+          logger.info(s"BBPairing ${from.id} $input")
+          from.some
       }
-    } yield swiss
-  }.recover {
-    case PairingSystem.BBPairingException(msg, input) =>
-      logger.warn(s"BBPairing ${from.id} $msg")
-      logger.info(s"BBPairing ${from.id} $input")
-      from
-  }
 
   private def fetchPlayers(swiss: Swiss) = SwissPlayer.fields { f =>
     playerColl
@@ -79,7 +92,11 @@ final private class SwissDirector(
         ) |> { g =>
             val turns = g.player.fold(0, 1)
             g.copy(
-              clock = swiss.clock.toClock.some,
+              clock = swiss.clock.toClock
+                .giveTime(White, Centis(300))
+                .giveTime(Black, Centis(300))
+                .start
+                .some,
               turns = turns,
               startedAtTurn = turns
             )

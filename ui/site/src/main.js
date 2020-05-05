@@ -816,7 +816,6 @@
   lidraughts.widget("clock", {
     _create: function() {
       var self = this;
-      // this.options.time: seconds Integer
       var target = this.options.time * 1000 + Date.now();
       var timeEl = this.element.find('.time')[0];
       var tick = function() {

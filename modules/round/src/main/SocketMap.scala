@@ -4,7 +4,7 @@ import scala.concurrent.duration._
 
 import lidraughts.game.Game
 import lidraughts.hub.actorApi.Deploy
-import lidraughts.hub.actorApi.map.{ Tell, TellIfExists, Exists }
+import lidraughts.hub.actorApi.map.{ Tell, TellIfExists, TellMany, Exists }
 import lidraughts.user.User
 
 private object SocketMap {
@@ -42,9 +42,10 @@ private object SocketMap {
         case msg: lidraughts.game.actorApi.StartGame => socketMap.tellIfPresent(msg.game.id, msg)
       },
       'roundSocket -> {
-        case TellIfExists(id, msg) => socketMap.tellIfPresent(id, msg)
-        case Tell(id, msg) => socketMap.tell(id, msg)
-        case Exists(id, promise) => promise success socketMap.exists(id)
+        case TellIfExists(gameId, msg) => socketMap.tellIfPresent(gameId, msg)
+        case Tell(gameId, msg) => socketMap.tell(gameId, msg)
+        case TellMany(gameIds, msg) => socketMap.tellIds(gameIds, msg)
+        case Exists(gameId, promise) => promise success socketMap.exists(gameId)
       },
       'deploy -> {
         case m: Deploy => socketMap tellAll m

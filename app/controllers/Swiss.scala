@@ -18,7 +18,7 @@ object Swiss extends LidraughtsController {
 
   def show(id: String) = Open { implicit ctx =>
     env.api.byId(SwissId(id)) flatMap { swissOption =>
-      val page = getInt("page")
+      val page = getInt("page").filter(0.<)
       negotiate(
         html = swissOption.fold(swissNotFound.fuccess) { swiss =>
           for {

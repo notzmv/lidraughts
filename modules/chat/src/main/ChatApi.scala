@@ -102,6 +102,9 @@ final class ChatApi(
       lidraughtsBus.publish(actorApi.ChatLine(chatId, line), classify(chatId))
     }
 
+    def service(chatId: Chat.Id, text: String, isVolatile: Boolean): Unit =
+      if (isVolatile) volatile(chatId, text) else system(chatId, text)
+
     def timeout(chatId: Chat.Id, modId: String, userId: String, reason: ChatTimeout.Reason, local: Boolean): Funit =
       coll.byId[UserChat](chatId.value) zip UserRepo.byId(modId) zip UserRepo.byId(userId) flatMap {
         case Some(chat) ~ Some(mod) ~ Some(user) if isMod(mod) || local => doTimeout(chat, mod, user, reason)

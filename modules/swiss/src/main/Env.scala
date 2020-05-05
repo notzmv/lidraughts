@@ -17,6 +17,7 @@ final class Env(
     flood: lidraughts.security.Flood,
     hub: lidraughts.hub.Env,
     asyncCache: lidraughts.memo.AsyncCache.Builder,
+    chatApi: lidraughts.chat.ChatApi,
     lightUserApi: lidraughts.user.LightUserApi,
     onStart: String => Unit
 ) {
@@ -59,7 +60,9 @@ final class Env(
     sequencers = sequencerMap,
     socketMap = socketMap,
     director = director,
-    scoring = scoring
+    scoring = scoring,
+    chatApi = chatApi,
+    bus = system.lidraughtsBus
   )
 
   private val socketMap: SocketMap = lidraughts.socket.SocketMap[SwissSocket](
@@ -138,9 +141,16 @@ final class Env(
   ResilientScheduler(
     every = Every(2 seconds),
     atMost = AtMost(15 seconds),
-    logger = logger branch "pairings",
-    initialDelay = 5 seconds
-  ) { api.tick }(system)
+    initialDelay = 20 seconds,
+    logger = logger branch "startPendingRounds"
+  ) { api.startPendingRounds }(system)
+
+  ResilientScheduler(
+    every = Every(1 minute),
+    atMost = AtMost(15 seconds),
+    initialDelay = 1 minute,
+    logger = logger branch "checkOngoingGames"
+  ) { api.checkOngoingGames }(system)
 }
 
 object Env {
@@ -152,6 +162,7 @@ object Env {
     flood = lidraughts.security.Env.current.flood,
     hub = lidraughts.hub.Env.current,
     asyncCache = lidraughts.memo.Env.current.asyncCache,
+    chatApi = lidraughts.chat.Env.current.api,
     lightUserApi = lidraughts.user.Env.current.lightUserApi,
     onStart = lidraughts.round.Env.current.onStart
   )

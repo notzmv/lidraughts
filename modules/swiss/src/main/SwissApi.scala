@@ -10,11 +10,13 @@ import scala.concurrent.duration._
 import scala.concurrent.Promise
 
 import actorApi._
+import lidraughts.chat.{ Chat, ChatApi }
+import lidraughts.common.{ Bus, GreatPlayer }
 import lidraughts.db.dsl._
-import lidraughts.common.GreatPlayer
+import lidraughts.game.Game
 import lidraughts.hub.lightTeam.TeamId
 import lidraughts.hub.{ Duct, DuctMap }
-import lidraughts.game.Game
+import lidraughts.round.actorApi.round.QuietFlag
 import lidraughts.user.User
 
 final class SwissApi(
@@ -25,7 +27,9 @@ final class SwissApi(
     sequencers: DuctMap[_],
     socketMap: SocketMap,
     director: SwissDirector,
-    scoring: SwissScoring
+    scoring: SwissScoring,
+    chatApi: ChatApi,
+    bus: Bus
 ) {
 
   import BsonHandlers._
@@ -45,6 +49,7 @@ final class SwissApi(
       round = SwissRound.Number(0),
       nbRounds = data.nbRounds,
       nbPlayers = 0,
+      nbOngoing = 0,
       createdAt = DateTime.now,
       createdBy = me.id,
       teamId = teamId,
@@ -114,7 +119,7 @@ final class SwissApi(
 
   private[swiss] def finishGame(game: Game): Unit = game.swissId foreach { swissId =>
     Sequencing(Swiss.Id(swissId))(startedById) { swiss =>
-      pairingColl.byId[SwissPairing](game.id) flatMap {
+      pairingColl.byId[SwissPairing](game.id).dmap(_.filter(_.isOngoing)) flatMap {
         _ ?? { pairing =>
           val winner = game.winnerColor
             .map(_.fold(pairing.white, pairing.black))
@@ -122,25 +127,32 @@ final class SwissApi(
           winner.fold(pairingColl.updateField($id(game.id), SwissPairing.Fields.status, BSONNull))(
             pairingColl.updateField($id(game.id), SwissPairing.Fields.status, _)
           ).void >>
+            swissColl.update($id(swiss.id), $inc("nbOngoing" -> -1)) >>
             scoring.recompute(swiss) >> {
               if (swiss.round.value == swiss.nbRounds) doFinish(swiss)
-              else
-                isCurrentRoundFinished(swiss).flatMap {
-                  _ ?? swissColl.updateField($id(swiss.id), "nextRoundAt", DateTime.now.plusMinutes(1)).void
-                }
+              else if (swiss.nbOngoing == 1) {
+                val minutes = 1
+                swissColl
+                  .updateField($id(swiss.id), "nextRoundAt", DateTime.now.plusMinutes(minutes))
+                  .void >>-
+                  systemChat(
+                    swiss.id,
+                    s"Round ${swiss.round.value + 1} will start soon."
+                  )
+              } else funit
             } >>- socketReload(swiss.id)
         }
       }
     }
   }
 
-  private def isCurrentRoundFinished(swiss: Swiss) =
-    SwissPairing
-      .fields { f =>
-        !pairingColl.exists(
-          $doc(f.swissId -> swiss.id, f.round -> swiss.round, f.status -> SwissPairing.ongoing)
-        )
-      }
+  // private def isCurrentRoundFinished(swiss: Swiss) =
+  //   SwissPairing
+  //     .fields { f =>
+  //       !pairingColl.exists(
+  //         $doc(f.swissId -> swiss.id, f.round -> swiss.round, f.status -> SwissPairing.ongoing)
+  //       )
+  //     }
 
   private[swiss] def destroy(swiss: Swiss): Funit =
     swissColl.remove($id(swiss.id)) >>
@@ -157,7 +169,15 @@ final class SwissApi(
     }
   private def doFinish(swiss: Swiss): Funit =
     for {
-      _ <- swissColl.updateField($id(swiss.id), "finishedAt", DateTime.now).void
+      _ <- swissColl
+        .update(
+          $id(swiss.id),
+          $unset("nextRoundAt") ++ $set(
+            "nbRounds" -> swiss.round,
+            "finishedAt" -> DateTime.now
+          )
+        )
+        .void
       winner <- SwissPlayer.fields { f =>
         playerColl.find($doc(f.swissId -> swiss.id)).sort($sort desc f.score).one[SwissPlayer]
       }
@@ -171,7 +191,7 @@ final class SwissApi(
     else if (swiss.isCreated) destroy(swiss)
   }
 
-  private[swiss] def tick: Funit =
+  private[swiss] def startPendingRounds: Funit =
     swissColl
       .find($doc("nextRoundAt" $lt DateTime.now), $id(true))
       .list[Bdoc](10)
@@ -180,20 +200,52 @@ final class SwissApi(
         lidraughts.common.Future.applySequentially(ids) { id =>
           val promise = Promise[Boolean]
           Sequencing(id)(notFinishedById) { swiss =>
-            val fuRound = {
+            val fu =
               if (swiss.nbPlayers >= 4)
-                director.startRound(swiss).flatMap(scoring.recompute) >>- socketReload(swiss.id)
+                director.startRound(swiss).flatMap {
+                  _.fold(
+                    doFinish(swiss) >>-
+                      systemChat(
+                        swiss.id,
+                        s"Not enough players for round ${swiss.round.value + 1}; terminating tournament."
+                      )
+                  ) { s =>
+                      scoring.recompute(s) >>-
+                        systemChat(
+                          swiss.id,
+                          s"Round ${swiss.round.value + 1} started."
+                        )
+                    }
+                }
               else {
                 if (swiss.startsAt isBefore DateTime.now.minusMinutes(60)) destroy(swiss)
-                else
-                  swissColl.update($id(swiss.id), $set("nextRoundAt" -> DateTime.now.plusMinutes(1))).void
+                else {
+                  systemChat(swiss.id, "Not enough players for first round; delaying start.", true)
+                  swissColl
+                    .update($id(swiss.id), $set("nextRoundAt" -> DateTime.now.plusSeconds(21)))
+                    .void
+                }
               }
-            } inject true
-            fuRound map promise.success
+            val fuCompleted = fu >>- socketReload(swiss.id) inject true
+            fuCompleted map promise.success
           }
           promise.future.withTimeoutDefault(15.seconds, false)(system).void
         }
       }
+
+  private[swiss] def checkOngoingGames: Funit =
+    SwissPairing.fields { f =>
+      pairingColl.primitive[Game.ID]($doc(f.status -> SwissPairing.ongoing), f.id)
+    } map { gameIds =>
+      bus.publish(lidraughts.hub.actorApi.map.TellMany(gameIds, QuietFlag), 'roundSocket)
+    }
+
+  private def systemChat(id: Swiss.Id, text: String, volatile: Boolean = false): Unit =
+    chatApi.userChat.service(
+      Chat.Id(id.value),
+      text,
+      volatile
+    )
 
   private def Sequencing(swissId: Swiss.Id)(fetch: Swiss.Id => Fu[Option[Swiss]])(run: Swiss => Funit): Unit =
     doSequence(swissId) {
