@@ -97,7 +97,7 @@ case class Game(
   def isClassical = perfType contains lidraughts.rating.PerfType.Classical
   def nonMandatory = !isMandatory
 
-  def hasChat = !isTournament && !isSimul && nonAi
+  def hasChat = !isTournament && !isSimul && !isSwiss && nonAi
 
   // we can't rely on the clock,
   // because if moretime was given,

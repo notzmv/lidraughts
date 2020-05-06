@@ -47,12 +47,15 @@ object widgets {
               )
             ),
             g.pdnImport.flatMap(_.date).fold(momentFromNow(g.createdAt))(frag(_)),
-            g.tournamentId map { tourId =>
+            g.tournamentId.map { tourId =>
               frag(separator, tournamentLink(tourId))
-            },
-            g.simulId map { simulId =>
-              frag(separator, views.html.simul.bits.link(simulId))
-            }
+            } orElse
+              g.simulId.map { simulId =>
+                frag(separator, views.html.simul.bits.link(simulId))
+              } orElse
+              g.swissId.map { swissId =>
+                frag(separator, views.html.swiss.bits.link(lidraughts.swiss.Swiss.Id(swissId)))
+              }
           )
         ),
         div(cls := "versus")(

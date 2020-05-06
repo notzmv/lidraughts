@@ -254,13 +254,15 @@ object Round extends LidraughtsController with TheftPrevention {
       c truncate 100,
       lidraughts.chat.Chat.ResourceId(resource)
     ))).some
-    (game.tournamentId, game.simulId) match {
-      case (Some(tid), _) => {
+    (game.tournamentId, game.simulId, game.swissId) match {
+      case (Some(tid), _, _) => {
         ctx.isAuth && tour.fold(true)(Tournament.canHaveChat(_, none))
       } ?? Env.chat.api.userChat.cached.findMine(Chat.Id(tid), ctx.me).dmap(toEventChat(s"tournament/$tid"))
-      case (_, Some(sid)) if simul.fold(false)(_.canHaveChat(ctx.me)) => game.simulId.?? { sid =>
+      case (_, Some(sid), _) => simul.fold(false)(_.canHaveChat(ctx.me)) ?? {
         Env.chat.api.userChat.cached.findMine(Chat.Id(sid), ctx.me).dmap(toEventChat(s"simul/$sid"))
       }
+      case (_, _, Some(sid)) =>
+        Env.chat.api.userChat.cached.findMine(Chat.Id(sid), ctx.me).dmap(toEventChat(s"swiss/$sid"))
       case _ => game.hasChat ?? {
         Env.chat.api.playerChat.findIf(Chat.Id(game.id), !game.justCreated) map { chat =>
           Chat.GameOrEvent(Left(Chat.Restricted(
