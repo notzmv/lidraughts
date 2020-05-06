@@ -93,19 +93,19 @@ final class SwissApi(
     promise: Option[Promise[Boolean]]
   ): Unit = Sequencing(id)(notFinishedById) { swiss =>
     val fuJoined =
-      (swiss.isEnterable && isInTeam(swiss.teamId)) ?? {
-        val number = SwissPlayer.Number(swiss.nbPlayers + 1)
-        playerColl
-          .updateField($id(SwissPlayer.makeId(swiss.id, me.id)), SwissPlayer.Fields.absent, false)
-          .flatMap { res =>
-            (res.nModified == 0) ?? {
+      playerColl // try a rejoin first
+        .updateField($id(SwissPlayer.makeId(swiss.id, me.id)), SwissPlayer.Fields.absent, false)
+        .flatMap { res =>
+          (res.nModified == 0).?? { // if it failed, try a join
+            (swiss.isEnterable && isInTeam(swiss.teamId)) ?? {
+              val number = SwissPlayer.Number(swiss.nbPlayers + 1)
               playerColl.insert(SwissPlayer.make(swiss.id, number, me, swiss.perfLens)) zip
                 swissColl.updateField($id(swiss.id), "nbPlayers", number) void
             }
           } >>
-          scoring.recompute(swiss) >>-
-          socketReload(swiss.id) inject true
-      }
+            scoring.recompute(swiss) >>-
+            socketReload(swiss.id) inject true
+        }
     fuJoined map {
       joined => promise.foreach(_ success joined)
     }
