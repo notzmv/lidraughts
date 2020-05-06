@@ -23,6 +23,7 @@ final class SwissApi(
     swissColl: Coll,
     playerColl: Coll,
     pairingColl: Coll,
+    cache: SwissCache,
     system: ActorSystem,
     sequencers: DuctMap[_],
     socketMap: SocketMap,
@@ -122,7 +123,12 @@ final class SwissApi(
   }
 
   def featuredInTeam(teamId: TeamId): Fu[List[Swiss]] =
-    swissColl.find($doc("teamId" -> teamId)).sort($sort desc "startsAt").list[Swiss](5)
+    cache.featuredInTeamCache.get(teamId) flatMap { ids =>
+      swissColl.byOrderedIds[Swiss, Swiss.Id](ids)(_.id)
+    }
+
+  def visibleInTeam(teamId: TeamId, nb: Int): Fu[List[Swiss]] =
+    swissColl.find($doc("teamId" -> teamId)).sort($sort desc "startsAt").list[Swiss](nb)
 
   def playerInfo(swiss: Swiss, userId: User.ID): Fu[Option[SwissPlayer.ViewExt]] =
     UserRepo named userId flatMap {

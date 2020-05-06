@@ -56,6 +56,7 @@ final class Env(
     swissColl = swissColl,
     playerColl = playerColl,
     pairingColl = pairingColl,
+    cache = cache,
     system = system,
     sequencers = sequencerMap,
     socketMap = socketMap,

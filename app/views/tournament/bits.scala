@@ -38,47 +38,6 @@ object bits {
       }
     )
 
-  def forTeam(tours: List[Tournament])(implicit ctx: Context) =
-    table(cls := "slist")(
-      tbody(
-        tours map { t =>
-          tr(
-            cls := List(
-              "enterable" -> t.isEnterable,
-              "soon" -> t.isNowOrSoon
-            )
-          )(
-              td(cls := "icon")(iconTag(tournamentIconChar(t))),
-              td(cls := "header")(
-                a(href := routes.Tournament.show(t.id))(
-                  span(cls := "name")(t.fullName),
-                  span(cls := "setup")(
-                    t.clock.show,
-                    " • ",
-                    if (t.variant.exotic) t.variant.name else t.perfType.map(_.name),
-                    t.isThematic option frag(" • ", trans.thematic()),
-                    " • ",
-                    t.mode.fold(trans.casualTournament, trans.ratedTournament)(),
-                    " • ",
-                    t.durationString
-                  )
-                )
-              ),
-              td(cls := "infos")(
-                t.teamBattle map { battle =>
-                  frag(battle.teams.size, " teams battle")
-                } getOrElse {
-                  "Inner team"
-                },
-                br,
-                momentFromNowOnce(t.startsAt)
-              ),
-              td(cls := "text", dataIcon := "r")(t.nbPlayers.localize)
-            )
-        }
-      )
-    )
-
   def jsI18n(implicit ctx: Context) = i18nJsObject(translations)
 
   private val translations = List(

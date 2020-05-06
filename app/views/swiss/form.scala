@@ -74,7 +74,7 @@ object form {
             ),
             postForm(cls := "terminate", action := routes.Swiss.terminate(swiss.id.value))(
               submitButton(dataIcon := "j", cls := "text button button-red confirm")(
-                "Cancel the tournament"
+                trans.cancelTheTournament()
               )
             )
           )

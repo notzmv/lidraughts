@@ -92,7 +92,7 @@ trait CollExt { self: dsl with QueryBuilderExt =>
         }
 
     def primitive[V: BSONValueReader](selector: Bdoc, sort: Bdoc, nb: Int, field: String): Fu[List[V]] =
-      coll.find(selector, $doc(field -> true))
+      (nb > 0) ?? coll.find(selector, $doc(field -> true))
         .sort(sort)
         .list[Bdoc](nb)
         .dmap {

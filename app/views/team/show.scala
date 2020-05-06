@@ -3,6 +3,7 @@ package views.html.team
 import play.api.libs.json.Json
 
 import lidraughts.api.Context
+import lidraughts.app.mashup.TeamInfo
 import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
 import lidraughts.common.paginator.Paginator
@@ -16,7 +17,7 @@ object show {
   def apply(
     t: Team,
     members: Paginator[lidraughts.common.LightUser],
-    info: lidraughts.app.mashup.TeamInfo,
+    info: TeamInfo,
     chatOption: Option[lidraughts.chat.UserChat.Mine],
     socketVersion: Option[lidraughts.socket.Socket.SocketVersion]
   )(implicit ctx: Context) =
@@ -139,22 +140,10 @@ object show {
                 views.html.team.request.list(info.requests, t.some)
               ),
               div(cls := "team-show__tour-forum")(
-                info.tournaments.nonEmpty option frag(
+                info.featuredTours.nonEmpty option frag(
                   st.section(cls := "team-show__tour team-tournaments")(
                     h2(a(href := routes.Team.tournaments(t.id))(trans.tournaments())),
-                    info.tournaments.span(_.isCreated) match {
-                      case (created, started) =>
-                        views.html.tournament.bits.forTeam(created.sortBy(_.startsAt) ::: started)
-                    }
-                  )
-                ),
-                info.swisses.nonEmpty option frag(
-                  st.section(cls := "team-show__tour team-swisses")(
-                    h2("Swiss tournaments"),
-                    info.swisses.span(_.isCreated) match {
-                      case (created, started) =>
-                        views.html.swiss.bits.forTeam(created.sortBy(_.startsAt) ::: started)
-                    }
+                    tournaments.widget(info.featuredTours)
                   )
                 ),
                 NotForKids {

@@ -81,8 +81,8 @@ object Team extends LidraughtsController {
   def tournaments(teamId: String) = Open { implicit ctx =>
     TeamRepo.enabled(teamId) flatMap {
       _ ?? { team =>
-        lidraughts.tournament.TournamentRepo.byTeam(team.id, 50) map { tours =>
-          Ok(html.team.bits.tournaments(team, tours))
+        Env.current.teamInfo.tournaments(team, 40) map { tours =>
+          Ok(html.team.tournaments.page(team, tours))
         }
       }
     }
