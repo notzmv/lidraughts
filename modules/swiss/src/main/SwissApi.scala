@@ -95,8 +95,14 @@ final class SwissApi(
     val fuJoined =
       (swiss.isEnterable && isInTeam(swiss.teamId)) ?? {
         val number = SwissPlayer.Number(swiss.nbPlayers + 1)
-        playerColl.insert(SwissPlayer.make(swiss.id, number, me, swiss.perfLens)) zip
-          swissColl.updateField($id(swiss.id), "nbPlayers", number) >>
+        playerColl
+          .updateField($id(SwissPlayer.makeId(swiss.id, me.id)), SwissPlayer.Fields.absent, false)
+          .flatMap { res =>
+            (res.nModified == 0) ?? {
+              playerColl.insert(SwissPlayer.make(swiss.id, number, me, swiss.perfLens)) zip
+                swissColl.updateField($id(swiss.id), "nbPlayers", number) void
+            }
+          } >>
           scoring.recompute(swiss) >>-
           socketReload(swiss.id) inject true
       }
@@ -114,6 +120,14 @@ final class SwissApi(
     join(id, me, isInTeam, promise.some)
     promise.future.withTimeoutDefault(5.seconds, false)(system)
   }
+
+  def withdraw(id: Swiss.Id, me: User): Unit =
+    Sequencing(id)(notFinishedById) { swiss =>
+      playerColl
+        .updateField($id(SwissPlayer.makeId(swiss.id, me.id)), SwissPlayer.Fields.absent, true)
+        .void >>-
+        socketReload(swiss.id)
+    }
 
   def pairingsOf(swiss: Swiss) = SwissPairing.fields { f =>
     pairingColl

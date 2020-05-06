@@ -268,6 +268,7 @@ POST  /swiss/new/:teamId                      controllers.Swiss.create(teamId: S
 GET   /swiss/$id<\w{8}>                       controllers.Swiss.show(id: String)
 GET   /swiss/$id<\w{8}>/socket/v:apiVersion   controllers.Swiss.websocket(id: String, apiVersion: Int)
 POST  /swiss/$id<\w{8}>/join                  controllers.Swiss.join(id: String)
+POST  /swiss/$id<\w{8}>/withdraw              controllers.Swiss.withdraw(id: String)
 GET   /swiss/$id<\w{8}>/edit                  controllers.Swiss.edit(id: String)
 POST  /swiss/$id<\w{8}>/edit                  controllers.Swiss.update(id: String)
 POST  /swiss/$id<\w{8}>/terminate             controllers.Swiss.terminate(id: String)

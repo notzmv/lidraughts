@@ -47,7 +47,7 @@ final private class SwissRankingApi(
               val b = Map.newBuilder[SwissPlayer.Number, Int]
               var r = 0
               for (u <- players) {
-                b += (SwissPlayer.Number(u.asInstanceOf[BSONInteger].value) -> r)
+                b += (SwissPlayer.Number(u.get.asInstanceOf[BSONInteger].value) -> r)
                 r = r + 1
               }
               b.result

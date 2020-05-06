@@ -105,6 +105,15 @@ object Swiss extends LidraughtsController {
     }
   }
 
+  def withdraw(id: String) =
+    Auth { implicit ctx => me =>
+      WithSwiss(id) { swiss =>
+        env.api.withdraw(SwissId(id), me)
+        if (lidraughts.common.HTTPRequest.isXhr(ctx.req)) fuccess(jsonOkResult)
+        else Redirect(routes.Swiss.show(id)).fuccess
+      }
+    }
+
   def edit(id: String) = Auth { implicit ctx => me =>
     WithEditableSwiss(id, me) { swiss =>
       Ok(html.swiss.form.edit(swiss, env.forms.edit(swiss))).fuccess
