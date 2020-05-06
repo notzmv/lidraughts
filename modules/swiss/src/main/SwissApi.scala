@@ -31,6 +31,7 @@ final class SwissApi(
     scoring: SwissScoring,
     chatApi: ChatApi,
     lightUserApi: lidraughts.user.LightUserApi,
+    proxyGames: List[Game.ID] => Fu[List[Game]],
     bus: Bus
 ) {
 
@@ -298,7 +299,7 @@ final class SwissApi(
                     .void
                 }
               }
-            val fuCompleted = fu >>- socketReload(swiss.id) inject true
+            val fuCompleted = fu >>- socketReloadImmediately(swiss.id) inject true
             fuCompleted map promise.success
           }
           promise.future.withTimeoutDefault(15.seconds, false)(system).void
@@ -308,8 +309,13 @@ final class SwissApi(
   private[swiss] def checkOngoingGames: Funit =
     SwissPairing.fields { f =>
       pairingColl.primitive[Game.ID]($doc(f.status -> SwissPairing.ongoing), f.id)
-    } map { gameIds =>
-      bus.publish(lidraughts.hub.actorApi.map.TellMany(gameIds, QuietFlag), 'roundSocket)
+    } flatMap proxyGames flatMap { games =>
+      val (finished, ongoing) = games.partition(_.finishedOrAborted)
+      val flagged = ongoing.filter(_ outoftime true)
+      if (flagged.nonEmpty)
+        bus.publish(lidraughts.hub.actorApi.map.TellMany(flagged.map(_.id), QuietFlag), 'roundSocket)
+      finished.foreach(finishGame)
+      funit
     }
 
   private def systemChat(id: Swiss.Id, text: String, volatile: Boolean = false): Unit =
@@ -332,4 +338,7 @@ final class SwissApi(
 
   private def socketReload(swissId: Swiss.Id): Unit =
     socketMap.tell(swissId.value, Reload)
+
+  private def socketReloadImmediately(swissId: Swiss.Id): Unit =
+    socketMap.tell(swissId.value, NotifyReload)
 }

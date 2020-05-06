@@ -5,6 +5,7 @@ import com.typesafe.config.Config
 import scala.concurrent.duration._
 
 import lidraughts.common.{ AtMost, Every, ResilientScheduler }
+import lidraughts.game.Game
 import lidraughts.hub.{ Duct, DuctMap }
 import lidraughts.socket.History
 import lidraughts.socket.Socket.{ GetVersion, SocketVersion }
@@ -19,7 +20,8 @@ final class Env(
     asyncCache: lidraughts.memo.AsyncCache.Builder,
     chatApi: lidraughts.chat.ChatApi,
     lightUserApi: lidraughts.user.LightUserApi,
-    onStart: String => Unit
+    onStart: String => Unit,
+    proxyGames: List[Game.ID] => Fu[List[Game]]
 ) {
 
   private val settings = new {
@@ -64,6 +66,7 @@ final class Env(
     scoring = scoring,
     chatApi = chatApi,
     lightUserApi = lightUserApi,
+    proxyGames = proxyGames,
     bus = system.lidraughtsBus
   )
 
@@ -166,6 +169,7 @@ object Env {
     asyncCache = lidraughts.memo.Env.current.asyncCache,
     chatApi = lidraughts.chat.Env.current.api,
     lightUserApi = lidraughts.user.Env.current.lightUserApi,
-    onStart = lidraughts.round.Env.current.onStart
+    onStart = lidraughts.round.Env.current.onStart,
+    proxyGames = lidraughts.round.Env.current.proxy.games _
   )
 }

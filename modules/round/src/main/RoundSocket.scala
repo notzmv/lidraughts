@@ -367,6 +367,7 @@ object RoundSocket {
     def all = Seq(priv, pub)
     def update(g: Game) =
       g.tournamentId.map { id => copy(priv = Chat.Id(id)) } orElse
+        g.swissId.map { id => copy(priv = Chat.Id(id)) } orElse
         g.simulId.map { id => copy(priv = Chat.Id(id)) } getOrElse
         this
   }
