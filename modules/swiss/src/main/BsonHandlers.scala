@@ -44,7 +44,8 @@ private object BsonHandlers {
       points = r.get[Swiss.Points](points),
       tieBreak = r.get[Swiss.TieBreak](tieBreak),
       performance = r.getO[Swiss.Performance](performance),
-      score = r.get[Swiss.Score](score)
+      score = r.get[Swiss.Score](score),
+      absent = r.boolD(absent)
     )
     def writes(w: BSON.Writer, o: SwissPlayer) = $doc(
       id -> o.id,
@@ -56,7 +57,8 @@ private object BsonHandlers {
       points -> o.points,
       tieBreak -> o.tieBreak,
       performance -> o.performance,
-      score -> o.score
+      score -> o.score,
+      absent -> w.boolO(o.absent)
     )
   }
 

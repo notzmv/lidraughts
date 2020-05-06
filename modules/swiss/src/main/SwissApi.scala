@@ -126,7 +126,7 @@ final class SwissApi(
             SwissPairing.fields { f =>
               pairingColl
                 .find($doc(f.swissId -> swiss.id, f.players -> player.number))
-                .sort($sort desc f.date)
+                .sort($sort asc f.round)
                 .list[SwissPairing]()
             } flatMap {
               pairingViews(_, player)
