@@ -27,9 +27,9 @@ object side {
               )
             } else s.perfType.map(_.name),
             separator,
-            s"${s.round}/${s.nbRounds} rounds"
+            s"${s.round}/${s.settings.nbRounds} rounds"
           ),
-          if (s.rated) trans.ratedTournament() else trans.casualTournament(),
+          if (s.settings.rated) trans.ratedTournament() else trans.casualTournament(),
           separator,
           "Swiss",
           (isGranted(_.ManageTournament) || (ctx.userId.has(s.createdBy) && s.isCreated)) option frag(
@@ -38,7 +38,7 @@ object side {
           )
         )
       ),
-      s.description map { d =>
+      s.settings.description map { d =>
         st.section(cls := "description")(richText(d))
       },
       teamLink(s.teamId),

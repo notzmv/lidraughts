@@ -47,7 +47,7 @@ final class SwissJson(
         "clock" -> swiss.clock,
         "variant" -> swiss.variant.key,
         "round" -> swiss.round,
-        "nbRounds" -> swiss.nbRounds,
+        "nbRounds" -> swiss.settings.nbRounds,
         "nbPlayers" -> swiss.nbPlayers,
         "nbOngoing" -> swiss.nbOngoing,
         "status" -> {
@@ -60,7 +60,7 @@ final class SwissJson(
       )
       .add("socketVersion" -> socketVersion.map(_.value))
       .add("quote" -> swiss.isCreated.option(lidraughts.quote.Quote.one(swiss.id.value)))
-      .add("description" -> swiss.description)
+      .add("description" -> swiss.settings.description)
       .add("nextRound" -> swiss.nextRoundAt.map { next =>
         Json.obj(
           "at" -> formatDate(next),

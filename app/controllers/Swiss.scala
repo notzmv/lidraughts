@@ -161,7 +161,7 @@ object Swiss extends LidraughtsController {
     }
 
   private def canHaveChat(swiss: SwissModel)(implicit ctx: Context): Fu[Boolean] =
-    (swiss.hasChat && ctx.noKid) ?? ctx.userId.?? {
+    (swiss.settings.hasChat && ctx.noKid) ?? ctx.userId.?? {
       Env.team.api.belongsTo(swiss.teamId, _)
     }
 }
