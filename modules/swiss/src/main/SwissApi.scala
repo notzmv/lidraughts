@@ -203,14 +203,6 @@ final class SwissApi(
     }
   }
 
-  // private def isCurrentRoundFinished(swiss: Swiss) =
-  //   SwissPairing
-  //     .fields { f =>
-  //       !pairingColl.exists(
-  //         $doc(f.swissId -> swiss.id, f.round -> swiss.round, f.status -> SwissPairing.ongoing)
-  //       )
-  //     }
-
   private[swiss] def destroy(swiss: Swiss): Funit =
     swissColl.remove($id(swiss.id)) >>
       pairingColl.remove($doc(SwissPairing.Fields.swissId -> swiss.id)) >>
@@ -282,7 +274,7 @@ final class SwissApi(
                 else {
                   systemChat(swiss.id, "Not enough players for first round; delaying start.", true)
                   swissColl
-                    .update($id(swiss.id), $set("nextRoundAt" -> DateTime.now.plusSeconds(21)))
+                    .update($id(swiss.id), $set("nextRoundAt" -> DateTime.now.plusSeconds(121)))
                     .void
                 }
               }
