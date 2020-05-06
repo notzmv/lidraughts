@@ -79,7 +79,7 @@ final class SwissApi(
         rated = data.rated | old.settings.rated,
         description = data.description,
         hasChat = data.hasChat | old.settings.hasChat,
-        roundInterval = data.roundInterval.fold(old.settings.roundInterval)(_.minutes)
+        roundInterval = data.roundInterval.fold(old.settings.roundInterval)(_.seconds)
       )
     )
     swissColl.update($id(swiss.id), swiss).void
@@ -184,16 +184,18 @@ final class SwissApi(
             pairingColl.updateField($id(game.id), SwissPairing.Fields.status, _)
           ).void >>
             swissColl.update($id(swiss.id), $inc("nbOngoing" -> -1)) >>
-            scoring.recompute(swiss) >> {
+            scoring.recompute(swiss) >>
+            game.playerWhoDidNotMove.flatMap(_.userId).?? { absent =>
+              SwissPlayer.fields { f =>
+                playerColl.updateField($doc(f.swissId -> swiss.id, f.userId -> absent), f.absent, true).void
+              }
+            } >> {
               if (swiss.round.value == swiss.settings.nbRounds) doFinish(swiss)
               else if (swiss.nbOngoing == 1)
                 swissColl
                   .updateField($id(swiss.id), "nextRoundAt", DateTime.now.plusSeconds(swiss.settings.roundInterval.toSeconds.toInt))
                   .void >>-
-                  systemChat(
-                    swiss.id,
-                    s"Round ${swiss.round.value + 1} will start soon."
-                  )
+                  systemChat(swiss.id, s"Round ${swiss.round.value + 1} will start soon.")
               else funit
             } >>- socketReload(swiss.id)
         }

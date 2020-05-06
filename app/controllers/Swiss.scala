@@ -16,7 +16,7 @@ object Swiss extends LidraughtsController {
 
   private def swissNotFound(implicit ctx: Context) = NotFound(html.swiss.bits.notFound())
 
-  def show(id: String) = Open { implicit ctx =>
+  def show(id: String) = Secure(_.Beta) { implicit ctx => _ =>
     env.api.byId(SwissId(id)) flatMap { swissOption =>
       val page = getInt("page").filter(0.<)
       negotiate(
@@ -64,11 +64,11 @@ object Swiss extends LidraughtsController {
   private def isCtxInTheTeam(teamId: lidraughts.team.Team.ID)(implicit ctx: Context) =
     ctx.userId.??(u => Env.team.cached.teamIds(u).dmap(_ contains teamId))
 
-  def form(teamId: String) = Auth { implicit ctx => me =>
+  def form(teamId: String) = Secure(_.Beta) { implicit ctx => me =>
     Ok(html.swiss.form.create(env.forms.create, teamId)).fuccess
   }
 
-  def create(teamId: String) = AuthBody { implicit ctx => me =>
+  def create(teamId: String) = SecureBody(_.Beta) { implicit ctx => me =>
     env.forms.create
       .bindFromRequest()(ctx.body)
       .fold(
@@ -88,7 +88,7 @@ object Swiss extends LidraughtsController {
     }
   }
 
-  def join(id: String) = AuthBody { implicit ctx => me =>
+  def join(id: String) = SecureBody(_.Beta) { implicit ctx => me =>
     NoLameOrBot {
       Env.team.cached.teamIds(me.id) flatMap { teamIds =>
         env.api.joinWithResult(SwissId(id), me, teamIds.contains) flatMap { result =>

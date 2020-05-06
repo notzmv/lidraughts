@@ -82,7 +82,7 @@ object show {
                       em("An arena tournament that only members of your team can join")
                     )
                   ),
-                  a(href := s"${routes.Swiss.form(t.id)}", cls := "button button-empty text", dataIcon := "g")(
+                  isGranted(_.Beta) option a(href := s"${routes.Swiss.form(t.id)}", cls := "button button-empty text", dataIcon := "g")(
                     span(
                       strong("Swiss tournament"),
                       em("Slow and clunky, a boomer's favourite")
