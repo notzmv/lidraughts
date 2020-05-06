@@ -87,7 +87,7 @@ private object BsonHandlers {
             round = r.get[SwissRound.Number](round),
             white = w,
             black = b,
-            status = r.get[SwissPairing.Status](status)
+            status = r.getO[SwissPairing.Status](status) | Right(none)
           )
         case _ => sys error "Invalid swiss pairing users"
       }
