@@ -11,8 +11,7 @@ final class SwissScoring(
 
   def recompute(swiss: Swiss): Funit = {
     for {
-      prevPlayers <- fetchPlayers(swiss)
-      pairings <- fetchPairings(swiss)
+      (prevPlayers, pairings) <- fetchPlayers(swiss) zip fetchPairings(swiss)
       pairingMap = SwissPairing.toMap(pairings)
       sheets = SwissSheet.many(swiss, prevPlayers, pairingMap)
       withPoints = (prevPlayers zip sheets).map {
@@ -41,9 +40,12 @@ final class SwissScoring(
       _ <- SwissPlayer.fields { f =>
         prevPlayers
           .zip(players)
+          .filter {
+            case (a, b) => a != b
+          }
           .map {
             case (prev, player) =>
-              (prev.score != player.score) ?? playerColl
+              playerColl
                 .update(
                   $id(player.id),
                   $set(
