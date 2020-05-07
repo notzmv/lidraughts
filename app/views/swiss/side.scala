@@ -27,7 +27,8 @@ object side {
               )
             } else s.perfType.map(_.name),
             separator,
-            s"${s.round}/${s.settings.nbRounds} rounds"
+            span(cls := "swiss__meta__round")(s"${s.round}/${s.actualNbRounds}"),
+            " rounds"
           ),
           if (s.settings.rated) trans.ratedTournament() else trans.casualTournament(),
           separator,
