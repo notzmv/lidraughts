@@ -89,7 +89,7 @@ export default function(opts: RoundOpts): void {
     if (opts.tour) {
       opts.chat.plugin = tourStandingCtrl(opts.tour, opts.i18n.standing);
       opts.chat.alwaysEnabled = true;
-    } else if (!data.simul) {
+    } else if (!data.simul && !data.swiss) {
       opts.chat.preset = getPresetGroup(data);
       opts.chat.parseMoves = true;
     }
