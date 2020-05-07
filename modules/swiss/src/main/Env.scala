@@ -64,6 +64,7 @@ final class Env(
     socketMap = socketMap,
     director = director,
     scoring = scoring,
+    rankingApi = rankingApi,
     chatApi = chatApi,
     lightUserApi = lightUserApi,
     proxyGames = proxyGames,

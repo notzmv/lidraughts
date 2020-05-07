@@ -29,6 +29,7 @@ final class SwissApi(
     socketMap: SocketMap,
     director: SwissDirector,
     scoring: SwissScoring,
+    rankingApi: SwissRankingApi,
     chatApi: ChatApi,
     lightUserApi: lidraughts.user.LightUserApi,
     proxyGames: List[Game.ID] => Fu[List[Game]],
@@ -214,6 +215,33 @@ final class SwissApi(
         }
       }
     }
+
+  def searchPlayers(id: Swiss.Id, term: String, nb: Int): Fu[List[User.ID]] =
+    User.couldBeUsername(term) ?? SwissPlayer.fields { f =>
+      playerColl.primitive[User.ID](
+        selector = $doc(
+          f.swissId -> id,
+          f.userId $startsWith term.toLowerCase
+        ),
+        sort = $sort desc f.score,
+        nb = nb,
+        field = f.userId
+      )
+    }
+
+  def pageOf(swiss: Swiss, userId: User.ID): Fu[Option[Int]] =
+    playerColl.primitiveOne[SwissPlayer.Number](
+      $id(SwissPlayer.makeId(swiss.id, userId)),
+      SwissPlayer.Fields.number
+    ) flatMap {
+        _ ?? { number =>
+          rankingApi(swiss) map {
+            _ get number map { rank =>
+              (Math.floor(rank / 10) + 1).toInt
+            }
+          }
+        }
+      }
 
   private[swiss] def finishGame(game: Game): Unit = game.swissId foreach { swissId =>
     Sequencing(Swiss.Id(swissId))(startedById) { swiss =>

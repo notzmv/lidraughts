@@ -105,6 +105,7 @@ export default class SwissCtrl {
       this.page = data.page;
       this.searching = false;
       this.focusOnMe = false;
+      this.pages[this.page].filter(p => p.user.id == userId).forEach(this.showPlayerInfo);
       this.redraw();
     });
   }

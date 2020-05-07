@@ -149,8 +149,8 @@ object Tournament extends LidraughtsController {
     OptionFuResult(repo byId id) { tour =>
       env.api.pageOf(tour, UserModel normalize userId) flatMap {
         _ ?? { page =>
-          env.jsonView.standing(tour, page) map { data =>
-            Ok(data) as JSON
+          JsonOk {
+            env.jsonView.standing(tour, page)
           }
         }
       }

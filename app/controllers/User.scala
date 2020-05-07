@@ -433,9 +433,10 @@ object User extends LidraughtsController {
       case None => BadRequest("No search term provided").fuccess
       case Some(term) if getBool("exists") => UserRepo nameExists term map { r => Ok(JsBoolean(r)) }
       case Some(term) => {
-        get("tour") match {
-          case Some(tourId) => Env.tournament.playerRepo.searchPlayers(tourId, term, 10)
-          case None => ctx.me.ifTrue(getBool("friend")) match {
+        (get("tour"), get("swiss")) match {
+          case (Some(tourId), _) => Env.tournament.playerRepo.searchPlayers(tourId, term, 10)
+          case (_, Some(swissId)) => Env.swiss.api.searchPlayers(lidraughts.swiss.Swiss.Id(swissId), term, 10)
+          case _ => ctx.me.ifTrue(getBool("friend")) match {
             case None => UserRepo userIdsLike term
             case Some(follower) =>
               Env.relation.api.searchFollowedBy(follower, term, 10) flatMap {

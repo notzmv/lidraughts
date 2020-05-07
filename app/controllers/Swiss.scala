@@ -147,6 +147,19 @@ object Swiss extends LidraughtsController {
     }
   }
 
+  def pageOf(id: String, userId: String) =
+    Open { implicit ctx =>
+      WithSwiss(id) { swiss =>
+        env.api.pageOf(swiss, lidraughts.user.User normalize userId) flatMap {
+          _ ?? { page =>
+            JsonOk {
+              env.standingApi(swiss, page)
+            }
+          }
+        }
+      }
+    }
+
   def player(id: String, userId: String) = Action.async {
     WithSwiss(id) { swiss =>
       env.api.playerInfo(swiss, userId) flatMap {
