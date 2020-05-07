@@ -115,6 +115,7 @@ final class Env(
   )
 
   lazy val json = new SwissJson(
+    swissColl = swissColl,
     playerColl = playerColl,
     pairingColl = pairingColl,
     standingApi = standingApi,

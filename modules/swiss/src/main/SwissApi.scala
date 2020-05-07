@@ -264,26 +264,25 @@ final class SwissApi(
       }
     }
   private def doFinish(swiss: Swiss): Funit =
-    for {
-      _ <- swissColl
-        .update(
-          $id(swiss.id),
-          $unset("nextRoundAt") ++ $set(
-            "settings.nbRounds" -> swiss.round,
-            "finishedAt" -> DateTime.now
-          )
-        )
-        .void
-      winner <- SwissPlayer.fields { f =>
+    SwissPlayer
+      .fields { f =>
         playerColl.find($doc(f.swissId -> swiss.id)).sort($sort desc f.score).uno[SwissPlayer]
       }
-      _ <- winner.?? { p =>
-        swissColl.updateField($id(swiss.id), "winnerId", p.userId).void
+      .flatMap { winner =>
+        swissColl
+          .update(
+            $id(swiss.id),
+            $unset("nextRoundAt") ++ $set(
+              "settings.nbRounds" -> swiss.round,
+              "finishedAt" -> DateTime.now,
+              "winnerId" -> winner.map(_.userId)
+            )
+          )
+          .void
+      } >>- {
+        socketReload(swiss.id)
+        systemChat(swiss.id, s"Tournament completed!")
       }
-    } yield {
-      socketReload(swiss.id)
-      systemChat(swiss.id, s"Tournament completed!")
-    }
 
   def kill(swiss: Swiss): Unit = {
     if (swiss.isStarted) finish(swiss)
