@@ -22,26 +22,31 @@ final private class SwissCache(
     logger = logger
   )
 
-  private[swiss] val featuredInTeamCache =
-    asyncCache.multi[TeamId, List[Swiss.Id]](
+  private[swiss] object featuredInTeam {
+    private val compute = (teamId: TeamId) => {
+      val max = 5
+      for {
+        enterable <- swissColl.primitive[Swiss.Id](
+          $doc("teamId" -> teamId, "finishedAt" $exists false),
+          $sort asc "startsAt",
+          nb = max,
+          "_id"
+        )
+        finished <- swissColl.primitive[Swiss.Id](
+          $doc("teamId" -> teamId, "finishedAt" $exists true),
+          $sort desc "startsAt",
+          nb = max - enterable.size,
+          "_id"
+        )
+      } yield enterable ::: finished
+    }
+    private val cache = asyncCache.multi[TeamId, List[Swiss.Id]](
       name = "swiss.visibleByTeam",
-      f = { teamId =>
-        val max = 5
-        for {
-          enterable <- swissColl.primitive[Swiss.Id](
-            $doc("teamId" -> teamId, "finishedAt" $exists false),
-            $sort asc "startsAt",
-            nb = max,
-            "_id"
-          )
-          finished <- swissColl.primitive[Swiss.Id](
-            $doc("teamId" -> teamId, "finishedAt" $exists true),
-            $sort desc "startsAt",
-            nb = max - enterable.size,
-            "_id"
-          )
-        } yield enterable ::: finished
-      },
+      f = compute,
       expireAfter = _.ExpireAfterAccess(30 minutes)
     )
+
+    def get(teamId: TeamId) = cache get teamId
+    def invalidate(teamId: TeamId) = cache.put(teamId, compute(teamId))
+  }
 }

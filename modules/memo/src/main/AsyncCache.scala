@@ -12,6 +12,7 @@ final class AsyncCache[K, V](cache: AsyncLoadingCache[K, V], f: K => Fu[V]) {
   def refresh(k: K): Unit = cache.put(k, f(k))
 
   def put(k: K, v: V): Unit = cache.put(k, fuccess(v))
+  def put(k: K, v: Fu[V]): Unit = cache.put(k, v)
 }
 
 final class AsyncCacheClearable[K, V](

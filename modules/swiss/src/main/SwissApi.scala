@@ -67,7 +67,8 @@ final class SwissApi(
         roundInterval = data.realRoundInterval
       )
     )
-    swissColl.insert(swiss) inject swiss
+    swissColl.insert(swiss) >>-
+      cache.featuredInTeam.invalidate(swiss.teamId) inject swiss
   }
 
   def update(old: Swiss, data: SwissForm.SwissData): Funit = {
@@ -153,7 +154,7 @@ final class SwissApi(
   }
 
   def featuredInTeam(teamId: TeamId): Fu[List[Swiss]] =
-    cache.featuredInTeamCache.get(teamId) flatMap { ids =>
+    cache.featuredInTeam.get(teamId) flatMap { ids =>
       swissColl.byOrderedIds[Swiss, Swiss.Id](ids)(_.id)
     }
 
@@ -281,8 +282,10 @@ final class SwissApi(
   private[swiss] def destroy(swiss: Swiss): Funit =
     swissColl.remove($id(swiss.id)) >>
       pairingColl.remove($doc(SwissPairing.Fields.swissId -> swiss.id)) >>
-      playerColl.remove($doc(SwissPairing.Fields.swissId -> swiss.id)).void >>-
-      socketReload(swiss.id)
+      playerColl.remove($doc(SwissPairing.Fields.swissId -> swiss.id)).void >>- {
+        socketReload(swiss.id)
+        cache.featuredInTeam.invalidate(swiss.teamId)
+      }
 
   private[swiss] def finish(oldSwiss: Swiss): Unit =
     Sequencing(oldSwiss.id)(startedById) { swiss =>
@@ -310,6 +313,7 @@ final class SwissApi(
       } >>- {
         socketReload(swiss.id)
         systemChat(swiss.id, s"Tournament completed!")
+        cache.featuredInTeam.invalidate(swiss.teamId)
       }
 
   def kill(swiss: Swiss): Unit = {
