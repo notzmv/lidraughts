@@ -96,17 +96,17 @@ final class SwissApi(
     val fuJoined =
       playerColl // try a rejoin first
         .updateField($id(SwissPlayer.makeId(swiss.id, me.id)), SwissPlayer.Fields.absent, false)
-        .flatMap { res =>
-          (res.nModified == 0).?? { // if it failed, try a join
+        .flatMap { rejoin =>
+          fuccess(rejoin.nModified == 1) >>| { // if it failed, try a join
             (swiss.isEnterable && isInTeam(swiss.teamId)) ?? {
               val number = SwissPlayer.Number(swiss.nbPlayers + 1)
               playerColl.insert(SwissPlayer.make(swiss.id, number, me, swiss.perfLens)) zip
-                swissColl.updateField($id(swiss.id), "nbPlayers", number) void
+                swissColl.updateField($id(swiss.id), "nbPlayers", number) inject true
             }
-          } >>
-            scoring.recompute(swiss) >>-
-            socketReload(swiss.id) inject true
-        }
+          } flatMap { res =>
+            scoring.recompute(swiss) >>- socketReload(swiss.id) inject res
+          }
+        } addEffect { _ => }
     fuJoined map {
       joined => promise.foreach(_ success joined)
     }
@@ -161,10 +161,17 @@ final class SwissApi(
               SwissPlayer.fields { f =>
                 playerColl.countSel($doc(f.swissId -> swiss.id, f.score $gt player.score)).dmap(1.+)
               } map { rank =>
+                val pairingMap = pairings.view.map { p =>
+                  p.pairing.round -> p
+                }.toMap
                 SwissPlayer
-                  .ViewExt(player, rank, user.light, pairings.view.map { p =>
-                    p.pairing.round -> p
-                  }.toMap)
+                  .ViewExt(
+                    player,
+                    rank,
+                    user.light,
+                    pairingMap,
+                    SwissSheet.one(swiss, pairingMap.view.map { case (r, p) => (r, p.pairing) }.toMap, player)
+                  )
                   .some
               }
             }
