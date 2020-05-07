@@ -99,9 +99,10 @@ final class SwissApi(
         .flatMap { rejoin =>
           fuccess(rejoin.nModified == 1) >>| { // if it failed, try a join
             (swiss.isEnterable && isInTeam(swiss.teamId)) ?? {
-              val number = SwissPlayer.Number(swiss.nbPlayers + 1)
-              playerColl.insert(SwissPlayer.make(swiss.id, number, me, swiss.perfLens)) zip
-                swissColl.updateField($id(swiss.id), "nbPlayers", number) inject true
+              nextPlayerNumber(swiss.id) flatMap { number =>
+                playerColl.insert(SwissPlayer.make(swiss.id, number, me, swiss.perfLens)) zip
+                  swissColl.update($id(swiss.id), $inc("nbPlayers" -> 1)) inject true
+              }
             }
           } flatMap { res =>
             scoring.recompute(swiss) >>- socketReload(swiss.id) inject res
@@ -122,12 +123,25 @@ final class SwissApi(
     promise.future.withTimeoutDefault(5.seconds, false)(system)
   }
 
+  private def nextPlayerNumber(id: Swiss.Id): Fu[SwissPlayer.Number] =
+    SwissPlayer.fields { f =>
+      playerColl
+        .primitiveOne[Int]($doc(f.swissId -> id), $sort desc f.number, f.number)
+        .dmap { n =>
+          SwissPlayer.Number(~n + 1)
+        }
+    }
+
   def withdraw(id: Swiss.Id, me: User): Unit =
     Sequencing(id)(notFinishedById) { swiss =>
-      playerColl
-        .updateField($id(SwissPlayer.makeId(swiss.id, me.id)), SwissPlayer.Fields.absent, true)
-        .void >>-
-        socketReload(swiss.id)
+      val fu =
+        if (swiss.isStarted)
+          playerColl
+            .updateField($id(SwissPlayer.makeId(swiss.id, me.id)), SwissPlayer.Fields.absent, true)
+        else
+          playerColl.remove($id(SwissPlayer.makeId(swiss.id, me.id))).void zip
+            swissColl.update($id(swiss.id), $inc("nbPlayers" -> -1))
+      fu.void >>- socketReload(swiss.id)
     }
 
   def pairingsOf(swiss: Swiss) = SwissPairing.fields { f =>
