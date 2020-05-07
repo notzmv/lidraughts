@@ -218,13 +218,18 @@ final class SwissApi(
                 playerColl.updateField($doc(f.swissId -> swiss.id, f.userId -> absent), f.absent, true).void
               }
             } >> {
-              if (swiss.round.value == swiss.settings.nbRounds) doFinish(swiss)
-              else if (swiss.nbOngoing == 1)
-                swissColl
-                  .updateField($id(swiss.id), "nextRoundAt", DateTime.now.plusSeconds(swiss.settings.roundInterval.toSeconds.toInt))
-                  .void >>-
-                  systemChat(swiss.id, s"Round ${swiss.round.value + 1} will start soon.")
-              else funit
+              (swiss.nbOngoing == 1) ?? {
+                if (swiss.round.value == swiss.settings.nbRounds) doFinish(swiss)
+                else
+                  swissColl
+                    .updateField(
+                      $id(swiss.id),
+                      "nextRoundAt",
+                      DateTime.now.plusSeconds(swiss.settings.roundInterval.toSeconds.toInt)
+                    )
+                    .void >>-
+                    systemChat(swiss.id, s"Round ${swiss.round.value + 1} will start soon.")
+              }
             } >>- socketReload(swiss.id)
         }
       }
@@ -250,7 +255,7 @@ final class SwissApi(
         .update(
           $id(swiss.id),
           $unset("nextRoundAt") ++ $set(
-            "nbRounds" -> swiss.round,
+            "settings.nbRounds" -> swiss.round,
             "finishedAt" -> DateTime.now
           )
         )
@@ -261,7 +266,10 @@ final class SwissApi(
       _ <- winner.?? { p =>
         swissColl.updateField($id(swiss.id), "winnerId", p.userId).void
       }
-    } yield socketReload(swiss.id)
+    } yield {
+      socketReload(swiss.id)
+      systemChat(swiss.id, s"Tournament completed!")
+    }
 
   def kill(swiss: Swiss): Unit = {
     if (swiss.isStarted) finish(swiss)
@@ -280,22 +288,19 @@ final class SwissApi(
             val fu =
               if (swiss.nbPlayers >= 4)
                 director.startRound(swiss).flatMap {
-                  _.fold(
-                    doFinish(swiss) >>-
-                      systemChat(
-                        swiss.id,
-                        s"All possible pairings were played. The tournament is complete."
-                      )
-                  ) {
-                      case s if s.nextRoundAt.isEmpty =>
-                        scoring.recompute(s) >>-
-                          systemChat(swiss.id, s"Round ${swiss.round.value + 1} started.")
-                      case s =>
-                        swissColl
-                          .update($id(swiss.id), $set("nextRoundAt" -> DateTime.now.plusSeconds(61)))
-                          .void >>-
-                          systemChat(swiss.id, s"Round ${swiss.round.value + 1} failed.", true)
-                    }
+                  _.fold {
+                    systemChat(swiss.id, "All possible pairings were played.")
+                    doFinish(swiss)
+                  } {
+                    case s if s.nextRoundAt.isEmpty =>
+                      scoring.recompute(s) >>-
+                        systemChat(swiss.id, s"Round ${swiss.round.value + 1} started.")
+                    case s =>
+                      swissColl
+                        .update($id(swiss.id), $set("nextRoundAt" -> DateTime.now.plusSeconds(61)))
+                        .void >>-
+                        systemChat(swiss.id, s"Round ${swiss.round.value + 1} failed.", true)
+                  }
                 }
               else {
                 if (swiss.startsAt isBefore DateTime.now.minusMinutes(60)) destroy(swiss)
@@ -306,7 +311,7 @@ final class SwissApi(
                     .void
                 }
               }
-            val fuCompleted = fu >>- socketReloadImmediately(swiss.id) inject true
+            val fuCompleted = fu >>- socketReload(swiss.id) inject true
             fuCompleted map promise.success
           }
           promise.future.withTimeoutDefault(15.seconds, false)(system).void
@@ -345,7 +350,4 @@ final class SwissApi(
 
   private def socketReload(swissId: Swiss.Id): Unit =
     socketMap.tell(swissId.value, Reload)
-
-  private def socketReloadImmediately(swissId: Swiss.Id): Unit =
-    socketMap.tell(swissId.value, NotifyReload)
 }
