@@ -332,6 +332,11 @@ case class Game(
     blackPlayer = f(blackPlayer)
   )
 
+  def startClock =
+    clock map { c =>
+      start.withClock(c.start)
+    }
+
   def start = if (started) this else copy(
     status = Status.Started,
     mode = Mode(mode.rated && userIds.distinct.size == 2)
@@ -573,7 +578,9 @@ case class Game(
   }
 
   def expirable =
-    !bothPlayersHaveMoved && source.exists(Source.expirable.contains) && playable && nonAi && hasClock
+    !bothPlayersHaveMoved && source.exists(Source.expirable.contains) && playable && nonAi && clock.exists(
+      !_.isRunning
+    )
 
   def timeBeforeExpiration: Option[Centis] = expirable option {
     Centis.ofMillis(movedAt.getMillis - nowMillis + timeForFirstMove.millis).nonNeg

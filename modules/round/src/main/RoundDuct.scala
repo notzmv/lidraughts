@@ -234,7 +234,12 @@ private[round] final class RoundDuct(
     }
 
     case NoStart => handle { game =>
-      game.timeBeforeExpiration.exists(_.centis == 0) ?? finisher.noStart(game)
+      game.timeBeforeExpiration.exists(_.centis == 0) ?? {
+        if (game.isSwiss) game.startClock ?? { g =>
+          proxy save g inject List(Event.Reload)
+        }
+        else finisher.noStart(game)
+      }
     }
   }
 

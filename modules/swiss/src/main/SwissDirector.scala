@@ -1,6 +1,6 @@
 package lidraughts.swiss
 
-import draughts.{ Black, Centis, Color, White }
+import draughts.{ Black, Color, White }
 import org.joda.time.DateTime
 
 import lidraughts.db.dsl._
@@ -99,11 +99,7 @@ final private class SwissDirector(
         ) |> { g =>
             val turns = g.player.fold(0, 1)
             g.copy(
-              clock = swiss.clock.toClock
-                .giveTime(White, Centis(300))
-                .giveTime(Black, Centis(300))
-                .start
-                .some,
+              clock = swiss.clock.toClock.some,
               turns = turns,
               startedAtTurn = turns
             )
