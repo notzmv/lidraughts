@@ -48,19 +48,27 @@ export function miniBoard(game) {
 }
 
 export const ratio2percent = (r: number) => Math.round(100 * r) + '%';
-export const userName = (u: LightUser) => u.title ? [h('span.title', u.title), ' ' + u.name] : [u.name];
+export const userName = (u: LightUser) => {
+  if (!u.title) return [u.name];
+  const title64 = u.title.endsWith('-64');
+  return [
+    h(
+      'span.title',
+      title64 ? { attrs: {'data-title64': true } } : (u.title == 'BOT' ? { attrs: {'data-bot': true } } : {}),
+      title64 ? u.title.slice(0, u.title.length - 3) : u.title
+    ), 
+    ' ' + u.name
+  ];
+}
 
 export function player(p: Player, asLink: boolean, withRating: boolean) {
-
-  const fullName = userName(p.user);
-
   return h('a.ulpt.user-link' + (((p.user.title || '') + p.user.name).length > 15 ? '.long' : ''), {
     attrs: asLink ? { href: '/@/' + p.user.name } : { 'data-href': '/@/' + p.user.name },
     hook: {
       destroy: vnode => $.powerTip.destroy(vnode.elm as HTMLElement)
     }
   }, [
-    h('span.name', fullName),
+    h('span.name', userName(p.user)),
     withRating ? h('span.rating', ' ' + p.rating + (p.provisional ? '?' : '')) : null
   ]);
 }

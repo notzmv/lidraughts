@@ -73,7 +73,7 @@ export function player(p, asLink: boolean, withRating: boolean, defender: boolea
     attrs: { 'data-icon': 'M' }
   }, '' + -p.ratingDiff);
   const rating = ' ' + p.rating + (p.provisional ? '?' : ''),
-  fullName = playerName(p);
+    fullName = playerName(p);
 
   return h('a.ulpt.user-link' + (fullName.length > 15 ? '.long' : ''), {
     attrs: asLink ? { href: '/@/' + p.name } : { 'data-href': '/@/' + p.name },

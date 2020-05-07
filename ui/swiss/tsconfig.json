@@ -4,6 +4,7 @@
   "compilerOptions": {
     "allowJs": true,
     "noImplicitAny": false,
-    "noImplicitReturns": false
+    "noImplicitReturns": false,
+    "target": "ES6"
   }
 }
