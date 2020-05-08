@@ -157,14 +157,14 @@ final class Env(
     }
 
   ResilientScheduler(
-    every = Every(2 seconds),
-    atMost = AtMost(15 seconds),
+    every = Every(1 second),
+    atMost = AtMost(20 seconds),
     initialDelay = 20 seconds,
     logger = logger branch "startPendingRounds"
   ) { api.startPendingRounds }(system)
 
   ResilientScheduler(
-    every = Every(20 seconds),
+    every = Every(10 seconds),
     atMost = AtMost(15 seconds),
     initialDelay = 20 seconds,
     logger = logger branch "checkOngoingGames"

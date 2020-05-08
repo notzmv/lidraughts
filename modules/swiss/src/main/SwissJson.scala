@@ -47,7 +47,6 @@ final class SwissJson(
         "createdBy" -> swiss.createdBy,
         "startsAt" -> formatDate(swiss.startsAt),
         "name" -> swiss.name,
-        "perf" -> swiss.perfType,
         "clock" -> swiss.clock,
         "variant" -> swiss.variant.key,
         "round" -> swiss.round,
@@ -69,7 +68,6 @@ final class SwissJson(
       .add("joinTeam" -> (!isInTeam).option(swiss.teamId))
       .add("socketVersion" -> socketVersion.map(_.value))
       .add("quote" -> swiss.isCreated.option(lidraughts.quote.Quote.one(swiss.id.value)))
-      .add("description" -> swiss.settings.description)
       .add("nextRound" -> swiss.nextRoundAt.map { next =>
         Json.obj(
           "at" -> formatDate(next),
@@ -260,9 +258,6 @@ object SwissJson {
   implicit private val roundNumberWriter: Writes[SwissRound.Number] = Writes[SwissRound.Number] { n =>
     JsNumber(n.value)
   }
-  // implicit private val playerNumberWriter: Writes[SwissPlayer.Number] = Writes[SwissPlayer.Number] { n =>
-  //   JsNumber(n.value)
-  // }
   implicit private val pointsWriter: Writes[Swiss.Points] = Writes[Swiss.Points] { p =>
     JsNumber(p.value)
   }

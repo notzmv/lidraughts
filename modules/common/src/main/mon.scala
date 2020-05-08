@@ -464,9 +464,10 @@ object mon {
     def standingOverload = inc("swiss.standing.overload")
     val tick = rec("swiss.tick")
     val bbpairing = rec("swiss.bbpairing")
-    val tiebreakRecompute = rec("swiss.tiebreak.recompute")
+    val scoringRecompute = rec("swiss.scoring.recompute")
     val startRound = rec("swiss.director.startRound")
     def games(status: String) = rec(s"swiss.ongoingGames.$status")
+    val json = rec("swiss.json")
   }
   object plan {
     object amount {
