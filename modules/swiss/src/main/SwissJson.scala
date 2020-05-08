@@ -40,6 +40,7 @@ final class SwissJson(
       page = reqPage orElse myInfo.map(_.page) getOrElse 1
       standing <- standingApi(swiss, page)
       podium <- podiumJson(swiss)
+      boards <- boardApi.withGames(swiss.id)
     } yield Json
       .obj(
         "id" -> swiss.id.value,
@@ -63,7 +64,7 @@ final class SwissJson(
             (myInfo.isEmpty && swiss.isEnterable && isInTeam)
         },
         "standing" -> standing,
-        "boards" -> boardApi(swiss.id)
+        "boards" -> boards.map(boardJson)
       )
       .add("joinTeam" -> (!isInTeam).option(swiss.teamId))
       .add("socketVersion" -> socketVersion.map(_.value))
@@ -239,11 +240,13 @@ object SwissJson {
         "absent" -> i.player.absent
       )
 
-  private[swiss] def boardJson(board: SwissBoard) =
+  private[swiss] def boardJson(b: SwissBoard.WithGame) =
     Json.obj(
-      "id" -> board.gameId,
-      "white" -> boardPlayerJson(board.p1),
-      "black" -> boardPlayerJson(board.p2)
+      "id" -> b.game.id,
+      "fen" -> (draughts.format.Forsyth exportBoard b.game.board),
+      "lastMove" -> ~b.game.lastMoveKeys,
+      "white" -> boardPlayerJson(b.board.white),
+      "black" -> boardPlayerJson(b.board.black)
     )
 
   private def boardPlayerJson(player: SwissBoard.Player) =

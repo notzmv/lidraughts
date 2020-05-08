@@ -2,7 +2,7 @@ import { Attrs } from 'snabbdom/modules/attributes'
 import { h } from 'snabbdom'
 import { Hooks } from 'snabbdom/hooks'
 import { VNode } from 'snabbdom/vnode';
-import { Player } from '../interfaces';
+import { BasePlayer } from '../interfaces';
 
 export function bind(eventName: string, f: (e: Event) => any, redraw?: () => void): Hooks {
   return onInsert(el =>
@@ -28,25 +28,6 @@ export function dataIcon(icon: string): Attrs {
   };
 }
 
-export function miniBoard(game) {
-  return h('a.mini-board.parse-fen.is2d.mini-board-' + game.id, {
-    key: game.id,
-    attrs: {
-      href: '/' + game.id + (game.color === 'white' ? '' : '/black'),
-      'data-color': game.color,
-      'data-fen': game.fen,
-      'data-lastmove': game.lastMove
-    },
-    hook: {
-      insert(vnode) {
-        window.lidraughts.parseFen($(vnode.elm as HTMLElement));
-      }
-    }
-  }, [
-    h('div.cg-wrap')
-  ]);
-}
-
 export const ratio2percent = (r: number) => Math.round(100 * r) + '%';
 export const userName = (u: LightUser) => {
   if (!u.title) return [u.name];
@@ -61,7 +42,7 @@ export const userName = (u: LightUser) => {
   ];
 }
 
-export function player(p: Player, asLink: boolean, withRating: boolean) {
+export function player(p: BasePlayer, asLink: boolean, withRating: boolean) {
   return h('a.ulpt.user-link' + (((p.user.title || '') + p.user.name).length > 15 ? '.long' : ''), {
     attrs: asLink ? { href: '/@/' + p.user.name } : { 'data-href': '/@/' + p.user.name },
     hook: {

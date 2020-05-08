@@ -21,6 +21,7 @@ final class Env(
     chatApi: lidraughts.chat.ChatApi,
     lightUserApi: lidraughts.user.LightUserApi,
     onStart: String => Unit,
+    proxyGame: Game.ID => Fu[Option[Game]],
     proxyGames: List[Game.ID] => Fu[List[Game]]
 ) {
 
@@ -55,10 +56,10 @@ final class Env(
   )
 
   private val boardApi = new SwissBoardApi(
-    swissColl = swissColl,
     rankingApi = rankingApi,
     asyncCache = asyncCache,
-    lightUserApi = lightUserApi
+    lightUserApi = lightUserApi,
+    proxyGame = proxyGame
   )
 
   lazy val api = new SwissApi(
@@ -182,6 +183,7 @@ object Env {
     chatApi = lidraughts.chat.Env.current.api,
     lightUserApi = lidraughts.user.Env.current.lightUserApi,
     onStart = lidraughts.round.Env.current.onStart,
+    proxyGame = lidraughts.round.Env.current.proxy.game _,
     proxyGames = lidraughts.round.Env.current.proxy.games _
   )
 }
