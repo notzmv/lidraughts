@@ -642,6 +642,7 @@ export default class RoundController {
       li.sound.genericNotify();
     }
     li.requestIdleCallback(() => {
+      const d = this.data;
       if (this.isPlaying()) {
         if (!d.simul || d.simul.isUnique) blur.init(d.steps.length > 2);
 
@@ -649,6 +650,7 @@ export default class RoundController {
         this.setTitle();
 
         window.addEventListener('beforeunload', e => {
+          const d = this.data;
           if (li.hasToReload ||
             this.nvui ||
             !game.playable(d) ||
