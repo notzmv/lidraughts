@@ -33,7 +33,8 @@ object Game extends LidraughtsController {
       val config = GameApiV2.OneConfig(
         format = if (HTTPRequest acceptsJson ctx.req) GameApiV2.Format.JSON else GameApiV2.Format.PDN,
         imported = getBool("imported"),
-        flags = requestPdnFlags(ctx.req, ctx.pref.draughtsResult, extended = true, ctx.pref.canAlgebraic)
+        flags = requestPdnFlags(ctx.req, ctx.pref.draughtsResult, extended = true, ctx.pref.canAlgebraic),
+        noDelay = get("key", ctx.req).exists(Env.current.noDelaySecretSetting.get().value.contains)
       )
       lidraughts.mon.export.pdn.game()
       Env.api.gameApiV2.exportOne(game, config) flatMap { content =>

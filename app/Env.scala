@@ -4,6 +4,7 @@ import akka.actor._
 import com.typesafe.config.Config
 import scala.concurrent.duration._
 
+import lidraughts.common.Strings
 import lidraughts.user.User
 
 final class Env(
@@ -29,6 +30,15 @@ final class Env(
     roundProxyPov = Env.round.proxy.pov _,
     urgentGames = Env.round.proxy.urgentGames _
   )
+
+  lazy val noDelaySecretSetting = {
+    import lidraughts.memo.SettingStore.Strings._
+    lidraughts.memo.Env.current.settingStore[Strings](
+      "noDelaySecrets",
+      default = Strings(Nil),
+      text = "Secret tokens that allows fetching ongoing games without the 3-moves delay. Separated by commas.".some
+    )
+  }
 
   lazy val socialInfo = mashup.UserInfo.Social(
     relationApi = Env.relation.api,
