@@ -20,6 +20,7 @@ final class SwissJson(
     pairingColl: Coll,
     standingApi: SwissStandingApi,
     rankingApi: SwissRankingApi,
+    boardApi: SwissBoardApi,
     lightUserApi: lidraughts.user.LightUserApi
 ) {
 
@@ -61,7 +62,8 @@ final class SwissJson(
           (swiss.isNotFinished && myInfo.exists(_.player.absent)) ||
             (myInfo.isEmpty && swiss.isEnterable && isInTeam)
         },
-        "standing" -> standing
+        "standing" -> standing,
+        "boards" -> boardApi(swiss.id)
       )
       .add("joinTeam" -> (!isInTeam).option(swiss.teamId))
       .add("socketVersion" -> socketVersion.map(_.value))
@@ -236,6 +238,20 @@ object SwissJson {
         "id" -> i.user.id,
         "absent" -> i.player.absent
       )
+
+  private[swiss] def boardJson(board: SwissBoard) =
+    Json.obj(
+      "id" -> board.gameId,
+      "white" -> boardPlayerJson(board.p1),
+      "black" -> boardPlayerJson(board.p2)
+    )
+
+  private def boardPlayerJson(player: SwissBoard.Player) =
+    Json.obj(
+      "rank" -> player.rank,
+      "rating" -> player.rating,
+      "user" -> player.user
+    )
 
   implicit private val roundNumberWriter: Writes[SwissRound.Number] = Writes[SwissRound.Number] { n =>
     JsNumber(n.value)

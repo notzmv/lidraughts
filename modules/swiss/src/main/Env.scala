@@ -54,6 +54,13 @@ final class Env(
     onStart = onStart
   )
 
+  private val boardApi = new SwissBoardApi(
+    swissColl = swissColl,
+    rankingApi = rankingApi,
+    asyncCache = asyncCache,
+    lightUserApi = lightUserApi
+  )
+
   lazy val api = new SwissApi(
     swissColl = swissColl,
     playerColl = playerColl,
@@ -65,6 +72,8 @@ final class Env(
     director = director,
     scoring = scoring,
     rankingApi = rankingApi,
+    standingApi = standingApi,
+    boardApi = boardApi,
     chatApi = chatApi,
     lightUserApi = lightUserApi,
     proxyGames = proxyGames,
@@ -121,6 +130,7 @@ final class Env(
     pairingColl = pairingColl,
     standingApi = standingApi,
     rankingApi = rankingApi,
+    boardApi = boardApi,
     lightUserApi = lightUserApi
   )
 

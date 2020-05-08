@@ -2,14 +2,14 @@ package lidraughts.swiss
 
 import lidraughts.db.dsl._
 
-final class SwissScoring(
+final private class SwissScoring(
     playerColl: Coll,
     pairingColl: Coll
 ) {
 
   import BsonHandlers._
 
-  def recompute(swiss: Swiss): Funit = {
+  def recompute(swiss: Swiss): Fu[SwissScoring.Result] = {
     for {
       (prevPlayers, pairings) <- fetchPlayers(swiss) zip fetchPairings(swiss)
       pairingMap = SwissPairing.toMap(pairings)
@@ -60,7 +60,13 @@ final class SwissScoring(
           .sequenceFu
           .void
       }
-    } yield {}
+    } yield SwissScoring.Result(
+      swiss,
+      SwissPlayer toMap players,
+      pairingMap.flatMap {
+        case (playerNumber, pairings) => pairings.get(swiss.round) map { playerNumber -> _ }
+      }
+    )
   }
 
   private def fetchPlayers(swiss: Swiss) = SwissPlayer.fields { f =>
@@ -75,4 +81,13 @@ final class SwissScoring(
       .find($doc(f.swissId -> swiss.id))
       .list[SwissPairing]()
   }
+}
+
+private object SwissScoring {
+
+  case class Result(
+      swiss: Swiss,
+      players: SwissPlayer.PlayerMap,
+      pairings: Map[SwissPlayer.Number, SwissPairing]
+  )
 }

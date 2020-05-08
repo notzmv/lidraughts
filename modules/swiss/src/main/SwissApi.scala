@@ -30,6 +30,8 @@ final class SwissApi(
     director: SwissDirector,
     scoring: SwissScoring,
     rankingApi: SwissRankingApi,
+    standingApi: SwissStandingApi,
+    boardApi: SwissBoardApi,
     chatApi: ChatApi,
     lightUserApi: lidraughts.user.LightUserApi,
     proxyGames: List[Game.ID] => Fu[List[Game]],
@@ -255,12 +257,12 @@ final class SwissApi(
             pairingColl.updateField($id(game.id), SwissPairing.Fields.status, _)
           ).void >>
             swissColl.update($id(swiss.id), $inc("nbOngoing" -> -1)) >>
-            scoring.recompute(swiss) >>
             game.playerWhoDidNotMove.flatMap(_.userId).?? { absent =>
               SwissPlayer.fields { f =>
                 playerColl.updateField($doc(f.swissId -> swiss.id, f.userId -> absent), f.absent, true).void
               }
-            } >> {
+            } >>
+            scoring.recompute(swiss).flatMap(boardApi.update) >> {
               (swiss.nbOngoing == 1) ?? {
                 if (swiss.round.value == swiss.settings.nbRounds) doFinish(swiss)
                 else
@@ -311,9 +313,10 @@ final class SwissApi(
           )
           .void
       } >>- {
-        socketReload(swiss.id)
         systemChat(swiss.id, s"Tournament completed!")
+        standingApi.clearCache(swiss.id)
         cache.featuredInTeam.invalidate(swiss.teamId)
+        socketReload(swiss.id)
       }
 
   def kill(swiss: Swiss): Unit = {
@@ -337,10 +340,10 @@ final class SwissApi(
                     systemChat(swiss.id, "All possible pairings were played.")
                     doFinish(swiss)
                   } {
-                    case s if s.nextRoundAt.isEmpty =>
-                      scoring.recompute(s) >>-
+                    case (s, pairings) if s.nextRoundAt.isEmpty =>
+                      scoring.recompute(s).flatMap(boardApi.update) >>-
                         systemChat(swiss.id, s"Round ${swiss.round.value + 1} started.")
-                    case s =>
+                    case (s, _) =>
                       swissColl
                         .update($id(swiss.id), $set("nextRoundAt" -> DateTime.now.plusSeconds(61)))
                         .void >>-
