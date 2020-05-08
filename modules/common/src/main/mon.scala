@@ -466,6 +466,7 @@ object mon {
     val bbpairing = rec("swiss.bbpairing")
     val tiebreakRecompute = rec("swiss.tiebreak.recompute")
     val startRound = rec("swiss.director.startRound")
+    def games(status: String) = rec(s"swiss.ongoingGames.$status")
   }
   object plan {
     object amount {

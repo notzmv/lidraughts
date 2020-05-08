@@ -372,6 +372,9 @@ final class SwissApi(
     } flatMap proxyGames flatMap { games =>
       val (finished, ongoing) = games.partition(_.finishedOrAborted)
       val flagged = ongoing.filter(_ outoftime true)
+      lidraughts.mon.swiss.games("finished")(finished.size)
+      lidraughts.mon.swiss.games("ongoing")(ongoing.size)
+      lidraughts.mon.swiss.games("flagged")(flagged.size)
       if (flagged.nonEmpty)
         bus.publish(lidraughts.hub.actorApi.map.TellMany(flagged.map(_.id), QuietFlag), 'roundSocket)
       finished.foreach(finishGame)
