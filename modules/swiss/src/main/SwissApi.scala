@@ -293,7 +293,7 @@ final class SwissApi(
     Sequencing(oldSwiss.id)(startedById) { swiss =>
       pairingColl.countSel($doc(SwissPairing.Fields.swissId -> swiss.id)) flatMap {
         case 0 => destroy(swiss)
-        case _ => doFinish(swiss: Swiss)
+        case _ => doFinish(swiss)
       }
     }
   private def doFinish(swiss: Swiss): Funit =
