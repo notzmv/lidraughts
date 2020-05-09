@@ -213,19 +213,21 @@ object SwissJson {
       case _ => JsNull
     }
 
-  private def pairingJson(player: SwissPlayer, pairing: SwissPairing) =
+  private def pairingJsonBase(player: SwissPlayer, pairing: SwissPairing) =
     Json
       .obj(
-        "g" -> pairing.gameId,
-        "c" -> (pairing.white == player.number)
+        "g" -> pairing.gameId
       )
       .add("o" -> pairing.isOngoing)
       .add("w" -> pairing.resultFor(player.number))
 
+  private def pairingJson(player: SwissPlayer, pairing: SwissPairing) =
+    pairingJsonBase(player, pairing) + ("c" -> JsBoolean(pairing.white == player.number))
+
   private def pairingJsonOrOutcome(
     player: SwissPlayer
   ): ((Option[SwissPairing], SwissSheet.Outcome)) => JsValue = {
-    case (Some(pairing), _) => pairingJson(player, pairing)
+    case (Some(pairing), _) => pairingJsonBase(player, pairing)
     case (_, outcome) => outcomeJson(outcome)
   }
 
@@ -272,13 +274,6 @@ object SwissJson {
     Json.obj(
       "limit" -> clock.limitSeconds,
       "increment" -> clock.incrementSeconds
-    )
-  }
-
-  implicit private def perfTypeWrites: OWrites[PerfType] = OWrites { pt =>
-    Json.obj(
-      "icon" -> pt.iconChar.toString,
-      "name" -> pt.name
     )
   }
 }
