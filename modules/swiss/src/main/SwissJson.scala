@@ -209,7 +209,8 @@ object SwissJson {
   private def outcomeJson(outcome: SwissSheet.Outcome): JsValue =
     outcome match {
       case SwissSheet.Absent => JsString("absent")
-      case SwissSheet.Bye | SwissSheet.Late => JsString("bye")
+      case SwissSheet.Late => JsString("late")
+      case SwissSheet.Bye => JsString("bye")
       case _ => JsNull
     }
 
