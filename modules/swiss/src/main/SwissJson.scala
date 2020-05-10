@@ -22,6 +22,7 @@ final class SwissJson(
     standingApi: SwissStandingApi,
     rankingApi: SwissRankingApi,
     boardApi: SwissBoardApi,
+    statsApi: SwissStatsApi,
     lightUserApi: lidraughts.user.LightUserApi
 ) {
 
@@ -42,6 +43,7 @@ final class SwissJson(
       standing <- standingApi(swiss, page)
       podium <- podiumJson(swiss)
       boards <- boardApi.withGames(swiss.id)
+      stats <- statsApi(swiss)
     } yield Json
       .obj(
         "id" -> swiss.id.value,
@@ -82,6 +84,7 @@ final class SwissJson(
       .add("playerInfo" -> playerInfo.map { playerJsonExt(swiss, _) })
       .add("podium" -> podium)
       .add("isRecentlyFinished" -> swiss.isRecentlyFinished)
+      .add("stats" -> stats)
 
   def fetchMyInfo(swiss: Swiss, me: User): Fu[Option[MyInfo]] =
     playerColl.byId[SwissPlayer](SwissPlayer.makeId(swiss.id, me.id).value) flatMap {
@@ -285,4 +288,6 @@ object SwissJson {
       "increment" -> clock.incrementSeconds
     )
   }
+
+  implicit private val statsWrites: Writes[SwissStats] = Json.writes[SwissStats]
 }

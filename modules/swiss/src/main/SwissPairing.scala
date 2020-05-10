@@ -21,6 +21,9 @@ case class SwissPairing(
   })
   def isOngoing = status.isLeft
   def resultFor(number: SwissPlayer.Number) = winner.map(number.==)
+  def whiteWins = status == Right(Some(white))
+  def blackWins = status == Right(Some(black))
+  def isDraw = status == Right(None)
 }
 
 object SwissPairing {

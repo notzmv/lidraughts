@@ -28,7 +28,6 @@ export function dataIcon(icon: string): Attrs {
   };
 }
 
-export const ratio2percent = (r: number) => Math.round(100 * r) + '%';
 export const userName = (u: LightUser) => {
   if (!u.title) return [u.name];
   const title64 = u.title.endsWith('-64');
@@ -53,6 +52,8 @@ export function player(p: BasePlayer, asLink: boolean, withRating: boolean) {
     withRating ? h('span.rating', ' ' + p.rating + (p.provisional ? '?' : '')) : null
   ]);
 }
+
+export const ratio2percent = (r: number) => Math.round(100 * r) + '%';
 
 export function numberRow(name: string, value: any, typ?: string) {
   return h('tr', [h('th', name), h('td',

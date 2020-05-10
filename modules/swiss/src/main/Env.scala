@@ -17,6 +17,7 @@ final class Env(
     db: lidraughts.db.Env,
     flood: lidraughts.security.Flood,
     hub: lidraughts.hub.Env,
+    mongoCache: lidraughts.memo.MongoCache.Builder,
     asyncCache: lidraughts.memo.AsyncCache.Builder,
     chatApi: lidraughts.chat.ChatApi,
     lightUserApi: lidraughts.user.LightUserApi,
@@ -60,6 +61,13 @@ final class Env(
     asyncCache = asyncCache,
     lightUserApi = lightUserApi,
     proxyGame = proxyGame
+  )
+
+  private val statsApi = new SwissStatsApi(
+    swissColl = swissColl,
+    playerColl = playerColl,
+    pairingColl = pairingColl,
+    mongoCache = mongoCache
   )
 
   lazy val api = new SwissApi(
@@ -132,6 +140,7 @@ final class Env(
     standingApi = standingApi,
     rankingApi = rankingApi,
     boardApi = boardApi,
+    statsApi = statsApi,
     lightUserApi = lightUserApi
   )
 
@@ -179,6 +188,7 @@ object Env {
     db = lidraughts.db.Env.current,
     flood = lidraughts.security.Env.current.flood,
     hub = lidraughts.hub.Env.current,
+    mongoCache = lidraughts.memo.Env.current.mongoCache,
     asyncCache = lidraughts.memo.Env.current.asyncCache,
     chatApi = lidraughts.chat.Env.current.api,
     lightUserApi = lidraughts.user.Env.current.lightUserApi,

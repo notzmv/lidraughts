@@ -9,7 +9,7 @@ import lidraughts.db.dsl._
 final class TournamentStatsApi(mongoCache: lidraughts.memo.MongoCache.Builder) {
 
   def apply(tournament: Tournament): Fu[Option[TournamentStats]] =
-    tournament.isFinished ?? cache(tournament.id).map(some)
+    tournament.isFinished ?? cache(tournament.id).dmap(some)
 
   private implicit val statsBSONHandler = Macros.handler[TournamentStats]
 
@@ -18,7 +18,7 @@ final class TournamentStatsApi(mongoCache: lidraughts.memo.MongoCache.Builder) {
     keyToString = identity,
     f = fetch,
     timeToLive = 10 minutes,
-    timeToLiveMongo = 90.days.some
+    timeToLiveMongo = 60.days.some
   )
 
   private def fetch(tournamentId: Tournament.ID): Fu[TournamentStats] = for {
