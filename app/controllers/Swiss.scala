@@ -74,24 +74,44 @@ object Swiss extends LidraughtsController {
   }
 
   def create(teamId: String) = SecureBody(_.Beta) { implicit ctx => me =>
-    env.forms.create
-      .bindFromRequest()(ctx.body)
-      .fold(
-        err => BadRequest(html.swiss.form.create(err, teamId)).fuccess,
-        data =>
-          Tournament.rateLimitCreation(me, false, ctx.req) {
-            env.api.create(data, me, teamId) map { swiss =>
-              Redirect(routes.Swiss.show(swiss.id.value))
-            }
-          }
-      )
-  }
-
-  def websocket(id: String, apiVersion: Int) = SocketOption[JsValue] { implicit ctx =>
-    getSocketUid("sri") ?? { uid =>
-      env.socketHandler.join(id, uid, ctx.me, getSocketVersion, apiVersion)
+    lidraughts.team.TeamRepo.isCreator(teamId, me.id) flatMap {
+      case false => notFound
+      case _ =>
+        env.forms.create
+          .bindFromRequest()(ctx.body)
+          .fold(
+            err => BadRequest(html.swiss.form.create(err, teamId)).fuccess,
+            data =>
+              Tournament.rateLimitCreation(me, false, ctx.req) {
+                env.api.create(data, me, teamId) map { swiss =>
+                  Redirect(routes.Swiss.show(swiss.id.value))
+                }
+              }
+          )
     }
   }
+
+  def apiCreate(teamId: String) =
+    ScopedBody() { implicit req => me =>
+      if (me.isBot || me.lame) notFoundJson("This account cannot create tournaments")
+      else
+        lidraughts.team.TeamRepo.isCreator(teamId, me.id) flatMap {
+          case false => notFoundJson("You're not a leader of that team")
+          case _ =>
+            env.forms.create.bindFromRequest
+              .fold(
+                jsonFormErrorDefaultLang,
+                data =>
+                  Tournament.rateLimitCreation(me, false, req) {
+                    JsonOk {
+                      env.api.create(data, me, teamId) flatMap { swiss =>
+                        env.json(swiss, me.some, true)
+                      }
+                    }
+                  }
+              )
+        }
+    }
 
   def join(id: String) = SecureBody(_.Beta) { implicit ctx => me =>
     NoLameOrBot {
@@ -172,6 +192,12 @@ object Swiss extends LidraughtsController {
           JsonOk(fuccess(lidraughts.swiss.SwissJson.playerJsonExt(swiss, player)))
         }
       }
+    }
+  }
+
+  def websocket(id: String, apiVersion: Int) = SocketOption[JsValue] { implicit ctx =>
+    getSocketUid("sri") ?? { uid =>
+      env.socketHandler.join(id, uid, ctx.me, getSocketVersion, apiVersion)
     }
   }
 
