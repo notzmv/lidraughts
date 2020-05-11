@@ -15,13 +15,17 @@ final class PdnDump(
     val dumper: lidraughts.game.PdnDump,
     annotator: Annotator,
     getSimulName: String => Fu[Option[String]],
-    getTournamentName: String => Option[String]
+    getTournamentName: String => Option[String],
+    getSwissName: lidraughts.swiss.Swiss.Id => Option[String]
 ) {
 
   def apply(game: Game, initialFen: Option[FEN], analysis: Option[Analysis], flags: WithFlags): Fu[Pdn] =
     dumper(game, initialFen, flags) flatMap { pdn =>
       if (flags.tags) (game.simulId ?? getSimulName) map { simulName =>
-        simulName.orElse(game.tournamentId flatMap getTournamentName).fold(pdn)(pdn.withEvent)
+        simulName
+          .orElse(game.tournamentId flatMap getTournamentName)
+          .orElse(game.swissId map lidraughts.swiss.Swiss.Id flatMap getSwissName)
+          .fold(pdn)(pdn.withEvent)
       }
       else fuccess(pdn)
     } map { pdn =>

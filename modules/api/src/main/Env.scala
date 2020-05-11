@@ -4,7 +4,6 @@ import akka.actor._
 import com.typesafe.config.Config
 
 import lidraughts.simul.Simul
-import lidraughts.swiss.Swiss
 
 final class Env(
     config: Config,
@@ -19,7 +18,6 @@ final class Env(
     relationApi: lidraughts.relation.RelationApi,
     bookmarkApi: lidraughts.bookmark.BookmarkApi,
     getTourAndRanks: lidraughts.game.Game => Fu[Option[lidraughts.tournament.TourAndRanks]],
-    swissApi: lidraughts.swiss.SwissApi,
     crosstableApi: lidraughts.game.CrosstableApi,
     prefApi: lidraughts.pref.PrefApi,
     playBanApi: lidraughts.playban.PlaybanApi,
@@ -29,6 +27,7 @@ final class Env(
     annotator: lidraughts.analyse.Annotator,
     lobbyEnv: lidraughts.lobby.Env,
     setupEnv: lidraughts.setup.Env,
+    swissEnv: lidraughts.swiss.Env,
     getSimul: Simul.ID => Fu[Option[Simul]],
     getSimulName: Simul.ID => Fu[Option[String]],
     getTournamentName: String => Option[String],
@@ -76,7 +75,8 @@ final class Env(
     dumper = gamePdnDump,
     annotator = annotator,
     getSimulName = getSimulName,
-    getTournamentName = getTournamentName
+    getTournamentName = getTournamentName,
+    getSwissName = swissEnv.getName
   )
 
   val userApi = new UserApi(
@@ -106,7 +106,7 @@ final class Env(
 
   val gameApiV2 = new GameApiV2(
     pdnDump = pdnDump,
-    swissApi = swissApi,
+    swissApi = swissEnv.api,
     getLightUser = userEnv.lightUser
   )(system)
 
@@ -123,7 +123,7 @@ final class Env(
     bookmarkApi = bookmarkApi,
     getTourAndRanks = getTourAndRanks,
     getSimul = getSimul,
-    getSwiss = swissApi.byId
+    getSwiss = swissEnv.api.byId
   )
 
   val lobbyApi = new LobbyApi(
@@ -164,6 +164,7 @@ object Env {
     annotator = lidraughts.analyse.Env.current.annotator,
     lobbyEnv = lidraughts.lobby.Env.current,
     setupEnv = lidraughts.setup.Env.current,
+    swissEnv = lidraughts.swiss.Env.current,
     getSimul = lidraughts.simul.Env.current.repo.find,
     getSimulName = lidraughts.simul.Env.current.api.idToName,
     getTournamentName = lidraughts.tournament.Env.current.cached.name,
@@ -174,7 +175,6 @@ object Env {
     relationApi = lidraughts.relation.Env.current.api,
     bookmarkApi = lidraughts.bookmark.Env.current.api,
     getTourAndRanks = lidraughts.tournament.Env.current.tourAndRanks,
-    swissApi = lidraughts.swiss.Env.current.api,
     crosstableApi = lidraughts.game.Env.current.crosstableApi,
     playBanApi = lidraughts.playban.Env.current.api,
     prefApi = lidraughts.pref.Env.current.api,

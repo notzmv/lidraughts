@@ -155,14 +155,14 @@ final class SwissApi(
       .list[SwissPairing]()
   }
 
-  def pairingCursor(
+  def sortedGameIdsCursor(
     swissId: Swiss.Id,
     batchSize: Int = 0,
     readPreference: ReadPreference = ReadPreference.secondaryPreferred
   )(implicit cp: CursorProducer[Bdoc]) =
     SwissPairing.fields { f =>
       val query = pairingColl
-        .find($doc(f.swissId -> swissId))
+        .find($doc(f.swissId -> swissId), $id(true))
         .sort($sort asc f.round)
       query.copy(options = query.options.batchSize(batchSize)).cursor[Bdoc](readPreference)
     }

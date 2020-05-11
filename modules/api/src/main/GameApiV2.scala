@@ -104,12 +104,12 @@ final class GameApiV2(
       formatterFor(config)
 
   def exportBySwiss(config: BySwissConfig): Enumerator[String] =
-    swissApi.pairingCursor(
+    swissApi.sortedGameIdsCursor(
       swissId = config.swissId,
       batchSize = config.perSecond.value
     ).bulkEnumerator() &>
       Enumeratee.mapM { pairingDocs =>
-        GameRepo.gamesFromSecondary(pairingDocs.flatMap { _.getAs[Game.ID](lidraughts.swiss.SwissPairing.Fields.gameId) }.toSeq)
+        GameRepo.gamesFromSecondary(pairingDocs.flatMap { _.getAs[Game.ID]("_id") }.toSeq)
       } &>
       lidraughts.common.Iteratee.delay(1 second) &>
       Enumeratee.mapConcat(_.toSeq) &>
