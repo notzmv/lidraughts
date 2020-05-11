@@ -1,7 +1,7 @@
 // Generated with bin/trans-dump.js
 package lidraughts.i18n
 
-import I18nDb.{ Site, Arena, Emails, Learn, Activity, Coordinates, Study }
+import I18nDb.{ Site, Arena, Emails, Learn, Activity, Coordinates, Study, Swiss }
 
 // format: OFF
 object I18nKeys {
@@ -917,6 +917,7 @@ val `emptyTournamentName` = new Translated("emptyTournamentName", Site)
 val `emptySimulName` = new Translated("emptySimulName", Site)
 
 object arena {
+val `arenaTournaments` = new Translated("arenaTournaments", Arena)
 val `isItRated` = new Translated("isItRated", Arena)
 val `willBeNotified` = new Translated("willBeNotified", Arena)
 val `isRated` = new Translated("isRated", Arena)
@@ -1230,6 +1231,10 @@ val `nbChapters` = new Translated("nbChapters", Study)
 val `nbGames` = new Translated("nbGames", Study)
 val `nbMembers` = new Translated("nbMembers", Study)
 val `pasteYourPdnTextHereUpToNbGames` = new Translated("pasteYourPdnTextHereUpToNbGames", Study)
+}
+
+object swiss {
+val `swissTournaments` = new Translated("swissTournaments", Swiss)
 }
 
 }
