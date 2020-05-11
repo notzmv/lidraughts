@@ -98,7 +98,7 @@ final class SwissJson(
                     $doc(f.swissId -> swiss.id, f.players -> player.number, f.status -> SwissPairing.ongoing),
                     $doc(f.id -> true)
                   )
-                  .sort($sort desc f.date)
+                  .sort($sort desc f.round)
                   .uno[Bdoc]
                   .dmap { _.flatMap(_.getAs[Game.ID](f.id)) }
               }

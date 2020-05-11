@@ -55,12 +55,9 @@ final private class SwissDirector(
                   .update($doc(f.number $in byes, f.swissId -> swiss.id), $addToSet(f.byes -> swiss.round))
                   .void
               }
-              pairingsBson = pairings.map { p =>
-                pairingHandler.write(p) ++ $doc(SwissPairing.Fields.date -> date)
-              }
+              pairingsBson = pairings.map(pairingHandler.write)
               _ <- pairingColl.bulkInsert(pairingsBson.toStream, ordered = true).void
-              playerMap = SwissPlayer.toMap(players)
-              games = pairings.map(makeGame(swiss, playerMap))
+              games = pairings.map(makeGame(swiss, SwissPlayer.toMap(players)))
               _ <- lidraughts.common.Future.applySequentially(games) { game =>
                 GameRepo.insertDenormalized(game) >>- onStart(game.id)
               }
