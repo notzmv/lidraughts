@@ -65,6 +65,9 @@ final class SwissJson(
       .add("podium" -> podium)
       .add("isRecentlyFinished" -> swiss.isRecentlyFinished)
       .add("stats" -> stats)
+      .add("greatPlayer" -> GreatPlayer.wikiUrl(swiss.name).map { url =>
+        Json.obj("name" -> swiss.name, "url" -> url)
+      })
 
   def fetchMyInfo(swiss: Swiss, me: User): Fu[Option[MyInfo]] =
     playerColl.byId[SwissPlayer](SwissPlayer.makeId(swiss.id, me.id).value) flatMap {
@@ -174,9 +177,6 @@ object SwissJson {
           "at" -> formatDate(next),
           "in" -> (next.getSeconds - nowSeconds).toInt.atLeast(0)
         )
-      })
-      .add("greatPlayer" -> GreatPlayer.wikiUrl(swiss.name).map { url =>
-        Json.obj("name" -> swiss.name, "url" -> url)
       })
 
   private[swiss] def playerJson(swiss: Swiss, view: SwissPlayer.View): JsObject =
