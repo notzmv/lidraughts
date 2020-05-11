@@ -103,11 +103,15 @@ final private class SwissFields(form: Form[_])(implicit ctx: Context) {
       form3.input(_, typ = "number")
     )
 
-  def rated = form3.checkbox(
-    form("rated"),
-    trans.rated(),
-    help = raw("Games are rated<br>and impact players ratings").some
-  )
+  def rated =
+    frag(
+      form3.checkbox(
+        form("rated"),
+        trans.rated(),
+        help = raw("Games are rated<br>and impact players ratings").some
+      ),
+      st.input(tpe := "hidden", st.name := form("rated").name, value := "false") // hack allow disabling rated
+    )
   def variant =
     form3.group(form("variant"), trans.variant(), half = true)(
       form3.select(_, translatedVariantChoicesWithVariants(_.key).map(x => x._1 -> x._2))
@@ -128,8 +132,8 @@ final private class SwissFields(form: Form[_])(implicit ctx: Context) {
   def description =
     form3.group(
       form("description"),
-      frag("Tournament description"),
-      help = frag("Anything special you want to tell the participants? Try to keep it short.").some
+      trans.tournamentDescription(),
+      help = trans.tournamentDescriptionHelp().some
     )(form3.textarea(_)(rows := 2))
   def startsAt =
     form3.group(

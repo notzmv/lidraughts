@@ -104,9 +104,7 @@ object Swiss extends LidraughtsController {
                 data =>
                   Tournament.rateLimitCreation(me, false, req) {
                     JsonOk {
-                      env.api.create(data, me, teamId) flatMap { swiss =>
-                        env.json(swiss, me.some, true)
-                      }
+                      env.api.create(data, me, teamId) map env.json.api
                     }
                   }
               )
