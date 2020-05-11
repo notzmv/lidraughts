@@ -19,6 +19,7 @@ final class Env(
     relationApi: lidraughts.relation.RelationApi,
     bookmarkApi: lidraughts.bookmark.BookmarkApi,
     getTourAndRanks: lidraughts.game.Game => Fu[Option[lidraughts.tournament.TourAndRanks]],
+    swissApi: lidraughts.swiss.SwissApi,
     crosstableApi: lidraughts.game.CrosstableApi,
     prefApi: lidraughts.pref.PrefApi,
     playBanApi: lidraughts.playban.PlaybanApi,
@@ -30,7 +31,6 @@ final class Env(
     setupEnv: lidraughts.setup.Env,
     getSimul: Simul.ID => Fu[Option[Simul]],
     getSimulName: Simul.ID => Fu[Option[String]],
-    getSwiss: Swiss.Id => Fu[Option[Swiss]],
     getTournamentName: String => Option[String],
     isStreaming: lidraughts.user.User.ID => Boolean,
     isPlaying: lidraughts.user.User.ID => Boolean,
@@ -106,6 +106,7 @@ final class Env(
 
   val gameApiV2 = new GameApiV2(
     pdnDump = pdnDump,
+    swissApi = swissApi,
     getLightUser = userEnv.lightUser
   )(system)
 
@@ -122,7 +123,7 @@ final class Env(
     bookmarkApi = bookmarkApi,
     getTourAndRanks = getTourAndRanks,
     getSimul = getSimul,
-    getSwiss = getSwiss
+    getSwiss = swissApi.byId
   )
 
   val lobbyApi = new LobbyApi(
@@ -165,7 +166,6 @@ object Env {
     setupEnv = lidraughts.setup.Env.current,
     getSimul = lidraughts.simul.Env.current.repo.find,
     getSimulName = lidraughts.simul.Env.current.api.idToName,
-    getSwiss = lidraughts.swiss.Env.current.api.byId,
     getTournamentName = lidraughts.tournament.Env.current.cached.name,
     roundJsonView = lidraughts.round.Env.current.jsonView,
     noteApi = lidraughts.round.Env.current.noteApi,
@@ -174,6 +174,7 @@ object Env {
     relationApi = lidraughts.relation.Env.current.api,
     bookmarkApi = lidraughts.bookmark.Env.current.api,
     getTourAndRanks = lidraughts.tournament.Env.current.tourAndRanks,
+    swissApi = lidraughts.swiss.Env.current.api,
     crosstableApi = lidraughts.game.Env.current.crosstableApi,
     playBanApi = lidraughts.playban.Env.current.api,
     prefApi = lidraughts.pref.Env.current.api,

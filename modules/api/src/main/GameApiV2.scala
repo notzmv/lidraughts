@@ -19,6 +19,7 @@ import lidraughts.user.User
 
 final class GameApiV2(
     pdnDump: PdnDump,
+    swissApi: lidraughts.swiss.SwissApi,
     getLightUser: LightUser.Getter
 )(implicit system: akka.actor.ActorSystem) {
 
@@ -96,6 +97,19 @@ final class GameApiV2(
     ).bulkEnumerator() &>
       Enumeratee.mapM { pairingDocs =>
         GameRepo.gamesFromSecondary(pairingDocs.flatMap { _.getAs[Game.ID]("_id") }.toSeq)
+      } &>
+      lidraughts.common.Iteratee.delay(1 second) &>
+      Enumeratee.mapConcat(_.toSeq) &>
+      Enumeratee.mapM(enrich(config.flags)) &>
+      formatterFor(config)
+
+  def exportBySwiss(config: BySwissConfig): Enumerator[String] =
+    swissApi.pairingCursor(
+      swissId = config.swissId,
+      batchSize = config.perSecond.value
+    ).bulkEnumerator() &>
+      Enumeratee.mapM { pairingDocs =>
+        GameRepo.gamesFromSecondary(pairingDocs.flatMap { _.getAs[Game.ID](lidraughts.swiss.SwissPairing.Fields.gameId) }.toSeq)
       } &>
       lidraughts.common.Iteratee.delay(1 second) &>
       Enumeratee.mapConcat(_.toSeq) &>
@@ -221,6 +235,13 @@ object GameApiV2 {
 
   case class ByTournamentConfig(
       tournamentId: Tournament.ID,
+      format: Format,
+      flags: WithFlags,
+      perSecond: MaxPerSecond
+  ) extends Config
+
+  case class BySwissConfig(
+      swissId: lidraughts.swiss.Swiss.Id,
       format: Format,
       flags: WithFlags,
       perSecond: MaxPerSecond

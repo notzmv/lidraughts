@@ -278,6 +278,27 @@ object Api extends LidraughtsController {
     }
   }
 
+  def swissGames(id: String) =
+    Action.async { req =>
+      Env.swiss.api byId lidraughts.swiss.Swiss.Id(id) flatMap {
+        _ ?? { swiss =>
+          GlobalLinearLimitPerIP(HTTPRequest lastRemoteAddress req) {
+            val flags = Game.requestPdnFlags(req, lidraughts.pref.Pref.default.draughtsResult, extended = false, algebraicPref = false)
+            val config = GameApiV2.BySwissConfig(
+              swissId = swiss.id,
+              format = GameApiV2.Format byRequest req,
+              flags = flags,
+              perSecond = MaxPerSecond(20)
+            )
+            Ok.chunked(Env.api.gameApiV2.exportBySwiss(config)).withHeaders(
+              noProxyBufferHeader,
+              CONTENT_TYPE -> Game.gameContentType(config)
+            ).fuccess
+          }
+        }
+      }
+    }
+
   def gamesByUsersStream = Action.async(parse.tolerantText) { req =>
     val userIds = req.body.split(',').take(300).toSet map lidraughts.user.User.normalize
     jsonStream(Env.game.gamesByUsersStream(userIds)).fuccess

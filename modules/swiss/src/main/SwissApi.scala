@@ -155,6 +155,18 @@ final class SwissApi(
       .list[SwissPairing]()
   }
 
+  def pairingCursor(
+    swissId: Swiss.Id,
+    batchSize: Int = 0,
+    readPreference: ReadPreference = ReadPreference.secondaryPreferred
+  )(implicit cp: CursorProducer[Bdoc]) =
+    SwissPairing.fields { f =>
+      val query = pairingColl
+        .find($doc(f.swissId -> swissId))
+        .sort($sort asc f.round)
+      query.copy(options = query.options.batchSize(batchSize)).cursor[Bdoc](readPreference)
+    }
+
   def featuredInTeam(teamId: TeamId): Fu[List[Swiss]] =
     cache.featuredInTeam.get(teamId) flatMap { ids =>
       swissColl.byOrderedIds[Swiss, Swiss.Id](ids)(_.id)
