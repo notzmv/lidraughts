@@ -150,7 +150,14 @@ object BSONHandlers {
       glyphs = r.getO[Glyphs]("g") | Glyphs.empty,
       score = r.getO[Score]("e"),
       clock = r.getO[Centis]("l"),
-      children = r.get[Node.Children]("n")
+      children =
+        try {
+          r.get[Node.Children]("n")
+        } catch {
+          case _: StackOverflowError =>
+            logger.warn(s"study ChildrenBSONHandler StackOverflowError")
+            Node.emptyChildren
+        }
     )
     def writes(w: Writer, s: Node) = $doc(
       "i" -> s.id,
