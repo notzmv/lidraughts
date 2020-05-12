@@ -69,7 +69,8 @@ object replay {
             "explorer" -> Json.obj(
               "endpoint" -> explorerEndpoint,
               "tablebaseEndpoint" -> tablebaseEndpoint
-            )
+            ),
+            "hunter" -> isGranted(_.Hunter)
           ))
         }""")
       ),
@@ -86,7 +87,6 @@ object replay {
           !ctx.blind option frag(
             div(cls := "analyse__underboard")(
               div(cls := "analyse__underboard__panels")(
-                div(cls := "active"),
                 game.analysable option div(cls := "computer-analysis")(
                   if (analysis.isDefined || analysisStarted) div(id := "acpl-chart")
                   else postForm(
@@ -98,6 +98,9 @@ object replay {
                       )
                     )
                 ),
+                div(cls := "move-times")(
+                  game.turns > 1 option div(id := "movetimes-chart")
+                ),
                 div(cls := "fen-pdn")(
                   div(
                     strong("FEN"),
@@ -108,9 +111,6 @@ object replay {
                     pdnLinks
                   ),
                   div(cls := "pdn")(pdn)
-                ),
-                div(cls := "move-times")(
-                  game.turns > 1 option div(id := "movetimes-chart")
                 ),
                 cross.map { c =>
                   div(cls := "ctable")(
