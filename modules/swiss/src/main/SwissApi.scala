@@ -259,37 +259,41 @@ final class SwissApi(
       }
 
   private[swiss] def finishGame(game: Game): Unit = game.swissId foreach { swissId =>
-    Sequencing(Swiss.Id(swissId))(startedById) { swiss =>
-      pairingColl.byId[SwissPairing](game.id).dmap(_.filter(_.isOngoing)) flatMap {
-        _ ?? { pairing =>
-          val winner = game.winnerColor
-            .map(_.fold(pairing.white, pairing.black))
-            .flatMap(playerNumberHandler.writeOpt)
-          winner.fold(pairingColl.updateField($id(game.id), SwissPairing.Fields.status, BSONNull))(
-            pairingColl.updateField($id(game.id), SwissPairing.Fields.status, _)
-          ).void >>
-            swissColl.update($id(swiss.id), $inc("nbOngoing" -> -1)) >>
-            game.playerWhoDidNotMove.flatMap(_.userId).?? { absent =>
-              SwissPlayer.fields { f =>
-                playerColl.updateField($doc(f.swissId -> swiss.id, f.userId -> absent), f.absent, true).void
-              }
-            } >>
-            scoring.recompute(swiss).flatMap(boardApi.update) >> {
-              (swiss.nbOngoing == 1) ?? {
-                if (swiss.round.value == swiss.settings.nbRounds) doFinish(swiss)
-                else
-                  swissColl
-                    .updateField(
-                      $id(swiss.id),
-                      "nextRoundAt",
-                      DateTime.now.plusSeconds(swiss.settings.roundInterval.toSeconds.toInt)
-                    )
-                    .void >>-
-                    systemChat(swiss.id, s"Round ${swiss.round.value + 1} will start soon.")
-              }
-            } >>- socketReload(swiss.id)
+    Sequencing(Swiss.Id(swissId))(byId) { swiss =>
+      if (!swiss.isStarted) {
+        logger.info(s"Removing pairing ${game.id} finished after swiss ${swiss.id}")
+        pairingColl.remove($id(game.id)).void
+      } else
+        pairingColl.byId[SwissPairing](game.id).dmap(_.filter(_.isOngoing)) flatMap {
+          _ ?? { pairing =>
+            val winner = game.winnerColor
+              .map(_.fold(pairing.white, pairing.black))
+              .flatMap(playerNumberHandler.writeOpt)
+            winner.fold(pairingColl.updateField($id(game.id), SwissPairing.Fields.status, BSONNull))(
+              pairingColl.updateField($id(game.id), SwissPairing.Fields.status, _)
+            ).void >>
+              swissColl.update($id(swiss.id), $inc("nbOngoing" -> -1)) >>
+              game.playerWhoDidNotMove.flatMap(_.userId).?? { absent =>
+                SwissPlayer.fields { f =>
+                  playerColl.updateField($doc(f.swissId -> swiss.id, f.userId -> absent), f.absent, true).void
+                }
+              } >>
+              scoring.recompute(swiss).flatMap(boardApi.update) >> {
+                (swiss.nbOngoing == 1) ?? {
+                  if (swiss.round.value == swiss.settings.nbRounds) doFinish(swiss)
+                  else
+                    swissColl
+                      .updateField(
+                        $id(swiss.id),
+                        "nextRoundAt",
+                        DateTime.now.plusSeconds(swiss.settings.roundInterval.toSeconds.toInt)
+                      )
+                      .void >>-
+                      systemChat(swiss.id, s"Round ${swiss.round.value + 1} will start soon.")
+                }
+              } >>- socketReload(swiss.id)
+          }
         }
-      }
     }
   }
 
