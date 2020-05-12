@@ -39,7 +39,13 @@ final class Env(
   }
   import settings._
 
+  val trf = new SwissTrf(
+    playerColl = playerColl,
+    pairingColl = pairingColl
+  )
+
   private val pairingSystem = new PairingSystem(
+    trf = trf,
     executable = PairingExecutable
   )
 
@@ -52,6 +58,7 @@ final class Env(
     swissColl = swissColl,
     playerColl = playerColl,
     pairingColl = pairingColl,
+    trf = trf,
     pairingSystem = pairingSystem,
     onStart = onStart
   )

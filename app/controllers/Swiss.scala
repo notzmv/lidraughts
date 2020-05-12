@@ -2,12 +2,13 @@ package controllers
 
 import play.api.libs.json._
 import play.api.mvc._
+import scala.concurrent.duration._
 
 import lidraughts.api.Context
 import lidraughts.app._
 import lidraughts.chat.Chat
-import lidraughts.swiss.{ Swiss => SwissModel }
 import lidraughts.swiss.Swiss.{ Id => SwissId }
+import lidraughts.swiss.{ Swiss => SwissModel }
 import views._
 
 object Swiss extends LidraughtsController {
@@ -198,6 +199,21 @@ object Swiss extends LidraughtsController {
       env.socketHandler.join(id, uid, ctx.me, getSocketVersion, apiVersion)
     }
   }
+
+  private val ExportLimitPerIP = new lidraughts.memo.RateLimit[lidraughts.common.IpAddress](
+    credits = 10,
+    duration = 1.minute,
+    name = "swiss export per IP",
+    key = "swiss.export.ip"
+  )
+
+  def exportTrf(id: String) =
+    Action.async {
+      env.api.byId(SwissId(id)) flatMap {
+        case None => NotFound("Tournament not found").fuccess
+        case Some(swiss) => env.trf(swiss) dmap { Ok(_) }
+      }
+    }
 
   private def WithSwiss(id: String)(f: SwissModel => Fu[Result]): Fu[Result] =
     env.api.byId(SwissId(id)) flatMap { _ ?? f }

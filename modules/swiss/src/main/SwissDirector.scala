@@ -10,6 +10,7 @@ final private class SwissDirector(
     swissColl: Coll,
     playerColl: Coll,
     pairingColl: Coll,
+    trf: SwissTrf,
     pairingSystem: PairingSystem,
     onStart: Game.ID => Unit
 ) {
@@ -17,8 +18,8 @@ final private class SwissDirector(
 
   // sequenced by SwissApi
   private[swiss] def startRound(from: Swiss): Fu[Option[(Swiss, List[SwissPairing])]] =
-    fetchPlayers(from)
-      .zip(fetchPrevPairings(from))
+    trf
+      .fetchData(from)
       .flatMap {
         case (players, prevPairings) =>
           val pendings = pairingSystem(from, players, prevPairings)
@@ -70,20 +71,6 @@ final private class SwissDirector(
           logger.info(s"BBPairing ${from.id} $input")
           Some(from -> List.empty[SwissPairing])
       }
-
-  private def fetchPlayers(swiss: Swiss) = SwissPlayer.fields { f =>
-    playerColl
-      .find($doc(f.swissId -> swiss.id))
-      .sort($sort asc f.number)
-      .list[SwissPlayer]()
-  }
-
-  private def fetchPrevPairings(swiss: Swiss) = SwissPairing.fields { f =>
-    pairingColl
-      .find($doc(f.swissId -> swiss.id))
-      .sort($sort asc f.round)
-      .list[SwissPairing]()
-  }
 
   private def makeGame(swiss: Swiss, players: Map[SwissPlayer.Number, SwissPlayer])(
     pairing: SwissPairing
