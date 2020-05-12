@@ -359,16 +359,16 @@ object Study extends LidraughtsController {
     }
   }
 
-  private val PdnRateLimitGlobal = new lidraughts.memo.RateLimit[String](
+  private val PdnRateLimitPerIp = new lidraughts.memo.RateLimit[IpAddress](
     credits = 30,
     duration = 1 minute,
-    name = "export study PDN global",
-    key = "export.study_pdn.global"
+    name = "export study PDN per ip",
+    key = "export.study_pdn.ip"
   )
 
   def pdn(id: String) = Open { implicit ctx =>
     OnlyHumans {
-      PdnRateLimitGlobal("-", msg = HTTPRequest.lastRemoteAddress(ctx.req).value) {
+      PdnRateLimitPerIp(HTTPRequest.lastRemoteAddress(ctx.req)) {
         OptionFuResult(env.api byId id) { study =>
           CanViewResult(study) {
             lidraughts.mon.export.pdn.study()
