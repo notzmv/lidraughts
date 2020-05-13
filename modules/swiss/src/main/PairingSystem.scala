@@ -10,25 +10,23 @@ final private class PairingSystem(
 
   def apply(swiss: Swiss): Fu[List[SwissPairing.ByeOrPending]] =
     trf(swiss).map {
-      _.fold("") {
-        case (a, l) => s"$l\n$a"
-      } |> invoke |> reader
+      invoke(swiss, _) |> reader
     }
 
-  private def invoke(input: String): List[String] =
-    blocking {
-      withTempFile(input) { file =>
-        import scala.sys.process._
-        val command = s"$executable --dutch $file -p"
-        val stdout = new collection.mutable.ListBuffer[String]
-        val stderr = new StringBuilder
-        val status = command ! ProcessLogger(stdout append _, stderr append _)
-        if (status != 0) {
-          val error = stderr.toString
-          if (error contains "No valid pairing exists") Nil
-          else throw new PairingSystem.BBPairingException(error, input)
-        } else stdout.toList
+  private def invoke(swiss: Swiss, input: List[String]): List[String] =
+    withTempFile(swiss, input) { file =>
+      import scala.sys.process._
+      val command = s"$executable --dutch $file -p"
+      val stdout = new collection.mutable.ListBuffer[String]
+      val stderr = new StringBuilder
+      val status = blocking {
+        command ! ProcessLogger(stdout append _, stderr append _)
       }
+      if (status != 0) {
+        val error = stderr.toString
+        if (error contains "No valid pairing exists") Nil
+        else throw new PairingSystem.BBPairingException(error, swiss)
+      } else stdout.toList
     }
 
   private def reader(output: List[String]): List[SwissPairing.ByeOrPending] =
@@ -48,15 +46,13 @@ final private class PairingSystem(
       }
       .flatten
 
-  /**
-   * NOTE: This function uses the createTempFile function from the File class. The prefix and
-   * suffix must be at least 3 characters long, otherwise this function throws an IllegalArgumentException.
-   */
-  def withTempFile[A](contents: String)(f: File => A): A = {
-    val file = File.createTempFile("lidraughts-", "-swiss")
+  def withTempFile[A](swiss: Swiss, contents: List[String])(f: File => A): A = {
+    // NOTE: The prefix and suffix must be at least 3 characters long,
+    // otherwise this function throws an IllegalArgumentException.
+    val file = File.createTempFile(s"lidraughts-swiss-${swiss.id}-${swiss.round}-", s"-bbp")
     val p = new PrintWriter(file, "UTF-8")
     try {
-      p.write(contents)
+      p.write(contents.mkString("\n"))
       p.flush()
       val res = f(file)
       res
@@ -69,5 +65,5 @@ final private class PairingSystem(
 }
 
 private object PairingSystem {
-  case class BBPairingException(val message: String, val input: String) extends lidraughts.base.LidraughtsException
+  case class BBPairingException(val message: String, val swiss: Swiss) extends lidraughts.base.LidraughtsException
 }
