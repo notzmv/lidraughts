@@ -108,7 +108,7 @@ final class SwissApi(
                 swissColl.update($id(swiss.id), $inc("nbPlayers" -> 1)) inject true
             }
           } flatMap { res =>
-            scoring.recompute(swiss) >>- socketReload(swiss.id) inject res
+            recomputeAndUpdateAll(swiss) >>- socketReload(swiss.id) inject res
           }
         } addEffect { _ => }
     fuJoined map {
@@ -271,11 +271,7 @@ final class SwissApi(
                   playerColl.updateField($doc(f.swissId -> swiss.id, f.userId -> absent), f.absent, true).void
                 }
               } >>
-              scoring.recompute(swiss).flatMap { res =>
-                rankingApi.update(res)
-                standingApi.update(res)
-                boardApi.update(res)
-              } >> {
+              recomputeAndUpdateAll(swiss) >> {
                 (swiss.nbOngoing == 1) ?? {
                   if (swiss.round.value == swiss.settings.nbRounds) doFinish(swiss)
                   else
@@ -336,6 +332,13 @@ final class SwissApi(
     else if (swiss.isCreated) destroy(swiss)
   }
 
+  private def recomputeAndUpdateAll(swiss: Swiss): Funit =
+    scoring.recompute(swiss).flatMap { res =>
+      rankingApi.update(res)
+      standingApi.update(res) >>
+        boardApi.update(res)
+    }
+
   private[swiss] def startPendingRounds: Funit =
     swissColl
       .find($doc("nextRoundAt" $lt DateTime.now), $id(true))
@@ -353,11 +356,7 @@ final class SwissApi(
                     doFinish(swiss)
                   } {
                     case (s, pairings) if s.nextRoundAt.isEmpty =>
-                      scoring.recompute(s).flatMap { res =>
-                        rankingApi.update(res)
-                        standingApi.update(res)
-                        boardApi.update(res)
-                      } >>-
+                      recomputeAndUpdateAll(s) >>-
                         systemChat(swiss.id, s"Round ${swiss.round.value + 1} started.")
                     case (s, _) =>
                       swissColl
