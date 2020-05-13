@@ -271,7 +271,11 @@ final class SwissApi(
                   playerColl.updateField($doc(f.swissId -> swiss.id, f.userId -> absent), f.absent, true).void
                 }
               } >>
-              scoring.recompute(swiss).flatMap(boardApi.update) >> {
+              scoring.recompute(swiss).flatMap { res =>
+                rankingApi.update(res)
+                standingApi.update(res)
+                boardApi.update(res)
+              } >> {
                 (swiss.nbOngoing == 1) ?? {
                   if (swiss.round.value == swiss.settings.nbRounds) doFinish(swiss)
                   else
@@ -323,7 +327,6 @@ final class SwissApi(
           .void
       } >>- {
         systemChat(swiss.id, s"Tournament completed!")
-        standingApi.clearCache(swiss.id)
         cache.featuredInTeam.invalidate(swiss.teamId)
         socketReload(swiss.id)
       }
@@ -350,7 +353,11 @@ final class SwissApi(
                     doFinish(swiss)
                   } {
                     case (s, pairings) if s.nextRoundAt.isEmpty =>
-                      scoring.recompute(s).flatMap(boardApi.update) >>-
+                      scoring.recompute(s).flatMap { res =>
+                        rankingApi.update(res)
+                        standingApi.update(res)
+                        boardApi.update(res)
+                      } >>-
                         systemChat(swiss.id, s"Round ${swiss.round.value + 1} started.")
                     case (s, _) =>
                       swissColl

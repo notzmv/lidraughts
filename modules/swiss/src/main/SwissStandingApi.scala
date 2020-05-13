@@ -1,10 +1,10 @@
 package lidraughts.swiss
 
+import com.github.blemale.scaffeine.Scaffeine
 import play.api.libs.json._
 import scala.concurrent.duration._
 
 import lidraughts.common.LightUser
-import lidraughts.memo._
 import lidraughts.db.dsl._
 
 /*
@@ -17,35 +17,65 @@ final class SwissStandingApi(
     swissColl: Coll,
     playerColl: Coll,
     pairingColl: Coll,
+    rankingApi: SwissRankingApi,
     asyncCache: lidraughts.memo.AsyncCache.Builder,
     lightUserApi: lidraughts.user.LightUserApi
 ) {
 
   import BsonHandlers._
 
-  def apply(swiss: Swiss, page: Int): Fu[JsObject] =
-    if (page == 1) first get swiss.id
-    else if (page > 50) {
-      if (swiss.isCreated) createdCache.get(swiss.id -> page)
-      else compute(swiss.id, page)
-    } else compute(swiss, page)
+  private val pageCache = Scaffeine()
+    .expireAfterWrite(60 minutes)
+    .build[(Swiss.Id, Int), JsObject]
 
-  private val first = asyncCache.clearable[Swiss.Id, JsObject](
+  def apply(swiss: Swiss, page: Int): Fu[JsObject] =
+    fuccess(pageCache.getIfPresent(swiss.id -> page)) getOrElse {
+      if (page == 1) first get swiss.id
+      else compute(swiss, page)
+    }
+
+  def update(res: SwissScoring.Result): Funit =
+    rankingApi(res.swiss) flatMap { ranking =>
+      lightUserApi
+        .asyncMany(res.players.map(_.userId))
+        .map(p => res.players.zip(p))
+        .map(s => res.sheets.zip(s))
+        .map(_ grouped 10)
+        .map(_.zipWithIndex)
+        .map(_.toList)
+        .map {
+          _ map {
+            case (pagePlayers, i) =>
+              val page = i + 1
+              pageCache.put(
+                res.swiss.id -> page,
+                Json.obj(
+                  "page" -> page,
+                  "players" -> pagePlayers
+                    .map {
+                      case (sheet, (player, user)) =>
+                        SwissJson.playerJson(
+                          res.swiss,
+                          SwissPlayer.View(
+                            player = player,
+                            rank = ranking.getOrElse(player.number, 0),
+                            user = user | LightUser.fallback(player.userId),
+                            ~res.pairings.get(player.number),
+                            sheet
+                          )
+                        )
+                    }
+                )
+              )
+          }
+        }
+    }
+
+  private val first = asyncCache.multi[Swiss.Id, JsObject](
     name = "swiss.page.first",
     f = compute(_, 1),
     expireAfter = _.ExpireAfterWrite(1 second)
   )
-
-  private val createdCache = asyncCache.multi[(Swiss.Id, Int), JsObject](
-    name = "swiss.page.createdCache",
-    f = c => compute(c._1, c._2),
-    expireAfter = _.ExpireAfterWrite(15 second)
-  )
-
-  def clearCache(id: Swiss.Id): Unit = {
-    first invalidate id
-    // no need to invalidate createdCache, these are only cached when tour.isCreated
-  }
 
   private def compute(id: Swiss.Id, page: Int): Fu[JsObject] =
     swissColl.byId[Swiss](id.value) flatten s"No such tournament: $id" flatMap { compute(_, page) }

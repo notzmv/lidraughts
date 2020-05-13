@@ -136,6 +136,7 @@ final class Env(
     swissColl = swissColl,
     playerColl = playerColl,
     pairingColl = pairingColl,
+    rankingApi = rankingApi,
     asyncCache = asyncCache,
     lightUserApi = lightUserApi
   )

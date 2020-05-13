@@ -1,7 +1,8 @@
 package lidraughts.swiss
 
-import scala.concurrent.duration._
+import com.github.blemale.scaffeine.Scaffeine
 import reactivemongo.bson._
+import scala.concurrent.duration._
 
 import lidraughts.db.dsl._
 
@@ -12,19 +13,28 @@ final private class SwissRankingApi(
   import BsonHandlers._
 
   def apply(swiss: Swiss): Fu[Ranking] =
-    if (swiss.isFinished) finishedRanking get swiss.id
-    else ongoingRanking get swiss.id
+    fuccess(scoreCache.getIfPresent(swiss.id)) getOrElse {
+      dbCache get swiss.id
+    }
 
-  // only applies to ongoing tournaments
-  private val ongoingRanking = asyncCache.multi[Swiss.Id, Ranking](
-    name = "swiss.ongoingRanking",
-    f = computeRanking,
-    expireAfter = _.ExpireAfterWrite(3 seconds)
-  )
+  def update(res: SwissScoring.Result) =
+    scoreCache.put(
+      res.swiss.id,
+      res.players
+        .sortBy(-_.score.value)
+        .zipWithIndex
+        .map {
+          case (p, i) => p.number -> (i + 1)
+        }
+        .toMap
+    )
 
-  // only applies to finished tournaments
-  private val finishedRanking = asyncCache.multi[Swiss.Id, Ranking](
-    name = "swiss.finishedRanking",
+  private val scoreCache = Scaffeine()
+    .expireAfterWrite(60 minutes)
+    .build[Swiss.Id, Ranking]
+
+  private val dbCache = asyncCache.multi[Swiss.Id, Ranking](
+    name = "swiss.ranking",
     maxCapacity = 1024,
     f = computeRanking,
     expireAfter = _.ExpireAfterAccess(1 hour)
