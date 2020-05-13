@@ -211,7 +211,10 @@ object Swiss extends LidraughtsController {
     Action.async {
       env.api.byId(SwissId(id)) flatMap {
         case None => NotFound("Tournament not found").fuccess
-        case Some(swiss) => env.trf(swiss) dmap { Ok(_) }
+        case Some(swiss) => env.trf(swiss) map { lines =>
+          Ok.chunked(play.api.libs.iteratee.Enumerator(lines mkString "\n"))
+            .withHeaders(CONTENT_DISPOSITION -> s"attachment; filename=lidraughts_swiss_$id.trf")
+        }
       }
     }
 

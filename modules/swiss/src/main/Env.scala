@@ -39,9 +39,13 @@ final class Env(
   }
   import settings._
 
-  val trf = new SwissTrf(
+  private val sheetApi = new SwissSheetApi(
     playerColl = playerColl,
     pairingColl = pairingColl
+  )
+
+  val trf = new SwissTrf(
+    sheetApi = sheetApi
   )
 
   private val pairingSystem = new PairingSystem(
@@ -58,7 +62,6 @@ final class Env(
     swissColl = swissColl,
     playerColl = playerColl,
     pairingColl = pairingColl,
-    trf = trf,
     pairingSystem = pairingSystem,
     onStart = onStart
   )

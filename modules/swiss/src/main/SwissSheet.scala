@@ -1,5 +1,7 @@
 package lidraughts.swiss
 
+import lidraughts.db.dsl._
+
 private case class SwissSheet(outcomes: List[SwissSheet.Outcome]) {
   import SwissSheet._
 
@@ -56,5 +58,66 @@ private object SwissSheet {
           case None => Absent
         }
       }
+    }
+
+}
+
+final private class SwissSheetApi(
+    playerColl: Coll,
+    pairingColl: Coll
+) {
+
+  import org.joda.time.DateTime
+  import reactivemongo.api.collections.bson.BSONBatchCommands.AggregationFramework.{ Match, PipelineOperator }
+  import reactivemongo.api.ReadPreference
+  import BsonHandlers._
+
+  def source(swiss: Swiss): Fu[List[(SwissPlayer, Map[SwissRound.Number, SwissPairing], SwissSheet)]] =
+    SwissPlayer.fields { f =>
+      val readPreference =
+        if (swiss.finishedAt.exists(_ isBefore DateTime.now.minusSeconds(10)))
+          ReadPreference.secondaryPreferred
+        else ReadPreference.primary
+      playerColl
+        .aggregateList(
+          Match($doc(f.swissId -> swiss.id)),
+          List(
+            PipelineOperator(
+              $doc(
+                "$lookup" -> $doc(
+                  "from" -> pairingColl.name,
+                  "let" -> $doc("n" -> "$n"),
+                  "pipeline" -> $arr(
+                    $doc(
+                      "$match" -> $doc(
+                        "$expr" -> $doc(
+                          "$and" -> $arr(
+                            $doc("$eq" -> $arr("$s", swiss.id)),
+                            $doc("$in" -> $arr("$$n", "$p"))
+                          )
+                        )
+                      )
+                    )
+                  ),
+                  "as" -> "pairings"
+                )
+              )
+            )
+          ),
+          maxDocs = Int.MaxValue,
+          readPreference = readPreference
+        )
+        .map {
+          _.flatMap { doc =>
+            val result = for {
+              player <- playerHandler.readOpt(doc)
+              pairings <- doc.getAs[List[SwissPairing]]("pairings")
+              pairingMap = pairings.map { p =>
+                p.round -> p
+              }.toMap
+            } yield (player, pairingMap, SwissSheet.one(swiss, pairingMap, player))
+            result.toList
+          }
+        }
     }
 }

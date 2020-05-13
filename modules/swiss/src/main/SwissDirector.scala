@@ -10,7 +10,6 @@ final private class SwissDirector(
     swissColl: Coll,
     playerColl: Coll,
     pairingColl: Coll,
-    trf: SwissTrf,
     pairingSystem: PairingSystem,
     onStart: Game.ID => Unit
 ) {
@@ -18,52 +17,55 @@ final private class SwissDirector(
 
   // sequenced by SwissApi
   private[swiss] def startRound(from: Swiss): Fu[Option[(Swiss, List[SwissPairing])]] =
-    trf
-      .fetchData(from)
-      .flatMap {
-        case (players, prevPairings) =>
-          val pendings = pairingSystem(from, players, prevPairings)
-          if (pendings.isEmpty) fuccess(none) // terminate
-          else {
-            val swiss = from.startRound
-            for {
-              pairings <- pendings.collect {
-                case Right(SwissPairing.Pending(w, b)) =>
-                  IdGenerator.game dmap { id =>
-                    SwissPairing(
-                      id = id,
-                      swissId = swiss.id,
-                      round = swiss.round,
-                      white = w,
-                      black = b,
-                      status = Left(SwissPairing.Ongoing)
-                    )
-                  }
-              }.sequenceFu
-              _ <- swissColl
-                .update(
-                  $id(swiss.id),
-                  $unset("nextRoundAt") ++ $set(
-                    "round" -> swiss.round,
-                    "nbOngoing" -> pairings.size
+    pairingSystem(from)
+      .flatMap { pendings =>
+        if (pendings.isEmpty) fuccess(none) // terminate
+        else {
+          val swiss = from.startRound
+          for {
+            players <- SwissPlayer.fields { f =>
+              playerColl
+                .find($doc(f.swissId -> swiss.id))
+                .sort($sort asc f.number)
+                .list[SwissPlayer]()
+            }
+            pairings <- pendings.collect {
+              case Right(SwissPairing.Pending(w, b)) =>
+                IdGenerator.game dmap { id =>
+                  SwissPairing(
+                    id = id,
+                    swissId = swiss.id,
+                    round = swiss.round,
+                    white = w,
+                    black = b,
+                    status = Left(SwissPairing.Ongoing)
                   )
+                }
+            }.sequenceFu
+            _ <- swissColl
+              .update(
+                $id(swiss.id),
+                $unset("nextRoundAt") ++ $set(
+                  "round" -> swiss.round,
+                  "nbOngoing" -> pairings.size
                 )
+              )
+              .void
+            date = DateTime.now
+            byes = pendings.collect { case Left(bye) => bye.player }
+            _ <- SwissPlayer.fields { f =>
+              playerColl
+                .update($doc(f.number $in byes, f.swissId -> swiss.id), $addToSet(f.byes -> swiss.round))
                 .void
-              date = DateTime.now
-              byes = pendings.collect { case Left(bye) => bye.player }
-              _ <- SwissPlayer.fields { f =>
-                playerColl
-                  .update($doc(f.number $in byes, f.swissId -> swiss.id), $addToSet(f.byes -> swiss.round))
-                  .void
-              }
-              pairingsBson = pairings.map(pairingHandler.write)
-              _ <- pairingColl.bulkInsert(pairingsBson.toStream, ordered = true).void
-              games = pairings.map(makeGame(swiss, SwissPlayer.toMap(players)))
-              _ <- lidraughts.common.Future.applySequentially(games) { game =>
-                GameRepo.insertDenormalized(game) >>- onStart(game.id)
-              }
-            } yield Some(swiss -> pairings)
-          }
+            }
+            pairingsBson = pairings.map(pairingHandler.write)
+            _ <- pairingColl.bulkInsert(pairingsBson.toStream, ordered = true).void
+            games = pairings.map(makeGame(swiss, SwissPlayer.toMap(players)))
+            _ <- lidraughts.common.Future.applySequentially(games) { game =>
+              GameRepo.insertDenormalized(game) >>- onStart(game.id)
+            }
+          } yield Some(swiss -> pairings)
+        }
       }
       .recover {
         case PairingSystem.BBPairingException(msg, input) =>

@@ -3,14 +3,17 @@ package lidraughts.swiss
 import java.io.{ File, PrintWriter }
 import scala.concurrent.blocking
 
-final private class PairingSystem(trf: SwissTrf, executable: String) {
+final private class PairingSystem(
+    trf: SwissTrf,
+    executable: String
+) {
 
-  def apply(
-    swiss: Swiss,
-    players: List[SwissPlayer],
-    pairings: List[SwissPairing]
-  ): List[SwissPairing.ByeOrPending] =
-    trf(swiss, players, pairings) |> invoke |> reader
+  def apply(swiss: Swiss): Fu[List[SwissPairing.ByeOrPending]] =
+    trf(swiss).map {
+      _.fold("") {
+        case (a, l) => s"$l\n$a"
+      } |> invoke |> reader
+    }
 
   private def invoke(input: String): List[String] =
     blocking {
