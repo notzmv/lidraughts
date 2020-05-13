@@ -36,6 +36,7 @@ final class Env(
     val SocketName = config getString "socket.name"
     val SequencerTimeout = config duration "sequencer.timeout"
     val PairingExecutable = config getString "bbpairing"
+    val NetBaseUrl = config getString "net.base_url"
   }
   import settings._
 
@@ -45,7 +46,8 @@ final class Env(
   )
 
   val trf = new SwissTrf(
-    sheetApi = sheetApi
+    sheetApi = sheetApi,
+    baseUrl = NetBaseUrl
   )
 
   private val pairingSystem = new PairingSystem(

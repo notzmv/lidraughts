@@ -1,7 +1,9 @@
 package lidraughts.swiss
 
+// https://www.fide.com/FIDE/handbook/C04Annex2_TRF16.pdf
 final class SwissTrf(
-    sheetApi: SwissSheetApi
+    sheetApi: SwissSheetApi,
+    baseUrl: String
 ) {
 
   private type Bits = List[(Int, String)]
@@ -15,11 +17,18 @@ final class SwissTrf(
 
   private def tournamentLines(swiss: Swiss) =
     List(
+      s"012 ${swiss.name}",
+      s"022 ${baseUrl}/swiss/${swiss.id}",
+      s"032 Lidraughts",
+      s"042 ${dateFormatter print swiss.startsAt}",
+      s"052 ${swiss.finishedAt ?? dateFormatter.print}",
+      s"062 ${swiss.nbPlayers}",
+      s"092 Individual: Swiss-System",
+      s"102 ${baseUrl}/swiss",
       s"XXR ${swiss.settings.nbRounds}",
       s"XXC ${draughts.Color(scala.util.Random.nextBoolean).name}1"
     )
 
-  // https://www.fide.com/FIDE/handbook/C04Annex2_TRF16.pdf
   private def playerLine(
     swiss: Swiss
   )(p: SwissPlayer, pairings: Map[SwissRound.Number, SwissPairing], sheet: SwissSheet): Bits =
@@ -59,6 +68,8 @@ final class SwissTrf(
 
   private def formatLine(bits: Bits): String =
     bits.foldLeft("") {
-      case (acc, (pos, txt)) => acc + (" " * (pos - txt.size - acc.size)) + txt
+      case (acc, (pos, txt)) => s"""$acc${" " * (pos - txt.size - acc.size)}$txt"""
     }
+
+  private val dateFormatter = org.joda.time.format.DateTimeFormat forStyle "M-"
 }
