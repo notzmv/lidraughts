@@ -18,7 +18,7 @@ private final class Streaming(
     keyword: Stream.Keyword,
     alwaysFeatured: () => lidraughts.common.Strings,
     googleApiKey: String,
-    twitchClientId: String,
+    twitchCredentials: () => (String, String),
     lightUserApi: lidraughts.user.LightUserApi
 ) extends Actor {
 
@@ -109,27 +109,32 @@ private final class Streaming(
     futureTwitchStreamers flatMap { twitchStreamers =>
       twitchStreamers.nonEmpty ?? {
         val twitchUserIds = twitchStreamers.map(_.userId)
+        val (clientId, secret) = twitchCredentials()
         val url = WS.url("https://api.twitch.tv/helix/streams")
           .withQueryString(
             (("first" -> maxIds.toString) :: twitchUserIds.map("user_login" -> _)): _*
           )
           .withHeaders(
-            "Client-ID" -> twitchClientId
+            "Client-ID" -> clientId,
+            "Authorization" -> s"Bearer $secret"
           )
         if (twitchUserIds.size > 1) logger.info(url.uri.toString)
-        url.get().flatMap { res =>
-          res.json.validate[Twitch.Result](twitchResultReads) match {
-            case JsSuccess(data, _) =>
-              fuccess(
-                data.streams(
-                  keyword,
-                  streamers,
-                  alwaysFeatured().value.map(_.toLowerCase)
+        url.get().flatMap {
+          case res if res.status == 200 =>
+            res.json.validate[Twitch.Result](twitchResultReads) match {
+              case JsSuccess(data, _) =>
+                fuccess(
+                  data.streams(
+                    keyword,
+                    streamers,
+                    alwaysFeatured().value.map(_.toLowerCase)
+                  )
                 )
-              )
-            case JsError(err) =>
-              fufail(s"twitch ${res.status} $err ${~res.body.lines.toList.headOption}")
-          }
+              case JsError(err) =>
+                fufail(s"twitch ${res.status} $err ${~res.body.lines.toList.headOption}")
+            }
+          case res =>
+            fufail(s"twitch ${res.status} ${~res.body.lines.toList.headOption}")
         }.recover {
           case e: Exception =>
             logger.warn(e.getMessage)

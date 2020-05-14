@@ -19,6 +19,7 @@ object Dev extends LidraughtsController {
     Env.report.scoreThresholdSetting,
     Env.game.pdnEncodingSetting,
     Env.streamer.alwaysFeaturedSetting,
+    Env.streamer.twitchCredentialsSetting,
     Env.study.rateLimitDisabledSetting,
     Env.lobby.whitelistIPSetting,
     Env.rating.ratingFactorsSetting,

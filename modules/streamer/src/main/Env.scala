@@ -23,7 +23,6 @@ final class Env(
   private val MaxPerPage = config getInt "paginator.max_per_page"
   private val Keyword = config getString "streaming.keyword"
   private val GoogleApiKey = config getString "streaming.google.api_key"
-  private val TwitchClientId = config getString "streaming.twitch.client_id"
 
   private lazy val streamerColl = db(CollectionStreamer)
   private lazy val imageColl = db(CollectionImage)
@@ -38,6 +37,12 @@ final class Env(
       text = "Twitch streamers who get featured without the keyword - lidraughts usernames separated by a comma".some
     )
   }
+
+  lazy val twitchCredentialsSetting = settingStore[String](
+    "twitchCredentials",
+    default = "",
+    text = "Twitch API client ID and secret, separated by a space".some
+  )
 
   lazy val api = new StreamerApi(
     coll = streamerColl,
@@ -59,7 +64,11 @@ final class Env(
     keyword = Stream.Keyword(Keyword),
     alwaysFeatured = alwaysFeaturedSetting.get,
     googleApiKey = GoogleApiKey,
-    twitchClientId = TwitchClientId,
+    twitchCredentials = () =>
+      twitchCredentialsSetting.get().split(' ') match {
+        case Array(client, secret) => (client, secret)
+        case _ => ("", "")
+      },
     lightUserApi = lightUserApi
   )))
 
