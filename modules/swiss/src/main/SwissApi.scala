@@ -138,7 +138,7 @@ final class SwissApi(
                   swissColl.update($id(swiss.id), $inc("nbPlayers" -> -1)) void
             }
           }
-      }.void >>- socketReload(swiss.id)
+      }.void >>- recomputeAndUpdateAll(id)
     }
 
   def sortedGameIdsCursor(
@@ -279,7 +279,7 @@ final class SwissApi(
                         .void >>-
                         systemChat(swiss.id, s"Round ${swiss.round.value + 1} will start soon.")
                   }
-                } >>- socketReload(swiss.id)
+                }
             }
           }
       } >> recomputeAndUpdateAll(swissId)
