@@ -10,7 +10,7 @@ import scala.concurrent.duration._
 
 import lidraughts.common.Form._
 
-final class SwissForm {
+final class SwissForm(isProd: Boolean) {
 
   import SwissForm._
 
@@ -44,7 +44,9 @@ final class SwissForm {
   def create = form fill SwissData(
     name = none,
     clock = ClockConfig(180, 0),
-    startsAt = Some(DateTime.now plusMinutes 10),
+    startsAt = Some(DateTime.now plusSeconds {
+      if (isProd) 60 * 10 else 20
+    }),
     variant = Variant.default.key.some,
     rated = true.some,
     nbRounds = 8,

@@ -23,7 +23,8 @@ final class Env(
     lightUserApi: lidraughts.user.LightUserApi,
     onStart: String => Unit,
     proxyGame: Game.ID => Fu[Option[Game]],
-    proxyGames: List[Game.ID] => Fu[List[Game]]
+    proxyGames: List[Game.ID] => Fu[List[Game]],
+    val isProd: Boolean
 ) {
 
   private val settings = new {
@@ -157,7 +158,9 @@ final class Env(
     lightUserApi = lightUserApi
   )
 
-  lazy val forms = new SwissForm
+  lazy val forms = new SwissForm(
+    isProd = isProd
+  )
 
   private lazy val cache = new SwissCache(
     asyncCache = asyncCache,
@@ -207,6 +210,7 @@ object Env {
     lightUserApi = lidraughts.user.Env.current.lightUserApi,
     onStart = lidraughts.round.Env.current.onStart,
     proxyGame = lidraughts.round.Env.current.proxy.game _,
-    proxyGames = lidraughts.round.Env.current.proxy.games _
+    proxyGames = lidraughts.round.Env.current.proxy.games _,
+    isProd = lidraughts.common.PlayApp.isProd
   )
 }
