@@ -1,16 +1,30 @@
 package lidraughts.swiss
 
+import scala.concurrent.duration._
+
 import lidraughts.db.dsl._
 
 final private class SwissScoring(
+    swissColl: Coll,
     playerColl: Coll,
     pairingColl: Coll
-) {
+)(implicit system: akka.actor.ActorSystem) {
 
   import BsonHandlers._
 
-  def recompute(swiss: Swiss): Fu[SwissScoring.Result] = {
+  def apply(id: Swiss.Id): Fu[SwissScoring.Result] = sequencer(id)
+
+  private val sequencer =
+    new lidraughts.hub.AskPipelines[Swiss.Id, SwissScoring.Result](
+      compute = recompute,
+      expiration = 1 minute,
+      timeout = 10 seconds,
+      name = "swiss.scoring"
+    )
+
+  private def recompute(id: Swiss.Id): Fu[SwissScoring.Result] = {
     for {
+      swiss <- swissColl.byId[Swiss](id.value) flatten s"No such swiss: $id"
       (prevPlayers, pairings) <- fetchPlayers(swiss) zip fetchPairings(swiss)
       pairingMap = SwissPairing.toMap(pairings)
       sheets = SwissSheet.many(swiss, prevPlayers, pairingMap)

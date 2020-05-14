@@ -107,10 +107,10 @@ final class SwissApi(
               playerColl.insert(SwissPlayer.make(swiss.id, number, me, swiss.perfLens)) zip
                 swissColl.update($id(swiss.id), $inc("nbPlayers" -> 1)) inject true
             }
-          } flatMap { res =>
-            recomputeAndUpdateAll(swiss) >>- socketReload(swiss.id) inject res
           }
-        } addEffect { _ => }
+        } flatMap { res =>
+          recomputeAndUpdateAll(swiss.id) inject res
+        }
     fuJoined map {
       joined => promise.foreach(_ success joined)
     }
@@ -251,44 +251,44 @@ final class SwissApi(
         }
       }
 
-  private[swiss] def finishGame(game: Game): Unit = game.swissId foreach { swissId =>
-    Sequencing(Swiss.Id(swissId))(byId) { swiss =>
-      if (!swiss.isStarted) {
-        logger.info(s"Removing pairing ${game.id} finished after swiss ${swiss.id}")
-        pairingColl.remove($id(game.id)).void
-      } else
-        pairingColl.byId[SwissPairing](game.id).dmap(_.filter(_.isOngoing)) flatMap {
-          _ ?? { pairing =>
-            val winner = game.winnerColor
-              .map(_.fold(pairing.white, pairing.black))
-              .flatMap(playerNumberHandler.writeOpt)
-            winner.fold(pairingColl.updateField($id(game.id), SwissPairing.Fields.status, BSONNull))(
-              pairingColl.updateField($id(game.id), SwissPairing.Fields.status, _)
-            ).void >>
-              swissColl.update($id(swiss.id), $inc("nbOngoing" -> -1)) >>
-              game.playerWhoDidNotMove.flatMap(_.userId).?? { absent =>
-                SwissPlayer.fields { f =>
-                  playerColl.updateField($doc(f.swissId -> swiss.id, f.userId -> absent), f.absent, true).void
-                }
-              } >>
-              recomputeAndUpdateAll(swiss) >> {
-                (swiss.nbOngoing == 1) ?? {
-                  if (swiss.round.value == swiss.settings.nbRounds) doFinish(swiss)
-                  else
-                    swissColl
-                      .updateField(
-                        $id(swiss.id),
-                        "nextRoundAt",
-                        DateTime.now.plusSeconds(swiss.settings.roundInterval.toSeconds.toInt)
-                      )
-                      .void >>-
-                      systemChat(swiss.id, s"Round ${swiss.round.value + 1} will start soon.")
-                }
-              } >>- socketReload(swiss.id)
+  private[swiss] def finishGame(game: Game): Unit =
+    game.swissId.map(Swiss.Id) foreach { swissId =>
+      Sequencing(swissId)(byId) { swiss =>
+        if (!swiss.isStarted) {
+          logger.info(s"Removing pairing ${game.id} finished after swiss ${swiss.id}")
+          pairingColl.remove($id(game.id)).void
+        } else
+          pairingColl.byId[SwissPairing](game.id).dmap(_.filter(_.isOngoing)) flatMap {
+            _ ?? { pairing =>
+              val winner = game.winnerColor
+                .map(_.fold(pairing.white, pairing.black))
+                .flatMap(playerNumberHandler.writeOpt)
+              winner.fold(pairingColl.updateField($id(game.id), SwissPairing.Fields.status, BSONNull))(
+                pairingColl.updateField($id(game.id), SwissPairing.Fields.status, _)
+              ).void >>
+                swissColl.update($id(swiss.id), $inc("nbOngoing" -> -1)) >>
+                game.playerWhoDidNotMove.flatMap(_.userId).?? { absent =>
+                  SwissPlayer.fields { f =>
+                    playerColl.updateField($doc(f.swissId -> swiss.id, f.userId -> absent), f.absent, true).void
+                  }
+                } >> {
+                  (swiss.nbOngoing == 1) ?? {
+                    if (swiss.round.value == swiss.settings.nbRounds) doFinish(swiss)
+                    else
+                      swissColl
+                        .updateField(
+                          $id(swiss.id),
+                          "nextRoundAt",
+                          DateTime.now.plusSeconds(swiss.settings.roundInterval.toSeconds.toInt)
+                        )
+                        .void >>-
+                        systemChat(swiss.id, s"Round ${swiss.round.value + 1} will start soon.")
+                  }
+                } >>- socketReload(swiss.id)
+            } >> recomputeAndUpdateAll(swissId)
           }
-        }
+      }
     }
-  }
 
   private[swiss] def destroy(swiss: Swiss): Funit =
     swissColl.remove($id(swiss.id)) >>
@@ -332,12 +332,12 @@ final class SwissApi(
     else if (swiss.isCreated) destroy(swiss)
   }
 
-  private def recomputeAndUpdateAll(swiss: Swiss): Funit =
-    scoring.recompute(swiss).flatMap { res =>
+  private def recomputeAndUpdateAll(id: Swiss.Id): Funit =
+    scoring(id).flatMap { res =>
       rankingApi.update(res)
       standingApi.update(res) >>
         boardApi.update(res)
-    }
+    } >>- socketReload(id)
 
   private[swiss] def startPendingRounds: Funit =
     swissColl
@@ -356,13 +356,13 @@ final class SwissApi(
                     doFinish(swiss)
                   } {
                     case (s, pairings) if s.nextRoundAt.isEmpty =>
-                      recomputeAndUpdateAll(s) >>-
-                        systemChat(swiss.id, s"Round ${swiss.round.value + 1} started.")
+                      systemChat(swiss.id, s"Round ${swiss.round.value + 1} started.")
+                      funit
                     case (s, _) =>
+                      systemChat(swiss.id, s"Round ${swiss.round.value + 1} failed.", true)
                       swissColl
                         .update($id(swiss.id), $set("nextRoundAt" -> DateTime.now.plusSeconds(61)))
-                        .void >>-
-                        systemChat(swiss.id, s"Round ${swiss.round.value + 1} failed.", true)
+                        .void
                   }
                 }
               else {
@@ -374,7 +374,7 @@ final class SwissApi(
                     .void
                 }
               }
-            val fuCompleted = fu >>- socketReload(swiss.id) inject true
+            val fuCompleted = fu >>- recomputeAndUpdateAll(id) inject true
             fuCompleted map promise.success
           }
           promise.future.withTimeoutDefault(15.seconds, false)(system).void

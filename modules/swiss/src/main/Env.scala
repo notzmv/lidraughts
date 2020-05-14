@@ -57,9 +57,10 @@ final class Env(
   )
 
   private val scoring = new SwissScoring(
+    swissColl = swissColl,
     playerColl = playerColl,
     pairingColl = pairingColl
-  )
+  )(system)
 
   private val director = new SwissDirector(
     swissColl = swissColl,
