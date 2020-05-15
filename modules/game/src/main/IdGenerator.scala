@@ -1,10 +1,10 @@
 package lidraughts.game
 
 import draughts.Color
-
+import java.security.SecureRandom
 import ornicar.scalalib.Random
 
-import java.security.SecureRandom
+import lidraughts.db.dsl._
 
 object IdGenerator {
 
@@ -15,6 +15,18 @@ object IdGenerator {
     GameRepo.exists(id).flatMap {
       case true => game
       case false => fuccess(id)
+    }
+  }
+
+  def games(nb: Int): Fu[List[Game.ID]] = {
+    if (nb < 1) fuccess(List.empty)
+    else if (nb == 1) game.dmap(List(_))
+    else if (nb < 5) List.fill(nb)(game).sequenceFu
+    else {
+      val ids = List.fill(nb)(uncheckedGame)
+      GameRepo.coll.distinct[Game.ID, List]("_id", $inIds(ids).some) flatMap { collisions =>
+        games(collisions.size) dmap { _ ++ (ids diff collisions) }
+      }
     }
   }
 
