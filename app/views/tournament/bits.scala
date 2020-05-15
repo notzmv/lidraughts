@@ -108,6 +108,7 @@ object bits {
     trans.averageOpponent,
     trans.ratedTournament,
     trans.casualTournament,
+    trans.password,
     trans.thematic
   )
 }
