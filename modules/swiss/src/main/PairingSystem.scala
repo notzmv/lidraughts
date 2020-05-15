@@ -3,16 +3,20 @@ package lidraughts.swiss
 import java.io.{ File, PrintWriter }
 import scala.concurrent.blocking
 
+import lidraughts.user.User
+
 final private class PairingSystem(
     trf: SwissTrf,
+    rankingApi: SwissRankingApi,
     executable: String
 ) {
 
   def apply(swiss: Swiss): Fu[List[SwissPairing.ByeOrPending]] =
-    trf(swiss).map {
-      invoke(swiss, _) |> reader
+    rankingApi(swiss) flatMap { ranking =>
+      trf(swiss, ranking).map {
+        invoke(swiss, _) |> reader(ranking.map(_.swap))
+      }
     }
-
   private def invoke(swiss: Swiss, input: List[String]): List[String] =
     withTempFile(swiss, input) { file =>
       import scala.sys.process._
@@ -29,20 +33,20 @@ final private class PairingSystem(
       } else stdout.toList
     }
 
-  private def reader(output: List[String]): List[SwissPairing.ByeOrPending] =
+  private def reader(rankingSwap: Map[Int, User.ID])(output: List[String]): List[SwissPairing.ByeOrPending] =
     output
       .drop(1) // first line is the number of pairings
       .map(_ split ' ')
       .collect {
         case Array(p, "0") =>
-          parseIntOption(p) map { p =>
-            Left(SwissPairing.Bye(SwissPlayer.Number(p)))
+          parseIntOption(p) flatMap rankingSwap.get map { userId =>
+            Left(SwissPairing.Bye(userId))
           }
         case Array(w, b) =>
           for {
-            white <- parseIntOption(w)
-            black <- parseIntOption(b)
-          } yield Right(SwissPairing.Pending(SwissPlayer.Number(white), SwissPlayer.Number(black)))
+            white <- parseIntOption(w) flatMap rankingSwap.get
+            black <- parseIntOption(b) flatMap rankingSwap.get
+          } yield Right(SwissPairing.Pending(white, black))
       }
       .flatten
 

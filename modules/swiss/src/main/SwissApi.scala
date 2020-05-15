@@ -131,8 +131,7 @@ final class SwissApi(
         .flatMap { rejoin =>
           fuccess(rejoin.n == 1) >>| { // if the match failed (not the update!), try a join
             (swiss.isEnterable && isInTeam(swiss.teamId)) ?? {
-              val number = SwissPlayer.Number(swiss.nbPlayers + 1)
-              playerColl.insert(SwissPlayer.make(swiss.id, number, me, swiss.perfLens)) zip
+              playerColl.insert(SwissPlayer.make(swiss.id, me, swiss.perfLens)) zip
                 swissColl.update($id(swiss.id), $inc("nbPlayers" -> 1)) inject true
             }
           }
@@ -147,18 +146,8 @@ final class SwissApi(
         if (swiss.isStarted)
           playerColl.updateField($id(SwissPlayer.makeId(swiss.id, me.id)), f.absent, true)
         else
-          playerColl.findAndRemove($id(SwissPlayer.makeId(swiss.id, me.id))) map {
-            _.value flatMap implicitly[BSONDocumentReader[SwissPlayer]].readOpt
-          } flatMap {
-            _ ?? { player =>
-              playerColl
-                .update(
-                  $doc(f.swissId -> id, f.number $gt player.number),
-                  $inc(f.number -> -1),
-                  multi = true
-                ) zip
-                  swissColl.update($id(swiss.id), $inc("nbPlayers" -> -1)) void
-            }
+          playerColl.remove($id(SwissPlayer.makeId(swiss.id, me.id))) flatMap { res =>
+            (res.n == 1) ?? swissColl.update($id(swiss.id), $inc("nbPlayers" -> -1)).void
           }
       }.void >>- recomputeAndUpdateAll(id)
     }
@@ -190,7 +179,7 @@ final class SwissApi(
           _ ?? { player =>
             SwissPairing.fields { f =>
               pairingColl
-                .find($doc(f.swissId -> swiss.id, f.players -> player.number))
+                .find($doc(f.swissId -> swiss.id, f.players -> player.userId))
                 .sort($sort asc f.round)
                 .list[SwissPairing]()
             } flatMap {
@@ -222,7 +211,7 @@ final class SwissApi(
     pairings.headOption ?? { first =>
       SwissPlayer.fields { f =>
         playerColl
-          .find($doc(f.swissId -> first.swissId, f.number $in pairings.map(_ opponentOf player.number)))
+          .find($inIds(pairings.map(_ opponentOf player.userId).map { SwissPlayer.makeId(first.swissId, _) }))
           .list[SwissPlayer]()
       } flatMap { opponents =>
         lightUserApi asyncMany opponents.map(_.userId) map { users =>
@@ -231,7 +220,7 @@ final class SwissApi(
           }
         } map { opponents =>
           pairings flatMap { pairing =>
-            opponents.find(_.player.number == pairing.opponentOf(player.number)) map {
+            opponents.find(_.player.userId == pairing.opponentOf(player.userId)) map {
               SwissPairing.View(pairing, _)
             }
           }
@@ -253,18 +242,11 @@ final class SwissApi(
     }
 
   def pageOf(swiss: Swiss, userId: User.ID): Fu[Option[Int]] =
-    playerColl.primitiveOne[SwissPlayer.Number](
-      $id(SwissPlayer.makeId(swiss.id, userId)),
-      SwissPlayer.Fields.number
-    ) flatMap {
-        _ ?? { number =>
-          rankingApi(swiss) map {
-            _ get number map { rank =>
-              (Math.floor(rank / 10) + 1).toInt
-            }
-          }
-        }
+    rankingApi(swiss) map {
+      _ get userId map { rank =>
+        (Math.floor(rank / 10) + 1).toInt
       }
+    }
 
   private[swiss] def finishGame(game: Game): Funit =
     game.swissId.map(Swiss.Id) ?? { swissId =>
@@ -275,12 +257,15 @@ final class SwissApi(
         } else
           pairingColl.byId[SwissPairing](game.id).dmap(_.filter(_.isOngoing)) flatMap {
             _ ?? { pairing =>
-              val winner = game.winnerColor
-                .map(_.fold(pairing.white, pairing.black))
-                .flatMap(playerNumberHandler.writeOpt)
-              winner.fold(pairingColl.updateField($id(game.id), SwissPairing.Fields.status, BSONNull))(
-                pairingColl.updateField($id(game.id), SwissPairing.Fields.status, _)
-              ).void >> {
+              pairingColl
+                .updateField(
+                  $id(game.id),
+                  SwissPairing.Fields.status,
+                  game.winnerColor
+                    .map(_.fold(pairing.white, pairing.black))
+                    .fold[BSONValue](BSONNull)(BSONString.apply)
+                )
+                .void >> {
                   if (swiss.nbOngoing > 0)
                     swissColl.update($id(swiss.id), $inc("nbOngoing" -> -1))
                   else

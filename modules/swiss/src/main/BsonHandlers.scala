@@ -3,9 +3,11 @@ package lidraughts.swiss
 import scala.concurrent.duration._
 
 import draughts.Clock.{ Config => ClockConfig }
+import draughts.Color
 import draughts.variant.Variant
 import lidraughts.db.BSON
 import lidraughts.db.dsl._
+import lidraughts.user.User
 import reactivemongo.bson._
 
 private object BsonHandlers {
@@ -29,7 +31,6 @@ private object BsonHandlers {
   implicit val swissTieBreakHandler = doubleAnyValHandler[Swiss.TieBreak](_.value, Swiss.TieBreak.apply)
   implicit val swissPerformanceHandler = doubleAnyValHandler[Swiss.Performance](_.value, Swiss.Performance.apply)
   implicit val swissScoreHandler = intAnyValHandler[Swiss.Score](_.value, Swiss.Score.apply)
-  implicit val playerNumberHandler = intAnyValHandler[SwissPlayer.Number](_.value, SwissPlayer.Number.apply)
   implicit val roundNumberHandler = intAnyValHandler[SwissRound.Number](_.value, SwissRound.Number.apply)
   implicit val swissIdHandler = stringAnyValHandler[Swiss.Id](_.value, Swiss.Id.apply)
   implicit val playerIdHandler = stringAnyValHandler[SwissPlayer.Id](_.value, SwissPlayer.Id.apply)
@@ -39,7 +40,6 @@ private object BsonHandlers {
     def reads(r: BSON.Reader) = SwissPlayer(
       id = r.get[SwissPlayer.Id](id),
       swissId = r.get[Swiss.Id](swissId),
-      number = r.get[SwissPlayer.Number](number),
       userId = r str userId,
       rating = r int rating,
       provisional = r boolD provisional,
@@ -53,7 +53,6 @@ private object BsonHandlers {
     def writes(w: BSON.Writer, o: SwissPlayer) = $doc(
       id -> o.id,
       swissId -> o.swissId,
-      number -> o.number,
       userId -> o.userId,
       rating -> o.rating,
       provisional -> w.boolO(o.provisional),
@@ -68,20 +67,20 @@ private object BsonHandlers {
 
   implicit val pairingStatusHandler: BSONHandler[BSONValue, SwissPairing.Status] = new BSONHandler[BSONValue, SwissPairing.Status] {
     def read(v: BSONValue): SwissPairing.Status = v match {
-      case BSONInteger(n) => Right(SwissPlayer.Number(n).some)
       case BSONBoolean(true) => Left(SwissPairing.Ongoing)
+      case BSONInteger(index) => Right(Color(index == 0).some)
       case _ => Right(none)
     }
     def write(s: SwissPairing.Status) = s match {
       case Left(_) => BSONBoolean(true)
-      case Right(Some(n)) => BSONInteger(n.value)
+      case Right(Some(c)) => BSONInteger(c.fold(0, 1))
       case _ => BSONNull
     }
   }
   implicit val pairingHandler = new BSON[SwissPairing] {
     import SwissPairing.Fields._
     def reads(r: BSON.Reader) =
-      r.get[List[SwissPlayer.Number]](players) match {
+      r.get[List[User.ID]](players) match {
         case List(w, b) =>
           SwissPairing(
             id = r str id,

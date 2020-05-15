@@ -56,7 +56,7 @@ final class SwissStandingApi(
                           player = player,
                           rank = r + 1,
                           user = user | LightUser.fallback(player.userId),
-                          ~res.pairings.get(player.number),
+                          ~res.pairings.get(player.userId),
                           sheet
                         )
                       )
@@ -80,7 +80,7 @@ final class SwissStandingApi(
       rankedPlayers <- bestWithRankByPage(swiss.id, 10, page atLeast 1)
       pairings <- !swiss.isCreated ?? SwissPairing.fields { f =>
         pairingColl
-          .find($doc(f.swissId -> swiss.id, f.players $in rankedPlayers.map(_.player.number)))
+          .find($doc(f.swissId -> swiss.id, f.players $in rankedPlayers.map(_.player.userId)))
           .sort($sort asc f.round)
           .list[SwissPairing]()
           .map(SwissPairing.toMap)
@@ -100,7 +100,7 @@ final class SwissStandingApi(
                 player,
                 rank,
                 user | LightUser.fallback(player.userId),
-                ~pairings.get(player.number),
+                ~pairings.get(player.userId),
                 sheet
               )
             )

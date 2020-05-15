@@ -44,13 +44,20 @@ final class Env(
     pairingColl = pairingColl
   )
 
+  private lazy val rankingApi = new SwissRankingApi(
+    playerColl = playerColl,
+    asyncCache = asyncCache
+  )
+
   val trf = new SwissTrf(
     sheetApi = sheetApi,
+    rankingApi = rankingApi,
     baseUrl = NetBaseUrl
   )
 
   private val pairingSystem = new PairingSystem(
     trf = trf,
+    rankingApi = rankingApi,
     executable = PairingExecutable
   )
 
@@ -132,11 +139,6 @@ final class Env(
     rankingApi = rankingApi,
     asyncCache = asyncCache,
     lightUserApi = lightUserApi
-  )
-
-  private lazy val rankingApi = new SwissRankingApi(
-    playerColl = playerColl,
-    asyncCache = asyncCache
   )
 
   lazy val json = new SwissJson(

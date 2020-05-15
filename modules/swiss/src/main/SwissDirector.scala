@@ -5,6 +5,7 @@ import org.joda.time.DateTime
 
 import lidraughts.db.dsl._
 import lidraughts.game.{ IdGenerator, Game, GameRepo, Player => GamePlayer }
+import lidraughts.user.User
 
 final private class SwissDirector(
     swissColl: Coll,
@@ -27,7 +28,6 @@ final private class SwissDirector(
             players <- SwissPlayer.fields { f =>
               playerColl
                 .find($doc(f.swissId -> swiss.id))
-                .sort($sort asc f.number)
                 .list[SwissPlayer]()
             }
             ids <- IdGenerator.games(pendingPairings.size)
@@ -55,7 +55,7 @@ final private class SwissDirector(
             byes = pendings.collect { case Left(bye) => bye.player }
             _ <- SwissPlayer.fields { f =>
               playerColl
-                .update($doc(f.number $in byes, f.swissId -> swiss.id), $addToSet(f.byes -> swiss.round))
+                .update($doc(f.userId $in byes, f.swissId -> swiss.id), $addToSet(f.byes -> swiss.round))
                 .void
             }
             pairingsBson = pairings.map(pairingHandler.write)
@@ -74,7 +74,7 @@ final private class SwissDirector(
           Some(from -> List.empty[SwissPairing])
       }
 
-  private def makeGame(swiss: Swiss, players: Map[SwissPlayer.Number, SwissPlayer])(
+  private def makeGame(swiss: Swiss, players: Map[User.ID, SwissPlayer])(
     pairing: SwissPairing
   ): Game =
     Game

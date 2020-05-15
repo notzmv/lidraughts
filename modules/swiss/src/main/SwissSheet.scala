@@ -35,7 +35,7 @@ private object SwissSheet {
     pairingMap: SwissPairing.PairingMap
   ): List[SwissSheet] =
     players.map { player =>
-      one(swiss, ~pairingMap.get(player.number), player)
+      one(swiss, ~pairingMap.get(player.userId), player)
     }
 
   def one(
@@ -50,8 +50,7 @@ private object SwissSheet {
             pairing.status match {
               case Left(_) => Ongoing
               case Right(None) => Draw
-              case Right(Some(n)) if n == player.number => Win
-              case Right(_) => Loss
+              case Right(Some(color)) => if (pairing(color) == player.userId) Win else Loss
             }
           case None if player.byes(round) => Bye
           case None if round.value == 1 => Late
@@ -68,7 +67,7 @@ final private class SwissSheetApi(
 ) {
 
   import org.joda.time.DateTime
-  import reactivemongo.api.collections.bson.BSONBatchCommands.AggregationFramework.{ Ascending, Match, PipelineOperator, Sort }
+  import reactivemongo.api.collections.bson.BSONBatchCommands.AggregationFramework.{ Descending, Match, PipelineOperator, Sort }
   import reactivemongo.api.ReadPreference
   import BsonHandlers._
 
@@ -82,7 +81,7 @@ final private class SwissSheetApi(
         .aggregateList(
           Match($doc(f.swissId -> swiss.id)),
           List(
-            Sort(Ascending(f.number)),
+            Sort(Descending(f.score)),
             PipelineOperator(
               $doc(
                 "$lookup" -> $doc(

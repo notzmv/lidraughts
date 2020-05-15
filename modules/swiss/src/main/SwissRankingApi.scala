@@ -5,6 +5,8 @@ import reactivemongo.bson._
 import scala.concurrent.duration._
 
 import lidraughts.db.dsl._
+import lidraughts.user.User
+import scala.util.Success
 
 final private class SwissRankingApi(
     playerColl: Coll,
@@ -21,7 +23,7 @@ final private class SwissRankingApi(
     scoreCache.put(
       res.swiss.id,
       res.leaderboard.zipWithIndex.map {
-        case ((p, _), i) => p.number -> (i + 1)
+        case ((p, _), i) => p.userId -> (i + 1)
       }.toMap
     )
 
@@ -42,7 +44,7 @@ final private class SwissRankingApi(
         import framework._
         Match($doc(f.swissId -> id)) -> List(
           Sort(Descending(f.score)),
-          Group(BSONNull)("players" -> PushField(f.number))
+          Group(BSONNull)("players" -> PushField(f.userId))
         )
       }
       .headOption map {
@@ -50,11 +52,15 @@ final private class SwissRankingApi(
           _ get "players" match {
             case Some(BSONArray(players)) =>
               // mutable optimized implementation
-              val b = Map.newBuilder[SwissPlayer.Number, Int]
+              val b = Map.newBuilder[User.ID, Int]
               var r = 0
               for (u <- players) {
-                b += (SwissPlayer.Number(u.get.asInstanceOf[BSONInteger].value) -> r)
-                r = r + 1
+                u match {
+                  case Success(v) =>
+                    b += (v.asInstanceOf[BSONString].value -> r)
+                    r = r + 1
+                  case _ =>
+                }
               }
               b.result
             case _ => Map.empty

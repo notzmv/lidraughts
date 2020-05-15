@@ -3,15 +3,19 @@ package lidraughts.swiss
 // https://www.fide.com/FIDE/handbook/C04Annex2_TRF16.pdf
 final class SwissTrf(
     sheetApi: SwissSheetApi,
+    rankingApi: SwissRankingApi,
     baseUrl: String
 ) {
 
   private type Bits = List[(Int, String)]
 
   def apply(swiss: Swiss): Fu[List[String]] =
+    rankingApi(swiss) flatMap { apply(swiss, _) }
+
+  def apply(swiss: Swiss, ranking: Ranking): Fu[List[String]] =
     sheetApi.source(swiss).map { lines =>
       tournamentLines(swiss) ::: lines
-        .map((playerLine(swiss) _).tupled)
+        .map((playerLine(swiss, ranking) _).tupled)
         .map(formatLine)
     }
 
@@ -26,15 +30,16 @@ final class SwissTrf(
       s"092 Individual: Swiss-System",
       s"102 ${baseUrl}/swiss",
       s"XXR ${swiss.settings.nbRounds}",
-      s"XXC ${draughts.Color(scala.util.Random.nextBoolean).name}1"
+      s"XXC ${draughts.Color(swiss.id.value(0).toInt % 2 == 0).name}1"
     )
 
   private def playerLine(
-    swiss: Swiss
+    swiss: Swiss,
+    ranking: Ranking
   )(p: SwissPlayer, pairings: Map[SwissRound.Number, SwissPairing], sheet: SwissSheet): Bits =
     List(
       3 -> "001",
-      8 -> p.number.toString,
+      8 -> ranking.getOrElse(p.userId, 0).toString,
       47 -> p.userId,
       84 -> f"${sheet.points.value}%1.1f"
     ) ::: {
@@ -42,8 +47,8 @@ final class SwissTrf(
           case (rn, outcome) =>
             val pairing = pairings get rn
             List(
-              95 -> pairing.map(_ opponentOf p.number).??(_.toString),
-              97 -> pairing.map(_ colorOf p.number).??(_.fold("w", "b")),
+              95 -> pairing.map(_ opponentOf p.userId).??(_.toString),
+              97 -> pairing.map(_ colorOf p.userId).??(_.fold("w", "b")),
               99 -> {
                 import SwissSheet._
                 outcome match {

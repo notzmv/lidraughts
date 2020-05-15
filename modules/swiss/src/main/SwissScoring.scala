@@ -33,12 +33,12 @@ final private class SwissScoring(
       }
       playerMap = SwissPlayer.toMap(withPoints)
       players = withPoints.map { p =>
-        val playerPairings = (~pairingMap.get(p.number)).values
+        val playerPairings = (~pairingMap.get(p.userId)).values
         val (tieBreak, perfSum) = playerPairings.foldLeft(0f -> 0f) {
           case ((tieBreak, perfSum), pairing) =>
-            val opponent = playerMap.get(pairing opponentOf p.number)
+            val opponent = playerMap.get(pairing opponentOf p.userId)
             val opponentPoints = opponent.??(_.points.value)
-            val result = pairing.resultFor(p.number)
+            val result = pairing.resultFor(p.userId)
             val newTieBreak = tieBreak + result.fold(opponentPoints / 2) { _ ?? opponentPoints }
             val newPerf = perfSum + opponent.??(_.rating) + result.?? { win =>
               if (win) 500 else -500
@@ -86,7 +86,7 @@ final private class SwissScoring(
     SwissPlayer.fields { f =>
       playerColl
         .find($doc(f.swissId -> swiss.id))
-        .sort($sort asc f.number)
+        .sort($sort asc f.score)
         .list[SwissPlayer]()
     }
 
