@@ -1,5 +1,7 @@
 package views.html.mod
 
+import scala.util.matching.Regex
+
 import lidraughts.api.Context
 import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
