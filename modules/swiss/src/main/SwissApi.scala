@@ -50,6 +50,8 @@ final class SwissApi(
   def createdById(id: Swiss.Id) = byId(id).dmap(_.filter(_.isCreated))
   def startedById(id: Swiss.Id) = byId(id).dmap(_.filter(_.isStarted))
 
+  def featurable: Fu[List[Swiss]] = cache.feature.get
+
   def create(data: SwissForm.SwissData, me: User, teamId: TeamId): Fu[Swiss] = {
     val swiss = Swiss(
       _id = Swiss.makeId,
@@ -74,7 +76,7 @@ final class SwissApi(
         roundInterval = data.realRoundInterval
       )
     )
-    swissColl.insert(swiss) >>-
+    swissColl.insert(addFeaturable(swiss)) >>-
       cache.featuredInTeam.invalidate(swiss.teamId) inject swiss
   }
 
@@ -339,7 +341,7 @@ final class SwissApi(
         swissColl
           .update(
             $id(swiss.id),
-            $unset("nextRoundAt") ++ $set(
+            $unset("nextRoundAt", "featurable") ++ $set(
               "settings.nbRounds" -> swiss.round,
               "finishedAt" -> DateTime.now,
               "winnerId" -> winner.map(_.userId)

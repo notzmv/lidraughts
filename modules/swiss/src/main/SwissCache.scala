@@ -49,4 +49,29 @@ final private class SwissCache(
     def get(teamId: TeamId) = cache get teamId
     def invalidate(teamId: TeamId) = cache.put(teamId, compute(teamId))
   }
+
+  private[swiss] object feature {
+
+    private val cache = asyncCache.single[List[Swiss]](
+      name = "swiss.featurable",
+      f = swissColl
+        .find(
+          $doc(
+            "featurable" -> true,
+            "settings.i" $lte 600 // hits the partial index
+          )
+        )
+        .sort($sort desc "nbPlayers")
+        .list[Swiss](10)
+        .map {
+          _.zipWithIndex.collect {
+            case (s, i) if s.nbPlayers >= 5 || i < 5 => s
+          }
+        },
+      expireAfter = _.ExpireAfterWrite(1 minute)
+    )
+
+    def get = cache.get
+  }
+
 }

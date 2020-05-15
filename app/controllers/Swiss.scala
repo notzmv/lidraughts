@@ -19,7 +19,9 @@ object Swiss extends LidraughtsController {
 
   def home =
     Open { implicit ctx =>
-      Ok(html.swiss.home()).fuccess
+      env.api.featurable map { s =>
+        Ok(html.swiss.home(s))
+      }
     }
 
   def show(id: String) = Secure(_.Beta) { implicit ctx => _ =>
