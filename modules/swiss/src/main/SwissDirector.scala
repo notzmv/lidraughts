@@ -29,19 +29,19 @@ final private class SwissDirector(
                 .sort($sort asc f.number)
                 .list[SwissPlayer]()
             }
-            pairings <- pendings.collect {
-              case Right(SwissPairing.Pending(w, b)) =>
-                IdGenerator.game dmap { id =>
-                  SwissPairing(
-                    id = id,
-                    swissId = swiss.id,
-                    round = swiss.round,
-                    white = w,
-                    black = b,
-                    status = Left(SwissPairing.Ongoing)
-                  )
-                }
-            }.sequenceFu
+            pendingPairings = pendings.collect { case Right(p) => p }
+            ids <- IdGenerator.games(pendingPairings.size)
+            pairings = pendingPairings.zip(ids).map {
+              case (SwissPairing.Pending(w, b), id) =>
+                SwissPairing(
+                  id = id,
+                  swissId = swiss.id,
+                  round = swiss.round,
+                  white = w,
+                  black = b,
+                  status = Left(SwissPairing.Ongoing)
+                )
+            }
             _ <- swissColl
               .update(
                 $id(swiss.id),
