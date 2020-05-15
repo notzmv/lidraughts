@@ -336,6 +336,7 @@ interface JQuery {
   watchers(): JQuery;
   watchers(method: 'set', data: any): void;
   highcharts(conf?: any): any;
+  flatpickr(opts: any): any;
 }
 
 declare namespace PowerTip {

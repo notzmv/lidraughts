@@ -7,7 +7,6 @@ import reactivemongo.api._
 import reactivemongo.api.collections.bson.BSONBatchCommands.AggregationFramework._
 import reactivemongo.bson._
 import scala.concurrent.duration._
-import scala.concurrent.Promise
 
 import actorApi._
 import lidraughts.chat.{ Chat, ChatApi }
@@ -89,7 +88,9 @@ final class SwissApi(
             clock = data.clock,
             variant = data.realVariant,
             startsAt = data.startsAt.ifTrue(old.isCreated) | old.startsAt,
-            nextRoundAt = if (old.isCreated) Some(data.startsAt | old.startsAt) else old.nextRoundAt,
+            nextRoundAt =
+              if (old.isCreated) Some(data.startsAt | old.startsAt)
+              else old.nextRoundAt,
             settings = old.settings.copy(
               nbRounds = data.nbRounds,
               rated = data.rated | old.settings.rated,
@@ -97,9 +98,28 @@ final class SwissApi(
               hasChat = data.hasChat | old.settings.hasChat,
               roundInterval = data.roundInterval.fold(old.settings.roundInterval)(_.seconds)
             )
-          )
+          ) |> { s =>
+              if (s.isStarted && s.nbOngoing == 0 && (s.nextRoundAt.isEmpty || old.settings.manualRounds) && !s.settings.manualRounds)
+                s.copy(nextRoundAt = DateTime.now.plusSeconds(s.settings.roundInterval.toSeconds.toInt).some)
+              else if (s.settings.manualRounds && !old.settings.manualRounds)
+                s.copy(nextRoundAt = none)
+              else s
+            }
         )
-        .void
+        .void >>- socketReload(swiss.id)
+    }
+
+  def scheduleNextRound(swiss: Swiss, date: DateTime): Funit =
+    Sequencing(swiss.id)(notFinishedById) { old =>
+      old.settings.manualRounds ?? {
+        if (old.isCreated) swissColls.updateField($id(old.id), "startsAt", date).void
+        else if (old.isStarted && old.nbOngoing == 0)
+          swissColl.updateField($id(old.id), "nextRoundAt", date).void >>- {
+            val show = org.joda.time.format.DateTimeFormat.forStyle("MS") print date
+            systemChat(swiss.id, s"Round ${swiss.round.value + 1} scheduled at $show UTC")
+          }
+        else funit
+      } >>- socketReload(swiss.id)
     }
 
   def join(id: Swiss.Id, me: User, isInTeam: TeamId => Boolean): Fu[Boolean] =
@@ -258,8 +278,14 @@ final class SwissApi(
                 .flatMap(playerNumberHandler.writeOpt)
               winner.fold(pairingColl.updateField($id(game.id), SwissPairing.Fields.status, BSONNull))(
                 pairingColl.updateField($id(game.id), SwissPairing.Fields.status, _)
-              ).void >>
-                swissColl.update($id(swiss.id), $inc("nbOngoing" -> -1)) >>
+              ).void >> {
+                  if (swiss.nbOngoing > 0)
+                    swissColl.update($id(swiss.id), $inc("nbOngoing" -> -1))
+                  else
+                    fuccess {
+                      logger.warn(s"swiss ${swiss.id} nbOngoing = ${swiss.nbOngoing}")
+                    }
+                } >>
                 game.playerWhoDidNotMove.flatMap(_.userId).?? { absent =>
                   SwissPlayer.fields { f =>
                     playerColl
@@ -267,8 +293,11 @@ final class SwissApi(
                       .void
                   }
                 } >> {
-                  (swiss.nbOngoing == 1) ?? {
+                  (swiss.nbOngoing <= 1) ?? {
                     if (swiss.round.value == swiss.settings.nbRounds) doFinish(swiss)
+                    else if (swiss.settings.manualRounds) fuccess {
+                      systemChat(swiss.id, s"Round ${swiss.round.value + 1} needs to be scheduled.")
+                    }
                     else
                       swissColl
                         .updateField(

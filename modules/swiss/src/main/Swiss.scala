@@ -83,7 +83,9 @@ object Swiss {
       description: Option[String] = None,
       hasChat: Boolean = true,
       roundInterval: FiniteDuration
-  )
+  ) {
+    def manualRounds = roundInterval.toSeconds == 0
+  }
 
   def makeScore(points: Points, tieBreak: TieBreak, perf: Performance) = Score(
     (points.value * 10000000 + tieBreak.value * 10000 + perf.value).toInt
