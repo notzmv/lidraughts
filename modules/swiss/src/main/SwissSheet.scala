@@ -68,7 +68,7 @@ final private class SwissSheetApi(
 ) {
 
   import org.joda.time.DateTime
-  import reactivemongo.api.collections.bson.BSONBatchCommands.AggregationFramework.{ Match, PipelineOperator }
+  import reactivemongo.api.collections.bson.BSONBatchCommands.AggregationFramework.{ Ascending, Match, PipelineOperator, Sort }
   import reactivemongo.api.ReadPreference
   import BsonHandlers._
 
@@ -82,6 +82,7 @@ final private class SwissSheetApi(
         .aggregateList(
           Match($doc(f.swissId -> swiss.id)),
           List(
+            Sort(Ascending(f.number)),
             PipelineOperator(
               $doc(
                 "$lookup" -> $doc(
