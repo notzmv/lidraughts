@@ -3,8 +3,6 @@ package lidraughts.swiss
 import java.io.{ File, PrintWriter }
 import scala.concurrent.blocking
 
-import lidraughts.user.User
-
 final private class PairingSystem(
     trf: SwissTrf,
     rankingApi: SwissRankingApi,
@@ -33,7 +31,7 @@ final private class PairingSystem(
       } else stdout.toList
     }
 
-  private def reader(rankingSwap: Map[Int, User.ID])(output: List[String]): List[SwissPairing.ByeOrPending] =
+  private def reader(rankingSwap: RankingSwap)(output: List[String]): List[SwissPairing.ByeOrPending] =
     output
       .drop(1) // first line is the number of pairings
       .map(_ split ' ')
