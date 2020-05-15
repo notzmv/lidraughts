@@ -112,7 +112,7 @@ final class SwissApi(
   def scheduleNextRound(swiss: Swiss, date: DateTime): Funit =
     Sequencing(swiss.id)(notFinishedById) { old =>
       old.settings.manualRounds ?? {
-        if (old.isCreated) swissColls.updateField($id(old.id), "startsAt", date).void
+        if (old.isCreated) swissColl.updateField($id(old.id), "startsAt", date).void
         else if (old.isStarted && old.nbOngoing == 0)
           swissColl.updateField($id(old.id), "nextRoundAt", date).void >>- {
             val show = org.joda.time.format.DateTimeFormat.forStyle("MS") print date
@@ -303,7 +303,8 @@ final class SwissApi(
                         .updateField(
                           $id(swiss.id),
                           "nextRoundAt",
-                          DateTime.now.plusSeconds(swiss.settings.roundInterval.toSeconds.toInt)
+                          if (swiss.settings.oneDayInterval) game.createdAt plusDays 1
+                          else DateTime.now.plusSeconds(swiss.settings.roundInterval.toSeconds.toInt)
                         )
                         .void >>-
                         systemChat(swiss.id, s"Round ${swiss.round.value + 1} will start soon.")
