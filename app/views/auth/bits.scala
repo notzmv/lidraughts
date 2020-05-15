@@ -15,11 +15,11 @@ object bits {
   def formFields(username: Field, password: Field, emailOption: Option[Field], register: Boolean)(implicit ctx: Context) = frag(
     form3.group(username, if (register) trans.username() else trans.usernameOrEmail()) { f =>
       frag(
-        form3.input(f)(autofocus, required),
+        form3.input(f)(autofocus, required, autocomplete := "username"),
         p(cls := "error exists none")(trans.usernameAlreadyUsed())
       )
     },
-    form3.password(password, trans.password()),
+    form3.passwordModified(password, trans.password())(autocomplete := (if (register) "new-password" else "current-password")),
     emailOption.map { email =>
       form3.group(email, trans.email(), help = frag("We will only use it for password reset.").some)(form3.input(_, typ = "email")(required))
     }
@@ -74,8 +74,8 @@ object bits {
           ),
           postForm(cls := "form3", action := routes.Auth.passwordResetConfirmApply(token))(
             form3.hidden(form("token")),
-            form3.passwordModified(form("newPasswd1"), trans.newPassword())(autofocus),
-            form3.password(form("newPasswd2"), trans.newPasswordAgain()),
+            form3.passwordModified(form("newPasswd1"), trans.newPassword())(autofocus, autocomplete := "new-password"),
+            form3.passwordModified(form("newPasswd2"), trans.newPasswordAgain())(autocomplete := "new-password"),
             form3.globalError(form),
             form3.action(form3.submit(trans.changePassword()))
           )

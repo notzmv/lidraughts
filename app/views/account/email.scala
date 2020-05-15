@@ -20,7 +20,7 @@ object email {
             frag(" ", i(cls := "is-green", dataIcon := "E"))
         ),
         postForm(cls := "form3", action := routes.Account.emailApply)(
-          form3.password(form("passwd"), trans.password()),
+          form3.passwordModified(form("passwd"), trans.password())(autofocus),
           form3.group(form("email"), trans.email())(form3.input(_, typ = "email")(required)),
           form3.action(form3.submit(trans.apply()))
         )
