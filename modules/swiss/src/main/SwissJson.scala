@@ -104,7 +104,7 @@ final class SwissJson(
           playerColl
             .update(
               $id(SwissPlayer.makeId(swiss.id, user.id)),
-              $set(f.rating -> perf.intRating, f.provisional -> perf.provisional)
+              $set(f.rating -> perf.intRating)
             )
             .void
         }
