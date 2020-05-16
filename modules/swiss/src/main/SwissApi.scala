@@ -415,11 +415,7 @@ final class SwissApi(
     }
 
   private def systemChat(id: Swiss.Id, text: String, volatile: Boolean = false): Unit =
-    chatApi.userChat.service(
-      Chat.Id(id.value),
-      text,
-      volatile
-    )
+    chatApi.userChat.service(Chat.Id(id.value), text, volatile)
 
   private def Sequencing[A: Zero](
     id: Swiss.Id
