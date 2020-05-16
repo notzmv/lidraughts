@@ -343,11 +343,14 @@ final class SwissApi(
     else funit
 
   private def recomputeAndUpdateAll(id: Swiss.Id): Funit =
-    scoring(id).flatMap { res =>
-      rankingApi.update(res)
-      standingApi.update(res) >>
-        boardApi.update(res)
-    } >>- socketReload(id)
+    scoring(id).flatMap {
+      _ ?? { res =>
+        rankingApi.update(res)
+        standingApi.update(res) >>
+          boardApi.update(res) >>-
+          socketReload(id)
+      }
+    }
 
   private[swiss] def startPendingRounds: Funit =
     swissColl
