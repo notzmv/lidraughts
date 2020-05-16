@@ -53,28 +53,24 @@ final private class SwissCache(
 
   private[swiss] object feature {
 
-    private val cache = asyncCache.single[List[Swiss]](
+    private val cache = asyncCache.single[(List[Swiss], List[Swiss])](
       name = "swiss.featurable",
-      f = swissColl
+      f = compute($doc("$lt" -> DateTime.now)) zip
+        compute($doc("$gt" -> DateTime.now, "$lt" -> DateTime.now.plusHours(1))),
+      expireAfter = _.ExpireAfterWrite(10 seconds)
+    )
+
+    private def compute(startsAtRange: Bdoc): Fu[List[Swiss]] =
+      swissColl
         .find(
           $doc(
             "featurable" -> true,
             "settings.i" $lte 600, // hits the partial index
-            "startsAt" -> $doc(
-              "$gt" -> DateTime.now.minusMinutes(60),
-              "$lt" -> DateTime.now.plusMinutes(60)
-            )
+            "startsAt" -> startsAtRange
           )
         )
         .sort($sort desc "nbPlayers")
-        .list[Swiss](10)
-        .map {
-          _.zipWithIndex.collect {
-            case (s, i) if s.nbPlayers >= 5 || i < 5 => s
-          }
-        },
-      expireAfter = _.ExpireAfterWrite(10 seconds)
-    )
+        .list[Swiss](5)
 
     def get = cache.get
   }

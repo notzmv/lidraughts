@@ -19,8 +19,8 @@ object Swiss extends LidraughtsController {
 
   def home =
     Open { implicit ctx =>
-      env.api.featurable map { s =>
-        Ok(html.swiss.home(s))
+      env.api.featurable map {
+        case (now, soon) => Ok(html.swiss.home(now, soon))
       }
     }
 
