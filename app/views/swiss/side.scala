@@ -27,9 +27,10 @@ object side {
               )
             } else s.perfType.map(_.name),
             separator,
-            span(cls := "swiss__meta__round")(s"${s.round}/${s.settings.nbRounds}"),
-            " rounds"
+            if (s.settings.rated) trans.ratedTournament() else trans.casualTournament()
           ),
+          span(cls := "swiss__meta__round")(s"${s.round}/${s.settings.nbRounds}"),
+          " rounds",
           if (s.settings.rated) trans.ratedTournament() else trans.casualTournament(),
           separator,
           a(href := routes.Swiss.home)("Swiss [BETA]"),
