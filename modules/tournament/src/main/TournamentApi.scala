@@ -50,7 +50,8 @@ final class TournamentApi(
     setup: TournamentSetup,
     me: User,
     myTeams: List[LightTeam],
-    getUserTeamIds: User => Fu[List[TeamId]]
+    getUserTeamIds: User => Fu[List[TeamId]],
+    andJoin: Boolean = true
   ): Fu[Tournament] = {
     val position = setup.realVariant match {
       case draughts.variant.Standard => setup.positionStandard
@@ -82,7 +83,9 @@ final class TournamentApi(
       }
     sillyNameCheck(tour, me)
     logger.info(s"Create $tour")
-    TournamentRepo.insert(tour) >>- join(tour.id, me, tour.password, setup.teamBattleByTeam, getUserTeamIds, none) inject tour
+    TournamentRepo.insert(tour) >>- {
+      andJoin ?? join(tour.id, me, tour.password, setup.teamBattleByTeam, getUserTeamIds, none)
+    } inject tour
   }
 
   def update(old: Tournament, data: TournamentSetup, me: User, myTeams: List[LightTeam]): Funit = {

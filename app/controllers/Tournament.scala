@@ -291,7 +291,7 @@ object Tournament extends LidraughtsController {
     env.forms.create(me).bindFromRequest.fold(
       jsonFormErrorDefaultLang,
       setup => rateLimitCreation(me, setup.password.isDefined, req) {
-        env.api.createTournament(setup, me, teams, getUserTeamIds) flatMap { tour =>
+        env.api.createTournament(setup, me, teams, getUserTeamIds, andJoin = false) flatMap { tour =>
           Env.tournament.jsonView(tour, none, none, getUserTeamIds, Env.team.cached.name, none, none, partial = false, lidraughts.i18n.defaultLang, none)
         } map { Ok(_) }
       }
