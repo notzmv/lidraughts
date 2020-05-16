@@ -21,7 +21,7 @@ final class Env(
     lightUserApi: lidraughts.user.LightUserApi,
     onStart: String => Unit,
     proxyGame: Game.ID => Fu[Option[Game]],
-    proxyGames: List[Game.ID] => Fu[List[Game]],
+    proxyGames: List[Game.ID] => Fu[List[(Game.ID, Option[Game])]],
     val isProd: Boolean
 ) {
 

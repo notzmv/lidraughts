@@ -31,7 +31,7 @@ final class SwissApi(
     boardApi: SwissBoardApi,
     chatApi: ChatApi,
     lightUserApi: lidraughts.user.LightUserApi,
-    proxyGames: List[Game.ID] => Fu[List[Game]],
+    proxyGames: List[Game.ID] => Fu[List[(Game.ID, Option[Game])]],
     bus: Bus
 )(implicit system: ActorSystem) {
 
@@ -330,7 +330,12 @@ final class SwissApi(
               "winnerId" -> winner.map(_.userId)
             )
           )
-          .void
+          .void zip
+          SwissPairing.fields { f =>
+            pairingColl.remove($doc(f.swissId -> swiss.id, f.status -> true)) map { res =>
+              if (res.n > 0) logger.warn(s"Swiss ${swiss.id} finished with ${res.n} ongoing pairings")
+            }
+          } void
       } >>- {
         systemChat(swiss.id, s"Tournament completed!")
         cache.featuredInTeam.invalidate(swiss.teamId)
@@ -392,14 +397,19 @@ final class SwissApi(
   private[swiss] def checkOngoingGames: Funit =
     SwissPairing.fields { f =>
       pairingColl.primitive[Game.ID]($doc(f.status -> SwissPairing.ongoing), f.id)
-    } flatMap proxyGames flatMap { games =>
+    } flatMap proxyGames flatMap { pairs =>
+      val games = pairs.collect { case (_, Some(g)) => g }
       val (finished, ongoing) = games.partition(_.finishedOrAborted)
       val flagged = ongoing.filter(_ outoftime true)
+      val missingIds = pairs.collect { case (id, None) => id }
       lidraughts.mon.swiss.games("finished")(finished.size)
       lidraughts.mon.swiss.games("ongoing")(ongoing.size)
       lidraughts.mon.swiss.games("flagged")(flagged.size)
+      lidraughts.mon.swiss.games("missing")(missingIds.size)
       if (flagged.nonEmpty)
         bus.publish(lidraughts.hub.actorApi.map.TellMany(flagged.map(_.id), QuietFlag), 'roundMapTell)
+      if (missingIds.nonEmpty)
+        pairingColl.remove($inIds(missingIds))
       finished.foreach(finishGame)
       funit
     }

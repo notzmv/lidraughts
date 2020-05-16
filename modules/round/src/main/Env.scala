@@ -121,10 +121,10 @@ final class Env(
         if (!g.isDefined) roundMap kill gameId
       }
 
-    def games(gameIds: List[Game.ID]): Fu[List[Game]] = gameIds
-      .map { id => roundMap.getOrMake(id).getGame }
-      .sequenceFu
-      .dmap(_.flatten)
+    def games(gameIds: List[Game.ID]): Fu[List[(Game.ID, Option[Game])]] =
+      gameIds.map { id =>
+        roundMap.getOrMake(id).getGame dmap { id -> _ }
+      }.sequenceFu
 
     def pov(gameId: Game.ID, user: lidraughts.user.User): Fu[Option[Pov]] =
       game(gameId) map { _ flatMap { Pov(_, user) } }
