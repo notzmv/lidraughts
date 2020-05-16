@@ -38,34 +38,12 @@ final private class SwissRankingApi(
     expireAfter = _.ExpireAfterAccess(1 hour)
   )
 
-  private def computeRanking(id: Swiss.Id): Fu[Ranking] = SwissPlayer.fields { f =>
-    playerColl
-      .aggregateWith[Bdoc]() { framework =>
-        import framework._
-        Match($doc(f.swissId -> id)) -> List(
-          Sort(Descending(f.score)),
-          Group(BSONNull)("players" -> PushField(f.userId))
-        )
-      }
-      .headOption map {
-        _ ?? {
-          _ get "players" match {
-            case Some(BSONArray(players)) =>
-              // mutable optimized implementation
-              val b = Map.newBuilder[User.ID, Int]
-              var r = 0
-              for (u <- players) {
-                u match {
-                  case Success(v) =>
-                    b += (v.asInstanceOf[BSONString].value -> r)
-                    r = r + 1
-                  case _ =>
-                }
-              }
-              b.result
-            case _ => Map.empty
-          }
-        }
-      }
-  }
+  private def computeRanking(id: Swiss.Id): Fu[Ranking] =
+    SwissPlayer.fields { f =>
+      playerColl.primitive[User.ID]($doc(f.swissId -> id), $sort desc f.score, f.userId)
+    } map {
+      _.view.zipWithIndex.map {
+        case (user, i) => (user, i + 1)
+      }.toMap
+    }
 }
