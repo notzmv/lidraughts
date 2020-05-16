@@ -68,7 +68,7 @@ final private class SwissCache(
             case (s, i) if s.nbPlayers >= 5 || i < 5 => s
           }
         },
-      expireAfter = _.ExpireAfterWrite(1 minute)
+      expireAfter = _.ExpireAfterWrite(10 seconds)
     )
 
     def get = cache.get
