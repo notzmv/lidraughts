@@ -7,6 +7,9 @@
       padding: .3em .5em;
       .more {
         color: $c-font-dim;
+        &:hover {
+          color: $c-link;
+        }
       }
       .title {
         @extend %base-font;
@@ -36,6 +39,14 @@
       max-width: 21ch; /* prevent leaderboard overflow due to long usernames */
       &:first-child {
         padding-left: .7em;
+      }
+      &.name a {
+        font-weight: bold;
+        color: $c-font;
+        @include transition(color);
+        &:hover {
+          color: $c-link;
+        }
       }
     }
     tr:nth-child(even) {
