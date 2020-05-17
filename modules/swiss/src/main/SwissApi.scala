@@ -98,7 +98,9 @@ final class SwissApi(
               rated = data.rated | old.settings.rated,
               description = data.description,
               hasChat = data.hasChat | old.settings.hasChat,
-              roundInterval = data.roundInterval.fold(old.settings.roundInterval)(_.seconds)
+              roundInterval =
+                if (data.roundInterval.isDefined) data.realRoundInterval
+                else old.settings.roundInterval
             )
           ) |> { s =>
               if (s.isStarted && s.nbOngoing == 0 && (s.nextRoundAt.isEmpty || old.settings.manualRounds) && !s.settings.manualRounds)
@@ -288,8 +290,10 @@ final class SwissApi(
                         .updateField(
                           $id(swiss.id),
                           "nextRoundAt",
-                          if (swiss.settings.oneDayInterval) game.createdAt plusDays 1
-                          else DateTime.now.plusSeconds(swiss.settings.roundInterval.toSeconds.toInt)
+                          swiss.settings.dailyInterval match {
+                            case Some(days) => game.createdAt plusDays days
+                            case None => DateTime.now.plusSeconds(swiss.settings.roundInterval.toSeconds.toInt)
+                          }
                         )
                         .void >>-
                         systemChat(swiss.id, s"Round ${swiss.round.value + 1} will start soon.")
