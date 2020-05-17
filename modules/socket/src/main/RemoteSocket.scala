@@ -1,15 +1,15 @@
-package lila.socket
+package lidraughts.socket
 
 import io.lettuce.core._
 import play.api.libs.json._
 import scala.concurrent.Future
 
-import chess.Centis
-import lila.common.{ Chronometer, WithResource }
-import lila.hub.actorApi.relation.ReloadOnlineFriends
-import lila.hub.actorApi.round.{ MoveEvent, Mlat }
-import lila.hub.actorApi.socket.{ SendTo, SendTos, WithUserIds, RemoteSocketTellSriIn, RemoteSocketTellSriOut }
-import lila.hub.actorApi.{ Deploy, Announce }
+import draughts.Centis
+import lidraughts.common.{ Chronometer, WithResource }
+import lidraughts.hub.actorApi.relation.ReloadOnlineFriends
+import lidraughts.hub.actorApi.round.{ MoveEvent, Mlat }
+import lidraughts.hub.actorApi.socket.{ SendTo, SendTos, WithUserIds, RemoteSocketTellSriIn, RemoteSocketTellSriOut }
+import lidraughts.hub.actorApi.{ Deploy, Announce }
 
 private final class RemoteSocket(
     redisClient: RedisClient,
@@ -18,7 +18,7 @@ private final class RemoteSocket(
     lifecycle: play.api.inject.ApplicationLifecycle,
     notificationActor: akka.actor.ActorSelection,
     setNb: Int => Unit,
-    bus: lila.common.Bus
+    bus: lidraughts.common.Bus
 ) {
 
   private object In {
@@ -87,7 +87,7 @@ private final class RemoteSocket(
       watchedGameIds -= gameId
     case In.Notified =>
       val userId = args
-      notificationActor ! lila.hub.actorApi.notify.Notified(userId)
+      notificationActor ! lidraughts.hub.actorApi.notify.Notified(userId)
     case In.Connections =>
       parseIntOption(args) foreach { nb =>
         setNb(nb)
@@ -133,7 +133,7 @@ private final class RemoteSocket(
 
   private val connIn = redisClient.connectPubSub()
   private val connOut = redisClient.connectPubSub()
-  private val mon = lila.mon.socket.remote
+  private val mon = lidraughts.mon.socket.remote
 
   connIn.addListener(new pubsub.RedisPubSubAdapter[String, String] {
     override def message(channel: String, message: String): Unit = {

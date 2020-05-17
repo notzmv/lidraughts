@@ -1,4 +1,4 @@
-package lila.common
+package lidraughts.common
 
 import scala.util.control.NonFatal
 
