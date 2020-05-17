@@ -86,6 +86,7 @@ final class Env(
     swissColl = swissColl,
     playerColl = playerColl,
     pairingColl = pairingColl,
+    sheetApi = sheetApi,
     mongoCache = mongoCache
   )
 

@@ -71,53 +71,35 @@ final private class SwissSheetApi(
   import reactivemongo.api.ReadPreference
   import BsonHandlers._
 
-  def source(swiss: Swiss): Fu[List[(SwissPlayer, Map[SwissRound.Number, SwissPairing], SwissSheet)]] =
-    SwissPlayer.fields { f =>
-      val readPreference =
-        if (swiss.finishedAt.exists(_ isBefore DateTime.now.minusSeconds(10)))
-          ReadPreference.secondaryPreferred
-        else ReadPreference.primary
-      playerColl
-        .aggregateList(
-          Match($doc(f.swissId -> swiss.id)),
-          List(
-            Sort(Descending(f.score)),
-            PipelineOperator(
-              $doc(
-                "$lookup" -> $doc(
-                  "from" -> pairingColl.name,
-                  "let" -> $doc("u" -> "$u"),
-                  "pipeline" -> $arr(
-                    $doc(
-                      "$match" -> $doc(
-                        "$expr" -> $doc(
-                          "$and" -> $arr(
-                            $doc("$eq" -> $arr("$s", swiss.id)),
-                            $doc("$in" -> $arr("$$u", "$p"))
-                          )
-                        )
-                      )
-                    )
-                  ),
-                  "as" -> "pairings"
-                )
-              )
-            )
-          ),
-          maxDocs = Int.MaxValue,
-          readPreference = readPreference
-        )
-        .map {
-          _.flatMap { doc =>
-            val result = for {
-              player <- playerHandler.readOpt(doc)
-              pairings <- doc.getAs[List[SwissPairing]]("pairings")
-              pairingMap = pairings.map { p =>
-                p.round -> p
-              }.toMap
-            } yield (player, pairingMap, SwissSheet.one(swiss, pairingMap, player))
-            result.toList
+  def source(swiss: Swiss): Fu[List[(SwissPlayer, Map[SwissRound.Number, SwissPairing], SwissSheet)]] = {
+    val readPreference =
+      if (swiss.finishedAt.exists(_ isBefore DateTime.now.minusSeconds(10)))
+        ReadPreference.secondaryPreferred
+      else ReadPreference.primary
+    SwissPlayer
+      .fields { f =>
+        playerColl
+          .find($doc(f.swissId -> swiss.id))
+          .sort($sort desc f.score)
+      }
+      .cursor[SwissPlayer](readPreference)
+      .gather[List](4) flatMap {
+        _.map { player =>
+          SwissPairing.fields { f =>
+            pairingColl.list[SwissPairing](
+              $doc(f.swissId -> swiss.id, f.players -> player.userId),
+              readPreference
+            ) dmap { player -> _ }
           }
-        }
-    }
+            .map {
+              case (player, pairings) =>
+                val pairingMap = pairings.map { p =>
+                  p.round -> p
+                }.toMap
+                (player, pairingMap, SwissSheet.one(swiss, pairingMap, player))
+            }
+        }.sequenceFu
+      }
+
+  }
 }

@@ -24,8 +24,8 @@ case class SwissPairing(
   })).map(apply)
   def isOngoing = status.isLeft
   def resultFor(userId: User.ID) = winner.map(userId.==)
-  def whiteWins = status == Right(Some(white))
-  def blackWins = status == Right(Some(black))
+  def whiteWins = status == Right(Some(Color.White))
+  def blackWins = status == Right(Some(Color.Black))
   def isDraw = status == Right(None)
 }
 
