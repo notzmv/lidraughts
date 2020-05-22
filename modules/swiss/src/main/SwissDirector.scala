@@ -47,7 +47,8 @@ final private class SwissDirector(
                 $id(swiss.id),
                 $unset("nextRoundAt") ++ $set(
                   "round" -> swiss.round,
-                  "nbOngoing" -> pairings.size
+                  "nbOngoing" -> pairings.size,
+                  "lastRoundAt" -> DateTime.now
                 )
               )
               .void
