@@ -171,7 +171,7 @@ final class Env(
   system.lidraughtsBus.subscribeFun(
     'finishGame, 'adjustCheater, 'adjustBooster
   ) {
-      case lidraughts.game.actorApi.FinishGame(game, _, _) => api finishGame game
+      case lidraughts.game.actorApi.FinishGame(game, _, _) => api.finishGame(game)
       // case lidraughts.hub.actorApi.mod.MarkCheater(userId, true) => api.ejectLame(userId, _)
       // case lidraughts.hub.actorApi.mod.MarkBooster(userId)       => api.ejectLame(userId, Nil)
     }

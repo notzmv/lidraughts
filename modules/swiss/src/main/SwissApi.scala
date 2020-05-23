@@ -400,24 +400,48 @@ final class SwissApi(
       }
 
   private[swiss] def checkOngoingGames: Funit =
-    SwissPairing.fields { f =>
-      pairingColl.primitive[Game.ID]($doc(f.status -> SwissPairing.ongoing), f.id)
-    } flatMap proxyGames flatMap { pairs =>
-      val games = pairs.collect { case (_, Some(g)) => g }
-      val (finished, ongoing) = games.partition(_.finishedOrAborted)
-      val flagged = ongoing.filter(_ outoftime true)
-      val missingIds = pairs.collect { case (id, None) => id }
-      lidraughts.mon.swiss.games("finished")(finished.size)
-      lidraughts.mon.swiss.games("ongoing")(ongoing.size)
-      lidraughts.mon.swiss.games("flagged")(flagged.size)
-      lidraughts.mon.swiss.games("missing")(missingIds.size)
-      if (flagged.nonEmpty)
-        bus.publish(lidraughts.hub.actorApi.map.TellMany(flagged.map(_.id), QuietFlag), 'roundMapTell)
-      if (missingIds.nonEmpty)
-        pairingColl.remove($inIds(missingIds))
-      finished.foreach(finishGame)
-      funit
-    }
+    SwissPairing
+      .fields { f =>
+        import reactivemongo.api.collections.bson.BSONBatchCommands.AggregationFramework._
+        pairingColl
+          .aggregateList(
+            Match($doc(f.status -> SwissPairing.ongoing)),
+            List(
+              GroupField(f.swissId)("ids" -> PushField(f.id))
+            ),
+            maxDocs = 100
+          )
+      }
+      .map {
+        _.flatMap { doc =>
+          for {
+            swissId <- doc.getAs[Swiss.Id]("_id")
+            gameIds <- doc.getAs[List[Game.ID]]("ids")
+          } yield swissId -> gameIds
+        }
+      }
+      .flatMap {
+        _.map {
+          case (swissId, gameIds) =>
+            Sequencing(swissId)(byId) { swiss =>
+              proxyGames(gameIds) flatMap { pairs =>
+                val games = pairs.collect { case (_, Some(g)) => g }
+                val (finished, ongoing) = games.partition(_.finishedOrAborted)
+                val flagged = ongoing.filter(_ outoftime true)
+                val missingIds = pairs.collect { case (id, None) => id }
+                lidraughts.mon.swiss.games("finished")(finished.size)
+                lidraughts.mon.swiss.games("ongoing")(ongoing.size)
+                lidraughts.mon.swiss.games("flagged")(flagged.size)
+                lidraughts.mon.swiss.games("missing")(missingIds.size)
+                if (flagged.nonEmpty)
+                  bus.publish(lidraughts.hub.actorApi.map.TellMany(flagged.map(_.id), QuietFlag), 'roundMapTell)
+                if (missingIds.nonEmpty)
+                  pairingColl.remove($inIds(missingIds))
+                finished.map(finishGame).sequenceFu.void
+              }
+            }
+        }.sequenceFu.void
+      }
 
   private def systemChat(id: Swiss.Id, text: String, volatile: Boolean = false): Unit =
     chatApi.userChat.service(Chat.Id(id.value), text, volatile)
