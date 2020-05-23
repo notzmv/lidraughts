@@ -19,7 +19,7 @@ final private class PairingSystem(
   private def invoke(swiss: Swiss, input: List[String]): List[String] =
     withTempFile(swiss, input) { file =>
       import scala.sys.process._
-      val flavour = if (swiss.nbPlayers < 200) "dutch" else "burstein"
+      val flavour = if (swiss.nbPlayers < 250) "dutch" else "burstein"
       val command = s"$executable --$flavour $file -p"
       val stdout = new collection.mutable.ListBuffer[String]
       val stderr = new StringBuilder
