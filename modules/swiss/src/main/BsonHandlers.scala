@@ -120,5 +120,8 @@ private object BsonHandlers {
 
   implicit val swissHandler = Macros.handler[Swiss]
 
-  def addFeaturable(s: Swiss) = swissHandler.writeTry(s).get ++ $doc("featurable" -> true)
+  def addFeaturable(s: Swiss) =
+    swissHandler.writeTry(s).get ++ {
+      s.isNotFinished ?? $doc("featurable" -> true)
+    }
 }
