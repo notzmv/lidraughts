@@ -377,7 +377,7 @@ final class TournamentApi(
   }
 
   def withdrawAll(user: User): Unit =
-    TournamentRepo.nonEmptyEnterableIds foreach {
+    TournamentRepo.nonEmptyEnterableIds() foreach {
       PlayerRepo.filterExists(_, user.id) foreach {
         _ foreach {
           withdraw(_, user.id, isPause = false, isStalling = false)
@@ -472,8 +472,22 @@ final class TournamentApi(
       }
     }
 
+  private[tournament] def kickFromTeam(teamId: TeamId, userId: User.ID): Unit =
+    TournamentRepo.nonEmptyEnterableIds(teamId.some) foreach {
+      PlayerRepo.filterExists(_, userId) foreach {
+        _ foreach { tourId =>
+          Sequencing(tourId)(TournamentRepo.byId) { tour =>
+            val fu =
+              if (tour.isCreated) PlayerRepo.remove(tour.id, userId)
+              else PlayerRepo.withdraw(tour.id, userId)
+            fu >> updateNbPlayers(tourId) >>- socketReload(tourId)
+          }
+        }
+      }
+    }
+
   def ejectLame(userId: User.ID, playedIds: List[Tournament.ID]): Unit =
-    TournamentRepo.nonEmptyEnterableIds foreach {
+    TournamentRepo.nonEmptyEnterableIds() foreach {
       PlayerRepo.filterExists(_, userId) foreach { enteredIds =>
         (enteredIds ++ playedIds).foreach { ejectLame(_, userId) }
       }

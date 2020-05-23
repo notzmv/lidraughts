@@ -64,8 +64,8 @@ object TournamentRepo {
   def createdByIdAndCreator(id: String, userId: String): Fu[Option[Tournament]] =
     createdById(id) map (_ filter (_.createdBy == userId))
 
-  def nonEmptyEnterableIds: Fu[List[Tournament.ID]] =
-    coll.primitive[Tournament.ID](enterableSelect ++ nonEmptySelect, "_id")
+  def nonEmptyEnterableIds(teamId: Option[String] = None): Fu[List[Tournament.ID]] =
+    coll.primitive[Tournament.ID](enterableSelect ++ nonEmptySelect ++ teamId.??(byTeamSelect), "_id")
 
   def createdIncludingScheduled: Fu[List[Tournament]] = coll.find(createdSelect).list[Tournament]()
 

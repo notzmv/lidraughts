@@ -28,6 +28,8 @@ private[tournament] final class ApiActor(
 
     case lidraughts.hub.actorApi.playban.Playban(userId, _) => api.pausePlaybanned(userId)
 
+    case lidraughts.hub.actorApi.team.KickFromTeam(teamId, userId) => api.kickFromTeam(teamId, userId)
+
     case m: lidraughts.hub.actorApi.Deploy => socketMap tellAll m
   }
 }

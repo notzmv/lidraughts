@@ -163,7 +163,7 @@ final class Env(
 
   system.lidraughtsBus.subscribe(
     system.actorOf(Props(new ApiActor(api, leaderboardApi, socketMap)), name = ApiActorName),
-    'finishGame, 'adjustCheater, 'adjustBooster, 'playban, 'deploy
+    'finishGame, 'adjustCheater, 'adjustBooster, 'playban, 'teamKick, 'deploy
   )
 
   system.actorOf(Props(new CreatedOrganizer(

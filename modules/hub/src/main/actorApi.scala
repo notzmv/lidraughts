@@ -204,6 +204,7 @@ package notify {
 package team {
   case class CreateTeam(id: String, name: String, userId: String)
   case class JoinTeam(id: String, userId: String)
+  case class KickFromTeam(teamId: String, userId: String)
   case class TeamIdsJoinedBy(userId: String, promise: Promise[List[lightTeam.TeamId]])
 }
 

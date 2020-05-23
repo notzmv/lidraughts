@@ -3,7 +3,7 @@ package lidraughts.team
 import actorApi._
 import akka.actor.ActorSelection
 import lidraughts.db.dsl._
-import lidraughts.hub.actorApi.team.{ CreateTeam, JoinTeam }
+import lidraughts.hub.actorApi.team.{ CreateTeam, JoinTeam, KickFromTeam }
 import lidraughts.hub.actorApi.timeline.{ Propagate, TeamJoin, TeamCreate }
 import lidraughts.hub.lightTeam.LightTeam
 import lidraughts.mod.ModlogApi
@@ -174,9 +174,10 @@ final class TeamApi(
 
   def kick(team: Team, userId: User.ID, me: User): Funit =
     doQuit(team, userId) >>
-      !team.isCreator(me.id) ?? {
+      (!team.isCreator(me.id)).?? {
         modLog.teamKick(me.id, userId, team.name)
-      }
+      } >>-
+      bus.publish(KickFromTeam(teamId = team.id, userId = userId), 'teamKick)
 
   def changeOwner(team: Team, userId: User.ID, me: User): Funit =
     MemberRepo.exists(team.id, userId) flatMap { e =>
