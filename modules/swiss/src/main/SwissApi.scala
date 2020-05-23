@@ -142,18 +142,6 @@ final class SwissApi(
       recomputeAndUpdateAll(id) inject res
     }
 
-  def withdraw(id: Swiss.Id, me: User): Funit =
-    Sequencing(id)(notFinishedById) { swiss =>
-      SwissPlayer.fields { f =>
-        if (swiss.isStarted)
-          playerColl.updateField($id(SwissPlayer.makeId(swiss.id, me.id)), f.absent, true)
-        else
-          playerColl.remove($id(SwissPlayer.makeId(swiss.id, me.id))) flatMap { res =>
-            (res.n == 1) ?? swissColl.update($id(swiss.id), $inc("nbPlayers" -> -1)).void
-          }
-      }.void >>- recomputeAndUpdateAll(id)
-    }
-
   def sortedGameIdsCursor(
     swissId: Swiss.Id,
     batchSize: Int = 0,
@@ -248,6 +236,19 @@ final class SwissApi(
       _ get userId map { rank =>
         (Math.floor(rank / 10) + 1).toInt
       }
+    }
+
+  def withdraw(id: Swiss.Id, userId: User.ID): Funit =
+    Sequencing(id)(notFinishedById) { swiss =>
+      SwissPlayer.fields { f =>
+        val selId = $id(SwissPlayer.makeId(swiss.id, userId))
+        if (swiss.isStarted)
+          playerColl.updateField(selId, f.absent, true)
+        else
+          playerColl.remove(selId) flatMap { res =>
+            (res.n == 1) ?? swissColl.update($id(swiss.id), $inc("nbPlayers" -> -1)).void
+          }
+      }.void >>- recomputeAndUpdateAll(id)
     }
 
   private[swiss] def finishGame(game: Game): Funit =

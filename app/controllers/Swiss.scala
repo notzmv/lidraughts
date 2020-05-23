@@ -133,7 +133,7 @@ object Swiss extends LidraughtsController {
 
   def withdraw(id: String) =
     Auth { implicit ctx => me =>
-      env.api.withdraw(SwissId(id), me) flatMap { result =>
+      env.api.withdraw(SwissId(id), me.id) flatMap { result =>
         negotiate(
           html = Redirect(routes.Swiss.show(id)).fuccess,
           api = _ => fuccess(jsonOkResult)
