@@ -394,19 +394,25 @@ object User extends LidraughtsController {
       if ((u.disabled || (u.lame && !ctx.is(u))) && !isGranted(_.UserSpy)) notFound
       else PerfType(perfKey).fold(notFound) { perfType =>
         for {
-          perfStat <- Env.perfStat.get(u, perfType)
+          oldPerfStat <- Env.perfStat.get(u, perfType)
+          perfStat = oldPerfStat.copy(playStreak = oldPerfStat.playStreak.checkCurrent)
           ranks = Env.user.cached rankingsOf u.id
           distribution <- u.perfs(perfType).established ?? {
             Env.user.cached.ratingDistribution(perfType) map some
           }
+          percentile = distribution.map { distrib =>
+            lidraughts.user.Stat.percentile(distrib, u.perfs(perfType).intRating) match {
+              case (under, sum) => Math.round(under * 1000.0 / sum) / 10.0
+            }
+          }
           ratingChart <- Env.history.ratingChartApi.apply(u)
           _ <- Env.user.lightUserApi preloadMany { u.id :: perfStat.userIds.map(_.value) }
-          data = Env.perfStat.jsonView(u, perfStat, ranks get perfType, distribution)
           response <- negotiate(
-            html = Ok(html.user.perfStat(u, ranks, perfType, data, ratingChart)).fuccess,
+            html = Ok(html.user.perfStat(u, ranks, perfType, percentile, perfStat, ratingChart)).fuccess,
             api = _ => getBool("graph").?? {
               Env.history.ratingChartApi.singlePerf(u, perfType).map(_.some)
             } map {
+              val data = Env.perfStat.jsonView(u, perfStat, ranks get perfType, percentile)
               _.fold(data) { graph => data + ("graph" -> graph) }
             } map { Ok(_) }
           )

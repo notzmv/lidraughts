@@ -99,7 +99,7 @@
           '<a data-icon="g" class="text" href="' + url + '">' + data.name + '</a>' +
           '<div class="actions">' +
           '<a class="withdraw text" href="' + url + '/withdraw" data-icon="Z">Pause</a>' +
-          '<a class="text" href="' + url + '" data-icon="G">Join</a>' +
+          '<a class="text" href="' + url + '" data-icon="G">Resume</a>' +
           '</div></div>'
         ).find('#announce .withdraw').click(function() {
           $.post($(this).attr("href"));
@@ -882,7 +882,7 @@
     $('body').data('simul-id', cfg.data.id);
     var simul;
     lidraughts.socket = lidraughts.StrongSocket(
-      '/simul/' + cfg.data.id + '/socket/v4', cfg.socketVersion, {
+      '/simul/' + cfg.data.id + '/socket/v3', cfg.socketVersion, {
         receive: function(t, d) {
           simul.socketReceive(t, d);
         }

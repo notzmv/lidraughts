@@ -217,6 +217,7 @@
   <string name="playingRightNow">Playing right now</string>
   <string name="eventInProgress">Playing right now</string>
   <string name="finished">Finished</string>
+  <string name="finishesX">finishes %s</string>
   <string name="abortGame">Abort game</string>
   <string name="gameAborted">Game aborted</string>
   <string name="standard">Standard</string>
@@ -440,7 +441,7 @@ computer analysis, game chat and shareable URL.</string>
   <string name="safeTournamentName">Pick a very safe name for the tournament.</string>
   <string name="safeSimulName">Pick a very safe name for the simul.</string>
   <string name="inappropriateNameWarning">Anything even slightly inappropriate could get your account closed.</string>
-  <string name="emptyTournamentName">Leave empty to name the tournament after a random Grandmaster.</string>
+  <string name="emptyTournamentName">Leave empty to name the tournament after a notable draughts player.</string>
   <string name="emptySimulName">Leave empty to name the simul after a random chemical element.</string>
   <string name="recommendNotTouching">We recommend not touching these.</string> 
   <string name="fewerPlayers">If you set conditions of entry, your tournament will have fewer players.</string> 
@@ -583,7 +584,7 @@ One URL per line</string>
   <string name="insult">Insult</string>
   <string name="troll">Troll</string>
   <string name="other">Other</string>
-  <string name="reportDescriptionHelp">Paste the link to the game(s) and explain what is wrong about this user behavior. Don't just say "they cheat", but tell us how you came to this conclusion. Your report will be processed faster if written in English.</string>
+  <string name="reportDescriptionHelp">Paste the link to the game(s) and explain what is wrong about this user's behaviour. Don't just say "they cheat", but tell us how you came to this conclusion. Your report will be processed faster if written in English.</string>
   <string name="error.provideOneCheatedGameLink">Please provide at least one link to a cheated game.</string>
   <string name="by">by %s</string>
   <string name="thisTopicIsNowClosed">This topic is now closed.</string>
@@ -628,7 +629,7 @@ One URL per line</string>
   <string name="allAtOnce">All at once</string>
   <string name="horizontalGreenProgressBars">Horizontal green progress bars</string>
   <string name="soundWhenTimeGetsCritical">Sound when time gets critical</string>
-  <string name="gameBehavior">Game behavior</string>
+  <string name="gameBehavior">Game behaviour</string>
   <string name="howDoYouMovePieces">How do you move pieces?</string>
   <string name="clickTwoSquares">Click two squares</string>
   <string name="dragPiece">Drag a piece</string>
@@ -670,7 +671,7 @@ One URL per line</string>
   <string name="starting">Starting:</string>
   <string name="allInformationIsPublicAndOptional">All information is public and optional.</string>
   <string name="yourCityRegionOrDepartment">Your city, region, or province.</string>
-  <string name="biographyDescription">Talk about yourself, your interests, what you like in draughts, your favorite openings, players, ...</string>
+  <string name="biographyDescription">Talk about yourself, your interests, what you like in draughts, your favourite openings, players, ...</string>
   <plurals name="maximumNbCharacters">
     <item quantity="one">Maximum: %s character.</item>
     <item quantity="other">Maximum: %s characters.</item>
@@ -715,7 +716,7 @@ One URL per line</string>
   <string name="inCorrespondenceGames">Correspondence games</string>
   <string name="ifRatingIsPlusMinusX">If rating is ± %s</string>
   <string name="onlyFriends">Only friends</string>
-  <string name="displayBoardResizeHandle">Display board resize handle</string>
+  <string name="displayBoardResizeHandle">Show board resize handle</string>
   <string name="onlyOnInitialPosition">Only on initial position</string>
   <string name="menu">Menu</string>
   <plurals name="nbForumPosts">
@@ -775,7 +776,7 @@ One URL per line</string>
   <string name="aboutSimulImage">Out of 169 opponents, Sijbrands won 115 games, drew 43 and lost 11.</string>
   <string name="aboutSimulRealLife">The concept is taken from real world events. In real life, this involves the simul host moving from table to table to play a single move.</string>
   <string name="aboutSimulRules">When the simul starts, every player starts a game with the host, who gets to play the white pieces. The simul ends when all games are complete.</string>
-  <string name="aboutSimulSettings">Simuls are always casual. Rematches, takebacks and "moretime" are disabled.</string>
+  <string name="aboutSimulSettings">Simuls are always casual. Rematches, takebacks and adding time are disabled.</string>
   <string name="create">Create</string>
   <string name="whenCreateSimul">When you create a Simul, you get to play several players at once.</string>
   <string name="simulVariantsHint">If you select several variants, each player gets to choose which one to play.</string>
@@ -808,7 +809,7 @@ One URL per line</string>
   <string name="tournamentHomeDescription">Play fast-paced draughts tournaments! Join an official scheduled tournament, or create your own. Bullet, Blitz, Classical, Frisian, Antidraughts, and more options available for endless draughts fun.</string>
   <string name="tournamentNotFound">Tournament not found</string>
   <string name="tournamentDoesNotExist">This tournament does not exist.</string>
-  <string name="tournamentMayHaveBeenCanceled">It may have been cancelled, if all players left it before the tournament starts.</string>
+  <string name="tournamentMayHaveBeenCanceled">The tournament may have been cancelled if all players left before it started.</string>
   <string name="returnToTournamentsHomepage">Return to tournaments homepage</string>
   <string name="weeklyPerfTypeRatingDistribution">Monthly %s rating distribution</string>
   <plurals name="nbPerfTypePlayersThisWeek">
@@ -818,6 +819,9 @@ One URL per line</string>
   <string name="yourPerfTypeRatingIsRating">Your %1$s rating is %2$s.</string>
   <string name="youAreBetterThanPercentOfPerfTypePlayers">You are better than %1$s of %2$s players.</string>
   <string name="youDoNotHaveAnEstablishedPerfTypeRating">You do not have an established %s rating.</string>
+  <string name="yourRating">Your rating</string>
+  <string name="cumulative">Cumulative</string>
+  <string name="glicko2Rating">Glicko-2 rating</string>
   <string name="checkYourEmail">Check your Email</string>
   <string name="weHaveSentYouAnEmailClickTheLink">We've sent you an email. Click the link in the email to activate your account.</string>
   <string name="ifYouDoNotSeeTheEmailCheckOtherPlaces">If you don't see the email, check other places it might be, like your junk, spam, social, or other folders.</string>
@@ -847,7 +851,7 @@ One URL per line</string>
   <string name="disableKidMode">Disable Kid mode</string>
   <string name="security">Security</string>
   <string name="entirely">Entirely</string>
-  <string name="thisIsAListOfDevicesThatHaveLoggedIntoYourAccount">This is a list of devices that have logged into your account. Revoke any sessions that you do not recognize.</string>
+  <string name="thisIsAListOfDevicesThatHaveLoggedIntoYourAccount">This is a list of devices that have logged into your account. Revoke any sessions that you do not recognise.</string>
   <string name="alternativelyYouCanX">Alternatively you can %s.</string>
   <string name="revokeAllSessions">revoke all sessions</string>
   <string name="speedUpYourAnalysis">Speed up your analysis!</string>
@@ -997,4 +1001,20 @@ One URL per line</string>
     <item quantity="one">and save %s premove line</item>
     <item quantity="other">and save %s premove lines</item>
   </plurals>
+  <string name="sorry">Sorry :(</string>
+  <string name="weHadToTimeYouOutForAWhile">We had to time you out for a while.</string>
+  <string name="timeoutExpires">The timeout expires %s.</string>
+  <string name="why">Why?</string>
+  <string name="pleasantDraughtsExperience">We aim to provide a pleasant draughts experience for everyone.</string>
+  <string name="goodPractice">To that effect, we must ensure that all players follow good practice.</string>
+  <string name="potentialProblem">When a potential problem is detected, we display this message.</string>
+  <string name="howToAvoidThis">How to avoid this?</string>
+  <string name="playEveryGame">Play every game you start.</string>
+  <string name="tryToWin">Try to win (or at least draw) every game you play.</string>
+  <string name="resignLostGames">Resign lost games (don't let the clock run down).</string>
+  <string name="temporaryInconvenience">We apologise for the temporary inconvenience,</string>
+  <string name="wishYouGreatGames">and wish you great games on lidraughts.org.</string>
+  <string name="thankYouForReading">Thank you for reading!</string>
+  <string name="lifetimeScore">Lifetime score</string>
+  <string name="currentMatchScore">Current match score</string>
 </resources>

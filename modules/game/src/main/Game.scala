@@ -25,7 +25,6 @@ case class Game(
     daysPerTurn: Option[Int],
     binaryMoveTimes: Option[ByteArray] = None,
     mode: Mode = Mode.default,
-    next: Option[Game.ID] = None,
     bookmarks: Int = 0,
     createdAt: DateTime = DateTime.now,
     movedAt: DateTime = DateTime.now,
@@ -650,9 +649,6 @@ case class Game(
     draughts = draughts.copy(turns = 0, startedAtTurn = 0)
   )
 
-  def setHoldAlert(color: Color, ha: Player.HoldAlert) =
-    updatePlayer(color, p => p.copy(holdAlert = ha.some))
-
   lazy val opening: Option[FullOpening.AtPly] =
     if (fromPosition || !Variant.openingSensibleVariants(variant)) none
     else FullOpeningDB search pdnMoves
@@ -791,7 +787,6 @@ object Game {
     val rated = "ra"
     val analysed = "an"
     val variant = "v"
-    val next = "ne"
     val bookmarks = "bm"
     val createdAt = "ca"
     val movedAt = "ua" // ua = updatedAt (bc)
