@@ -249,27 +249,27 @@ object Round extends LidraughtsController with TheftPrevention {
       game.finishedOrAborted || !ctx.userId.exists(game.userIds.contains)
     }
   } ?? {
-    Env.chat.api.userChat.findMineIf(Chat.Id(s"${game.id}/w"), ctx.me, !game.justCreated) flatMap { chat =>
+    val id = Chat.Id(s"${game.id}/w")
+    Env.chat.api.userChat.findMineIf(id, ctx.me, !game.justCreated) flatMap { chat =>
       Env.user.lightUserApi.preloadMany(chat.chat.userIds) inject chat.some
     }
   }
 
   private[controllers] def getPlayerChat(game: GameModel, tour: Option[Tour], simul: Option[lidraughts.simul.Simul])(implicit ctx: Context): Fu[Option[Chat.GameOrEvent]] = ctx.noKid ?? {
+    def toEventChat(c: lidraughts.chat.UserChat.Mine) = Chat.GameOrEvent(Right(c truncate 100)).some
     (game.tournamentId, game.simulId) match {
       case (Some(tid), _) => {
         ctx.isAuth && tour.fold(true)(Tournament.canHaveChat(_, none))
-      } ??
-        Env.chat.api.userChat.cached.findMine(Chat.Id(tid), ctx.me).map { chat =>
-          Chat.GameOrEvent(Right(chat truncate 50)).some
-        }
+      } ?? Env.chat.api.userChat.cached.findMine(Chat.Id(tid), ctx.me).map(toEventChat)
       case (_, Some(sid)) if simul.fold(false)(_.canHaveChat(ctx.me)) => game.simulId.?? { sid =>
-        Env.chat.api.userChat.cached.findMine(Chat.Id(sid), ctx.me).map { chat =>
-          Chat.GameOrEvent(Right(chat truncate 50)).some
-        }
+        Env.chat.api.userChat.cached.findMine(Chat.Id(sid), ctx.me).map(toEventChat)
       }
       case _ => game.hasChat ?? {
-        Env.chat.api.playerChat.findIf(Chat.Id(game.id), !game.justCreated).map { chat =>
-          Chat.GameOrEvent(Left(Chat.Restricted(chat, game.fromLobby && ctx.isAnon))).some
+        Env.chat.api.playerChat.findIf(Chat.Id(game.id), !game.justCreated) map { chat =>
+          Chat.GameOrEvent(Left(Chat.Restricted(
+            chat,
+            restricted = game.fromLobby && ctx.isAnon
+          ))).some
         }
       }
     }

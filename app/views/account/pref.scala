@@ -41,7 +41,7 @@ object pref {
     val booleanChoices = Seq(0 -> trans.no.txt(), 1 -> trans.yes.txt())
     div(cls := "account box box-pad")(
       h1(bits.categName(categ)),
-      st.form(cls := "autosubmit", action := routes.Pref.formApply, method := "POST")(
+      postForm(cls := "autosubmit", action := routes.Pref.formApply)(
         categFieldset(PrefCateg.GameDisplay, categ)(
           setting(
             trans.pieceAnimation(),
@@ -120,6 +120,10 @@ object pref {
             radios(form("behavior.takeback"), translatedTakebackChoices)
           ),
           setting(
+            trans.giveMoreTime(),
+            radios(form("behavior.moretime"), translatedMoretimeChoices)
+          ),
+          setting(
             trans.claimDrawOnThreefoldRepetitionAutomatically(),
             radios(form("behavior.autoThreefold"), translatedAutoThreefoldChoices)
           ),
@@ -155,7 +159,7 @@ object pref {
           ),
           setting(
             trans.shareYourInsightsData(),
-            radios(form("insightShare"), translatedInsightSquareChoices)
+            radios(form("insightShare"), translatedInsightShareChoices)
           )
         ),
         p(cls := "saved text none", dataIcon := "E")(trans.yourPreferencesHaveBeenSaved())

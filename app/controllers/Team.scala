@@ -98,7 +98,15 @@ object Team extends LidraughtsController {
     OptionFuResult(api team id) { team =>
       Owner(team) {
         implicit val req = ctx.body
-        forms.selectMember.bindFromRequest.value.pp ?? { api.kick(team, _, me) } inject Redirect(routes.Team.show(team.id))
+        forms.selectMember.bindFromRequest.value ?? { api.kick(team, _, me) } inject Redirect(routes.Team.show(team.id))
+      }
+    }
+  }
+  def kickUser(teamId: String, userId: String) = Scoped(_.Team.Write) { req => me =>
+    api team teamId flatMap {
+      _ ?? { team =>
+        if (team isCreator me.id) api.kick(team, userId, me) inject jsonOkResult
+        else Forbidden(jsonError("Not your team")).fuccess
       }
     }
   }
@@ -164,7 +172,7 @@ object Team extends LidraughtsController {
       case Some(Motivate(team)) => Redirect(routes.Team.requestForm(team.id)).fuccess
       case _ => notFound(ctx)
     },
-    scoped = req => me => Env.oAuth.server.fetchAppOwner(req) flatMap {
+    scoped = req => me => Env.oAuth.server.fetchAppAuthor(req) flatMap {
       _ ?? { api.joinApi(id, me, _) }
     } map {
       case Some(Joined(_)) => jsonOkResult

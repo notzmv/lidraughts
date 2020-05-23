@@ -25,10 +25,19 @@ object chat {
     public: Boolean, // game players chat is not public
     withNote: Boolean = false,
     writeable: Boolean = true,
-    localMod: Boolean = false
+    localMod: Boolean = false,
+    palantir: Boolean = false
   )(implicit ctx: Context) =
     json(
-      chat.chat, name = name, timeout = timeout, withNote = withNote, writeable = writeable, public = public, restricted = chat.restricted, localMod = localMod
+      chat.chat,
+      name = name,
+      timeout = timeout,
+      withNote = withNote,
+      writeable = writeable,
+      public = public,
+      restricted = chat.restricted,
+      localMod = localMod,
+      palantir = palantir
     )
 
   def json(
@@ -39,16 +48,18 @@ object chat {
     withNote: Boolean = false,
     writeable: Boolean = true,
     restricted: Boolean = false,
-    localMod: Boolean = false
+    localMod: Boolean = false,
+    palantir: Boolean = false
   )(implicit ctx: Context) = Json.obj(
     "data" -> Json.obj(
       "id" -> chat.id,
       "name" -> name,
       "lines" -> lidraughts.chat.JsonView(chat),
-      "userId" -> ctx.userId,
-      "loginRequired" -> chat.loginRequired,
-      "restricted" -> restricted
-    ),
+      "userId" -> ctx.userId
+    )
+      .add("loginRequired" -> chat.loginRequired)
+      .add("restricted" -> restricted)
+      .add("palantir" -> (palantir && ctx.isAuth)),
     "i18n" -> i18n(withNote = withNote),
     "writeable" -> writeable,
     "noteId" -> (withNote && ctx.noBlind).option(chat.id.value take 8),

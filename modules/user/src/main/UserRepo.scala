@@ -58,6 +58,12 @@ object UserRepo {
     query.copy(options = query.options.batchSize(batchSize)).cursor[Bdoc](readPreference)
   }
 
+  def countRecentByPrevEmail(
+    email: NormalizedEmailAddress,
+    since: DateTime = DateTime.now.minusWeeks(1)
+  ): Fu[Int] =
+    coll.countSel($doc(F.prevEmail -> email, F.createdAt $gt since))
+
   def pair(x: Option[ID], y: Option[ID]): Fu[(Option[User], Option[User])] =
     coll.byIds[User](List(x, y).flatten) map { users =>
       x.??(xx => users.find(_.id == xx)) ->
@@ -374,6 +380,9 @@ object UserRepo {
   private def anyEmail(doc: Bdoc): Option[EmailAddress] =
     doc.getAs[EmailAddress](F.verbatimEmail) orElse doc.getAs[EmailAddress](F.email)
 
+  private def anyEmailOrPrevious(doc: Bdoc): Option[EmailAddress] =
+    anyEmail(doc) orElse doc.getAs[EmailAddress](F.prevEmail)
+
   def email(id: ID): Fu[Option[EmailAddress]] = coll.find(
     $id(id),
     $doc(
@@ -418,6 +427,15 @@ object UserRepo {
             )
           )
         }
+      }
+  def withEmailsU(users: List[User]): Fu[List[User.WithEmails]] = withEmails(users.map(_.id))
+
+  def emailMap(names: List[String]): Fu[Map[User.ID, EmailAddress]] =
+    coll.find($inIds(names map normalize), $doc(F.verbatimEmail -> true, F.email -> true, F.prevEmail -> true))
+      .list[Bdoc](none, ReadPreference.secondaryPreferred).map { docs =>
+        docs.flatMap { doc =>
+          anyEmailOrPrevious(doc) map { ~doc.getAs[User.ID](F.id) -> _ }
+        }(collection.breakOut)
       }
 
   def hasEmail(id: ID): Fu[Boolean] = email(id).map(_.isDefined)

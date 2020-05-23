@@ -124,9 +124,8 @@
     }
   });
 
-  lidraughts.readServerFen = function(t) {
-    return atob(t.split("").reverse().join(""));
-  };
+  lidraughts.reverse = s => s.split('').reverse().join('');
+  lidraughts.readServerFen = t => atob(lidraughts.reverse(t));
 
   lidraughts.userAutocomplete = function($input, opts) {
     opts = opts || {};
@@ -489,9 +488,7 @@
         return false;
       });
 
-      $('a.delete, input.delete').click(function() {
-        return confirm('Delete?');
-      });
+      $('a.delete, input.delete').click(() => confirm('Delete?'));
       $('input.confirm, button.confirm').click(function() {
         return confirm($(this).attr('title') || 'Confirm this action?');
       });
@@ -631,8 +628,8 @@
         }
       }
     });
-    api.say = function(text, cut) {
-      if (!speechStorage.get()) return false;
+    api.say = function(text, cut, force) {
+      if (!speechStorage.get() && !force) return false;
       var msg = text.text ? text : new SpeechSynthesisUtterance(text);
       msg.volume = api.getVolume();
       msg.lang = 'en-US';
@@ -693,7 +690,7 @@
       if (data.users) {
         var tags = data.users.map($.userLink);
         if (data.anons === 1) tags.push('Anonymous');
-        else if (data.anons) tags.push('Anonymous(' + data.anons + ')');
+        else if (data.anons) tags.push('Anonymous (' + data.anons + ')');
         this.list.html(tags.join(', '));
       } else if (!this.number.length) this.list.html(data.nb + ' players in the chat');
       this.element.removeClass('none');

@@ -303,12 +303,13 @@ object User extends LidraughtsController {
         val others = spyFu flatMap { spy =>
           val familyUserIds = user.id :: spy.otherUserIds.toList
           Env.user.noteApi.forMod(familyUserIds).logTimeIfGt(s"$username noteApi.forMod", 2 seconds) zip
-            Env.playban.api.bans(familyUserIds).logTimeIfGt(s"$username playban.bans", 2 seconds) map {
-              case notes ~ bans => html.user.mod.otherUsers(user, spy, notes, bans).some
+            Env.playban.api.bans(familyUserIds).logTimeIfGt(s"$username playban.bans", 2 seconds) zip
+            lidraughts.security.UserSpy.withMeSortedWithEmails(user, spy.otherUsers) map {
+              case notes ~ bans ~ othersWithEmail => html.user.mod.otherUsers(user, spy, othersWithEmail, notes, bans).some
             }
         }
         val identification = spyFu map { spy =>
-          html.user.mod.identification(user, spy).some
+          html.user.mod.identification(user, spy, Env.security.printBan.blocks).some
         }
         val irwin = Env.irwin.api.reports.withPovs(user) map {
           _ ?? { reps =>

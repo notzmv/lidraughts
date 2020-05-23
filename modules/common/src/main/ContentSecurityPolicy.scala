@@ -12,13 +12,7 @@ case class ContentSecurityPolicy(
     baseUri: List[String]
 ) {
 
-  private def withScriptSrc(source: String) = copy(scriptSrc = source :: scriptSrc)
-
-  def withNonce(nonce: Nonce) = copy(
-    // Nonces are not supported by Safari but 'unsafe-inline' is ignored by
-    // better browsers if there are also nonces.
-    scriptSrc = nonce.scriptSrc :: "'unsafe-inline'" :: scriptSrc
-  )
+  def withNonce(nonce: Nonce) = copy(scriptSrc = nonce.scriptSrc :: scriptSrc)
 
   def withStripe = copy(
     connectSrc = "https://*.stripe.com" :: connectSrc,
@@ -59,6 +53,10 @@ case class ContentSecurityPolicy(
   def withRecaptcha = copy(
     scriptSrc = "https://www.google.com" :: scriptSrc,
     frameSrc = "https://www.google.com" :: frameSrc
+  )
+
+  def withPeer = copy(
+    connectSrc = "wss://0.peerjs.com" :: connectSrc
   )
 
   private def withPrismicEditor(maybe: Boolean): ContentSecurityPolicy = if (maybe) copy(

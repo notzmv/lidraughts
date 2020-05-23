@@ -311,8 +311,8 @@
     <item quantity="other">≥ %s partijen met rating</item>
   </plurals>
   <plurals name="moreThanNbPerfRatedGames">
-    <item quantity="one">≥ %1$s %2%s partij met rating</item>
-    <item quantity="other">≥ %1$s %2%s partijen met rating</item>
+    <item quantity="one">≥ %1$s %2$s partij met rating</item>
+    <item quantity="other">≥ %1$s %2$s partijen met rating</item>
   </plurals>
   <plurals name="needNbMorePerfGames">
     <item quantity="one">Je moet %1$s extra %2$s partij met rating spelen</item>
@@ -527,6 +527,7 @@ Een URL per regel</string>
   <string name="wasThisPuzzleAnyGood">Was dit een goede puzzel?</string>
   <string name="pleaseVotePuzzle">Verbeter lidraughts door te stemmen met de pijl naar boven of beneden.</string>
   <string name="thankYou">Bedankt!</string>
+  <string name="hidden">verborgen</string>
   <plurals name="playedXTimes">
     <item quantity="one">%s keer gespeeld</item>
     <item quantity="other">%s keer gespeeld</item>

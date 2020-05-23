@@ -348,7 +348,7 @@ export default function(ctrl: AnalyseCtrl): VNode {
       playerBars ? playerBars[ctrl.bottomIsWhite() ? 0 : 1] : null
     ]),
     (gaugeOn && !intro) ? cevalView.renderGauge(ctrl) : null,
-    gamebookPlayView || (intro ? null : h('div.analyse__tools', [
+    gamebookPlayView || (intro ? null : h(addChapterId(study, 'div.analyse__tools'), [
       ...(menuIsOpen ? [actionMenu(ctrl)] : (
         (multiBoardMenu && multiBoardMenuIsOpen) ? [multiBoardMenu.view(ctrl.study)] : [
           cevalView.renderCeval(ctrl),
@@ -377,7 +377,7 @@ export default function(ctrl: AnalyseCtrl): VNode {
             (!ctrl.synthetic && playable(ctrl.data)) ? h('div.back-to-game',
               h('a.button.button-empty.text', {
                 attrs: {
-                  href: router.game(ctrl.data),
+                  href: router.game(ctrl.data, ctrl.data.player.color),
                   'data-icon': 'i'
                 }
               }, ctrl.trans.noarg('backToGame'))

@@ -2,6 +2,7 @@ package lidraughts.study
 
 import akka.actor._
 import akka.pattern.ask
+import scala.concurrent.duration._
 
 import lidraughts.hub.actorApi.socket.HasUserId
 import lidraughts.notify.{ InvitedToStudy, NotifyApi, Notification }
@@ -14,8 +15,16 @@ private final class StudyInvite(
     studyRepo: StudyRepo,
     notifyApi: NotifyApi,
     getPref: User => Fu[Pref],
-    getRelation: (User.ID, User.ID) => Fu[Option[lidraughts.relation.Relation]]
+    getRelation: (User.ID, User.ID) => Fu[Option[lidraughts.relation.Relation]],
+    rateLimitDisabled: () => lidraughts.common.Strings
 ) {
+
+  private val notifyRateLimit = new lidraughts.memo.RateLimit[User.ID](
+    credits = 500,
+    duration = 1 day,
+    name = "Study invites per user",
+    key = "study.invite.user"
+  )
 
   private val maxMembers = 30
 
@@ -37,7 +46,14 @@ private final class StudyInvite(
     }
     _ <- studyRepo.addMember(study, StudyMember make invited)
     shouldNotify = !isPresent && (!inviter.troll || relation.has(Follow))
-    _ <- shouldNotify ?? {
+    rateLimitCost = if (rateLimitDisabled().value.map(UserRepo.normalize).contains(byUserId)) 0
+    else if (relation has Follow) 10
+    else if (inviter.roles has "ROLE_COACH") 20
+    else if (inviter.hasTitle) 20
+    else if (inviter.perfs.bestRating >= 2000) 50
+    else if (invited.hasTitle) 200
+    else 100
+    _ <- shouldNotify ?? notifyRateLimit(inviter.id, rateLimitCost) {
       val notificationContent = InvitedToStudy(
         InvitedToStudy.InvitedBy(inviter.id),
         InvitedToStudy.StudyName(study.name.value),

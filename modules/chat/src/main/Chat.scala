@@ -1,7 +1,7 @@
 package lidraughts.chat
 
-import lidraughts.user.User
 import lidraughts.hub.actorApi.shutup.PublicSource
+import lidraughts.user.User
 
 sealed trait AnyChat {
   def id: Chat.Id

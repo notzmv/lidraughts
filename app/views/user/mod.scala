@@ -4,6 +4,7 @@ import lidraughts.api.Context
 import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
 import lidraughts.evaluation.Display
+import lidraughts.security.FingerHash
 import lidraughts.user.User
 
 import controllers.routes
@@ -29,94 +30,94 @@ object mod {
   def actions(u: User, emails: User.Emails, erased: User.Erased)(implicit ctx: Context): Frag =
     div(id := "mz_actions")(
       isGranted(_.UserEvaluate) option div(cls := "btn-rack")(
-        st.form(method := "POST", action := routes.Mod.spontaneousInquiry(u.username), title := "Start an inquiry")(
-          button(cls := "btn-rack__btn inquiry", tpe := "submit")(i)
+        postForm(action := routes.Mod.spontaneousInquiry(u.username), title := "Start an inquiry")(
+          submitButton(cls := "btn-rack__btn inquiry")(i)
         ),
-        st.form(method := "POST", action := routes.Mod.refreshUserAssess(u.username), title := "Collect data and ask irwin", cls := "xhr")(
-          button(cls := "btn-rack__btn", tpe := "submit")("Evaluate")
+        postForm(action := routes.Mod.refreshUserAssess(u.username), title := "Collect data and ask irwin", cls := "xhr")(
+          submitButton(cls := "btn-rack__btn")("Evaluate")
         ),
         isGranted(_.Shadowban) option {
           a(cls := "btn-rack__btn", href := routes.Mod.communicationPublic(u.id), title := "View communications")("Comms")
         }
-      /*st.form(method := "POST", action := routes.Mod.notifySlack(u.id), title := "Notify slack #tavern", cls := "xhr")(
-          button(cls := "btn-rack__btn", tpe := "submit")("Slack")
+      /*postForm(action := routes.Mod.notifySlack(u.id), title := "Notify slack #tavern", cls := "xhr")(
+          submitButton(cls := "btn-rack__btn")("Slack")
         )*/
       ),
       div(cls := "btn-rack")(
         isGranted(_.MarkEngine) option {
-          st.form(method := "POST", action := routes.Mod.engine(u.username, !u.engine), title := "This user is clearly cheating.", cls := "xhr")(
-            button(cls := List("btn-rack__btn" -> true, "active" -> u.engine), tpe := "submit")("Engine")
+          postForm(action := routes.Mod.engine(u.username, !u.engine), title := "This user is clearly cheating.", cls := "xhr")(
+            submitButton(cls := List("btn-rack__btn" -> true, "active" -> u.engine))("Engine")
           )
         },
         isGranted(_.MarkBooster) option {
-          st.form(method := "POST", action := routes.Mod.booster(u.username, !u.booster), title := "Marks the user as a booster or sandbagger.", cls := "xhr")(
-            button(cls := List("btn-rack__btn" -> true, "active" -> u.booster), tpe := "submit")("Booster")
+          postForm(action := routes.Mod.booster(u.username, !u.booster), title := "Marks the user as a booster or sandbagger.", cls := "xhr")(
+            submitButton(cls := List("btn-rack__btn" -> true, "active" -> u.booster))("Booster")
           )
         },
         isGranted(_.Shadowban) option {
-          st.form(method := "POST", action := routes.Mod.troll(u.username, !u.troll), title := "Enable/disable communication features for this user.", cls := "xhr")(
-            button(cls := List("btn-rack__btn" -> true, "active" -> u.troll), tpe := "submit")("Shadowban")
+          postForm(action := routes.Mod.troll(u.username, !u.troll), title := "Enable/disable communication features for this user.", cls := "xhr")(
+            submitButton(cls := List("btn-rack__btn" -> true, "active" -> u.troll))("Shadowban")
           )
         },
         u.troll option {
-          st.form(method := "POST", action := routes.Mod.deletePmsAndChats(u.username), title := "Delete all PMs and public chat messages", cls := "xhr")(
-            button(cls := "btn-rack__btn confirm", tpe := "submit")("Clear PMs & chats")
+          postForm(action := routes.Mod.deletePmsAndChats(u.username), title := "Delete all PMs and public chat messages", cls := "xhr")(
+            submitButton(cls := "btn-rack__btn confirm")("Clear PMs & chats")
           )
         },
         isGranted(_.RemoveRanking) option {
-          st.form(method := "POST", action := routes.Mod.rankban(u.username, !u.rankban), title := "Include/exclude this user from the rankings.", cls := "xhr")(
-            button(cls := List("btn-rack__btn" -> true, "active" -> u.rankban), tpe := "submit")("Rankban")
+          postForm(action := routes.Mod.rankban(u.username, !u.rankban), title := "Include/exclude this user from the rankings.", cls := "xhr")(
+            submitButton(cls := List("btn-rack__btn" -> true, "active" -> u.rankban))("Rankban")
           )
         },
         isGranted(_.ReportBan) option {
-          st.form(method := "POST", action := routes.Mod.reportban(u.username, !u.reportban), title := "Enable/disable the report feature for this user.", cls := "xhr")(
-            button(cls := List("btn-rack__btn" -> true, "active" -> u.reportban), tpe := "submit")("Reportban")
+          postForm(action := routes.Mod.reportban(u.username, !u.reportban), title := "Enable/disable the report feature for this user.", cls := "xhr")(
+            submitButton(cls := List("btn-rack__btn" -> true, "active" -> u.reportban))("Reportban")
           )
         }
       ),
       div(cls := "btn-rack")(
         isGranted(_.IpBan) option {
-          st.form(method := "POST", action := routes.Mod.ban(u.username, !u.ipBan), title := "Bans all IPs under this account from logging into this site.", cls := "xhr")(
-            button(cls := List("btn-rack__btn" -> true, "active" -> u.ipBan), tpe := "submit")("IP ban")
+          postForm(action := routes.Mod.ipBan(u.username, !u.ipBan), cls := "xhr")(
+            submitButton(cls := List("btn-rack__btn" -> true, "active" -> u.ipBan))("IP ban")
           )
         },
         if (u.enabled) {
           isGranted(_.CloseAccount) option {
-            st.form(method := "POST", action := routes.Mod.closeAccount(u.username), title := "Disables this account.", cls := "xhr")(
-              button(cls := "btn-rack__btn", tpe := "submit")("Close")
+            postForm(action := routes.Mod.closeAccount(u.username), title := "Disables this account.", cls := "xhr")(
+              submitButton(cls := "btn-rack__btn")("Close")
             )
           }
         } else if (erased.value) {
           "Erased"
         } else {
           isGranted(_.ReopenAccount) option {
-            st.form(method := "POST", action := routes.Mod.reopenAccount(u.username), title := "Re-activates this account.", cls := "xhr")(
-              button(tpe := "submit", cls := "btn-rack__btn active")("Closed")
+            postForm(action := routes.Mod.reopenAccount(u.username), title := "Re-activates this account.", cls := "xhr")(
+              submitButton(cls := "btn-rack__btn active")("Closed")
             )
           }
         }
       ),
       div(cls := "btn-rack")(
         (u.totpSecret.isDefined && isGranted(_.DisableTwoFactor)) option {
-          st.form(method := "POST", action := routes.Mod.disableTwoFactor(u.username), title := "Disables two-factor authentication for this account.", cls := "xhr")(
-            button(cls := "btn-rack__btn confirm", tpe := "submit")("Disable 2FA")
+          postForm(action := routes.Mod.disableTwoFactor(u.username), title := "Disables two-factor authentication for this account.", cls := "xhr")(
+            submitButton(cls := "btn-rack__btn confirm")("Disable 2FA")
           )
         },
         isGranted(_.Impersonate) option {
-          st.form(method := "post", action := routes.Mod.impersonate(u.username))(
-            button(cls := "btn-rack__btn", tpe := "submit")("Impersonate")
+          postForm(action := routes.Mod.impersonate(u.username))(
+            submitButton(cls := "btn-rack__btn")("Impersonate")
           )
         }
       ),
       isGranted(_.SetTitle) option {
-        st.form(cls := "fmjd_title", method := "POST", action := routes.Mod.setTitle(u.username))(
+        postForm(cls := "fmjd_title", action := routes.Mod.setTitle(u.username))(
           form3.select(lidraughts.user.DataForm.title.fill(u.title.map(_.value))("title"), lidraughts.user.Title.all, "No title".some)
         )
       },
       isGranted(_.SetEmail) ?? frag(
-        st.form(cls := "email", method := "POST", action := routes.Mod.setEmail(u.username))(
+        postForm(cls := "email", action := routes.Mod.setEmail(u.username))(
           st.input(tpe := "email", value := emails.current.??(_.value), name := "email", placeholder := "Email address"),
-          button(tpe := "submit", cls := "button", dataIcon := "E")
+          submitButton(cls := "button", dataIcon := "E")
         ),
         emails.previous.map { email =>
           s"Previously $email"
@@ -199,25 +200,25 @@ object mod {
     div(id := "mz_assessments")(
       pag.pag.sfAvgBlurs.map { blursYes =>
         p(cls := "text", dataIcon := "j")(
-          "ACPL in games with blurs is ", strong(blursYes),
+          "ACPL in games with blurs is ", strong(blursYes._1), " [", blursYes._2, " , ", blursYes._3, "]",
           pag.pag.sfAvgNoBlurs ?? { blursNo =>
-            frag(" against ", strong(blursNo), " in games without blurs.")
+            frag(" against ", strong(blursNo._1), " [", blursNo._2, ", ", blursNo._3, "] in games without blurs.")
           }
         )
       },
       pag.pag.sfAvgLowVar.map { lowVar =>
         p(cls := "text", dataIcon := "j")(
-          "ACPL in games with consistent move times is ", strong(lowVar),
+          "ACPL in games with consistent move times is ", strong(lowVar._1), " [", lowVar._2, ", ", lowVar._3, "]",
           pag.pag.sfAvgHighVar ?? { highVar =>
-            frag(" against ", strong(highVar), " in games with random move times.")
+            frag(" against ", strong(highVar._1), " [", highVar._2, ", ", highVar._3, "] in games with random move times.")
           }
         )
       },
       pag.pag.sfAvgHold.map { holdYes =>
         p(cls := "text", dataIcon := "j")(
-          "ACPL in games with bot signature ", strong(holdYes),
-          pag.pag.sfAvgNoHold.map { holdNo =>
-            frag(" against ", strong(holdNo), " in games without bot signature.")
+          "ACPL in games with bot signature ", strong(holdYes._1), " [", holdYes._2, ", ", holdYes._3, "]",
+          pag.pag.sfAvgNoHold ?? { holdNo =>
+            frag(" against ", strong(holdNo._1), " [", holdNo._2, ", ", holdNo._3, "]  in games without bot signature.")
           }
         )
       },
@@ -282,12 +283,13 @@ object mod {
       )
     )
 
-  def otherUsers(u: User, spy: lidraughts.security.UserSpy, notes: List[lidraughts.user.Note], bans: Map[String, Int])(implicit ctx: Context): Frag =
+  def otherUsers(u: User, spy: lidraughts.security.UserSpy, othersWithEmail: lidraughts.security.UserSpy.WithMeSortedWithEmails, notes: List[lidraughts.user.Note], bans: Map[String, Int])(implicit ctx: Context): Frag =
     div(id := "mz_others")(
       table(cls := "slist")(
         thead(
           tr(
             th(spy.otherUsers.size, " similar user(s)"),
+            th("Email"),
             th("Same"),
             th(attr("data-sort-method") := "number")("Games"),
             th("Status"),
@@ -296,10 +298,11 @@ object mod {
           )
         ),
         tbody(
-          spy.withMeSorted(u).map {
+          othersWithEmail.others.map {
             case lidraughts.security.UserSpy.OtherUser(o, byIp, byFp) => {
               tr((o == u) option (cls := "same"))(
                 td(attr("data-sort") := o.id)(userLink(o, withBestRating = true, params = "?mod")),
+                td(othersWithEmail emailValueOf o),
                 td(
                   if (o == u) "-"
                   else List(byIp option "IP", byFp option "Print").flatten.mkString(", ")
@@ -323,7 +326,7 @@ object mod {
       )
     )
 
-  def identification(u: User, spy: lidraughts.security.UserSpy)(implicit ctx: Context): Frag =
+  def identification(u: User, spy: lidraughts.security.UserSpy, printBlock: FingerHash => Boolean)(implicit ctx: Context): Frag =
     div(id := "mz_identification")(
       div(cls := "spy_ips")(
         strong(spy.ips.size, " IP addresses"),
@@ -359,7 +362,7 @@ object mod {
         ul(
           spy.prints.sorted.map { fp =>
             li(
-              a(href := s"${routes.Mod.search}?q=${java.net.URLEncoder.encode(fp.value.value, "US-ASCII")}")(
+              a(href := routes.Mod.print(fp.value.value), cls := printBlock(fp.value) option "blocked")(
                 fp.value.value, " ", momentFromNowOnce(fp.date)
               )
             )
@@ -376,8 +379,8 @@ object mod {
       ),
       reports.by.map { r =>
         r.atomBy(lidraughts.report.ReporterId(u.id)).map { atom =>
-          st.form(action := routes.Report.inquiry(r.id), method := "POST")(
-            button(tpe := "submit")(reportScore(r.score), " ", strong(r.reason.name)), " ",
+          postForm(action := routes.Report.inquiry(r.id))(
+            submitButton(reportScore(r.score), " ", strong(r.reason.name)), " ",
             userIdLink(r.user.some), " ", momentFromNowOnce(atom.at), ": ", shorten(atom.text, 200)
           )
         }
@@ -389,8 +392,8 @@ object mod {
         reports.about.isEmpty option ": nothing to show."
       ),
       reports.about.map { r =>
-        st.form(action := routes.Report.inquiry(r.id), method := "POST")(
-          button(tpe := "submit")(reportScore(r.score), " ", strong(r.reason.name)),
+        postForm(action := routes.Report.inquiry(r.id))(
+          submitButton(reportScore(r.score), " ", strong(r.reason.name)),
           div(cls := "atoms")(
             r.bestAtoms(3).map { atom =>
               div(cls := "atom")(

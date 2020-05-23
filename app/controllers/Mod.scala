@@ -4,10 +4,10 @@ import lidraughts.api.{ Context, BodyContext }
 import lidraughts.app._
 import lidraughts.chat.Chat
 import lidraughts.common.{ IpAddress, EmailAddress, HTTPRequest }
-import lidraughts.report.{ Suspect, Mod => AsMod }
-import lidraughts.security.Permission
-import lidraughts.user.{ UserRepo, User => UserModel, Title }
 import lidraughts.mod.UserSearch
+import lidraughts.report.{ Suspect, Mod => AsMod }
+import lidraughts.security.{ Permission, FingerHash }
+import lidraughts.user.{ UserRepo, User => UserModel, Title }
 import ornicar.scalalib.Zero
 import views._
 
@@ -77,7 +77,7 @@ object Mod extends LidraughtsController {
     case (inquiry, suspect) => Report.onInquiryClose(inquiry, me, suspect.some)(ctx)
   })
 
-  def ban(username: String, v: Boolean) = OAuthMod(_.IpBan) { _ => me =>
+  def ipBan(username: String, v: Boolean) = OAuthMod(_.IpBan) { _ => me =>
     withSuspect(username) { sus =>
       modApi.setBan(AsMod(me), sus, v) map some
     }
@@ -181,15 +181,17 @@ object Mod extends LidraughtsController {
           (Env.security userSpy user) zip
           Env.user.noteApi.forMod(user.id) zip
           Env.mod.logApi.userHistory(user.id) zip
-          Env.report.api.inquiries.ofModId(me.id) map {
+          Env.report.api.inquiries.ofModId(me.id) flatMap {
             case chats ~ threads ~ publicLines ~ spy ~ notes ~ history ~ inquiry =>
-              if (priv && !inquiry.??(_.isRecentCommOf(Suspect(user))))
-                Env.slack.api.commlog(mod = me, user = user, inquiry.map(_.oldestAtom.by.value))
-              val povWithChats = (povs zip chats) collect {
-                case (p, Some(c)) if c.nonEmpty => p -> c
-              } take 15
-              val filteredNotes = notes.filter(_.from != "irwin")
-              html.mod.communication(user, povWithChats, threads, publicLines, spy, filteredNotes, history, priv)
+              lidraughts.security.UserSpy.withMeSortedWithEmails(user, spy.otherUsers) map { othersWithEmail =>
+                if (priv && !inquiry.??(_.isRecentCommOf(Suspect(user))))
+                  Env.slack.api.commlog(mod = me, user = user, inquiry.map(_.oldestAtom.by.value))
+                val povWithChats = (povs zip chats) collect {
+                  case (p, Some(c)) if c.nonEmpty => p -> c
+                } take 15
+                val filteredNotes = notes.filter(_.from != "irwin")
+                html.mod.communication(user, povWithChats, threads, publicLines, spy, othersWithEmail, filteredNotes, history, priv)
+              }
           }
       }
     }
@@ -205,7 +207,10 @@ object Mod extends LidraughtsController {
   }
 
   protected[controllers] def redirect(username: String, mod: Boolean = true) =
-    Redirect(routes.User.show(username).url + mod.??("?mod"))
+    Redirect(userUrl(username, mod))
+
+  protected[controllers] def userUrl(username: String, mod: Boolean = true) =
+    s"${routes.User.show(username).url}${mod ?? "?mod"}"
 
   def refreshUserAssess(username: String) = Secure(_.MarkEngine) { implicit ctx => me =>
     OptionFuResult(UserRepo named username) { user =>
@@ -247,6 +252,21 @@ object Mod extends LidraughtsController {
   protected[controllers] def searchTerm(q: String)(implicit ctx: Context) = {
     val query = UserSearch exact q
     Env.mod.search(query) map { users => Ok(html.mod.search(UserSearch.form fill query, users)) }
+  }
+
+  def print(fh: String) = SecureBody(_.PrintBan) { implicit ctx => me =>
+    val hash = FingerHash(fh)
+    for {
+      uids <- Env.security.api recentUserIdsByFingerHash hash
+      users <- UserRepo usersFromSecondary uids.reverse
+      withEmails <- UserRepo withEmailsU users
+      uas <- Env.security.api.printUas(hash)
+    } yield Ok(html.mod.search.print(hash, withEmails, uas, Env.security.printBan blocks hash))
+  }
+
+  def printBan(fh: String, v: Boolean) = Secure(_.PrintBan) { _ => me =>
+    Env.security.printBan.toggle(FingerHash(fh), v) inject
+      Redirect(routes.Mod.print(fh))
   }
 
   def chatUser(username: String) = Secure(_.ChatTimeout) { implicit ctx => me =>

@@ -2,7 +2,7 @@
 <resources>
   <string name="playInATournament">Play in a tournament</string>
   <string name="playWithAFriend">Play with a friend</string>
-  <string name="playWithTheMachine">Play with the machine</string>
+  <string name="playWithTheMachine">Play with the computer</string>
   <string name="toInviteSomeoneToPlayGiveThisUrl">To invite someone to play, give this URL</string>
   <string name="gameOver">Game Over</string>
   <string name="waitingForOpponent">Waiting for opponent</string>
@@ -53,7 +53,7 @@
   <string name="inLocalBrowser">in local browser</string>
   <string name="toggleLocalEvaluation">Toggle local evaluation</string>
   <string name="promoteVariation">Promote variation</string>
-  <string name="makeMainLine">Make main line</string>
+  <string name="makeMainLine">Make mainline</string>
   <string name="deleteFromHere">Delete from here</string>
   <string name="move">Move</string>
   <string name="variantLoss">Variant loss</string>
@@ -538,6 +538,7 @@ One URL per line</string>
   <string name="pleaseVotePuzzle">Help lidraughts improve by voting, using the up or down arrow:</string>
   <string name="thankYou">Thank you!</string>
   <string name="ratingX">Rating: %s</string>
+  <string name="hidden">hidden</string>
   <plurals name="playedXTimes">
     <item quantity="one">Played %s time</item>
     <item quantity="other">Played %s times</item>
@@ -686,7 +687,7 @@ One URL per line</string>
   <string name="youPlayTheWhitePieces">You play the white pieces</string>
   <string name="youPlayTheBlackPieces">You play the black pieces</string>
   <string name="itsYourTurn">It's your turn!</string>
-  <string name="unauthorizedError">Access is unauthorized.</string>
+  <string name="unauthorizedError">Access is unauthorised.</string>
   <string name="noInternetConnection">No internet connection. You can still play offline from the menu.</string>
   <string name="connectedToLidraughts">You are now connected to lidraughts.org</string>
   <string name="signedOut">You have been signed out</string>
@@ -779,7 +780,7 @@ One URL per line</string>
   <string name="whenCreateSimul">When you create a Simul, you get to play several players at once.</string>
   <string name="simulVariantsHint">If you select several variants, each player gets to choose which one to play.</string>
   <string name="simulClockHint">Fischer Clock setup. The more players you take on, the more time you may need.</string>
-  <string name="simulAddExtraTime">You may add extra time to your clock to help cope with the simul.</string>
+  <string name="simulAddExtraTime">You may add extra time to your clock to help you cope with the simul.</string>
   <string name="simulHostExtraTime">Host extra clock time</string>
   <string name="simulHostColor">Host colour for each game</string>
   <string name="simulChatRestrictionsHint">Chat restrictions only apply while the simultaneous exhibition is running.</string>

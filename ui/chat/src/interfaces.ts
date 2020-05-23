@@ -1,5 +1,6 @@
 import { VNode } from 'snabbdom/vnode'
 import { PresetCtrl } from './preset'
+import { Prop } from 'common';
 
 export interface ChatOpts {
   data: ChatData
@@ -34,6 +35,8 @@ export interface ChatData {
   userId?: string
   loginRequired: boolean
   restricted: boolean
+  palantir: boolean
+  domVersion: number
 }
 
 export interface Line {
@@ -66,8 +69,15 @@ export interface Ctrl {
   setTab(tab: Tab): void
   setEnabled(v: boolean): void
   plugin?: ChatPlugin
+  palantir: ChatPalantir;
   redraw: Redraw
   destroy(): void;
+}
+
+export interface ChatPalantir {
+  instance?: Palantir;
+  loaded: boolean;
+  enabled: Prop<boolean>;
 }
 
 export interface ViewModel {
