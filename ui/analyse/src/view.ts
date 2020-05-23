@@ -198,7 +198,7 @@ function controls(ctrl: AnalyseCtrl) {
               $(el).powerTip('hide');
             })
           ).powerTip('show')
-          setTimeout(() => $(el).powerTip('hide'), 6000);
+          setTimeout(() => $(el).powerTip('hide'), 14000);
         }, 1500);
       }
     })
@@ -398,6 +398,6 @@ export default function(ctrl: AnalyseCtrl): VNode {
     }),
     ctrl.embed ? null : h('div.chat__members.none', {
       hook: onInsert(el => $(el).watchers())
-    }, [h('span.list')])
+    }, [h('span.number', '\xa0'), ' ', ctrl.trans.noarg('spectators'), ' ', h('span.list')])
   ]);
 }

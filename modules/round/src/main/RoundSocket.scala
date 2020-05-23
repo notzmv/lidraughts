@@ -4,7 +4,7 @@ import scala.concurrent.duration._
 
 import akka.actor._
 import akka.pattern.{ ask, pipe }
-import draughts.{ Color, White, Black }
+import draughts.{ Color, White, Black, Speed }
 import play.api.libs.iteratee._
 import play.api.libs.json._
 
@@ -12,7 +12,7 @@ import actorApi._
 import lidraughts.chat.Chat
 import lidraughts.common.LightUser
 import lidraughts.game.actorApi.{ SimulNextGame, StartGame, UserStartGame }
-import lidraughts.game.{ Game, GameRepo, Event }
+import lidraughts.game.{ Game, Event }
 import lidraughts.hub.actorApi.Deploy
 import lidraughts.hub.actorApi.game.ChangeFeatured
 import lidraughts.hub.actorApi.round.{ IsOnGame, TourStanding, SimulStanding }
@@ -22,19 +22,22 @@ import lidraughts.hub.Trouper
 import lidraughts.socket._
 import lidraughts.socket.actorApi.{ Connected => _, _ }
 import lidraughts.socket.Socket
+import lidraughts.user.User
 import makeTimeout.short
 
 private[round] final class RoundSocket(
     dependencies: RoundSocket.Dependencies,
     gameId: Game.ID,
     history: History,
-    keepMeAlive: () => Unit
+    keepMeAlive: () => Unit,
+    getGoneWeights: Game => Fu[(Float, Float)]
 ) extends SocketTrouper[Member](dependencies.system, dependencies.sriTtl) {
 
   import dependencies._
 
   private var hasAi = false
   private var mightBeSimul = true // until proven false
+  private var gameSpeed: Option[Speed] = none
   private var chatIds = RoundSocket.ChatIds(
     priv = Chat.Id(gameId), // until replaced with tourney/simul chat
     pub = Chat.Id(s"$gameId/w")
@@ -53,7 +56,8 @@ private[round] final class RoundSocket(
     // connected as a bot
     private var botConnected: Boolean = false
 
-    var userId = none[String]
+    var userId = none[User.ID]
+    var goneWeight = 1f
 
     def ping: Unit = {
       isGone foreach { _ ?? notifyGone(color, false) }
@@ -65,13 +69,16 @@ private[round] final class RoundSocket(
     }
     private def isBye = bye > 0
 
-    private def isHostingSimul: Fu[Boolean] = userId.ifTrue(mightBeSimul) ?? { u =>
-      lidraughtsBus.ask[Set[String]]('simulGetHosts)(GetHostIds).map(_ contains u)
+    private def isHostingSimul: Fu[Boolean] = mightBeSimul ?? userId ?? { u =>
+      lidraughtsBus.ask[Set[User.ID]]('simulGetHosts)(GetHostIds).map(_ contains u)
     }
 
+    private def timeoutMillis = {
+      if (isBye) ragequitTimeout.toMillis else gameDisconnectTimeout(gameSpeed).toMillis
+    } * goneWeight atLeast 12000
+
     def isGone: Fu[Boolean] = {
-      time < (nowMillis - (if (isBye) ragequitTimeout else disconnectTimeout).toMillis) &&
-        !botConnected
+      time < (nowMillis - timeoutMillis) && !botConnected
     } ?? !isHostingSimul
 
     def setBotConnected(v: Boolean) =
@@ -84,7 +91,7 @@ private[round] final class RoundSocket(
   private val blackPlayer = new Player(Black)
 
   buscriptions.subAll
-  GameRepo game gameId map SetGame.apply foreach this.!
+  getGame(gameId) map SetGame.apply foreach this.!
 
   override def stop(): Unit = {
     buscriptions.unsubAll
@@ -112,7 +119,7 @@ private[round] final class RoundSocket(
       simul
     }
 
-    def tv = members.flatMap { case (_, m) => m.userTv }.toSet foreach { (userId: String) =>
+    def tv = members.flatMap { case (_, m) => m.userTv }.toSet foreach { (userId: User.ID) =>
       sub(Symbol(s"userStartGame:$userId"))
       sub(Symbol(s"simulNextGame:$userId"))
     }
@@ -149,6 +156,13 @@ private[round] final class RoundSocket(
         simulId = simId.some
         buscriptions.simul
       }
+      gameSpeed = game.speed.some
+      getGoneWeights(game) foreach {
+        case (w, b) => {
+          whitePlayer.goneWeight = w
+          blackPlayer.goneWeight = b
+        }
+      }
 
     // from lidraughtsBus 'startGame
     // sets definitive user ids
@@ -157,7 +171,7 @@ private[round] final class RoundSocket(
 
     case d: Deploy =>
       onDeploy(d)
-      history.enablePersistence
+      history.persistNow()
 
     case BotConnected(color, v) =>
       playerDo(color, _ setBotConnected v)
@@ -355,6 +369,15 @@ object RoundSocket {
       lightUser: LightUser.Getter,
       sriTtl: FiniteDuration,
       disconnectTimeout: FiniteDuration,
-      ragequitTimeout: FiniteDuration
-  )
+      ragequitTimeout: FiniteDuration,
+      getGame: Game.ID => Fu[Option[Game]]
+  ) {
+
+    def gameDisconnectTimeout(speed: Option[Speed]): FiniteDuration =
+      disconnectTimeout * speed.fold(1) {
+        case Speed.Classical => 3
+        case Speed.Rapid => 2
+        case _ => 1
+      }
+  }
 }

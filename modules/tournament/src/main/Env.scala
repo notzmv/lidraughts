@@ -6,6 +6,7 @@ import scala.concurrent.duration._
 import scala.concurrent.Promise
 
 import lidraughts.hub.{ Duct, DuctMap, TrouperMap }
+import lidraughts.game.Game
 import lidraughts.socket.History
 import lidraughts.socket.Socket.{ GetVersion, SocketVersion }
 import lidraughts.user.User
@@ -17,6 +18,7 @@ final class Env(
     db: lidraughts.db.Env,
     mongoCache: lidraughts.memo.MongoCache.Builder,
     asyncCache: lidraughts.memo.AsyncCache.Builder,
+    proxyGame: Game.ID => Fu[Option[Game]],
     flood: lidraughts.security.Flood,
     hub: lidraughts.hub.Env,
     roundMap: DuctMap[_],
@@ -107,7 +109,8 @@ final class Env(
     asyncCache = asyncCache,
     duelStore = duelStore,
     pause = pause,
-    lightUserApi = lightUserApi
+    lightUserApi = lightUserApi,
+    proxyGame = proxyGame
   )
 
   lazy val crudApi = new crud.CrudApi
@@ -121,7 +124,7 @@ final class Env(
     flood = flood
   )
 
-  lazy val jsonView = new JsonView(lightUserApi, cached, statsApi, shieldApi, asyncCache, verify, duelStore, pause, startedSinceSeconds)
+  lazy val jsonView = new JsonView(lightUserApi, cached, statsApi, shieldApi, asyncCache, proxyGame, verify, duelStore, pause, startedSinceSeconds)
 
   lazy val scheduleJsonView = new ScheduleJsonView(lightUserApi.async)
 
@@ -211,12 +214,13 @@ object Env {
     db = lidraughts.db.Env.current,
     mongoCache = lidraughts.memo.Env.current.mongoCache,
     asyncCache = lidraughts.memo.Env.current.asyncCache,
+    proxyGame = lidraughts.round.Env.current.proxy.game _,
     flood = lidraughts.security.Env.current.flood,
     hub = lidraughts.hub.Env.current,
     roundMap = lidraughts.round.Env.current.roundMap,
     lightUserApi = lidraughts.user.Env.current.lightUserApi,
     isOnline = lidraughts.user.Env.current.isOnline,
-    onStart = lidraughts.game.Env.current.onStart,
+    onStart = lidraughts.round.Env.current.onStart,
     historyApi = lidraughts.history.Env.current.api,
     trophyApi = lidraughts.user.Env.current.trophyApi,
     notifyApi = lidraughts.notify.Env.current.api,

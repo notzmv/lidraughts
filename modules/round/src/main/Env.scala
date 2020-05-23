@@ -4,14 +4,16 @@ import akka.actor._
 import akka.pattern.ask
 import com.typesafe.config.Config
 import scala.concurrent.duration._
+import com.github.blemale.scaffeine.Cache
 
 import actorApi.{ GetSocketStatus, SocketStatus }
 
-import lidraughts.game.{ Game, GameRepo, Pov }
+import lidraughts.game.{ Game, GameRepo, Pov, PlayerRef }
 import lidraughts.hub.actorApi.map.Tell
 import lidraughts.hub.actorApi.round.{ Abort, Resign, AnalysisComplete }
 import lidraughts.hub.actorApi.socket.HasUserId
-import lidraughts.hub.actorApi.{ DeployPost, Announce }
+import lidraughts.hub.actorApi.{ Announce, DeployPost }
+import lidraughts.user.User
 
 final class Env(
     config: Config,
@@ -24,11 +26,11 @@ final class Env(
     playban: lidraughts.playban.PlaybanApi,
     lightUser: lidraughts.common.LightUser.Getter,
     userJsonView: lidraughts.user.JsonView,
+    gameJsonView: lidraughts.game.JsonView,
     rankingApi: lidraughts.user.RankingApi,
     notifyApi: lidraughts.notify.NotifyApi,
     uciMemo: lidraughts.game.UciMemo,
-    rematch960Cache: lidraughts.memo.ExpireSetMemo,
-    onStart: String => Unit,
+    rematches: Cache[Game.ID, Game.ID],
     divider: lidraughts.game.Divider,
     prefApi: lidraughts.pref.PrefApi,
     historyApi: lidraughts.history.HistoryApi,
@@ -59,7 +61,9 @@ final class Env(
   private val moveTimeChannel = new lidraughts.socket.Channel(system)
   bus.subscribe(moveTimeChannel, 'roundMoveTimeChannel)
 
-  private lazy val roundDependencies = Round.Dependencies(
+  private val deployPersistence = new DeployPersistence(system)
+
+  private lazy val roundDependencies = RoundDuct.Dependencies(
     messenger = messenger,
     takebacker = takebacker,
     moretimer = moretimer,
@@ -70,12 +74,12 @@ final class Env(
     forecastApi = forecastApi,
     socketMap = socketMap
   )
-  val roundMap = new lidraughts.hub.DuctMap[Round](
+  val roundMap = new lidraughts.hub.DuctMap[RoundDuct](
     mkDuct = id => {
-      val duct = new Round(
+      val duct = new RoundDuct(
         dependencies = roundDependencies,
         gameId = id
-      )
+      )(new GameProxy(id, deployPersistence.isEnabled, system.scheduler))
       duct.getGame foreach { _ foreach scheduleExpiration }
       duct
     },
@@ -87,7 +91,7 @@ final class Env(
       case Tell(id, msg) => roundMap.tell(id, msg)
     },
     'deploy -> {
-      case DeployPost => roundMap.tellAll(DeployPost)
+      case DeployPost => roundMap tellAll DeployPost
     },
     'accountClose -> {
       case lidraughts.hub.actorApi.security.CloseAccount(userId) => GameRepo.allPlaying(userId) map {
@@ -95,6 +99,9 @@ final class Env(
           roundMap.tell(pov.gameId, Resign(pov.playerId))
         }
       }
+    },
+    'gameStartId -> {
+      case gameId: String => onStart(gameId)
     }
   )
 
@@ -106,10 +113,55 @@ final class Env(
     bus.publish(lidraughts.hub.actorApi.round.NbRounds(nbRounds), 'nbRounds)
   }
 
-  def roundProxyGame(gameId: Game.ID): Fu[Option[Game]] =
-    roundMap.getOrMake(gameId).getGame addEffect { g =>
-      if (!g.isDefined) roundMap kill gameId
+  object proxy {
+
+    def game(gameId: Game.ID): Fu[Option[Game]] = Game.validId(gameId) ??
+      roundMap.getOrMake(gameId).getGame addEffect { g =>
+        if (!g.isDefined) roundMap kill gameId
+      }
+
+    def pov(gameId: Game.ID, user: lidraughts.user.User): Fu[Option[Pov]] =
+      game(gameId) map { _ flatMap { Pov(_, user) } }
+
+    def pov(gameId: Game.ID, color: draughts.Color): Fu[Option[Pov]] =
+      game(gameId) map2 { (g: Game) => Pov(g, color) }
+
+    def pov(fullId: Game.ID): Fu[Option[Pov]] = pov(PlayerRef(fullId))
+
+    def pov(playerRef: PlayerRef): Fu[Option[Pov]] =
+      game(playerRef.gameId) map { _ flatMap { _ playerIdPov playerRef.playerId } }
+
+    def updateIfPresent(game: Game): Fu[Game] =
+      if (game.finishedOrAborted) fuccess(game)
+      else roundMap.getIfPresent(game.id).fold(fuccess(game))(_.getGame.map(_ | game))
+
+    def gameIfPresent(gameId: Game.ID): Fu[Option[Game]] =
+      roundMap.getIfPresent(gameId).??(_.getGame)
+
+    def povIfPresent(gameId: Game.ID, color: draughts.Color): Fu[Option[Pov]] =
+      gameIfPresent(gameId) map2 { (g: Game) => Pov(g, color) }
+
+    def povIfPresent(fullId: Game.ID): Fu[Option[Pov]] = povIfPresent(PlayerRef(fullId))
+
+    def povIfPresent(playerRef: PlayerRef): Fu[Option[Pov]] =
+      gameIfPresent(playerRef.gameId) map { _ flatMap { _ playerIdPov playerRef.playerId } }
+
+    private def unsortedPovs(user: User) = GameRepo urgentPovsUnsorted user flatMap {
+      _.map { pov =>
+        gameIfPresent(pov.gameId) map { _.fold(pov)(pov.withGame) }
+      }.sequenceFu
     }
+
+    def urgentGames(user: User): Fu[List[Pov]] = unsortedPovs(user) map { povs =>
+      try { povs sortWith Pov.priority }
+      catch { case e: IllegalArgumentException => povs sortBy (-_.game.movedAt.getSeconds) }
+    }
+
+    def urgentGamesSeq(user: User): Fu[List[Pov]] = unsortedPovs(user) map { povs =>
+      try { povs.sortBy(_.game.metadata.simulPairing.getOrElse(Int.MaxValue)) }
+      catch { case e: IllegalArgumentException => povs sortBy (-_.game.movedAt.getSeconds) }
+    }
+  }
 
   def setAnalysedIfPresent(gameId: Game.ID) =
     roundMap.tellIfPresent(gameId, AnalysisComplete)
@@ -121,18 +173,20 @@ final class Env(
   }
 
   val socketMap = SocketMap.make(
-    makeHistory = History(db(CollectionHistory)) _,
+    makeHistory = History(db(CollectionHistory), deployPersistence.isEnabled _) _,
     socketTimeout = SocketTimeout,
     dependencies = RoundSocket.Dependencies(
       system = system,
       lightUser = lightUser,
       sriTtl = SocketSriTimeout,
       disconnectTimeout = PlayerDisconnectTimeout,
-      ragequitTimeout = PlayerRagequitTimeout
-    )
+      ragequitTimeout = PlayerRagequitTimeout,
+      getGame = proxy.game _
+    ),
+    playban = playban
   )
 
-  lazy val selfReport = new SelfReport(roundMap)
+  lazy val selfReport = new SelfReport(roundMap, proxy.pov)
 
   lazy val recentTvGames = new {
     val fast = new lidraughts.memo.ExpireSetMemo(7 minutes)
@@ -184,9 +238,10 @@ final class Env(
   private lazy val rematcher = new Rematcher(
     messenger = messenger,
     onStart = onStart,
-    rematch960Cache = rematch960Cache,
+    rematches = rematches,
     bus = bus
   )
+  val isOfferingRematch = rematcher.isOffering _
 
   private lazy val player: Player = new Player(
     system = system,
@@ -218,16 +273,27 @@ final class Env(
   lazy val jsonView = new JsonView(
     noteApi = noteApi,
     userJsonView = userJsonView,
+    gameJsonView = gameJsonView,
     getSocketStatus = getSocketStatus,
     canTakeback = takebacker.isAllowedIn,
     canMoretime = moretimer.isAllowedIn,
     divider = divider,
     evalCache = evalCache,
+    isOfferingRematch = rematcher.isOffering,
     baseAnimationDuration = AnimationDuration,
     moretimeSeconds = MoretimeDuration.toSeconds.toInt
   )
 
   lazy val noteApi = new NoteApi(db(CollectionNote))
+
+  def onStart(gameId: Game.ID): Unit = proxy game gameId foreach {
+    _ foreach { game =>
+      bus.publish(lidraughts.game.actorApi.StartGame(game), 'startGame)
+      game.userIds foreach { userId =>
+        bus.publish(lidraughts.game.actorApi.UserStartGame(userId, game), Symbol(s"userStartGame:$userId"))
+      }
+    }
+  }
 
   MoveMonitor.start(system, moveTimeChannel)
 
@@ -236,7 +302,7 @@ final class Env(
     name = "titivate"
   )
 
-  private val corresAlarm = new CorresAlarm(system, db(CollectionAlarm), socketMap)
+  private val corresAlarm = new CorresAlarm(system, db(CollectionAlarm), socketMap, proxy.game _)
 
   private lazy val takebacker = new Takebacker(
     messenger = messenger,
@@ -275,11 +341,11 @@ object Env {
     playban = lidraughts.playban.Env.current.api,
     lightUser = lidraughts.user.Env.current.lightUser,
     userJsonView = lidraughts.user.Env.current.jsonView,
+    gameJsonView = lidraughts.game.Env.current.jsonView,
     rankingApi = lidraughts.user.Env.current.rankingApi,
     notifyApi = lidraughts.notify.Env.current.api,
     uciMemo = lidraughts.game.Env.current.uciMemo,
-    rematch960Cache = lidraughts.game.Env.current.cached.rematch960,
-    onStart = lidraughts.game.Env.current.onStart,
+    rematches = lidraughts.game.Env.current.rematches,
     divider = lidraughts.game.Env.current.divider,
     prefApi = lidraughts.pref.Env.current.api,
     historyApi = lidraughts.history.Env.current.api,

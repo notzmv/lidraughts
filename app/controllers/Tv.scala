@@ -4,7 +4,7 @@ import play.api.mvc._
 
 import lidraughts.api.Context
 import lidraughts.app._
-import lidraughts.game.{ GameRepo, Pov }
+import lidraughts.game.Pov
 import views._
 
 object Tv extends LidraughtsController {
@@ -16,7 +16,7 @@ object Tv extends LidraughtsController {
   }
 
   def sides(gameId: String, color: String) = Open { implicit ctx =>
-    OptionFuResult(GameRepo.pov(gameId, color)) { pov =>
+    OptionFuResult(draughts.Color(color) ?? { Env.round.proxy.pov(gameId, _) }) { pov =>
       Env.game.crosstableApi.withMatchup(pov.game) map { ct =>
         Ok(html.tv.side.sides(pov.some, ct))
       }
@@ -61,7 +61,7 @@ object Tv extends LidraughtsController {
 
   def gamesChannel(chanKey: String) = Open { implicit ctx =>
     (lidraughts.tv.Tv.Channel.byKey get chanKey) ?? { channel =>
-      Env.tv.tv.getChampions zip Env.tv.tv.getGames(channel, 12) map {
+      Env.tv.tv.getChampions zip Env.tv.tv.getGames(channel, 15) map {
         case (champs, games) => NoCache {
           Ok(html.tv.games(channel, games map Pov.first, champs))
         }
@@ -98,7 +98,7 @@ object Tv extends LidraughtsController {
     }
     val povsFu = userIds map { userId =>
       lidraughts.user.UserRepo.named(userId) flatMap {
-        _ ?? GameRepo.lastPlayedPlaying
+        _ ?? { u => lidraughts.game.GameRepo.lastPlayedPlayingId(u.id).flatMap(_ ?? { Env.round.proxy.pov(_, u) }) }
       }
     } sequenceFu
     val gamesFu = povsFu map { povs =>

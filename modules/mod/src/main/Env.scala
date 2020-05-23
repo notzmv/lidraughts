@@ -141,7 +141,7 @@ final class Env(
           api.garbageCollect(sus, ipBan) >> publicChat.delete(sus)
         }
     }
-  }), name = ActorName), 'finishGame, 'analysisReady, 'garbageCollect)
+  }), name = ActorName), 'finishGame, 'analysisReady, 'garbageCollect, 'playban)
 }
 
 object Env {

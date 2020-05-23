@@ -8,7 +8,6 @@ import lidraughts.api.Context
 import lidraughts.app._
 import lidraughts.chat.Chat
 import lidraughts.common.HTTPRequest
-import lidraughts.game.{ Pov, GameRepo }
 import lidraughts.hub.lightTeam._
 import lidraughts.tournament.{ System, TournamentRepo, PairingRepo, VisibleTournaments, Tournament => Tour }
 import lidraughts.user.{ User => UserModel }
@@ -125,27 +124,6 @@ object Tournament extends LidraughtsController {
             Ok(data) as JSON
           }
         }
-      }
-    }
-  }
-
-  def userGameNbMini(id: String, user: String, nb: Int) = Open { implicit ctx =>
-    withUserGameNb(id, user, nb) { pov =>
-      Ok(html.tournament.bits.miniGame(pov))
-    }
-  }
-
-  def userGameNbShow(id: String, user: String, nb: Int) = Open { implicit ctx =>
-    withUserGameNb(id, user, nb) { pov =>
-      Redirect(routes.Round.watcher(pov.gameId, pov.color.name))
-    }
-  }
-
-  private def withUserGameNb(id: String, user: String, nb: Int)(withPov: Pov => Result)(implicit ctx: Context): Fu[Result] = {
-    val userId = lidraughts.user.User normalize user
-    OptionFuResult(PairingRepo.byTourUserNb(id, userId, nb)) { pairing =>
-      GameRepo game pairing.id map {
-        _.flatMap { Pov.ofUserId(_, userId) }.fold(Redirect(routes.Tournament show id))(withPov)
       }
     }
   }

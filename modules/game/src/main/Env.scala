@@ -1,7 +1,9 @@
 package lidraughts.game
 
 import akka.actor._
+import com.github.blemale.scaffeine.{ Cache, Scaffeine }
 import com.typesafe.config.Config
+import scala.concurrent.duration._
 
 final class Env(
     config: Config,
@@ -84,18 +86,6 @@ final class Env(
     captcher -> actorApi.NewCaptcha
   }
 
-  def onStart(gameId: String) = GameRepo game gameId foreach {
-    _ foreach { game =>
-      system.lidraughtsBus.publish(actorApi.StartGame(game), 'startGame)
-      game.userIds foreach { userId =>
-        system.lidraughtsBus.publish(
-          actorApi.UserStartGame(userId, game),
-          Symbol(s"userStartGame:$userId")
-        )
-      }
-    }
-  }
-
   lazy val gamesByUsersStream = new GamesByUsersStream(system)
 
   lazy val bestOpponents = new BestOpponents
@@ -106,6 +96,13 @@ final class Env(
     }
   }
 
+  lazy val rematches: Cache[Game.ID, Game.ID] = Scaffeine()
+    .expireAfterWrite(3 hour)
+    .build[Game.ID, Game.ID]
+
+  lazy val jsonView = new JsonView(
+    rematchOf = rematches.getIfPresent
+  )
 }
 
 object Env {

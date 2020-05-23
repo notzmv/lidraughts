@@ -4,6 +4,8 @@ import akka.actor._
 import com.typesafe.config.Config
 import scala.concurrent.duration._
 
+import lidraughts.user.User
+
 final class Env(
     config: Config,
     val scheduler: lidraughts.common.Scheduler,
@@ -23,7 +25,9 @@ final class Env(
     countRounds = () => Env.round.count,
     lobbyApi = Env.api.lobbyApi,
     getPlayban = Env.playban.api.currentBan _,
-    lightUserApi = Env.user.lightUserApi
+    lightUserApi = Env.user.lightUserApi,
+    roundProxyPov = Env.round.proxy.pov _,
+    urgentGames = Env.round.proxy.urgentGames _
   )
 
   lazy val socialInfo = mashup.UserInfo.Social(
@@ -46,7 +50,7 @@ final class Env(
     postApi = Env.forum.postApi,
     studyRepo = Env.study.studyRepo,
     getRatingChart = Env.history.ratingChartApi.apply,
-    getRanks = Env.user.cached.ranking.getAllQuicklyMaybe,
+    getRanks = Env.user.cached.rankingsOf,
     isHostingSimul = Env.simul.isHosting,
     fetchIsStreamer = Env.streamer.api.isStreamer,
     fetchTeamIds = Env.team.cached.teamIdsList,
@@ -59,7 +63,9 @@ final class Env(
     api = Env.team.api,
     getForumNbPosts = Env.forum.categApi.teamNbPosts _,
     getForumPosts = Env.forum.recent.team _,
-    asyncCache = Env.memo.asyncCache
+    asyncCache = Env.memo.asyncCache,
+    memberColl = Env.team.colls.member,
+    userColl = Env.user.userColl
   )
 
   private val tryDailyPuzzle: lidraughts.puzzle.Daily.Try = () =>
@@ -96,12 +102,15 @@ final class Env(
     system.lidraughtsBus.publish(lidraughts.hub.actorApi.security.CloseAccount(user.id), 'accountClose)
   }
 
-  system.lidraughtsBus.subscribeFun('garbageCollect) {
-    case lidraughts.hub.actorApi.security.GarbageCollect(userId, _) =>
-      system.scheduler.scheduleOnce(1 second) {
-        closeAccount(userId, self = false)
-      }
+  system.lidraughtsBus.subscribeFun('garbageCollect, 'playban) {
+    case lidraughts.hub.actorApi.security.GarbageCollect(userId, _) => kill(userId)
+    case lidraughts.hub.actorApi.playban.SitcounterClose(userId) => kill(userId)
   }
+
+  private def kill(userId: User.ID): Unit =
+    system.scheduler.scheduleOnce(1 second) {
+      closeAccount(userId, self = false)
+    }
 
   system.actorOf(Props(new actor.Renderer), name = RendererName)
 

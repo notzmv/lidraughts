@@ -20,11 +20,13 @@ import actorApi.SocketStatus
 final class JsonView(
     noteApi: NoteApi,
     userJsonView: lidraughts.user.JsonView,
+    gameJsonView: lidraughts.game.JsonView,
     getSocketStatus: Game.ID => Fu[SocketStatus],
     canTakeback: Game => Fu[Boolean],
     canMoretime: Game => Fu[Boolean],
     divider: lidraughts.game.Divider,
     evalCache: lidraughts.evalCache.EvalCacheApi,
+    isOfferingRematch: Pov => Boolean,
     baseAnimationDuration: Duration,
     moretimeSeconds: Int
 ) {
@@ -41,7 +43,7 @@ final class JsonView(
       .add("rating" -> p.rating)
       .add("ratingDiff" -> p.ratingDiff)
       .add("provisional" -> p.provisional)
-      .add("offeringRematch" -> p.isOfferingRematch)
+      .add("offeringRematch" -> isOfferingRematch(Pov(g, p)))
       .add("offeringDraw" -> p.isOfferingDraw)
       .add("proposingTakeback" -> p.isProposingTakeback)
       .add("kingMoves" -> kingMoves(g, p.color))
@@ -65,7 +67,7 @@ final class JsonView(
         case socket ~ opponentUser ~ takebackable ~ moretimeable =>
           import pov._
           Json.obj(
-            "game" -> gameJson(game, initialFen),
+            "game" -> gameJsonView(game, initialFen),
             "player" -> {
               commonPlayerJson(game, player, playerUser, withFlags) ++ Json.obj(
                 "id" -> playerId,
@@ -154,7 +156,7 @@ final class JsonView(
         case (socket, (playerUser, opponentUser)) =>
           import pov._
           Json.obj(
-            "game" -> gameJson(game, initialFen)
+            "game" -> gameJsonView(game, initialFen)
               .add("moveCentis" -> (withFlags.movetimes ?? game.moveTimes.map(_.map(_.centis))))
               .add("division" -> withFlags.division.option(divider(game, initialFen)))
               .add("opening" -> game.opening)

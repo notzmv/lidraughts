@@ -12,7 +12,7 @@ import lidraughts.app.mashup.{ GameFilterMenu, GameFilter }
 import lidraughts.common.paginator.Paginator
 import lidraughts.common.PimpedJson._
 import lidraughts.common.{ IpAddress, HTTPRequest }
-import lidraughts.game.{ GameRepo, Game => GameModel }
+import lidraughts.game.{ Pov, GameRepo, Game => GameModel }
 import lidraughts.rating.PerfType
 import lidraughts.socket.UserLagCache
 import lidraughts.user.{ User => UserModel, UserRepo }
@@ -26,8 +26,8 @@ object User extends LidraughtsController {
 
   def tv(username: String) = Open { implicit ctx =>
     OptionFuResult(UserRepo named username) { user =>
-      (GameRepo lastPlayedPlaying user) orElse
-        (GameRepo lastPlayed user) flatMap {
+      currentlyPlaying(user) orElse
+        GameRepo.lastPlayed(user) flatMap {
           _.fold(fuccess(Redirect(routes.User.show(username)))) { pov =>
             Round.watch(pov, userTv = user.some)
           }
@@ -111,7 +111,7 @@ object User extends LidraughtsController {
             )(ctx.body)
             _ <- Env.user.lightUserApi preloadMany pag.currentPageResults.flatMap(_.userIds)
             _ <- Env.tournament.cached.nameCache preloadMany pag.currentPageResults.flatMap(_.tournamentId)
-            res <- if (HTTPRequest.isSynchronousHttp(ctx.req)) for {
+            res <- if (HTTPRequest isSynchronousHttp ctx.req) for {
               info ← Env.current.userInfo(u, nbs, ctx)
               _ <- Env.team.cached.nameCache preloadMany info.teamIds
               social ← Env.current.socialInfo(u, ctx)
@@ -143,12 +143,12 @@ object User extends LidraughtsController {
     OptionFuResult(UserRepo named username) { user =>
       if (user.enabled || isGranted(_.UserSpy)) for {
         blocked <- ctx.userId ?? { relationApi.fetchBlocks(user.id, _) }
-        crosstable <- ctx.userId ?? { Env.game.crosstableApi(user.id, _) }
+        crosstable <- ctx.userId ?? { Env.game.crosstableApi(user.id, _) map some }
         followable <- ctx.isAuth ?? { Env.pref.api.followable(user.id) }
         relation <- ctx.userId ?? { relationApi.fetchRelation(_, user.id) }
         ping = env.isOnline(user.id) ?? UserLagCache.getLagRating(user.id)
         res <- negotiate(
-          html = !ctx.is(user) ?? GameRepo.lastPlayedPlaying(user) map { pov =>
+          html = !ctx.is(user) ?? currentlyPlaying(user) map { pov =>
             Ok(html.user.mini(user, pov, blocked, followable, relation, ping, crosstable))
               .withHeaders(CACHE_CONTROL -> "max-age=5")
           },
@@ -169,8 +169,8 @@ object User extends LidraughtsController {
     val max = 50
     negotiate(
       html = notFoundJson(),
-      api = _ => env.cached.getTop50Online map { list =>
-        Ok(Json.toJson(list.take(getInt("nb", req).fold(10)(_ min max)).map(env.jsonView(_))))
+      api = _ => fuccess {
+        Ok(Json.toJson(env.cached.getTop50Online.take(getInt("nb", req).fold(10)(_ min max)).map(env.jsonView(_))))
       }
     )
   }
@@ -180,6 +180,9 @@ object User extends LidraughtsController {
       Env.history.ratingChartApi(u) map { Ok(_) as JSON }
     }
   }
+
+  private def currentlyPlaying(user: UserModel): Fu[Option[Pov]] =
+    GameRepo.lastPlayedPlayingId(user.id).flatMap(_ ?? { Env.round.proxy.pov(_, user) })
 
   private val UserGamesRateLimitPerIP = new lidraughts.memo.RateLimit[IpAddress](
     credits = 500,
@@ -215,37 +218,35 @@ object User extends LidraughtsController {
 
   def list = Open { implicit ctx =>
     val nb = 10
-    env.cached.leaderboards flatMap { leaderboards =>
-      negotiate(
-        html = for {
-          nbAllTime ← env.cached topNbGame nb
-          nbDay ← fuccess(Nil)
-          tourneyWinners ← Env.tournament.winners.all.map(_.top)
-          online ← env.cached.getTop50Online
-          _ <- Env.user.lightUserApi preloadMany tourneyWinners.map(_.userId)
-        } yield Ok(html.user.list(
-          tourneyWinners = tourneyWinners,
-          online = online,
-          leaderboards = leaderboards,
-          nbDay = nbDay,
-          nbAllTime = nbAllTime
-        )),
-        api = _ => fuccess {
-          implicit val lpWrites = OWrites[UserModel.LightPerf](env.jsonView.lightPerfIsOnline)
-          Ok(Json.obj(
-            "bullet" -> leaderboards.bullet,
-            "blitz" -> leaderboards.blitz,
-            "rapid" -> leaderboards.rapid,
-            "classical" -> leaderboards.classical,
-            "ultraBullet" -> leaderboards.ultraBullet,
-            "frisian" -> leaderboards.frisian,
-            "frysk" -> leaderboards.frysk,
-            "antidraughts" -> leaderboards.antidraughts,
-            "breakthrough" -> leaderboards.breakthrough
-          ))
-        }
-      )
-    }
+    val leaderboards = env.cached.top10.get
+    negotiate(
+      html = for {
+        nbAllTime ← env.cached topNbGame nb
+        nbDay ← fuccess(Nil)
+        tourneyWinners ← Env.tournament.winners.all.map(_.top)
+        _ <- Env.user.lightUserApi preloadMany tourneyWinners.map(_.userId)
+      } yield Ok(html.user.list(
+        tourneyWinners = tourneyWinners,
+        online = env.cached.getTop50Online,
+        leaderboards = leaderboards,
+        nbDay = nbDay,
+        nbAllTime = nbAllTime
+      )),
+      api = _ => fuccess {
+        implicit val lpWrites = OWrites[UserModel.LightPerf](env.jsonView.lightPerfIsOnline)
+        Ok(Json.obj(
+          "bullet" -> leaderboards.bullet,
+          "blitz" -> leaderboards.blitz,
+          "rapid" -> leaderboards.rapid,
+          "classical" -> leaderboards.classical,
+          "ultraBullet" -> leaderboards.ultraBullet,
+          "frisian" -> leaderboards.frisian,
+          "frysk" -> leaderboards.frysk,
+          "antidraughts" -> leaderboards.antidraughts,
+          "breakthrough" -> leaderboards.breakthrough
+        ))
+      }
+    )
   }
 
   def topNb(nb: Int, perfKey: String) = Open { implicit ctx =>
@@ -291,7 +292,7 @@ object User extends LidraughtsController {
             Env.plan.api.recentChargesOf(user).logTimeIfGt(s"$username plan.recentChargesOf", 2 seconds) zip
             Env.report.api.byAndAbout(user, 20).logTimeIfGt(s"$username report.byAndAbout", 2 seconds) zip
             Env.pref.api.getPref(user).logTimeIfGt(s"$username pref.getPref", 2 seconds) zip
-            Env.playban.api.getSitAndDcCounter(user) flatMap {
+            Env.playban.api.sitAndDcCounter(user.id) flatMap {
               case history ~ charges ~ reports ~ pref ~ sitAndDcCounter =>
                 Env.user.lightUserApi.preloadMany(reports.userIds).logTimeIfGt(s"$username lightUserApi.preloadMany", 2 seconds) inject
                   html.user.mod.parts(user, history, charges, reports, pref, sitAndDcCounter).some
@@ -394,13 +395,13 @@ object User extends LidraughtsController {
       else PerfType(perfKey).fold(notFound) { perfType =>
         for {
           perfStat <- Env.perfStat.get(u, perfType)
-          ranks <- Env.user.cached.ranking.getAll(u.id)
+          ranks = Env.user.cached rankingsOf u.id
           distribution <- u.perfs(perfType).established ?? {
             Env.user.cached.ratingDistribution(perfType) map some
           }
           ratingChart <- Env.history.ratingChartApi.apply(u)
           _ <- Env.user.lightUserApi preloadMany { u.id :: perfStat.userIds.map(_.value) }
-          data = Env.perfStat.jsonView(u, perfStat, ranks get perfType.key, distribution)
+          data = Env.perfStat.jsonView(u, perfStat, ranks get perfType, distribution)
           response <- negotiate(
             html = Ok(html.user.perfStat(u, ranks, perfType, data, ratingChart)).fuccess,
             api = _ => getBool("graph").?? {

@@ -9,7 +9,7 @@ import scala.concurrent.duration._
 import actorApi._, round._
 import draughts.{ Color, Pos }
 import draughts.format.Uci
-import lidraughts.game.{ Event, Game, Pov, Progress, Source }
+import lidraughts.game.{ Event, Game, Pov, Progress, Source, Player => GamePlayer }
 import lidraughts.hub.actorApi.DeployPost
 import lidraughts.hub.actorApi.map._
 import lidraughts.hub.actorApi.round.{ DraughtsnetPlay, BotPlay, RematchYes, RematchNo, Abort, Resign, AnalysisComplete }
@@ -17,17 +17,15 @@ import lidraughts.hub.Duct
 import lidraughts.socket.UserLagCache
 import makeTimeout.large
 
-private[round] final class Round(
-    dependencies: Round.Dependencies,
+private[round] final class RoundDuct(
+    dependencies: RoundDuct.Dependencies,
     gameId: Game.ID
-) extends Duct {
+)(implicit proxy: GameProxy) extends Duct {
 
-  import Round._
+  import RoundDuct._
   import dependencies._
 
-  private[this] implicit val proxy = new GameProxy(gameId)
-
-  private[this] var takebackSituation: Option[Round.TakebackSituation] = None
+  private[this] var takebackSituation: Option[TakebackSituation] = None
 
   def getGame: Fu[Option[Game]] = proxy.game
 
@@ -89,7 +87,7 @@ private[round] final class Round(
 
     case GoBerserk(color) => handle(color) { pov =>
       pov.game.goBerserk(color) ?? { progress =>
-        proxy.save(progress) >> proxy.invalidating(_ goBerserk pov) inject progress.events
+        proxy.save(progress) >> proxy.persist(_ goBerserk pov) inject progress.events
       }
     }
 
@@ -168,7 +166,11 @@ private[round] final class Round(
       !pov.player.hasHoldAlert ?? {
         lidraughts.log("cheat").info(s"hold alert $ip https://lidraughts.org/${pov.gameId}/${pov.color.name}#${pov.game.turns} ${pov.player.userId | "anon"} mean: $mean SD: $sd")
         lidraughts.mon.cheat.holdAlert()
-        proxy.bypass(_.setHoldAlert(pov, mean, sd)) inject List.empty[Event]
+        val alert = GamePlayer.HoldAlert(ply = pov.game.turns, mean = mean, sd = sd)
+        proxy.persistAndSet(
+          _.setHoldAlert(pov, alert),
+          _.setHoldAlert(pov.color, alert)
+        ) inject List.empty[Event]
       }
     }
 
@@ -302,7 +304,7 @@ private[round] final class Round(
   }
 }
 
-object Round {
+object RoundDuct {
 
   private[round] case class Dependencies(
       messenger: Messenger,

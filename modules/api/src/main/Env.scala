@@ -14,6 +14,7 @@ final class Env(
     roundJsonView: lidraughts.round.JsonView,
     noteApi: lidraughts.round.NoteApi,
     forecastApi: lidraughts.round.ForecastApi,
+    urgentGames: lidraughts.user.User => Fu[List[lidraughts.game.Pov]],
     relationApi: lidraughts.relation.RelationApi,
     bookmarkApi: lidraughts.bookmark.BookmarkApi,
     getTourAndRanks: lidraughts.game.Game => Fu[Option[lidraughts.tournament.TourAndRanks]],
@@ -98,7 +99,8 @@ final class Env(
     isPlaying = isPlaying,
     isOnline = userEnv.onlineUserIdMemo.get,
     recentTitledUserIds = () => userEnv.recentTitledUserIdMemo.keys,
-    prefApi = prefApi
+    prefApi = prefApi,
+    urgentGames = urgentGames
   )(system)
 
   val gameApi = new GameApi(
@@ -134,7 +136,8 @@ final class Env(
     lightUserApi = userEnv.lightUserApi,
     seekApi = lobbyEnv.seekApi,
     remoteSocketDomain = ctx => ctx.userId exists lidraughts.socket.Env.current.socketRemoteUsersSetting.get().matches option Net.RemoteSocketDomain,
-    pools = pools
+    pools = pools,
+    urgentGames = urgentGames
   )
 
   lazy val eventStream = new EventStream(system, challengeJsonView, userEnv.onlineUserIdMemo.put)
@@ -173,6 +176,7 @@ object Env {
     roundJsonView = lidraughts.round.Env.current.jsonView,
     noteApi = lidraughts.round.Env.current.noteApi,
     forecastApi = lidraughts.round.Env.current.forecastApi,
+    urgentGames = lidraughts.round.Env.current.proxy.urgentGames,
     relationApi = lidraughts.relation.Env.current.api,
     bookmarkApi = lidraughts.bookmark.Env.current.api,
     getTourAndRanks = lidraughts.tournament.Env.current.tourAndRanks,

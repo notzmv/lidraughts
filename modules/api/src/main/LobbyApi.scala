@@ -2,7 +2,7 @@ package lidraughts.api
 
 import play.api.libs.json.{ Json, JsObject, JsArray }
 
-import lidraughts.game.{ GameRepo, Pov }
+import lidraughts.game.Pov
 import lidraughts.lobby.SeekApi
 import lidraughts.pool.JsonView.poolConfigJsonWriter
 import lidraughts.setup.FilterConfig
@@ -13,14 +13,15 @@ final class LobbyApi(
     lightUserApi: lidraughts.user.LightUserApi,
     seekApi: SeekApi,
     remoteSocketDomain: Context => Option[String],
-    pools: List[lidraughts.pool.PoolConfig]
+    pools: List[lidraughts.pool.PoolConfig],
+    urgentGames: lidraughts.user.User => Fu[List[Pov]]
 ) {
 
   val poolsJson = Json toJson pools
 
   def apply(implicit ctx: Context): Fu[(JsObject, List[Pov])] =
     ctx.me.fold(seekApi.forAnon)(seekApi.forUser) zip
-      (ctx.me ?? GameRepo.urgentGames) zip
+      (ctx.me ?? urgentGames) zip
       getFilter(ctx) flatMap {
         case seeks ~ povs ~ filter =>
           val displayedPovs = povs take 9

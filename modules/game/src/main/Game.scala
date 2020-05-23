@@ -237,8 +237,9 @@ case class Game(
     }
   }
 
+  // apply a move
   def update(
-    game: DraughtsGame,
+    game: DraughtsGame, // new draughts position
     move: Move,
     blur: Boolean = false,
     moveMetrics: MoveMetrics = MoveMetrics()
@@ -400,9 +401,8 @@ case class Game(
   def playerHasOfferedDraw(color: Color) =
     player(color).lastDrawOffer ?? (_ >= turns - 20)
 
-  def playerCanRematch(color: Color) =
-    !player(color).isOfferingRematch &&
-      finishedOrAborted &&
+  def playerCouldRematch(color: Color) =
+    finishedOrAborted &&
       nonMandatory &&
       !boosted
 
@@ -650,6 +650,9 @@ case class Game(
     draughts = draughts.copy(turns = 0, startedAtTurn = 0)
   )
 
+  def setHoldAlert(color: Color, ha: Player.HoldAlert) =
+    updatePlayer(color, p => p.copy(holdAlert = ha.some))
+
   lazy val opening: Option[FullOpening.AtPly] =
     if (fromPosition || !Variant.openingSensibleVariants(variant)) none
     else FullOpeningDB search pdnMoves
@@ -719,6 +722,9 @@ object Game {
 
   def takeGameId(fullId: String) = fullId take gameIdSize
   def takePlayerId(fullId: String) = fullId drop gameIdSize
+
+  val idRegex = """[\w-]{8}""".r
+  def validId(id: ID) = idRegex matches id
 
   private[game] val emptyKingMoves = KingMoves(0, 0)
 

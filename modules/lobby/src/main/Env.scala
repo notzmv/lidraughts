@@ -56,7 +56,6 @@ final class Env(
   )
 
   private val lobbyTrouper = LobbyTrouper.start(
-    system,
     broomPeriod = BroomPeriod,
     resyncIdsPeriod = ResyncIdsPeriod
   ) { () =>
@@ -71,7 +70,7 @@ final class Env(
       poolApi = poolApi,
       onStart = onStart
     )
-  }
+  }(system)
 
   lazy val socketHandler = new SocketHandler(
     hub = hub,
@@ -104,7 +103,7 @@ object Env {
     config = lidraughts.common.PlayApp loadConfig "lobby",
     db = lidraughts.db.Env.current,
     hub = lidraughts.hub.Env.current,
-    onStart = lidraughts.game.Env.current.onStart,
+    onStart = lidraughts.round.Env.current.onStart,
     blocking = lidraughts.relation.Env.current.api.fetchBlocking,
     playban = lidraughts.playban.Env.current.api.currentBan _,
     gameCache = lidraughts.game.Env.current.cached,

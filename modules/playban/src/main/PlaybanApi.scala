@@ -1,12 +1,14 @@
 package lidraughts.playban
 
 import reactivemongo.bson._
+import scala.concurrent.duration._
 
 import draughts.{ Status, Color }
 import lidraughts.common.PlayApp.{ startedSinceMinutes, isDev }
 import lidraughts.db.BSON._
 import lidraughts.db.dsl._
 import lidraughts.game.{ Pov, Game, Player, Source }
+import lidraughts.message.{ MessageApi, ModPreset }
 import lidraughts.user.{ User, UserRepo }
 
 import org.joda.time.DateTime
@@ -15,7 +17,9 @@ final class PlaybanApi(
     coll: Coll,
     sandbag: SandbagWatch,
     feedback: PlaybanFeedback,
-    bus: lidraughts.common.Bus
+    bus: lidraughts.common.Bus,
+    asyncCache: lidraughts.memo.AsyncCache.Builder,
+    messenger: MessageApi
 ) {
 
   import lidraughts.db.BSON.BSONJodaDateTimeHandler
@@ -123,12 +127,19 @@ final class PlaybanApi(
       save(if (isSandbag) Outcome.Sandbag else Outcome.Good, userId, 0)
     }
 
-  def currentBan(userId: User.ID): Fu[Option[TempBan]] = coll.find(
-    $doc("_id" -> userId, "b.0" $exists true),
-    $doc("_id" -> false, "b" -> $doc("$slice" -> -1))
-  ).uno[Bdoc].map {
-      _.flatMap(_.getAs[List[TempBan]]("b")).??(_.find(_.inEffect))
-    }
+  // memorize users without any ban to save DB reads
+  private val cleanUserIds = new lidraughts.memo.ExpireSetMemo(30 minutes)
+
+  def currentBan(userId: User.ID): Fu[Option[TempBan]] = !cleanUserIds.get(userId) ?? {
+    coll.find(
+      $doc("_id" -> userId, "b.0" $exists true),
+      $doc("_id" -> false, "b" -> $doc("$slice" -> -1))
+    ).uno[Bdoc].map {
+        _.flatMap(_.getAs[List[TempBan]]("b")).??(_.find(_.inEffect))
+      } addEffect { ban =>
+        if (ban.isEmpty) cleanUserIds put userId
+      }
+  }
 
   def hasCurrentBan(userId: User.ID): Fu[Boolean] = currentBan(userId).map(_.isDefined)
 
@@ -143,13 +154,10 @@ final class PlaybanApi(
       }
     }
 
-  def bans(userId: User.ID): Fu[List[TempBan]] =
-    coll.primitiveOne[List[TempBan]]($doc("_id" -> userId, "b.0" $exists true), "b").map(~_)
-
   def bans(userIds: List[User.ID]): Fu[Map[User.ID, Int]] = coll.find(
     $inIds(userIds),
     $doc("b" -> true)
-  ).cursor[Bdoc]().gather[List]().map {
+  ).list[Bdoc]().map {
       _.flatMap { obj =>
         obj.getAs[User.ID]("_id") flatMap { id =>
           obj.getAs[Barr]("b") map { id -> _.stream.size }
@@ -157,8 +165,13 @@ final class PlaybanApi(
       }(scala.collection.breakOut)
     }
 
-  def getSitAndDcCounter(user: User): Fu[Int] =
-    coll.primitiveOne[Int]($doc("_id" -> user.id, "c" $exists true), "c").map(~_)
+  private val sitAndDcCounterCache = asyncCache.multi[User.ID, Int](
+    name = "playban.sit_dc_counter",
+    f = userId => coll.primitiveOne[Int]($doc("_id" -> userId, "c" $exists true), "c").map(~_),
+    expireAfter = _.ExpireAfterWrite(30 minutes)
+  )
+
+  def sitAndDcCounter(userId: User.ID): Fu[Int] = sitAndDcCounterCache get userId
 
   private def save(outcome: Outcome, userId: User.ID, sitAndDcCounterChange: Int): Funit = {
     lidraughts.mon.playban.outcome(outcome.key)()
@@ -178,6 +191,27 @@ final class PlaybanApi(
         case Some(record) => UserRepo.createdAtById(userId) flatMap {
           o => o map { d => legiferate(record, d) } getOrElse funit
         }
+      } addEffect { _ =>
+        if (sitAndDcCounterChange != 0) {
+          sitAndDcCounterCache refresh userId
+          if (sitAndDcCounterChange < 0) {
+            sitAndDcCounter(userId) map { counter =>
+              if (counter == -10) {
+                for {
+                  mod <- UserRepo.Lidraughts
+                  user <- UserRepo byId userId
+                } yield (mod zip user).headOption.?? {
+                  case (m, u) =>
+                    lidraughts.log("stall").info(s"https://lidraughts.org/@/${u.username}")
+                    messenger.sendPreset(m, u, ModPreset.sittingAuto).void
+                }
+              } else if (counter <= -20) {
+                lidraughts.log("stall").warn(s"Close https://lidraughts.org/@/${userId} ragesit=$counter")
+                // bus.publish(lidraughts.hub.actorApi.playban.SitcounterClose(userId), 'playban)
+              }
+            }
+          }
+        }
       }
 
   }.void logFailure lidraughts.log("playban")
@@ -196,8 +230,7 @@ final class PlaybanApi(
               "$slice" -> -30
             )
           )
-      ).void
+      ).void >>- cleanUserIds.remove(record.userId)
     }
-
   }
 }

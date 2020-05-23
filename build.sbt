@@ -243,8 +243,8 @@ lazy val challenge = module("challenge", Seq(common, db, hub, setup, game, relat
   libraryDependencies ++= provided(play.api, scalatags, reactivemongo.driver)
 )
 
-lazy val study = module("study", Seq(common, db, hub, socket, game, round, importer, notifyModule, relation, evalCache, explorer)).settings(
-  libraryDependencies ++= provided(play.api, reactivemongo.driver)
+lazy val study = module("study", Seq(common, db, hub, socket, game, round, importer, notifyModule, relation, evalCache, explorer, i18n)).settings(
+  libraryDependencies ++= provided(play.api, scalatags, reactivemongo.driver)
 )
 
 lazy val relay = module("relay", Seq(common, study, simul)).settings(
@@ -336,7 +336,7 @@ lazy val tree = module("tree", Seq(common, draughts)).settings(
 )
 
 lazy val socket = module("socket", Seq(common, hub, memo, tree)).settings(
-  libraryDependencies ++= provided(play.api, lettuce)
+  libraryDependencies ++= provided(play.api, reactivemongo.driver, lettuce)
 )
 
 lazy val hub = module("hub", Seq(common, draughts)).settings(
