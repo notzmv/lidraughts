@@ -138,54 +138,59 @@ object PdnImport {
       }
     }
 
-  private def makeNode(prev: draughts.DraughtsGame, sans: List[San], annotator: Option[Comment.Author], iteratedCapts: Boolean = false, ambs: Option[List[(San, String)]]): (Option[Node], Boolean) = {
-    var newAmb = none[(San, String)]
-    val res = sans match {
-      case Nil => (none, false)
-      case san :: rest =>
-        san(prev.situation, iteratedCapts, if (ambs.isEmpty) None else ambs.get.collect({ case (ambSan, ambUci) if ambSan == san => ambUci }).some).fold(
-          _ =>
-            (none, true), // illegal move; stop here unless we can rewind to some notational ambiguity
-          move => {
-            if (iteratedCapts && move.capture.fold(false)(_.lengthCompare(1) > 0) && move.situationBefore.ambiguitiesMove(move) > 0)
-              newAmb = (san -> move.toUci.uci).some
-            val game = prev.apply(move)
-            val uci = move.toUci
-            val sanStr = Dumper.apply(move)
-            parseComments(san.metas.comments, annotator, game.situation.color.some) match {
-              case (shapes, clock, comments) =>
-                var illegal = false
-                val variations = makeVariations(rest, game, annotator, iteratedCapts, if (newAmb.isDefined) (newAmb.get :: ambs.getOrElse(Nil)).some else ambs)
-                (Node(
-                  id = UciCharPair(uci),
-                  ply = game.turns,
-                  move = Uci.WithSan(uci, sanStr),
-                  fen = FEN(Forsyth >> game),
-                  shapes = shapes,
-                  comments = comments,
-                  glyphs = san.metas.glyphs,
-                  clock = clock,
-                  runningClock = parseRunningClock(san.metas.comments, game.situation.color.some),
-                  children = Node.Children {
-                    var nodeRes = makeNode(game, rest, annotator, iteratedCapts, if (newAmb.isDefined) (newAmb.get :: ambs.getOrElse(Nil)).some else ambs)
-                    if (nodeRes._1.isDefined && variations._1.nonEmpty) {
-                      var ambVars = 0
-                      while (variations._1.exists(n => nodeRes._1.get.id == n.id)) {
-                        ambVars = ambVars + 1
-                        nodeRes = nodeRes._1.get.copy(id = UciCharPair(nodeRes._1.get.id.a, ambVars)).some -> nodeRes._2
+  private def makeNode(prev: draughts.DraughtsGame, sans: List[San], annotator: Option[Comment.Author], iteratedCapts: Boolean = false, ambs: Option[List[(San, String)]]): (Option[Node], Boolean) =
+    try {
+      var newAmb = none[(San, String)]
+      val res = sans match {
+        case Nil => (none, false)
+        case san :: rest =>
+          san(prev.situation, iteratedCapts, if (ambs.isEmpty) None else ambs.get.collect({ case (ambSan, ambUci) if ambSan == san => ambUci }).some).fold(
+            _ =>
+              (none, true), // illegal move; stop here unless we can rewind to some notational ambiguity
+            move => {
+              if (iteratedCapts && move.capture.fold(false)(_.lengthCompare(1) > 0) && move.situationBefore.ambiguitiesMove(move) > 0)
+                newAmb = (san -> move.toUci.uci).some
+              val game = prev.apply(move)
+              val uci = move.toUci
+              val sanStr = Dumper.apply(move)
+              parseComments(san.metas.comments, annotator, game.situation.color.some) match {
+                case (shapes, clock, comments) =>
+                  var illegal = false
+                  val variations = makeVariations(rest, game, annotator, iteratedCapts, if (newAmb.isDefined) (newAmb.get :: ambs.getOrElse(Nil)).some else ambs)
+                  (Node(
+                    id = UciCharPair(uci),
+                    ply = game.turns,
+                    move = Uci.WithSan(uci, sanStr),
+                    fen = FEN(Forsyth >> game),
+                    shapes = shapes,
+                    comments = comments,
+                    glyphs = san.metas.glyphs,
+                    clock = clock,
+                    runningClock = parseRunningClock(san.metas.comments, game.situation.color.some),
+                    children = Node.Children {
+                      var nodeRes = makeNode(game, rest, annotator, iteratedCapts, if (newAmb.isDefined) (newAmb.get :: ambs.getOrElse(Nil)).some else ambs)
+                      if (nodeRes._1.isDefined && variations._1.nonEmpty) {
+                        var ambVars = 0
+                        while (variations._1.exists(n => nodeRes._1.get.id == n.id)) {
+                          ambVars = ambVars + 1
+                          nodeRes = nodeRes._1.get.copy(id = UciCharPair(nodeRes._1.get.id.a, ambVars)).some -> nodeRes._2
+                        }
                       }
+                      illegal = nodeRes._2 || variations._2
+                      nodeRes._1.fold(variations._1)(_ :: variations._1).toVector
                     }
-                    illegal = nodeRes._2 || variations._2
-                    nodeRes._1.fold(variations._1)(_ :: variations._1).toVector
-                  }
-                ).some, illegal)
+                  ).some, illegal)
+              }
             }
-          }
-        )
+          )
+      }
+      if (res._2 && newAmb.isDefined) makeNode(prev, sans, annotator, iteratedCapts, (newAmb.get :: ambs.getOrElse(Nil)).some)
+      else res
+    } catch {
+      case _: StackOverflowError =>
+        logger.warn(s"study PdnImport.makeNode StackOverflowError")
+        (None, false)
     }
-    if (res._2 && newAmb.isDefined) makeNode(prev, sans, annotator, iteratedCapts, (newAmb.get :: ambs.getOrElse(Nil)).some)
-    else res
-  }
 
   /*
    * Fix bad PDN like this one found on reddit:
