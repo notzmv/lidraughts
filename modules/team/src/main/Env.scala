@@ -92,8 +92,10 @@ final class Env(
 
   private lazy val notifier = new Notifier(notifyApi = notifyApi)
 
-  system.lidraughtsBus.subscribeFun('shadowban) {
+  system.lidraughtsBus.subscribeFun('shadowban, 'teamJoinedBy) {
     case lidraughts.hub.actorApi.mod.Shadowban(userId, true) => api deleteRequestsByUserId userId
+    case lidraughts.hub.actorApi.team.TeamIdsJoinedBy(userId, promise) =>
+      promise completeWith cached.teamIdsList(userId)
   }
 }
 

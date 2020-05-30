@@ -238,6 +238,60 @@ final class SwissApi(
       }
     }
 
+  private[swiss] def kickFromTeam(teamId: TeamId, userId: User.ID) =
+    swissColl
+      .primitive[Swiss.Id]($doc("teamId" -> teamId, "featurable" -> true), "_id")
+      .flatMap { swissIds =>
+        swissIds.nonEmpty ?? SwissPlayer.fields { f =>
+          playerColl.distinct[Swiss.Id, Seq](
+            "s",
+            $inIds(swissIds.map { SwissPlayer.makeId(_, userId) }).some
+          )
+        }
+      }
+      .flatMap { kickFromSwissIds(userId, _) }
+
+  private[swiss] def kickLame(userId: User.ID) =
+    bus
+      .ask[List[TeamId]]('teamJoinedBy)(lidraughts.hub.actorApi.team.TeamIdsJoinedBy(userId, _))
+      .flatMap { teamIds =>
+        import reactivemongo.api.collections.bson.BSONBatchCommands.AggregationFramework._
+        swissColl.aggregateList(
+          Match($doc("teamId" $in teamIds, "featurable" -> true)),
+          List(
+            PipelineOperator(
+              $doc(
+                "$lookup" -> $doc(
+                  "as" -> "player",
+                  "from" -> playerColl.name,
+                  "let" -> $doc("s" -> "$_id"),
+                  "pipeline" -> $arr(
+                    $doc(
+                      "$match" -> $doc(
+                        "$expr" -> $doc(
+                          "$and" -> $arr(
+                            $doc("$eq" -> $arr("$u", userId)),
+                            $doc("$eq" -> $arr("$s", "$$s"))
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            ),
+            Match("player" $ne $arr()),
+            Project($id(true))
+          ),
+          maxDocs = 100
+        )
+      }
+      .map(_.flatMap(_.getAs[Swiss.Id]("_id")))
+      .flatMap { kickFromSwissIds(userId, _) }
+
+  private def kickFromSwissIds(userId: User.ID, swissIds: Seq[Swiss.Id]): Funit =
+    swissIds.map { withdraw(_, userId) }.sequenceFu.void
+
   def withdraw(id: Swiss.Id, userId: User.ID): Funit =
     Sequencing(id)(notFinishedById) { swiss =>
       SwissPlayer.fields { f =>

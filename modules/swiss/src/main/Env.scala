@@ -172,8 +172,8 @@ final class Env(
     'finishGame, 'adjustCheater, 'adjustBooster
   ) {
       case lidraughts.game.actorApi.FinishGame(game, _, _) => api.finishGame(game)
-      // case lidraughts.hub.actorApi.mod.MarkCheater(userId, true) => api.ejectLame(userId, _)
-      // case lidraughts.hub.actorApi.mod.MarkBooster(userId)       => api.ejectLame(userId, Nil)
+      case lidraughts.hub.actorApi.mod.MarkCheater(userId, true) => api.kickLame(userId)
+      case lidraughts.hub.actorApi.mod.MarkBooster(userId) => api.kickLame(userId)
     }
 
   ResilientScheduler(
