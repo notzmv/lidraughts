@@ -121,9 +121,9 @@ final class Env(
     noteApi = noteApi,
     forecastApi = forecastApi,
     bookmarkApi = bookmarkApi,
+    swissApi = swissEnv.api,
     getTourAndRanks = getTourAndRanks,
-    getSimul = getSimul,
-    getSwiss = swissEnv.api.byId
+    getSimul = getSimul
   )
 
   val lobbyApi = new LobbyApi(
