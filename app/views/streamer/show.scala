@@ -49,7 +49,7 @@ method:'post'
                 iframe(
                   st.frameborder := "0",
                   frame.scrolling := "yes",
-                  src := s"https://twitch.tv/embed/${twitch.userId}/chat${(ctx.currentBg != "light") ?? "?darkpopout"}"
+                  src := s"https://twitch.tv/embed/${twitch.userId}/chat?${(ctx.currentBg != "light") ?? "darkpopout&"}parent=${netDomain}"
                 )
               }
             }
@@ -76,7 +76,7 @@ method:'post'
             case _ => s.streamer.twitch.map { twitch =>
               div(cls := "box embed twitch")(
                 iframe(
-                  src := s"https://player.twitch.tv/?channel=${twitch.userId}",
+                  src := s"https://player.twitch.tv/?channel=${twitch.userId}&parent=$netDomain",
                   frame.allowfullscreen
                 )
               )
