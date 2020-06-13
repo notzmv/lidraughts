@@ -1,6 +1,6 @@
 import { build as treeBuild, ops as treeOps, path as treePath } from 'tree';
 import { ctrl as cevalCtrl, scan2uci } from 'ceval';
-import { readDests, readCaptureLength, decomposeUci } from 'draughts';
+import { readDests, readCaptureLength, decomposeUci, san2alg } from 'draughts';
 import { opposite } from 'draughtsground/util';
 import { countGhosts } from 'draughtsground/fen';
 import { animationDuration } from 'draughtsground/anim';
@@ -55,6 +55,7 @@ export default function (opts, redraw: () => void): Controller {
           ply: data.history.ply,
           fen: data.history.fen,
           san: data.history.san,
+          alg: isAlgebraic() ? san2alg(data.history.san) : undefined,
           uci: data.history.uci,
           drops: undefined,
           tbhit: undefined,
