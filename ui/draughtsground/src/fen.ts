@@ -85,14 +85,18 @@ export function write(pieces: cg.Pieces, fields?: number, algebraic?: boolean): 
 export function toggleCoordinates(fen: cg.FEN, algebraic: boolean, fields?: number): string {
   if (!fen) return fen;
   if (fen === 'start') fen = initial;
-  let fenOut = '', fenW = 'W', fenB = 'B';
+  const extraParts = [];
+  let prefix = '', fenW = 'W', fenB = 'B';
   for (let fenPart of fen.split(':')) {
     let first = fenPart.slice(0, 1), clr: boolean;
     if (first === 'W') clr = true;
     else if (first === 'B') clr = false;
-    else continue;
+    else {
+      extraParts.push(fenPart)
+      continue;
+    }
     if (fenPart.length === 1) {
-      fenOut = first;
+      if (!prefix && !extraParts.length) prefix = first;
       continue;
     }
     const fenPieces = fenPart.slice(1).split(',');
@@ -139,7 +143,8 @@ export function toggleCoordinates(fen: cg.FEN, algebraic: boolean, fields?: numb
       }
     }
   }
-  return (fenOut ? fenOut + ':' + fenW : fenW) + ':' + fenB;
+  const partsOut = prefix ? [prefix, fenW, fenB] : [fenW, fenB]
+  return partsOut.concat(extraParts).join(':')
 }
 
 export function countGhosts(fen: cg.FEN): number {
