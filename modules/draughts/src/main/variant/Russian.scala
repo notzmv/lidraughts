@@ -39,9 +39,6 @@ case object Russian extends Variant(
     }(breakOut)
   }
 
-  def promoteOrSame(m: Move): Move =
-    maybePromote(m) getOrElse m
-
   override def shortRangeCaptures(actor: Actor, finalSquare: Boolean): List[Move] = {
     val buf = new ArrayBuffer[Move]
     val color = actor.color
@@ -56,6 +53,7 @@ case object Russian extends Variant(
                   curBoard.taking(curPos, landingPos, nextPos).fold(0) { newBoard =>
                     val promotion = promotablePos(landingPos, color)
                     val boardAfter = promotion.fold(newBoard promote landingPos, none) getOrElse newBoard
+                    val promoted = if (promotion) Some(King) else None
                     val newSquares = landingPos :: allSquares
                     val newTaken = nextPos :: allTaken
                     val opposite = Variant.oppositeDirs(walkDir._1)
@@ -64,15 +62,15 @@ case object Russian extends Variant(
                         if (captDir._1 == opposite) total
                         else {
                           total + promotion.fold(
-                            innerLongRangeCaptures(buf, actor, boardAfter, landingPos, captDir, finalSquare, firstSquare.getOrElse(landingPos).some, firstBoard.getOrElse(boardAfter).some, newSquares, newTaken),
+                            innerLongRangeCaptures(buf, actor, boardAfter, landingPos, captDir, finalSquare, firstSquare.getOrElse(landingPos).some, firstBoard.getOrElse(boardAfter).some, newSquares, newTaken, promoted),
                             walkCaptures(captDir, boardAfter, landingPos, firstSquare.getOrElse(landingPos).some, firstBoard.getOrElse(boardAfter).some, newSquares, newTaken)
                           )
                         }
                     }
                     if (extraCaptures == 0) {
                       val newMove =
-                        if (finalSquare) actor.move(landingPos, boardAfter.withoutGhosts, newSquares, newTaken)
-                        else promoteOrSame(actor.move(firstSquare.getOrElse(landingPos), firstBoard.getOrElse(boardAfter), newSquares, newTaken))
+                        if (finalSquare) actor.move(landingPos, boardAfter.withoutGhosts, newSquares, newTaken, promoted)
+                        else actor.move(firstSquare.getOrElse(landingPos), firstBoard.getOrElse(boardAfter), newSquares, newTaken, promoted)
                       buf += newMove
                     }
                     extraCaptures + 1
@@ -92,12 +90,12 @@ case object Russian extends Variant(
   override def longRangeCaptures(actor: Actor, finalSquare: Boolean): List[Move] = {
     val buf = new ArrayBuffer[Move]
     captureDirs.foreach {
-      innerLongRangeCaptures(buf, actor, actor.board, actor.pos, _, finalSquare, None, None, Nil, Nil)
+      innerLongRangeCaptures(buf, actor, actor.board, actor.pos, _, finalSquare, None, None, Nil, Nil, None)
     }
     buf.toList
   }
 
-  private def innerLongRangeCaptures(buf: ArrayBuffer[Move], actor: Actor, initBoard: Board, initPos: PosMotion, initDir: Direction, finalSquare: Boolean, initFirstSquare: Option[PosMotion], initFirstBoard: Option[Board], initAllSquares: List[PosMotion], initAllTaken: List[PosMotion]): Int = {
+  private def innerLongRangeCaptures(buf: ArrayBuffer[Move], actor: Actor, initBoard: Board, initPos: PosMotion, initDir: Direction, finalSquare: Boolean, initFirstSquare: Option[PosMotion], initFirstBoard: Option[Board], initAllSquares: List[PosMotion], initAllTaken: List[PosMotion], promoted: Option[PromotableRole]): Int = {
 
     @tailrec
     def walkUntilCapture(walkDir: Direction, curBoard: Board, curPos: PosMotion, firstSquare: Option[PosMotion], firstBoard: Option[Board], allSquares: List[Pos], allTaken: List[Pos]): Int =
@@ -145,9 +143,9 @@ case object Russian extends Variant(
       val totalCaptures = currentCaptures + extraCaptures + moreExtraCaptures
       if (totalCaptures == 0) {
         if (finalSquare)
-          buf += actor.move(curPos, curBoard.withoutGhosts, newSquares, newTaken)
+          buf += actor.move(curPos, curBoard.withoutGhosts, newSquares, newTaken, promoted)
         else
-          buf += actor.move(firstSquare.getOrElse(curPos), firstBoard.getOrElse(curBoard), newSquares, newTaken)
+          buf += actor.move(firstSquare.getOrElse(curPos), firstBoard.getOrElse(curBoard), newSquares, newTaken, promoted)
       }
       if (justTaken) totalCaptures + 1
       else totalCaptures
