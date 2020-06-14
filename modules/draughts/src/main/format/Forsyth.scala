@@ -83,18 +83,17 @@ object Forsyth {
       val allFields = new scala.collection.mutable.ArrayBuffer[(Pos, Piece)]
       for (line <- fenPieces) {
         if (line.nonEmpty)
-          Color.apply(line.charAt(0)).fold() {
-            color =>
-              val fields = if (line.endsWith(".")) line.substring(1, line.length - 1) else line.drop(1)
-              for (field <- fields.split(',')) {
-                if (field.nonEmpty)
-                  field.charAt(0) match {
-                    case 'K' => posAt(field.drop(1)).foreach { pos => allFields.+=((pos, Piece(color, King))) }
-                    case 'G' => posAt(field.drop(1)).foreach { pos => allFields.+=((pos, Piece(color, GhostMan))) }
-                    case 'P' => posAt(field.drop(1)).foreach { pos => allFields.+=((pos, Piece(color, GhostKing))) }
-                    case _ => posAt(field).fold() { pos => allFields.+=((pos, Piece(color, Man))) }
-                  }
-              }
+          Color.apply(line.charAt(0)).foreach { color =>
+            val fields = if (line.endsWith(".")) line.substring(1, line.length - 1) else line.drop(1)
+            for (field <- fields.split(',')) {
+              if (field.nonEmpty)
+                field.charAt(0) match {
+                  case 'K' => posAt(field.drop(1)).foreach { pos => allFields.+=((pos, Piece(color, King))) }
+                  case 'G' => posAt(field.drop(1)).foreach { pos => allFields.+=((pos, Piece(color, GhostMan))) }
+                  case 'P' => posAt(field.drop(1)).foreach { pos => allFields.+=((pos, Piece(color, GhostKing))) }
+                  case _ => posAt(field).foreach { pos => allFields.+=((pos, Piece(color, Man))) }
+                }
+            }
           }
       }
       Board(allFields, variant).some
@@ -167,7 +166,7 @@ object Forsyth {
     fenW.append(White.letter)
     fenB.append(Black.letter)
     for (f <- 1 to board.boardSize.fields) {
-      board(f).fold() { piece =>
+      board(f).foreach { piece =>
         if (piece is White) {
           if (fenW.length > 1) fenW append ','
           if (piece isNot Man) fenW append piece.forsyth
@@ -199,7 +198,7 @@ object Forsyth {
     val fenB = new scala.collection.mutable.StringBuilder(30)
     fenB.append('0')
     for (f <- 1 to board.boardSize.fields) {
-      board(f).fold() { piece =>
+      board(f).foreach { piece =>
         if (piece is White) {
           if (piece isNot Man) fenW append roleId(piece)
           fenW append posAt(f).get.piotr
