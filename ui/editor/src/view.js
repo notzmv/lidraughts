@@ -37,8 +37,7 @@ function studyButton(ctrl, fen) {
 }
 
 function controls(ctrl, fen) {
-  var positionIndex = ctrl.positionIndex[fen.split(' ')[0]];
-  var currentPosition = ctrl.data.positions && positionIndex !== -1 ? ctrl.data.positions[positionIndex] : null;
+  var currentPosition = ctrl.positionMap[fen.split(':').slice(0, 3).join(':')];
   var position2option = function(pos) {
     return {
       tag: 'option',
@@ -46,7 +45,7 @@ function controls(ctrl, fen) {
         value: pos.fen,
         selected: currentPosition && currentPosition.fen === pos.fen
       },
-      children: [pos.eco ? pos.eco + " " + pos.name : pos.name]
+      children: [pos.code ? pos.code + ': ' + pos.name : pos.name]
     };
   };
   var variant2option = function(variant) {
@@ -73,10 +72,11 @@ function controls(ctrl, fen) {
             selected: true
           }, '- ' + ctrl.trans.noarg('boardEditor') + ' -'),
           ctrl.extraPositions.map(position2option)
-        ])/*,
-        optgroup(ctrl.trans.noarg('popularOpenings'),
-          ctrl.data.positions.map(position2option)
-        )*/
+        ]),
+        ctrl.data.positions[ctrl.data.variant.key] ? 
+          ctrl.data.positions[ctrl.data.variant.key].map(function(cat) {
+             return optgroup(cat.name, cat.positions.map(position2option))
+          }) : null
       ]) : null
     ]),
     m('div.metadata', [

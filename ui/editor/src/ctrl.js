@@ -26,10 +26,17 @@ module.exports = function(cfg) {
       name: this.trans('loadPosition')
   }];
 
-  this.positionIndex = {};
-  cfg.positions && cfg.positions.forEach(function(p, i) {
-    this.positionIndex[p.fen.split(' ')[0]] = i;
-  }.bind(this));
+  this.makePositionMap = function() {
+    const positionMap = {};
+    const positions = cfg.positions && cfg.positions[this.data.variant.key];
+    if (positions) positions.forEach(function(cat) { 
+      cat.positions.forEach(function(pos) {
+        positionMap[pos.fen.split(':').slice(0, 3).join(':')] = pos;
+      });
+    });
+    this.positionMap = positionMap
+  }.bind(this)
+  this.makePositionMap();
 
   this.draughtsground; // will be set from the view when instanciating draughtsground
 
@@ -105,6 +112,7 @@ module.exports = function(cfg) {
       this.draughtsground = undefined;
     }
     this.data.variant = variant;
+    this.makePositionMap();
     m.redraw();
   }.bind(this);
 
