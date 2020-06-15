@@ -19,8 +19,8 @@ case object Russian extends Variant(
   val pieces = Variant.symmetricThreeRank(Vector(Man, Man, Man, Man), boardSize)
   val initialFen = "W:W21,22,23,24,25,26,27,28,29,30,31,32:B1,2,3,4,5,6,7,8,9,10,11,12:H0:F1"
   val startingPosition = StartingPosition("---", initialFen, "", "Initial position".some)
-  override val openings = OpeningTable.categoriesIDF
-  override val openingTables = List(OpeningTable.tableIDF)
+  override val openings = OpeningTable.categoriesFMJD
+  override val openingTables = List(OpeningTable.tableFMJD)
 
   def captureDirs = Standard.captureDirs
   def moveDirsColor = Standard.moveDirsColor
