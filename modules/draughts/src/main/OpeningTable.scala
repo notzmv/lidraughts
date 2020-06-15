@@ -847,8 +847,8 @@ object OpeningTable {
 
   val tableFMJD = OpeningTable(
     key = "fmjd",
-    name = "FMJD competitions Table of draw",
-    url = "https://fmjd.org/",
+    name = "FMJD Drawing Tables - Russian",
+    url = "https://results.fmjd.org/viewpage.php?page_id=2",
     positions = categoriesFMJD.flatMap(_.positions)
   )
 
