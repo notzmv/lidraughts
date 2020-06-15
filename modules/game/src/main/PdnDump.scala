@@ -118,7 +118,7 @@ final class PdnDump(
           }
         }).some
       ).flatten ::: customStartPosition(game.variant).??(List(
-          Tag(_.FEN, convertedFen.fold("?")(_.value))
+          Tag(_.FEN, convertedFen.fold("?")(_.value.split(':').take(3).mkString(":")))
         ))
     }
   }
