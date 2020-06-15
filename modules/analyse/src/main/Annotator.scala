@@ -28,7 +28,7 @@ final class Annotator(netDomain: String) {
     }
 
   private def annotateOpening(opening: Option[FullOpening.AtPly])(p: Pdn) = opening.fold(p) { o =>
-    p.updatePly(o.ply, _.copy(opening = o.opening.ecoName.some))
+    p.updatePly(o.ply, _.copy(opening = o.opening.fullName.some))
   }
 
   private def annotateTurns(p: Pdn, advices: List[Advice]): Pdn =

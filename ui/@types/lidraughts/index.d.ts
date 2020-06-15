@@ -301,7 +301,7 @@ declare namespace Tree {
 
   export interface Opening {
     name: string;
-    eco: string;
+    code: string;
   }
 
   type GlyphId = number;

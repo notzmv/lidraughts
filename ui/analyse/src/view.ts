@@ -278,9 +278,9 @@ function renderOpeningBox(ctrl: AnalyseCtrl) {
   let opening = ctrl.tree.getOpening(ctrl.nodeList);
   if (!opening && !ctrl.path) opening = ctrl.data.game.opening;
   if (opening) return h('div.opening_box', {
-    attrs: { title: opening.eco + ' ' + opening.name }
+    attrs: { title: opening.code + ' ' + opening.name }
   }, [
-      h('strong', opening.eco),
+      h('strong', opening.code),
       ' ' + opening.name
     ]);
 }

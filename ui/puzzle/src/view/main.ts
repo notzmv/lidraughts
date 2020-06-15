@@ -14,9 +14,9 @@ import { Controller } from '../interfaces';
 function renderOpeningBox(ctrl: Controller) {
   var opening = ctrl.getTree().getOpening(ctrl.vm.nodeList);
   if (opening) return h('div.opening_box', {
-    attrs: { title: opening.eco + ' ' + opening.name }
+    attrs: { title: opening.code + ' ' + opening.name }
   }, [
-    h('strong', opening.eco),
+    h('strong', opening.code),
     ' ' + opening.name
   ]);
 }

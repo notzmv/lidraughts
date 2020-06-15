@@ -79,7 +79,7 @@ export interface Game {
 
 export interface Opening {
   name: string;
-  eco: string;
+  code: string;
   ply: number;
 }
 

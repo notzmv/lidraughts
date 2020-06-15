@@ -191,7 +191,7 @@ object Node {
 
   implicit val openingWriter: OWrites[draughts.opening.FullOpening] = OWrites { o =>
     Json.obj(
-      "eco" -> o.eco,
+      "code" -> o.code,
       "name" -> o.name
     )
   }

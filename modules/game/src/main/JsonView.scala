@@ -110,7 +110,7 @@ object JsonView {
 
   implicit val openingWriter: OWrites[draughts.opening.FullOpening.AtPly] = OWrites { o =>
     Json.obj(
-      "eco" -> o.opening.eco,
+      "code" -> o.opening.code,
       "name" -> o.opening.name,
       "ply" -> o.ply
     )
