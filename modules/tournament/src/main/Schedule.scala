@@ -28,6 +28,8 @@ case class Schedule(
     case _ => s"${freq.toString} ${variant.name}"
   }
 
+  def openingTable = (freq.isWeeklyOrBetter && variant.russian) ?? variant.openingTables.headOption
+
   def day = at.withTimeAtStartOfDay
 
   def sameSpeed(other: Schedule) = speed == other.speed

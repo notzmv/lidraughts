@@ -212,8 +212,8 @@ Thank you all, you rock!"""
         ).flatten,
 
         List( // daily variant tournaments!
-          at(today, 19 - todayCET) map { date => Schedule(Daily, SuperBlitz, Frysk, std, date |> orTomorrow).plan },
-          at(today, 20 - todayCET) map { date => Schedule(Daily, SuperBlitz, Russian, std, date |> orTomorrow).plan },
+          at(today, 17 - todayCET) map { date => Schedule(Daily, SuperBlitz, Russian, std, date |> orTomorrow).plan },
+          at(today, 20 - todayCET) map { date => Schedule(Daily, SuperBlitz, Frysk, std, date |> orTomorrow).plan },
           at(today, 21 - todayCET) map { date => Schedule(Daily, SuperBlitz, Frisian, std, date |> orTomorrow).plan },
           at(today, 22 - todayCET) map { date => Schedule(Daily, SuperBlitz, Antidraughts, std, date |> orTomorrow).plan }
         ).flatten,

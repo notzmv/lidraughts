@@ -185,7 +185,7 @@ object Tournament {
     nbPlayers = 0,
     variant = sched.variant,
     position = sched.position,
-    openingTable = none,
+    openingTable = sched.openingTable,
     mode = Mode.Rated,
     conditions = sched.conditions,
     schedule = Some(sched),
