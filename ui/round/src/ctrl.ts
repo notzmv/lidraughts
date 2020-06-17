@@ -14,7 +14,6 @@ import { countGhosts } from 'draughtsground/fen';
 import { ClockController } from './clock/clockCtrl';
 import { CorresClockController, ctrl as makeCorresClock } from './corresClock/corresClockCtrl';
 import MoveOn from './moveOn';
-import atomic = require('./atomic');
 import sound = require('./sound');
 import util = require('./util');
 import xhr = require('./xhr');
@@ -75,8 +74,7 @@ export default class RoundController {
 
   constructor(readonly opts: RoundOpts, readonly redraw: Redraw) {
 
-    opts.data.steps = round.mergeSteps(opts.data.steps);
-
+    opts.data.steps = round.mergeSteps(opts.data.steps, this.isAlgebraic(opts.data) ? 1 : 0);
     round.massage(opts.data);
 
     const d = this.data = opts.data;
@@ -159,13 +157,9 @@ export default class RoundController {
       this.moveOn.timeOutGame(0);
   };
 
-  private onMove = (_: cg.Key, dest: cg.Key, captured?: cg.Piece) => {
-    if (captured) {
-      if (this.data.game.variant.key === 'atomic') {
-        sound.explode();
-        atomic.capture(this, dest);
-      } else sound.capture();
-    } else sound.move();
+  private onMove = (_orig: cg.Key, _dest: cg.Key, captured?: cg.Piece) => {
+    if (captured) sound.capture();
+    else sound.move();
   };
 
   private isSimulHost = () => {
@@ -226,6 +220,14 @@ export default class RoundController {
       d.pref.replay === 1 && (d.game.speed === 'classical' || d.game.speed === 'unlimited' || d.game.speed === 'correspondence')
     );
   };
+
+  private isAlgebraic = (d: RoundData): boolean => {
+    return d.pref.coordSystem === 1 && d.game.variant.board.key === '64';
+  }
+  
+  coordSystem = (): number => {
+    return this.isAlgebraic(this.data) ? 1 : 0;
+  }
 
   isLate = () => this.replaying() && status.playing(this.data);
 
@@ -313,9 +315,8 @@ export default class RoundController {
 
   apiMove = (o: ApiMove): void => {
     const d = this.data,
-      playing = this.isPlaying();
-
-    const ghosts = countGhosts(o.fen);
+      playing = this.isPlaying(),
+      ghosts = countGhosts(o.fen);
 
     d.game.turns = o.ply;
     d.game.player = o.ply % 2 === 0 ? 'white' : 'black';
@@ -330,7 +331,6 @@ export default class RoundController {
     this.playerByColor('black').offeringDraw = o.bDraw;
 
     d.possibleMoves = activeColor ? o.dests : undefined;
-    d.possibleDrops = activeColor ? o.drops : undefined;
     d.captureLength = o.captLen;
 
     this.setTitle();
@@ -346,16 +346,7 @@ export default class RoundController {
       }, o.uci.substr(o.uci.length - 2, 2) as cg.Key);
       else {
         const keys = util.uci2move(o.uci);
-        this.draughtsground.move(keys![0], keys![1]);
-      }
-      if (o.enpassant) {
-        const p = o.enpassant, pieces: cg.PiecesDiff = {};
-        pieces[p.key] = undefined;
-        this.draughtsground.setPieces(pieces);
-        if (d.game.variant.key === 'atomic') {
-          atomic.enpassant(this, p.key, p.color);
-          sound.explode();
-        } else sound.capture();
+        this.draughtsground.move(keys![0], keys![1], ghosts === 0);
       }
       this.draughtsground.set({
         turnColor: d.game.player,
@@ -375,7 +366,7 @@ export default class RoundController {
       fen: o.fen,
       san: o.san,
       uci: o.uci
-    });
+    }, this.coordSystem());
 
     this.justDropped = undefined;
     this.justCaptured = undefined;
@@ -402,10 +393,10 @@ export default class RoundController {
         decSimulToMove(this.trans);
     }
     if (!this.replaying() && playedColor != d.player.color) {
-      // atrocious hack to prevent race condition
+      // TODO: atrocious hack to prevent race condition
       // with explosions and premoves
       // https://github.com/ornicar/lila/issues/343
-      const premoveDelay = d.game.variant.key === 'atomic' ? 100 : 1;
+      const premoveDelay = 1;
       setTimeout(() => {
         if (!this.draughtsground.playPremove()) {
           this.showYourMoveNotification();
@@ -425,7 +416,7 @@ export default class RoundController {
   }
 
   reload = (d: RoundData): void => {
-    d.steps = round.mergeSteps(d.steps);
+    d.steps = round.mergeSteps(d.steps, this.coordSystem());
     if (d.steps.length !== this.data.steps.length) this.ply = d.steps[d.steps.length - 1].ply;
     round.massage(d);
     this.data = d;

@@ -167,15 +167,20 @@ object BinaryFormat {
 
   object piece {
 
-    private val groupedPos = Pos.all grouped 2 collect {
+    import Board.BoardSize
+    private val groupedPos: Map[BoardSize, Array[(PosMotion, PosMotion)]] = BoardSize.all.map { size =>
+      size -> getGroupedPos(size)
+    }(breakOut)
+
+    private def getGroupedPos(size: BoardSize) = size.pos.all grouped 2 collect {
       case List(p1, p2) => (p1, p2)
     } toArray
 
-    def write(pieces: PieceMap): ByteArray = {
+    def write(pieces: PieceMap, variant: Variant): ByteArray = {
       def posInt(pos: Pos): Int = (pieces get pos).fold(0) { piece =>
         piece.color.fold(0, 8) + roleToInt(piece.role)
       }
-      ByteArray(groupedPos map {
+      ByteArray(groupedPos(variant.boardSize) map {
         case (p1, p2) => ((posInt(p1) << 4) + posInt(p2)).toByte
       })
     }
@@ -188,13 +193,13 @@ object BinaryFormat {
       def intPiece(int: Int): Option[Piece] =
         intToRole(int & 7, variant) map { role => Piece(Color((int & 8) == 0), role) }
       val pieceInts = ba.value flatMap splitInts
-      (Pos.all zip pieceInts).flatMap {
+      (variant.boardSize.pos.all zip pieceInts).flatMap {
         case (pos, int) => intPiece(int) map (pos -> _)
       }(breakOut)
     }
 
     // cache standard start position
-    val standard = write(Board.init(draughts.variant.Standard).pieces)
+    val standard = write(Board.init(draughts.variant.Standard).pieces, draughts.variant.Standard)
 
     private def intToRole(int: Int, variant: Variant): Option[Role] = int match {
       case 4 => Some(GhostMan)

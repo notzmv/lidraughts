@@ -49,9 +49,8 @@ object BSONHandlers {
   implicit val tournamentHandler = new BSON[Tournament] {
     def reads(r: BSON.Reader) = {
       val variant = r.intO("variant").fold[Variant](Variant.default)(Variant.orDefault)
-      val position: StartingPosition = r.strO("fen").flatMap(Thematic.byFen) orElse
-        r.strO("eco").flatMap(Thematic.byEco) getOrElse // for BC
-        StartingPosition.initial
+      val position: StartingPosition = r.strO("fen").flatMap(variant.openingByFen) getOrElse
+        variant.startingPosition
       val startsAt = r date "startsAt"
       val conditions = r.getO[Condition.All]("conditions") getOrElse Condition.All.empty
       Tournament(
@@ -63,6 +62,7 @@ object BSONHandlers {
         minutes = r int "minutes",
         variant = variant,
         position = position,
+        openingTable = r.strO("table").flatMap(draughts.OpeningTable.byKey),
         mode = r.intO("mode") flatMap Mode.apply getOrElse Mode.Rated,
         password = r.strO("password"),
         conditions = conditions,
@@ -90,7 +90,8 @@ object BSONHandlers {
       "clock" -> o.clock,
       "minutes" -> o.minutes,
       "variant" -> o.variant.some.filterNot(_.standard).map(_.id),
-      "fen" -> o.position.some.filterNot(_.initial).map(_.fen),
+      "fen" -> o.position.some.filterNot(_.initialVariant(o.variant)).map(_.fen),
+      "table" -> o.openingTable.map(_.key),
       "mode" -> o.mode.some.filterNot(_.rated).map(_.id),
       "password" -> o.password,
       "conditions" -> o.conditions.ifNonEmpty,

@@ -96,8 +96,8 @@ object Puzzle {
   import reactivemongo.bson._
   import lidraughts.db.BSON
   import BSON.BSONJodaDateTimeHandler
-  private implicit val lineBSONHandler = new BSONHandler[BSONDocument, Lines] {
-    private def readMove(move: String) = draughts.Pos.doublePiotrToKey(move take 2) match {
+  private implicit val linesBSONHandler = new BSONHandler[BSONDocument, Lines] {
+    private def readMove(move: String) = draughts.Piotr.doublePiotrToKey(move take 2) match {
       case Some(m) => s"$m${move drop 2}"
       case _ => sys error s"Invalid piotr move notation: $move"
     }
@@ -112,7 +112,7 @@ object Puzzle {
       case BSONElement(move, value) =>
         throw new Exception(s"Can't read value of $move: $value")
     }(breakOut)
-    private def writeMove(move: String) = draughts.Pos.doubleKeyToPiotr(move take 4) match {
+    private def writeMove(move: String) = draughts.Piotr.doubleKeyToPiotr(move take 4) match {
       case Some(m) => s"$m${move drop 4}"
       case _ => sys error s"Invalid move notation: $move"
     }
@@ -165,7 +165,6 @@ object Puzzle {
       attempts = r int attempts,
       mate = r bool mate
     )
-
     def writes(w: BSON.Writer, o: Puzzle) = BSONDocument(
       id -> o.id,
       variant -> o.variant.key,

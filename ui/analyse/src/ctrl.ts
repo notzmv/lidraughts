@@ -193,7 +193,7 @@ export default class AnalyseCtrl {
     this.ongoing = !this.synthetic && game.playable(data);
 
     const prevTree = merge && this.tree.root;
-    this.tree = makeTree(treeOps.reconstruct(this.data.treeParts));
+    this.tree = makeTree(treeOps.reconstruct(this.data.treeParts, this.coordSystem()));
     if (prevTree) this.tree.merge(prevTree);
 
     this.actionMenu = new ActionMenuCtrl();
@@ -307,7 +307,7 @@ export default class AnalyseCtrl {
   getDests: () => void = throttle(800, () => {
     const gamebook = this.gamebookPlay();
     if (this.embed && gamebook && !defined(this.node.dests)) {
-      let dests = calcDests(this.node.fen, this.data.game.variant.key);
+      let dests = calcDests(this.node.fen, this.data.game.variant);
       if (dests.length > 1 && dests[0] === '#') {
         const nextUci = gamebook.nextUci();
         if (nextUci && nextUci.length >= 4) {
@@ -506,9 +506,18 @@ export default class AnalyseCtrl {
     });
   }
 
+  isAlgebraic(): boolean {
+    return this.data.pref.coordSystem === 1 && this.data.game.variant.board.key === '64';
+  }
+
+  coordSystem(): number {
+    return this.isAlgebraic() ? 1 : 0;
+  }
+
   changeFen(fen: Fen): void {
     this.redirecting = true;
-    window.location.href = '/analysis/' + (this.data.puzzleEditor ? 'puzzle/' : '') + this.data.game.variant.key + '/' + encodeURIComponent(fen).replace(/%20/g, '_').replace(/%2F/g, '/');
+    const cleanFen = draughtsUtil.fenFromTag(fen);
+    window.location.href = '/analysis/' + (this.data.puzzleEditor ? 'puzzle/' : '') + this.data.game.variant.key + '/' + encodeURIComponent(cleanFen).replace(/%20/g, '_').replace(/%2F/g, '/');
   }
 
   userMove = (orig: Key, dest: Key, capture?: JustCaptured): void => {
@@ -530,7 +539,7 @@ export default class AnalyseCtrl {
      const fenParts = this.node.fen.split(':');
      var fen = this.node.fen[0] + ":" + boardFen;
      if (fenParts.length > 3) fen += ":" + fenParts.slice(3).join(':');
-     const dests = calcDests(fen, this.data.game.variant.key);
+     const dests = calcDests(fen, this.data.game.variant);
      return dests.length > 1 && dests[0] === "#";
   }
 
@@ -577,13 +586,13 @@ export default class AnalyseCtrl {
         if (fenParts.length > 3)
           treeNode.fen += ":" + fenParts.slice(3).join(':');
         if (treeNode.captLen > 0) {
-          treeNode.dests = calcDests(treeNode.fen, this.data.game.variant.key);
+          treeNode.dests = calcDests(treeNode.fen, this.data.game.variant);
           treeNode.dests = "#" + treeNode.captLen.toString() + treeNode.dests.substr(2);
         } else
           treeNode.dests = undefined;
       }
       if (!treeNode.dests) {
-        treeNode.dests = calcDests(treeNode.fen, this.data.game.variant.key);
+        treeNode.dests = calcDests(treeNode.fen, this.data.game.variant);
         if (treeNode.dests.length > 1 && treeNode.dests[0] === '#') {
           const nextChild = gamebook.peekNextChild();
           if (nextChild && nextChild.uci && nextChild.uci.length > 4) {
@@ -654,7 +663,7 @@ export default class AnalyseCtrl {
   }
 
   addNode(node: Tree.Node, path: Tree.Path) {
-    const newPath = this.tree.addNode(node, path, this.data.puzzleEditor);
+    const newPath = this.tree.addNode(node, path, this.data.puzzleEditor, this.coordSystem());
     if (!newPath) {
       console.log("Can't addNode", node, path);
       return this.redraw();
@@ -698,7 +707,6 @@ export default class AnalyseCtrl {
   }
 
   generatePuzzleJson(): string {
-
     const nodesUci = new Array<string[]>();
     treeOps.allVariationsNodeList(this.tree.root).map(variation => treeOps.expandMergedNodes(variation)).forEach(
       moves => {
@@ -718,7 +726,6 @@ export default class AnalyseCtrl {
         nodesUci.push(movesUci)
       }
     );
-
     return JSON.stringify({
       category: "Puzzles",
       last_pos: this.tree.root.fen,
@@ -726,8 +733,7 @@ export default class AnalyseCtrl {
       move_list: nodesUci.map(variation => variation.slice(1)),
       game_id: "custom"
     });
-
-};
+  };
 
   expandVariations(path: Tree.Path): void {
     const node = this.tree.nodeAtPath(path);
@@ -735,15 +741,16 @@ export default class AnalyseCtrl {
     const parentPath = treePath.init(path), parent = this.tree.nodeAtPath(parentPath);
     if (!parent) return;
     for (const alt of node.missingAlts) {
-      var copy = treeOps.copyNode(node);
+      var copy = treeOps.copyNode(node, false, this.coordSystem());
       copy.uci = alt.uci;
       copy.children = node.children;
       this.tree.setAmbs(copy, parent);
-      this.tree.addNode(copy, parentPath, this.data.puzzleEditor);
+      this.tree.addNode(copy, parentPath, this.data.puzzleEditor, this.coordSystem());
     }
-    for (const c of parent.children)
+    for (const c of parent.children) {
       if (draughtsUtil.fenCompare(node.fen, c.fen))
         c.missingAlts = [];
+    }
   }
 
   promote(path: Tree.Path, toMainline: boolean): void {

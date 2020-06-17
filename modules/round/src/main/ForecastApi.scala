@@ -16,7 +16,7 @@ import lidraughts.hub.DuctMap
 final class ForecastApi(coll: Coll, roundMap: DuctMap[RoundDuct]) {
 
   private implicit val PosBSONHandler = new BSONHandler[BSONString, Pos] {
-    def read(bsonStr: BSONString): Pos = Pos.posAt(bsonStr.value) err s"No such pos: ${bsonStr.value}"
+    def read(bsonStr: BSONString): Pos = draughts.Board.BoardSize.max.posAt(bsonStr.value) err s"No such pos: ${bsonStr.value}"
     def write(x: Pos) = BSONString(x.key)
   }
 

@@ -48,7 +48,6 @@ export interface RoundData extends GameData {
   pref: Pref;
   steps: Step[];
   possibleMoves?: EncodedDests;
-  possibleDrops?: string;
   captureLength?: number
   forecastCount?: number;
   crazyhouse?: CrazyData;
@@ -111,12 +110,12 @@ export interface Step {
   fen: Fen;
   san: San;
   uci: Uci;
+  alg?: string
   captLen?: number;
 }
 
 export interface ApiMove extends Step {
   dests: EncodedDests;
-  captLen?: number
   clock?: {
     white: Seconds;
     black: Seconds;
@@ -134,15 +133,6 @@ export interface ApiMove extends Step {
   promotion?: {
     key: cg.Key;
     pieceClass: cg.Role;
-  };
-  enpassant: {
-    key: cg.Key;
-    color: Color;
-  };
-  castle: {
-    king: [cg.Key, cg.Key];
-    rook: [cg.Key, cg.Key];
-    color: Color;
   };
   isMove?: true;
   isDrop?: true;
@@ -173,6 +163,7 @@ export interface Pref {
   clockTenths: 0 | 1 | 2;
   confirmResign: boolean;
   coords: 0 | 1 | 2;
+  coordSystem: 0 | 1;
   destination: boolean;
   enablePremove: boolean;
   highlight: boolean;

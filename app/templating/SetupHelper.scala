@@ -141,7 +141,8 @@ trait SetupHelper { self: I18nHelper =>
       variantTuple(draughts.variant.Frisian) :+
       variantTuple(draughts.variant.Frysk) :+
       variantTuple(draughts.variant.Antidraughts) :+
-      variantTuple(draughts.variant.Breakthrough)
+      variantTuple(draughts.variant.Breakthrough) :+
+      variantTuple(draughts.variant.Russian)
 
   def translatedVariantChoicesWithFen(implicit ctx: Context) =
     translatedVariantChoices(ctx) :+
@@ -185,6 +186,11 @@ trait SetupHelper { self: I18nHelper =>
     (Pref.Coords.NONE, trans.no.txt()),
     (Pref.Coords.INSIDE, trans.insideTheBoard.txt()),
     (Pref.Coords.OUTSIDE, trans.outsideTheBoard.txt())
+  )
+
+  def translatedCoordinateSystemChoices(implicit ctx: Context) = List(
+    (Pref.CoordSystem.FIELDNUMBERS, trans.fieldnumbers8x8.txt()),
+    (Pref.CoordSystem.ALGEBRAIC, trans.algebraic8x8.txt())
   )
 
   def translatedMoveListWhilePlayingChoices(implicit ctx: Context) = List(

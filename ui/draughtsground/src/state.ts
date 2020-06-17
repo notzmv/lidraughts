@@ -7,6 +7,7 @@ import * as cg from './types';
 
 export interface State {
   pieces: cg.Pieces;
+  boardSize: cg.BoardSize;
   orientation: cg.Color; // board orientation. white | black
   turnColor: cg.Color; // turn to play. white | black
   lastMove?: cg.Key[]; // ucis of the last move [32, 27]
@@ -14,6 +15,7 @@ export interface State {
   /** square currently selected "a1" */
   selected?: cg.Key;
   coordinates: number; // include coords attributes
+  coordSystem?: number; // coordinate system (0 = fieldnumbers, 1 = algebraic)
   viewOnly: boolean; // don't bind events: the user will never be able to move pieces around
   disableContextMenu: boolean; // because who needs a context menu on a draughtsboard
   resizable: boolean; // listens to draughtsground.resize on document.body to clear bounds cache
@@ -35,6 +37,7 @@ export interface State {
     dests?: cg.Dests; // valid moves. {"a2" ["a3" "a4"] "b1" ["a3" "c3"]}
     captLen?: number;
     captureUci?: Array<string>
+    variant?: string; // game variant, to determine motion rules
     showDests: boolean; // whether to add the move-dest class on squares
     events: {
       after?: (orig: cg.Key, dest: cg.Key, metadata: cg.MoveMetadata) => void; // called after the move has been played
@@ -105,6 +108,7 @@ export interface State {
 export function defaults(): Partial<State> {
   return {
     pieces: fen.read(fen.initial),
+    boardSize: [10, 10],
     orientation: 'white',
     turnColor: 'white',
     coordinates: 2,

@@ -60,11 +60,11 @@ object GameDiff {
     a.pdnStorage match {
       case f @ PdnStorage.OldBin => {
         d(oldPdn, _.pdnMoves, writeBytes compose f.encode)
-        d(binaryPieces, _.board.pieces, writeBytes compose BinaryFormat.piece.write)
+        d(binaryPieces, _.board.pieces, writeBytes compose { m: draughts.PieceMap => BinaryFormat.piece.write(m, a.variant) })
         d(positionHashes, _.history.positionHashes, w.bytes)
         d(historyLastMove, _.history.lastMove.map(_.uci) | "", w.str)
         // since variants are always OldBin
-        if (a.variant.frisianVariant)
+        if (a.variant.frisianVariant || a.variant.russian)
           dOpt(kingMoves, _.history.kingMoves, (o: KingMoves) => o.nonEmpty option { BSONHandlers.kingMovesWriter write o })
       }
       case f @ PdnStorage.Huffman => {

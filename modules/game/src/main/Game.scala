@@ -290,7 +290,7 @@ case class Game(
     val events = Event.Move(move, game.situation, state, clockEvent) ::
       {
         // abstraction leak, I know.
-        updated.board.variant.frisianVariant ?? List(Event.KingMoves(
+        (updated.board.variant.frisianVariant || updated.board.variant.russian) ?? List(Event.KingMoves(
           white = updated.history.kingMoves.white,
           black = updated.history.kingMoves.black,
           whiteKing = updated.history.kingMoves.whiteKing,
@@ -566,7 +566,8 @@ case class Game(
       case Rapid => 30
       case _ => 35
     }
-    base
+    if (isTournament && variant.russian && metadata.simulPairing.isDefined) base + 10
+    else base
   }
 
   def expirable =
@@ -634,7 +635,9 @@ case class Game(
     case _ => None
   }
 
-  def withTournamentId(id: String) = copy(metadata = metadata.copy(tournamentId = id.some))
+  def withTournamentId(id: String, tableId: Option[Int]) =
+    if (tableId.isDefined) copy(metadata = metadata.copy(tournamentId = id.some, simulPairing = tableId))
+    else copy(metadata = metadata.copy(tournamentId = id.some))
 
   def withSimul(id: String, pairing: Int) = copy(metadata = metadata.copy(simulId = id.some, simulPairing = pairing.some))
 

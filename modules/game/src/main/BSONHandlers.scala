@@ -59,9 +59,9 @@ object BSONHandlers {
         history = DraughtsHistory(
           lastMove = decoded.lastMove,
           positionHashes = decoded.positionHashes,
-          kingMoves = if (gameVariant.frisianVariant) {
+          kingMoves = if (gameVariant.frisianVariant || gameVariant.russian) {
             val counts = r.intsD(F.kingMoves)
-            KingMoves(~counts.headOption, ~counts.tailOption.flatMap(_.headOption), if (counts.length > 2) draughts.Pos.posAt(counts(2)) else none, if (counts.length > 3) draughts.Pos.posAt(counts(3)) else none)
+            KingMoves(~counts.headOption, ~counts.tailOption.flatMap(_.headOption), if (counts.length > 2) gameVariant.boardSize.pos.posAt(counts(2)) else none, if (counts.length > 3) gameVariant.boardSize.pos.posAt(counts(3)) else none)
           } else Game.emptyKingMoves,
           variant = gameVariant
         ),
@@ -155,7 +155,7 @@ object BSONHandlers {
         o.pdnStorage match {
           case f @ PdnStorage.OldBin => $doc(
             F.oldPdn -> f.encode(o.pdnMoves take Game.maxPlies),
-            F.binaryPieces -> BinaryFormat.piece.write(o.board.pieces),
+            F.binaryPieces -> BinaryFormat.piece.write(o.board.pieces, o.board.variant),
             F.positionHashes -> o.history.positionHashes,
             F.historyLastMove -> o.history.lastMove.map(_.uci),
             // since variants are always OldBin

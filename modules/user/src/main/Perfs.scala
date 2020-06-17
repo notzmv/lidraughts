@@ -3,7 +3,7 @@ package lidraughts.user
 import org.joda.time.DateTime
 
 import draughts.Speed
-import draughts.variant.{ Variant, Standard, Frisian }
+import draughts.variant.{ Variant, Standard, Frisian, Russian }
 import lidraughts.db.BSON
 import lidraughts.rating.{ Perf, PerfType, Glicko }
 
@@ -13,6 +13,7 @@ case class Perfs(
     frysk: Perf,
     antidraughts: Perf,
     breakthrough: Perf,
+    russian: Perf,
     ultraBullet: Perf,
     bullet: Perf,
     blitz: Perf,
@@ -28,6 +29,7 @@ case class Perfs(
     "frysk" -> frysk,
     "antidraughts" -> antidraughts,
     "breakthrough" -> breakthrough,
+    "russian" -> russian,
     "ultraBullet" -> ultraBullet,
     "bullet" -> bullet,
     "blitz" -> blitz,
@@ -35,7 +37,8 @@ case class Perfs(
     "classical" -> classical,
     "correspondence" -> correspondence,
     "puzzle" -> puzzle(Standard),
-    "puzzlefrisian" -> puzzle(Frisian)
+    "puzzlefrisian" -> puzzle(Frisian),
+    "puzzlerussian" -> puzzle(Russian)
   )
 
   def bestPerf: Option[(PerfType, Perf)] = {
@@ -93,6 +96,7 @@ case class Perfs(
     "frysk" -> frysk,
     "antidraughts" -> antidraughts,
     "breakthrough" -> breakthrough,
+    "russian" -> russian,
     "ultraBullet" -> ultraBullet,
     "bullet" -> bullet,
     "blitz" -> blitz,
@@ -100,7 +104,8 @@ case class Perfs(
     "classical" -> classical,
     "correspondence" -> correspondence,
     "puzzle" -> puzzle(Standard),
-    "puzzlefrisian" -> puzzle(Frisian)
+    "puzzlefrisian" -> puzzle(Frisian),
+    "puzzlerussian" -> puzzle(Russian)
   )
 
   def ratingMap: Map[String, Int] = perfsMap mapValues (_.intRating)
@@ -121,8 +126,10 @@ case class Perfs(
     case PerfType.Frysk => frysk
     case PerfType.Antidraughts => antidraughts
     case PerfType.Breakthrough => breakthrough
+    case PerfType.Russian => russian
     case PerfType.Puzzle => puzzle(Standard)
     case PerfType.PuzzleFrisian => puzzle(Frisian)
+    case PerfType.PuzzleRussian => puzzle(Russian)
   }
 
   def inShort = perfs map {
@@ -161,7 +168,7 @@ case object Perfs {
 
   val default = {
     val p = Perf.default
-    Perfs(p, p, p, p, p, p, p, p, p, p, p, Map(Standard -> p, Frisian -> p))
+    Perfs(p, p, p, p, p, p, p, p, p, p, p, p, Map(Standard -> p, Frisian -> p))
   }
 
   def variantLens(variant: draughts.variant.Variant): Option[Perfs => Perf] = variant match {
@@ -170,6 +177,7 @@ case object Perfs {
     case draughts.variant.Frysk => Some(_.frysk)
     case draughts.variant.Antidraughts => Some(_.antidraughts)
     case draughts.variant.Breakthrough => Some(_.breakthrough)
+    case draughts.variant.Russian => Some(_.russian)
     case _ => none
   }
 
@@ -194,13 +202,18 @@ case object Perfs {
         frysk = perf("frysk"),
         antidraughts = perf("antidraughts"),
         breakthrough = perf("breakthrough"),
+        russian = perf("russian"),
         ultraBullet = perf("ultraBullet"),
         bullet = perf("bullet"),
         blitz = perf("blitz"),
         rapid = perf("rapid"),
         classical = perf("classical"),
         correspondence = perf("correspondence"),
-        puzzle = Map(Standard -> perf("puzzle"), Frisian -> perf("puzzlefrisian"))
+        puzzle = Map(
+          Standard -> perf("puzzle"),
+          Frisian -> perf("puzzlefrisian"),
+          Russian -> perf("puzzlerussian")
+        )
       )
     }
 
@@ -212,6 +225,7 @@ case object Perfs {
       "frysk" -> notNew(o.frysk),
       "antidraughts" -> notNew(o.antidraughts),
       "breakthrough" -> notNew(o.breakthrough),
+      "russian" -> notNew(o.russian),
       "ultraBullet" -> notNew(o.ultraBullet),
       "bullet" -> notNew(o.bullet),
       "blitz" -> notNew(o.blitz),
@@ -219,7 +233,8 @@ case object Perfs {
       "classical" -> notNew(o.classical),
       "correspondence" -> notNew(o.correspondence),
       "puzzle" -> notNew(o.puzzle(Standard)),
-      "puzzlefrisian" -> notNew(o.puzzle(Frisian))
+      "puzzlefrisian" -> notNew(o.puzzle(Frisian)),
+      "puzzlerussian" -> notNew(o.puzzle(Russian))
     )
   }
 
@@ -232,8 +247,9 @@ case object Perfs {
       frisian: List[User.LightPerf],
       frysk: List[User.LightPerf],
       antidraughts: List[User.LightPerf],
-      breakthrough: List[User.LightPerf]
+      breakthrough: List[User.LightPerf],
+      russian: List[User.LightPerf]
   )
 
-  val emptyLeaderboards = Leaderboards(Nil, Nil, Nil, Nil, Nil, Nil, Nil, Nil, Nil)
+  val emptyLeaderboards = Leaderboards(Nil, Nil, Nil, Nil, Nil, Nil, Nil, Nil, Nil, Nil)
 }

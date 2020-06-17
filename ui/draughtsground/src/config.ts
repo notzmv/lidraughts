@@ -1,17 +1,19 @@
 import { State } from './state'
-import { setSelected } from './board'
+import { setSelected, boardFields } from './board'
 import { readKingMoves, read as fenRead } from './fen'
 import { DrawShape, DrawBrush } from './draw'
 import * as cg from './types'
 
 export interface Config {
   fen?: cg.FEN; // draughts position in Forsyth notation
+  boardSize?: cg.BoardSize; // board size (width / height)
   orientation?: cg.Color; // board orientation. white | black
   turnColor?: cg.Color; // turn to play. white | black
   captureLength?: number; //Amount of forced captures in this turn
   lastMove?: cg.Key[]; // squares part of the last move ["c3", "c4"]
   selected?: cg.Key; // square currently selected "a1"
   coordinates?: number; // include coords attributes
+  coordSystem?: number; // coordinate system (0 = fieldnumbers, 1 = algebraic)
   viewOnly?: boolean; // don't bind events: the user will never be able to move pieces around
   disableContextMenu?: boolean; // because who needs a context menu on a draughtsboard
   resizable?: boolean; // listens to draughtsground.resize on document.body to clear bounds cache
@@ -34,6 +36,7 @@ export interface Config {
     }; // valid moves. {"a2" ["a3" "a4"] "b1" ["a3" "c3"]}
     showDests?: boolean; // whether to add the move-dest class on squares
     captureUci?: Array<string>; // possible multicaptures, when played by clicking to the final square (or first ambiguity)
+    variant?: string; // game variant, to determine motion rules
     events?: {
       after?: (orig: cg.Key, dest: cg.Key, metadata: cg.MoveMetadata) => void; // called after the move has been played
       afterNewPiece?: (role: cg.Role, key: cg.Key, metadata: cg.MoveMetadata) => void; // called after a new piece is dropped on the board
@@ -103,7 +106,7 @@ export function configure(state: State, config: Config) {
   if (config.fen) {
 
     // if a fen was provided, replace the pieces
-    state.pieces = fenRead(config.fen);
+    state.pieces = fenRead(config.fen, boardFields(state));
     state.drawable.shapes = [];
     
     // show kingmoves for frisian variants
@@ -139,7 +142,8 @@ export function configure(state: State, config: Config) {
 };
 
 export function setKingMoves(state: State, kingMoves: cg.KingMoves) {
-  for (let f = 1; f <= 50; f++) {
+  const fields = boardFields(state);
+  for (let f = 1; f <= fields; f++) {
     const key = (f < 10 ? '0' + f.toString() : f.toString()) as cg.Key,
       piece = state.pieces[key];
     if (piece && piece.kingMoves)

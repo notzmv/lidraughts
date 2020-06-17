@@ -19,13 +19,12 @@ final class AutoPairing(
       variant = tour.ratingVariant,
       daysPerTurn = none
     )
+    val variant = if (tour.variant.standard && !tour.position.initialStandard) draughts.variant.FromPosition else tour.variant
+    val opening = tour.openingTable.fold(-1 -> tour.position) { _.randomOpening }
     val game = Game.make(
       draughts = draughts.DraughtsGame(
-        variantOption = Some {
-          if (tour.position.initial) tour.variant
-          else draughts.variant.FromPosition
-        },
-        fen = tour.position.some.filterNot(_.initial).map(_.fen)
+        variantOption = Some(variant),
+        fen = opening._2.some.filterNot(_.initialVariant(variant)).map(_.fen)
       ) |> { g =>
           val turns = g.player.fold(0, 1)
           g.copy(
@@ -40,7 +39,7 @@ final class AutoPairing(
       source = Source.Tournament,
       pdnImport = None
     ).withId(pairing.gameId)
-      .withTournamentId(tour.id)
+      .withTournamentId(tour.id, tour.openingTable.map(_ => opening._1))
       .start
     (GameRepo insertDenormalized game) >>- {
       onStart(game.id)

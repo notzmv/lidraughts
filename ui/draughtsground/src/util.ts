@@ -3,12 +3,16 @@ import * as cg from './types';
 export const colors: cg.Color[] = ['white', 'black'];
 
 export const allKeys: cg.Key[] = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50'];
+export const algebraicKeys: string[] = ['b8', 'd8', 'f8', 'h8', 'a7', 'c7', 'e7', 'g7', 'b6', 'd6', 'f6', 'h6', 'a5', 'c5', 'e5', 'g5', 'b4', 'd4', 'f4', 'h4', 'a3', 'c3', 'e3', 'g3', 'b2', 'd2', 'f2', 'h2', 'a1', 'c1', 'e1', 'g1'];
+export const san2alg : { [key: string]: string } = { '1':'b8', '2':'d8', '3':'f8', '4':'h8', '5':'a7', '6':'c7', '7':'e7', '8':'g7', '9':'b6', '10':'d6', '11':'f6', '12':'h6', '13':'a5', '14':'c5', '15':'e5', '16':'g5', '17':'b4', '18':'d4', '19':'f4', '20':'h4', '21':'a3', '22':'c3', '23':'e3', '24':'g3', '25':'b2', '26':'d2', '27':'f2', '28':'h2', '29':'a1', '30':'c1', '31':'e1', '32':'g1' };
+export const ranks = ['1', '2', '3', '4', '5', '6', '7', '8'], ranksRev = ['8', '7', '6', '5', '4', '3', '2', '1'];
+export const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'], filesRev = ['h', 'g', 'f', 'e', 'd', 'c', 'b', 'a'];
 
-export const pos2key = (pos: cg.Pos) => allKeys[pos[0] + 5 * pos[1] - 6];
+export const pos2key = (pos: cg.Pos, s: cg.BoardSize) => allKeys[pos[0] + (s[0] / 2) * (pos[1] - 1) - 1];
 export const field2key = (n: number) => n < 10 ? ('0' + n.toString()) as cg.Key : n.toString() as cg.Key;
 
-export const key2pos = (k: cg.Key) => key2posn(parseInt(k));
-const key2posn = (k: number) => [(k - 1) % 5 + 1, ((k - 1) + (5 - (k - 1) % 5)) / 5] as cg.Pos;
+export const key2pos = (k: cg.Key, s: cg.BoardSize) => key2posn(parseInt(k), s);
+const key2posn = (k: number, s: cg.BoardSize) => [(k - 1) % (s[0] / 2) + 1, ((k - 1) + ((s[0] / 2) - (k - 1) % (s[0] / 2))) / (s[1] / 2)] as cg.Pos;
 
 export function memo<A>(f: () => A): cg.Memo<A> {
   let v: A | undefined;
@@ -47,29 +51,30 @@ export const distanceSq: (pos1: cg.Pos, pos2: cg.Pos) => number = (pos1, pos2) =
 export const samePiece: (p1: cg.Piece, p2: cg.Piece) => boolean = (p1, p2) =>
   p1.role === p2.role && p1.color === p2.color;
 
-const posToTranslateBase: (pos: cg.Pos, asWhite: boolean, xFactor: number, yFactor: number, shift: number) => cg.NumberPair =
-  (pos, asWhite, xFactor, yFactor, shift: number) => {
+const posToTranslateBase: (pos: cg.Pos, boardSize: cg.BoardSize, asWhite: boolean, xFactor: number, yFactor: number, shift: number) => cg.NumberPair =
+  (pos, boardSize, asWhite, xFactor, yFactor, shift: number) => {
+    const xf = boardSize[0] / 2 - 0.5;
     if (shift !== 0) {
       return [
-        (!asWhite ? 4.5 - ((shift - 0.5) + pos[0]) : (shift - 0.5) + pos[0]) * xFactor,
-        (!asWhite ? 10 - pos[1] : pos[1] - 1) * yFactor
+        (!asWhite ? xf - ((shift - 0.5) + pos[0]) : (shift - 0.5) + pos[0]) * xFactor,
+        (!asWhite ? boardSize[1] - pos[1] : pos[1] - 1.0) * yFactor
       ];
     } else {
       return [
-        (!asWhite ? 4.5 - ((pos[1] % 2 !== 0 ? -0.5 : -1) + pos[0]) : (pos[1] % 2 !== 0 ? -0.5 : -1) + pos[0]) * xFactor,
-        (!asWhite ? 10 - pos[1] : pos[1] - 1) * yFactor
+        (!asWhite ? xf - ((pos[1] % 2 !== 0 ? -0.5 : -1.0) + pos[0]) : (pos[1] % 2 !== 0 ? -0.5 : -1.0) + pos[0]) * xFactor,
+        (!asWhite ? boardSize[1] - pos[1] : pos[1] - 1.0) * yFactor
       ];
     }
   }
 
-export const posToTranslateAbs = (bounds: ClientRect) => {
-  const xFactor = bounds.width / 5, yFactor = bounds.height / 10;
-  return (pos: cg.Pos, asWhite: boolean, shift: number) => posToTranslateBase(pos, asWhite, xFactor, yFactor, shift);
+export const posToTranslateAbs = (bounds: ClientRect, boardSize: cg.BoardSize) => {
+  const xFactor = bounds.width / (boardSize[0] / 2), yFactor = bounds.height / boardSize[1];
+  return (pos: cg.Pos, asWhite: boolean, shift: number) => posToTranslateBase(pos, boardSize, asWhite, xFactor, yFactor, shift);
 };
 
-export const posToTranslateRel: (pos: cg.Pos, asWhite: boolean, shift: number) => cg.NumberPair =
-  (pos, asWhite, shift: number) => posToTranslateBase(pos, asWhite, 20.0, 10.0, shift);
-
+export const posToTranslateRel = (boardSize: cg.BoardSize) => {
+  return (pos: cg.Pos, asWhite: boolean, shift: number) => posToTranslateBase(pos, boardSize, asWhite, 2 * 100 / boardSize[0], 100 / boardSize[1], shift);
+}
 /**
  * Modifies dom element style with asolute value (translate attribute, amount of pixels)
  */
@@ -107,7 +112,7 @@ export function isObjectEmpty(o: any): boolean {
   return true;
 }
 
-export const movesDown: number[][] = [
+export const movesDown100: number[][] = [
   [-1, -1, -1],
   [6, 7, 11],
   [7, 8, 12],
@@ -161,7 +166,43 @@ export const movesDown: number[][] = [
   [-1, -1, -1]
 ];
 
-export const movesUp: number[][] = [
+export const movesDown64: number[][] = [
+  [-1, -1, -1],
+  [5, 6, 9],
+  [6, 7, 10],
+  [7, 8, 11],
+  [8, -1, 12],
+  [-1, 9, 13],
+  [9, 10, 14],
+  [10, 11, 15],
+  [11, 12, 16],
+  [13, 14, 17],
+  [14, 15, 18],
+  [15, 16, 19],
+  [16, -1, 20],
+  [-1, 17, 21],
+  [17, 18, 22],
+  [18, 19, 23],
+  [19, 20, 24],
+  [21, 22, 25],
+  [22, 23, 26],
+  [23, 24, 27],
+  [24, -1, 28],
+  [-1, 25, 29],
+  [25, 26, 30],
+  [26, 27, 31],
+  [27, 28, 32],
+  [29, 30, -1],
+  [30, 31, -1],
+  [31, 32, -1],
+  [32, -1, -1],
+  [-1, -1, -1],
+  [-1, -1, -1],
+  [-1, -1, -1],
+  [-1, -1, -1]
+]
+
+export const movesUp100: number[][] = [
   [-1, -1, -1],
   [-1, -1, -1],
   [-1, -1, -1],
@@ -215,7 +256,43 @@ export const movesUp: number[][] = [
   [44, 45, 40]
 ];
 
-export const movesHorizontal: number[][] = [
+export const movesUp64: number[][] = [
+  [-1, -1, -1],
+  [-1, -1, -1],
+  [-1, -1, -1],
+  [-1, -1, -1],
+  [-1, -1, -1],
+  [-1, 1, -1],
+  [1, 2, -1],
+  [2, 3, -1],
+  [3, 4, -1],
+  [5, 6, 1],
+  [6, 7, 2],
+  [7, 8, 3],
+  [8, -1, 4],
+  [-1, 9, 5],
+  [9, 10, 6],
+  [10, 11, 7],
+  [11, 12, 8],
+  [13, 14, 9],
+  [14, 15, 10],
+  [15, 16, 11],
+  [16, -1, 12],
+  [-1, 17, 13],
+  [17, 18, 14],
+  [18, 19, 15],
+  [19, 20, 16],
+  [21, 22, 17],
+  [22, 23, 18],
+  [23, 24, 19],
+  [24, -1, 20],
+  [-1, 25, 21],
+  [25, 26, 22],
+  [26, 27, 23],
+  [27, 28, 24]
+];
+
+export const movesHorizontal100: number[][] = [
   [-1, -1],
   [-1, 2],
   [1, 3],
@@ -267,4 +344,40 @@ export const movesHorizontal: number[][] = [
   [47, 49],
   [48, 50],
   [49, -1]
+];
+
+export const movesHorizontal64: number[][] = [
+  [-1, -1],
+  [-1, 2],
+  [1, 3],
+  [2, 4],
+  [3, -1],
+  [-1, 6],
+  [5, 7],
+  [6, 8],
+  [7, -1],
+  [-1, 10],
+  [9, 11],
+  [10, 12],
+  [11, -1],
+  [-1, 14],
+  [13, 15],
+  [14, 16],
+  [15, -1],
+  [-1, 18],
+  [17, 19],
+  [18, 20],
+  [19, -1],
+  [-1, 22],
+  [21, 23],
+  [22, 24],
+  [23, -1],
+  [-1, 26],
+  [25, 27],
+  [26, 28],
+  [27, -1],
+  [-1, 30],
+  [29, 31],
+  [30, 32],
+  [31, -1]
 ];

@@ -71,12 +71,20 @@ object JsonView {
     }))
   }
 
+  implicit val boardSizeWriter: Writes[draughts.Board.BoardSize] = Writes[draughts.Board.BoardSize] { b =>
+    Json.obj(
+      "key" -> b.key,
+      "size" -> b.sizes
+    )
+  }
+
   implicit val variantWriter: OWrites[draughts.variant.Variant] = OWrites { v =>
     Json.obj(
       "key" -> v.key,
       "name" -> v.name,
       "short" -> v.shortName,
-      "gameType" -> v.gameType
+      "gameType" -> v.gameType,
+      "board" -> v.boardSize
     )
   }
 
@@ -102,7 +110,7 @@ object JsonView {
 
   implicit val openingWriter: OWrites[draughts.opening.FullOpening.AtPly] = OWrites { o =>
     Json.obj(
-      "eco" -> o.opening.eco,
+      "code" -> o.opening.code,
       "name" -> o.opening.name,
       "ply" -> o.ply
     )

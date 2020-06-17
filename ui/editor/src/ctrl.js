@@ -2,6 +2,7 @@ var editor = require('./editor');
 var m = require('mithril');
 var keyboard = require('./keyboard');
 var fenRead = require('draughtsground/fen').read;
+var fenCompare = require('draughts').fenCompare;
 
 module.exports = function(cfg) {
 
@@ -15,7 +16,7 @@ module.exports = function(cfg) {
   this.selected = m.prop('pointer');
 
   this.extraPositions = [{
-      fen: 'W:W31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50:B1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20',
+      fen: 'start',
       name: this.trans('startPosition')
   }, {
       fen: 'W:W:B',
@@ -25,10 +26,17 @@ module.exports = function(cfg) {
       name: this.trans('loadPosition')
   }];
 
-  this.positionIndex = {};
-  cfg.positions && cfg.positions.forEach(function(p, i) {
-    this.positionIndex[p.fen.split(' ')[0]] = i;
-  }.bind(this));
+  this.makePositionMap = function() {
+    const positionMap = {};
+    const positions = cfg.positions && cfg.positions[this.data.variant.key];
+    if (positions) positions.forEach(function(cat) { 
+      cat.positions.forEach(function(pos) {
+        positionMap[pos.fen.split(':').slice(0, 3).join(':')] = pos;
+      });
+    });
+    this.positionMap = positionMap
+  }.bind(this)
+  this.makePositionMap();
 
   this.draughtsground; // will be set from the view when instanciating draughtsground
 
@@ -56,7 +64,7 @@ module.exports = function(cfg) {
 
   this.startPosition = function() {
     this.draughtsground.set({
-      fen: 'start'
+      fen: this.data.variant.initialFen
     });
     this.data.color('w');
     this.onChange();
@@ -64,7 +72,7 @@ module.exports = function(cfg) {
 
   this.clearBoard = function() {
     this.draughtsground.set({
-        fen: 'W:W:B'
+      fen: 'W:W:B'
     });
     this.onChange();
   }.bind(this);
@@ -72,38 +80,67 @@ module.exports = function(cfg) {
   this.loadNewFen = function(fen) {
     if (fen === 'prompt') {
       fen = prompt('Paste FEN position').trim();
-      if (!fen) return;
+    } else if (fen === 'start') {
+      fen = this.data.variant.initialFen;
     }
-    this.changeFen(fen);
+    if (fen) {
+      this.changeFen(fen);
+    }
   }.bind(this);
+
+  this.isAlgebraic = function() {
+    return this.cfg.coordSystem === 1 && this.data.variant.board.key === '64';
+  }.bind(this);
+
+  this.coordSystem = function() {
+    return this.isAlgebraic() ? 1 : 0;
+  }.bind(this);
+
 
   this.changeFen = function(fen) {
-    window.location = editor.makeUrl(this.data.baseUrl + (this.data.variant !== 'standard' ? this.data.variant + '/' : ''), fen);
+    window.location = editor.makeUrl(this.data.baseUrl + (this.data.variant.key !== 'standard' ? this.data.variant.key + '/' : ''), fen);
   }.bind(this);
 
-  this.changeVariant = function(variant) {
+  this.changeVariant = function(key) {
+    const variant = this.data.variants.find(v => v.key === key);
+    if (!variant) return;
+    const newSize = variant.board.size[0] !== this.data.variant.board.size[0] || variant.board.size[1] !== this.data.variant.board.size[1],
+      changeInitial = variant.initialFen !== this.data.variant.initialFen && fenCompare(this.computeFen(), this.data.variant.initialFen);
+    if (newSize || changeInitial) {
+      // recreate draughtsground on startingposition with new boardsize
+      this.cfg.fen = variant.initialFen;
+      this.draughtsground = undefined;
+    }
     this.data.variant = variant;
+    this.makePositionMap();
     m.redraw();
   }.bind(this);
 
   this.positionLooksLegit = function() {
-    var pieces = this.draughtsground ? this.draughtsground.state.pieces : fenRead(this.cfg.fen);
-    var totals = {
-      white: 0,
-      black: 0
-    };
-    for (var pos in pieces) {
-        if (pieces[pos] && (pieces[pos].role === 'king' || pieces[pos].role === 'man')) {
-            if (pieces[pos].role === 'man') {
-                if (pieces[pos].color === 'white' && (pos === "01" || pos === "02" || pos === "03" || pos === "04" || pos === "05"))
-                    return false;
-                else if (pieces[pos].color === 'black' && (pos === "46" || pos === "47" || pos === "48" || pos === "49" || pos === "50"))
-                    return false;
-            }
-            totals[pieces[pos].color]++;
-        }
+    const totals = { white: 0, black: 0 },
+      boardSize = this.data.variant.board.size,
+      fields = boardSize[0] * boardSize[1] / 2,
+      width = boardSize[0] / 2,
+      pieces = this.draughtsground ? this.draughtsground.state.pieces : fenRead(this.cfg.fen, fields),
+      backrankWhite = [], backrankBlack = [];
+    for (let i = 1; i <= width; i++) {
+      backrankWhite.push(i < 10 ? '0' +  i.toString() :  i.toString());
     }
-    return totals.white !== 0 && totals.black !== 0 && (totals.white + totals.black) < 50;
+    for (let i = fields - width + 1; i <= fields; i++) {
+      backrankBlack.push(i < 10 ? '0' +  i.toString() :  i.toString());
+    }
+    for (let pos in pieces) {
+      if (pieces[pos] && (pieces[pos].role === 'king' || pieces[pos].role === 'man')) {
+        if (pieces[pos].role === 'man') {
+          if (pieces[pos].color === 'white' && backrankWhite.includes(pos))
+            return false;
+          else if (pieces[pos].color === 'black' && backrankBlack.includes(pos))
+            return false;
+        }
+        totals[pieces[pos].color]++;
+      }
+    }
+    return totals.white !== 0 && totals.black !== 0 && (totals.white + totals.black) < fields;
   }.bind(this);
 
   this.setOrientation = function(o) {

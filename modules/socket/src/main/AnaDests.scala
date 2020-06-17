@@ -25,31 +25,32 @@ case class AnaDests(
 
   private val orig =
     (lastUci.exists(_.length >= 4) && sit.ghosts > 0) ?? lastUci.flatMap { uci =>
-      draughts.Pos.posAt(uci.substring(uci.length - 2))
+      variant.boardSize.pos.posAt(uci.substring(uci.length - 2))
     }
 
   private lazy val validMoves =
     AnaDests.validMoves(sit, orig, ~fullCapture)
 
-  lazy val captureLength =
-    orig.fold(sit.allMovesCaptureLength)(sit.captureLengthFrom)
+  lazy val captureLength: Int =
+    orig.fold(sit.allMovesCaptureLength)(~sit.captureLengthFrom(_))
 
   private val truncatedMoves =
-    (!isInitial && ~fullCapture && ~captureLength > 1) option AnaDests.truncateMoves(validMoves)
+    (!isInitial && ~fullCapture && captureLength > 1) option AnaDests.truncateMoves(validMoves)
 
   val dests: String =
     if (isInitial) AnaDests.initialDests
     else sit.playable(false) ?? {
-      val truncatedDests = truncatedMoves.map { _ mapValues { _ flatMap (uci => draughts.Pos.posAt(uci.takeRight(2))) } }
+      val truncatedDests = truncatedMoves.map { _ mapValues { _ flatMap (uci => variant.boardSize.pos.posAt(uci.takeRight(2))) } }
       val destStr = destString(truncatedDests.getOrElse(validMoves mapValues { _ map (_.dest) }))
-      captureLength.fold(destStr)(capts => "#" + capts.toString + " " + destStr)
+      if (captureLength > 0) s"#$captureLength $destStr"
+      else destStr
     }
 
   val destsUci: Option[List[String]] =
     truncatedMoves.map(_.values.toList.flatten)
 
   val alternatives: Option[List[Alternative]] =
-    (!isInitial && ~puzzle && sit.ghosts == 0 && ~captureLength > 2) option
+    (!isInitial && ~puzzle && sit.ghosts == 0 && captureLength > 2) option
       sit.validMovesFinal.values.toList.flatMap(_.map { m =>
         Alternative(
           uci = m.toUci.uci,

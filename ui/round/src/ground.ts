@@ -19,10 +19,12 @@ export function makeConfig(ctrl: RoundController): Config {
   return {
     fen: step.fen,
     orientation: boardOrientation(data, ctrl.flip),
+    boardSize: data.game.variant.board.size,
     turnColor: (step.ply - (ghosts == 0 ? 0 : 1)) % 2 === 0 ? 'white' : 'black',
     lastMove: util.uci2move(step.uci),
     captureLength: data.captureLength,
     coordinates: data.pref.coords,
+    coordSystem: ctrl.coordSystem(),
     addPieceZIndex: ctrl.data.pref.is3d,
     highlight: {
       lastMove: data.pref.highlight,
@@ -41,6 +43,7 @@ export function makeConfig(ctrl: RoundController): Config {
       color: playing ? data.player.color : undefined,
       dests: playing ? util.parsePossibleMoves(data.possibleMoves) : {},
       showDests: !noAssistance && data.pref.destination,
+      variant: data.game.variant.key,
       events: {
         after: hooks.onUserMove
       }

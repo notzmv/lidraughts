@@ -1,8 +1,8 @@
 package controllers
 
 import draughts.format.Forsyth
-import draughts.Situation
-import draughts.variant.{ Standard, Variant }
+import draughts.{ StartingPosition, Situation }
+import draughts.variant.{ Standard, Variant, Russian }
 import play.api.libs.json._
 
 import lidraughts.app._
@@ -11,14 +11,21 @@ import views._
 
 object Editor extends LidraughtsController {
 
+  private def positionJson(p: StartingPosition) = Json.obj(
+    "code" -> p.code,
+    "fen" -> p.fen
+  ).add("name", p.name)
+
   private lazy val positionsJson = lidraughts.common.String.html.safeJsonValue {
-    JsArray(draughts.StartingPosition.all map { p =>
-      Json.obj(
-        "eco" -> p.eco,
-        "name" -> p.name,
-        "fen" -> p.fen
-      )
-    })
+    Json.obj(
+      "standard" -> JsArray(Standard.allOpenings map positionJson),
+      "russian" -> Russian.openingTables.map { table =>
+        Json.obj(
+          "name" -> table.name,
+          "positions" -> JsArray(Russian.allOpenings map positionJson)
+        )
+      }
+    )
   }
 
   def parse(arg: String) = arg.split("/", 2) match {

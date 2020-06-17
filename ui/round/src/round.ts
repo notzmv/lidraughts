@@ -1,20 +1,19 @@
 import { RoundData, Step } from './interfaces';
 import { countGhosts } from 'draughtsground/fen'
+import { san2alg } from 'draughts'
 
-export function mergeSteps(steps: Step[]): Step[] {
+export function mergeSteps(steps: Step[], coordSystem: number): Step[] {
   const mergedSteps: Step[] = new Array<Step>();
   if (steps.length == 0) return mergedSteps;
-  else mergedSteps.push(steps[0]);
+  else mergedSteps.push(addNotation(steps[0], coordSystem));
 
-  if (steps.length == 1) return mergedSteps;;
+  if (steps.length == 1) return mergedSteps;
 
   for (let i = 1; i < steps.length; i++) {
     const step = steps[i - 1];
-    if (step.captLen === undefined) {
-      mergedSteps.push(steps[i]);
-    } else if (step.captLen < 2 || step.ply < steps[i].ply) {
+    if (step.captLen === undefined || step.captLen < 2 || step.ply < steps[i].ply) {
       // Captures split over multiple steps have the same ply. If a multicapture is reported in one step, the ply does increase
-      mergedSteps.push(steps[i]);
+      mergedSteps.push(addNotation(steps[i], coordSystem));
     } else {
       const originalStep = steps[i];
       for (let m = 0; m < step.captLen - 1 && i + 1 < steps.length; m++) {
@@ -24,12 +23,18 @@ export function mergeSteps(steps: Step[]): Step[] {
         mergeStep(originalStep, steps[i]);
       }
       if (countGhosts(originalStep.fen) > 0)
-          originalStep.ply++;
-      mergedSteps.push(originalStep);
+        originalStep.ply++;
+      mergedSteps.push(addNotation(originalStep, coordSystem));
     }
   }
-
   return mergedSteps;
+}
+
+function addNotation(step: Step, coordSystem: number): Step {
+  if (coordSystem) {
+    step.alg = san2alg(step.san);
+  }
+  return step;
 }
 
 function mergeStep(originalStep: Step, mergeStep: Step) {
@@ -39,14 +44,14 @@ function mergeStep(originalStep: Step, mergeStep: Step) {
   originalStep.uci = originalStep.uci + mergeStep.uci.substr(2, 2);
 }
 
-export function addStep(steps: Step[], newStep: Step): Step {
+export function addStep(steps: Step[], newStep: Step, coordSystem: number): Step {
   if (steps.length == 0 || countGhosts(steps[steps.length - 1].fen) === 0)
     steps.push(newStep);
   else
     mergeStep(steps[steps.length - 1], newStep);
   if (countGhosts(steps[steps.length - 1].fen) > 0)
     steps[steps.length - 1].ply++;
-  return steps[steps.length - 1];
+  return addNotation(steps[steps.length - 1], coordSystem);
 }
 
 export function firstPly(d: RoundData): number {

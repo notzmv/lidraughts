@@ -602,10 +602,12 @@ Een URL per regel</string>
   <string name="newPasswordAgain">Nieuw wachtwoord (opnieuw)</string>
   <string name="boardHighlights">Bord laten oplichten (laatste zet en slagen)</string>
   <string name="pieceDestinations">Toon geldige zetten en sta vooraf-zetten toe</string>
-  <string name="boardCoordinates">Bordcoördinaten (1-50)</string>
+  <string name="boardCoordinates">Bordcoördinaten (1-50, a1-h8)</string>
+  <string name="coordinateSystem8x8">Coördinaten systeem op 8x8 borden</string>
+  <string name="fieldnumbers8x8">Veldnummers (1-32)</string>
+  <string name="algebraic8x8">Algebraïsch (a-h, 1-8)</string>
   <string name="moveListWhilePlaying">Zetnotatie zichtbaar tijdens partij</string>
   <string name="notationGameResult">Notatie resultaat partij (winst wit • remise • winst zwart)</string>
-  <string name="pdnPieceNotation">Stuknotatie</string>
   <string name="draughtsClock">Damklok</string>
   <string name="clockInitialTime">Klok begintijd</string>
   <string name="onlyMembersOfTeam">Alleen leden van team</string>
@@ -968,6 +970,7 @@ Een URL per regel</string>
   </plurals>
   <string name="middlegame">Middenspel</string>
   <string name="endgame">Eindspel</string>
+  <string name="randomOpeningFromX">Willekeurige opening uit %s</string>
   <string name="registerToSendChallenges">Maak een account aan om spelers uit de dagen.</string>
   <string name="youCannotChallengeX">Je kan %s niet uitdagen.</string>
   <string name="xDoesNotAcceptChallenges">%s accepteert geen uitdagingen.</string>

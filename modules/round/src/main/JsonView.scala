@@ -84,7 +84,7 @@ final class JsonView(
               "socket" -> s"/$fullId/socket/v$apiVersion",
               "round" -> s"/$fullId"
             ),
-            "captureLength" -> ~captureLength(pov),
+            "captureLength" -> captureLength(pov),
             "pref" -> Json.obj(
               "animationDuration" -> animationDuration(pov, pref),
               "coords" -> pref.coords,
@@ -102,6 +102,7 @@ final class JsonView(
               .add("enablePremove" -> pref.premove)
               .add("showCaptured" -> pref.captured)
               .add("showKingMoves" -> pref.kingMoves)
+              .add("coordSystem" -> (pref.coordSystem != Pref.CoordSystem.FIELDNUMBERS).option(pref.coordSystem))
               .add("draughtsResult" -> pref.draughtsResult)
               .add("submitMove" -> {
                 import Pref.SubmitMove._
@@ -185,7 +186,8 @@ final class JsonView(
               .add("destination" -> (pref.destination && !pref.isBlindfold))
               .add("showCaptured" -> pref.captured)
               .add("showKingMoves" -> pref.kingMoves)
-              .add("fullCapture" -> ((pref.fullCapture == Pref.FullCapture.YES) option true))
+              .add("fullCapture" -> (pref.fullCapture == Pref.FullCapture.YES).option(true))
+              .add("coordSystem" -> (pref.coordSystem != Pref.CoordSystem.FIELDNUMBERS).option(pref.coordSystem))
               .add("draughtsResult" -> pref.draughtsResult),
             "evalPut" -> JsBoolean(me.??(evalCache.shouldPut))
           ).add("evalPut" -> me.??(evalCache.shouldPut))
@@ -243,7 +245,8 @@ final class JsonView(
         .add("destination" -> (pref.destination && !pref.isBlindfold))
         .add("draughtsResult" -> pref.draughtsResult)
         .add("showKingMoves" -> pref.kingMoves)
-        .add("fullCapture" -> ((pref.fullCapture == Pref.FullCapture.YES) option true)),
+        .add("fullCapture" -> (pref.fullCapture == Pref.FullCapture.YES).option(true))
+        .add("coordSystem" -> (pref.coordSystem != Pref.CoordSystem.FIELDNUMBERS).option(pref.coordSystem)),
       "path" -> pov.game.turns,
       "userAnalysis" -> true
     ).add("evalPut" -> me.??(evalCache.shouldPut))
@@ -289,7 +292,8 @@ final class JsonView(
         .add("destination" -> (pref.destination && !pref.isBlindfold))
         .add("draughtsResult" -> pref.draughtsResult)
         .add("showKingMoves" -> pref.kingMoves)
-        .add("fullCapture" -> ((pref.fullCapture == Pref.FullCapture.YES) option true)),
+        .add("fullCapture" -> (pref.fullCapture == Pref.FullCapture.YES).option(true))
+        .add("coordSystem" -> (pref.coordSystem != Pref.CoordSystem.FIELDNUMBERS).option(pref.coordSystem)),
       "path" -> pov.game.turns,
       "userAnalysis" -> true,
       "puzzleEditor" -> true
@@ -309,7 +313,7 @@ final class JsonView(
     (pov.game playableBy pov.player) option {
       if (pov.game.situation.ghosts > 0) {
         val move = pov.game.pdnMoves(pov.game.pdnMoves.length - 1)
-        val destPos = draughts.Pos.posAt(move.substring(move.lastIndexOf('x') + 1))
+        val destPos = pov.game.variant.boardSize.pos.posAt(move.substring(move.lastIndexOf('x') + 1))
         destPos match {
           case Some(dest) =>
             lidraughts.game.Event.PossibleMoves.json(Map(dest -> pov.game.situation.destinationsFrom(dest)), apiVersion)
@@ -321,18 +325,12 @@ final class JsonView(
       }
     }
 
-  private def possibleDrops(pov: Pov): Option[JsValue] = (pov.game playableBy pov.player) ?? {
-    pov.game.situation.drops map { drops =>
-      JsString(drops.map(_.key).mkString)
-    }
-  }
-
-  private def captureLength(pov: Pov): Option[Int] =
+  private def captureLength(pov: Pov): Int =
     if (pov.game.situation.ghosts > 0) {
       val move = pov.game.pdnMoves(pov.game.pdnMoves.length - 1)
-      val destPos = draughts.Pos.posAt(move.substring(move.lastIndexOf('x') + 1))
+      val destPos = pov.game.variant.boardSize.pos.posAt(move.substring(move.lastIndexOf('x') + 1))
       destPos match {
-        case Some(dest) => pov.game.situation.captureLengthFrom(dest)
+        case Some(dest) => ~pov.game.situation.captureLengthFrom(dest)
         case _ => pov.game.situation.allMovesCaptureLength
       }
     } else

@@ -1,6 +1,6 @@
 package lidraughts.pref
 
-import draughts.variant.{ Variant, Standard, Frisian }
+import draughts.variant.{ Variant, Standard, Frisian, Russian }
 
 case class Pref(
     _id: String, // user id
@@ -27,6 +27,7 @@ case class Pref(
     coords: Int,
     replay: Int,
     gameResult: Int,
+    coordSystem: Int,
     challenge: Int,
     message: Int,
     studyInvite: Int,
@@ -78,6 +79,9 @@ case class Pref(
   }
 
   def draughtsResult = gameResult == Pref.GameResult.DRAUGHTS
+
+  def isAlgebraic(v: Variant) = canAlgebraic && v.boardSize.pos.hasAlgebraic
+  def canAlgebraic = coordSystem == Pref.CoordSystem.ALGEBRAIC
 
   def isBlindfold = blindfold == Pref.Blindfold.YES
 
@@ -265,6 +269,16 @@ object Pref {
     )
   }
 
+  object CoordSystem {
+    val FIELDNUMBERS = 0
+    val ALGEBRAIC = 1
+
+    val choices = Seq(
+      FIELDNUMBERS -> "Fieldnumbers",
+      ALGEBRAIC -> "Algebraic"
+    )
+  }
+
   object ClockTenths {
     val NEVER = 0
     val LOWTIME = 1
@@ -332,7 +346,7 @@ object Pref {
   object Zen extends BooleanPref {
   }
 
-  val puzzleVariants: List[Variant] = List(Standard, Frisian)
+  val puzzleVariants: List[Variant] = List(Standard, Frisian, Russian)
 
   def create(id: String) = default.copy(_id = id)
 
@@ -361,6 +375,7 @@ object Pref {
     coords = Coords.OUTSIDE,
     replay = Replay.ALWAYS,
     gameResult = GameResult.DRAUGHTS,
+    coordSystem = CoordSystem.FIELDNUMBERS,
     clockTenths = ClockTenths.LOWTIME,
     challenge = Challenge.ALWAYS,
     message = Message.ALWAYS,

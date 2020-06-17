@@ -60,7 +60,7 @@ export function unsetPredrop(state: State): void {
   }
 }
 
-export function calcCaptKey(pieces: cg.Pieces, startX: number, startY: number, destX: number, destY: number): cg.Key | undefined {
+export function calcCaptKey(pieces: cg.Pieces, boardSize: cg.BoardSize, startX: number, startY: number, destX: number, destY: number): cg.Key | undefined {
 
   const xDiff: number = destX - startX, yDiff: number = destY - startY;
 
@@ -74,13 +74,13 @@ export function calcCaptKey(pieces: cg.Pieces, startX: number, startY: number, d
   const captPos = [startX + xStep, startY + yStep] as cg.Pos;
   if (captPos === undefined) return undefined;
 
-  const captKey: cg.Key = pos2key(captPos);
+  const captKey: cg.Key = pos2key(captPos, boardSize);
 
   const piece: cg.Piece | undefined = pieces[captKey];
   if (piece !== undefined && piece.role !== 'ghostman' && piece.role !== 'ghostking')
     return captKey
   else
-    return calcCaptKey(pieces, startX + xStep, startY + yStep, destX, destY)
+    return calcCaptKey(pieces, boardSize, startX + xStep, startY + yStep, destX, destY)
 
 }
 
@@ -91,23 +91,39 @@ function inArray(arr: string[], predicate: Function) {
   return undefined
 }
 
-export function baseMove(state: State, orig: cg.Key, dest: cg.Key): cg.Piece | boolean {
+export function baseMove(state: State, orig: cg.Key, dest: cg.Key, finishCapture?: Boolean): cg.Piece | boolean {
 
-  if (orig === dest || !state.pieces[orig]) return false;
+  if (orig === dest || !state.pieces[orig]) {
+    // remove any remaining ghost pieces if capture sequence is done
+    if (finishCapture) {
+      for (let i = 0; i < allKeys.length; i++) {
+        const k = allKeys[i], pc = state.pieces[k];
+        if (pc && (pc.role === 'ghostking' || pc.role === 'ghostman'))
+          delete state.pieces[k];
+      }
+      if (dest == state.selected) unselect(state);
+    }
+    return false;
+  }
 
-  const isCapture = (state.movable.captLen && state.movable.captLen > 0);
+  const isCapture = (state.movable.captLen && state.movable.captLen > 0), bs = state.boardSize;
   const captureUci = isCapture && state.movable.captureUci && inArray(state.movable.captureUci, (uci: string) => uci.slice(0, 2) === orig && uci.slice(-2) === dest);
-  const origPos: cg.Pos = key2pos(orig), destPos: cg.Pos = captureUci ? key2pos(captureUci.slice(2, 4) as cg.Key) : key2pos(dest);
-  const captKey: cg.Key | undefined = isCapture ? calcCaptKey(state.pieces, origPos[0], origPos[1], destPos[0], destPos[1]) : undefined;
+  const origPos: cg.Pos = key2pos(orig, bs), destPos: cg.Pos = captureUci ? key2pos(captureUci.slice(2, 4) as cg.Key, bs) : key2pos(dest, bs);
+  const captKey: cg.Key | undefined = isCapture ? calcCaptKey(state.pieces, bs, origPos[0], origPos[1], destPos[0], destPos[1]) : undefined;
   const captPiece: cg.Piece | undefined = (isCapture && captKey) ? state.pieces[captKey] : undefined;
   const origPiece = state.pieces[orig];
 
   if (dest == state.selected) unselect(state);
   callUserFunction(state.events.move, orig, dest, captPiece);
 
-  const captured = captureUci ? (captureUci.length - 2) / 2 : 1;
-  const finalDest = captureUci ? key2pos(captureUci.slice(captureUci.length - 2) as cg.Key) : destPos;
-  const promotable = (!state.movable.captLen || state.movable.captLen <= captured) && origPiece.role === 'man' && ((origPiece.color === 'white' && finalDest[1] === 1) || (origPiece.color === 'black' && finalDest[1] === 10));
+  const captured = captureUci ? (captureUci.length - 2) / 2 : 1,
+    finalDest = captureUci ? key2pos(captureUci.slice(captureUci.length - 2) as cg.Key, bs) : destPos,
+    variant = (state.movable && state.movable.variant) || (state.premovable && state.premovable.variant),
+    promotable = (variant === 'russian' || !state.movable.captLen || state.movable.captLen <= captured) && 
+                  origPiece.role === 'man' && (
+                    (origPiece.color === 'white' && finalDest[1] === 1) || 
+                    (origPiece.color === 'black' && finalDest[1] === state.boardSize[1])
+                  );
   
   const destPiece = (!state.movable.free && promotable) ? {
       role: 'king',
@@ -117,12 +133,22 @@ export function baseMove(state: State, orig: cg.Key, dest: cg.Key): cg.Piece | b
 
   if (captureUci && captKey) {
     delete state.pieces[captKey];
+    const maybePromote = destPiece.role === 'man' && variant === 'russian',
+      promoteAt = origPiece.color === 'white' ? 1 : state.boardSize[1];
+    let doPromote = false;
     for (let s = 2; s + 4 <= captureUci.length; s += 2) {
-      const nextOrig = key2pos(captureUci.slice(s, s + 2) as cg.Key), nextDest = key2pos(captureUci.slice(s + 2, s + 4) as cg.Key);
-      const nextCapt = calcCaptKey(state.pieces, nextOrig[0], nextOrig[1], nextDest[0], nextDest[1]);
+      const nextOrig = key2pos(captureUci.slice(s, s + 2) as cg.Key, bs), 
+        nextDest = key2pos(captureUci.slice(s + 2, s + 4) as cg.Key, bs),
+        nextCapt = calcCaptKey(state.pieces, bs, nextOrig[0], nextOrig[1], nextDest[0], nextDest[1]);
       if (nextCapt) {
         delete state.pieces[nextCapt];
       }
+      if (maybePromote && nextOrig[1] === promoteAt) {
+        doPromote = true;
+      }
+    }
+    if (doPromote) {
+      destPiece.role = 'king';
     }
     state.pieces[dest] = destPiece;
   } else {
@@ -133,7 +159,7 @@ export function baseMove(state: State, orig: cg.Key, dest: cg.Key): cg.Piece | b
       delete state.pieces[captKey]
 
       //Show a ghostpiece when we capture more than once
-      if (state.movable.captLen !== undefined && state.movable.captLen > 1) {
+      if (!finishCapture && state.movable.captLen !== undefined && state.movable.captLen > 1) {
         if (captRole === 'man') {
           state.pieces[captKey] = {
             role: 'ghostman',
@@ -148,9 +174,9 @@ export function baseMove(state: State, orig: cg.Key, dest: cg.Key): cg.Piece | b
       } else {
         //Remove any remaing ghost pieces if capture sequence is done
         for (let i = 0; i < allKeys.length; i++) {
-          const pc = state.pieces[allKeys[i]];
-          if (pc !== undefined && (pc.role === 'ghostking' || pc.role === 'ghostman'))
-            delete state.pieces[allKeys[i]];
+          const k = allKeys[i], pc = state.pieces[k];
+          if (pc && (pc.role === 'ghostking' || pc.role === 'ghostman'))
+            delete state.pieces[k];
         }
       }
     }
@@ -168,7 +194,6 @@ export function baseMove(state: State, orig: cg.Key, dest: cg.Key): cg.Piece | b
 
   callUserFunction(state.events.change);
   return captPiece || true;
-
 }
 
 export function baseNewPiece(state: State, piece: cg.Piece, key: cg.Key, force?: boolean): boolean {
@@ -271,7 +296,7 @@ export function selectSquare(state: State, key: cg.Key, force?: boolean): void {
 export function setSelected(state: State, key: cg.Key): void {
   state.selected = key;
   if (isPremovable(state, key)) {
-    state.premovable.dests = premove(state.pieces, key, state.premovable.variant);
+    state.premovable.dests = premove(state.pieces, state.boardSize, key, state.premovable.variant);
   }
   else state.premovable.dests = undefined;
 }
@@ -316,7 +341,7 @@ function isPremovable(state: State, orig: cg.Key): boolean {
 function canPremove(state: State, orig: cg.Key, dest: cg.Key): boolean {
   return orig !== dest &&
     isPremovable(state, orig) &&
-    containsX(premove(state.pieces, orig, state.premovable.variant), dest);
+    containsX(premove(state.pieces, state.boardSize, orig, state.premovable.variant), dest);
 }
 
 function canPredrop(state: State, orig: cg.Key, dest: cg.Key): boolean {
@@ -390,12 +415,12 @@ export function stop(state: State): void {
   cancelMove(state);
 }
 
-export function getKeyAtDomPos(pos: cg.NumberPair, asWhite: boolean, bounds: ClientRect): cg.Key | undefined {
+export function getKeyAtDomPos(pos: cg.NumberPair, boardSize: cg.BoardSize, asWhite: boolean, bounds: ClientRect): cg.Key | undefined {
 
-  let row = Math.ceil(10 * ((pos[1] - bounds.top) / bounds.height));
-  if (!asWhite) row = 11 - row;
-  let col = Math.ceil(10 * ((pos[0] - bounds.left) / bounds.width));
-  if (!asWhite) col = 11 - col;
+  let row = Math.ceil(boardSize[1] * ((pos[1] - bounds.top) / bounds.height));
+  if (!asWhite) row = (boardSize[1] + 1) - row;
+  let col = Math.ceil(boardSize[0] * ((pos[0] - bounds.left) / bounds.width));
+  if (!asWhite) col = (boardSize[0] + 1) - col;
 
   // on odd rows we skip fields 1,3,5 etc and on even rows 2,4,6 etc
   if (row % 2 !== 0) {
@@ -405,15 +430,15 @@ export function getKeyAtDomPos(pos: cg.NumberPair, asWhite: boolean, bounds: Cli
     if (col % 2 === 0) return undefined;
     else col = (col + 1) / 2;
   }
-  return (col > 0 && col < 6 && row > 0 && row < 11) ? pos2key([col, row]) : undefined;
+  return (col > 0 && col <= boardSize[0] / 2 && row > 0 && row <= boardSize[1]) ? pos2key([col, row], boardSize) : undefined;
 }
 
-export function unusedFieldAtDomPos(pos: cg.NumberPair, asWhite: boolean, bounds: ClientRect): boolean {
+export function unusedFieldAtDomPos(pos: cg.NumberPair, boardSize: cg.BoardSize, asWhite: boolean, bounds: ClientRect): boolean {
 
-  let row = Math.ceil(10 * ((pos[1] - bounds.top) / bounds.height));
-  if (!asWhite) row = 11 - row;
-  let col = Math.ceil(10 * ((pos[0] - bounds.left) / bounds.width));
-  if (!asWhite) col = 11 - col;
+  let row = Math.ceil(boardSize[1] * ((pos[1] - bounds.top) / bounds.height));
+  if (!asWhite) row = (boardSize[1] + 1) - row;
+  let col = Math.ceil(boardSize[0] * ((pos[0] - bounds.left) / bounds.width));
+  if (!asWhite) col = (boardSize[0] + 1) - col;
 
   if (row % 2 !== 0) {
     if (col % 2 !== 0) return true;
@@ -421,6 +446,10 @@ export function unusedFieldAtDomPos(pos: cg.NumberPair, asWhite: boolean, bounds
     if (col % 2 === 0) return true;
   }
   return false;
+}
+
+export function boardFields(s: State): number {
+  return s.boardSize[0] * s.boardSize[1] / 2;
 }
 
 export function whitePov(s: State): boolean {

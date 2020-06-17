@@ -74,7 +74,7 @@ object Puzzle extends LidraughtsController {
   }
 
   def showOrVariant(something: String) = Variant(something) match {
-    case Some(variant) if puzzleVariants.contains(variant) => homeVariant(variant)
+    case Some(variant) if puzzleVariants.contains(variant) && !variant.russian => homeVariant(variant)
     case _ => parseIntOption(something) match {
       case Some(id) => show(id, Standard)
       case _ => Open { implicit ctx => notFound(ctx) }
@@ -117,7 +117,7 @@ object Puzzle extends LidraughtsController {
   def newPuzzleStandard = newPuzzle(Standard)
 
   def newPuzzleVariant(key: String) = Variant(key) match {
-    case Some(variant) if puzzleVariants.contains(variant) => newPuzzle(variant)
+    case Some(variant) if puzzleVariants.contains(variant) && !variant.russian => newPuzzle(variant)
     case _ => Open { implicit ctx => notFound(ctx) }
   }
 
@@ -135,7 +135,7 @@ object Puzzle extends LidraughtsController {
   def round2Standard(id: PuzzleId) = round2(id, Standard)
 
   def round2Variant(id: PuzzleId, key: String) = Variant(key) match {
-    case Some(variant) if puzzleVariants.contains(variant) => round2(id, variant)
+    case Some(variant) if puzzleVariants.contains(variant) && !variant.russian => round2(id, variant)
     case _ => OpenBody { implicit ctx => fuccess(BadRequest("bad variant")) map (_ as JSON) }
   }
 
@@ -206,7 +206,7 @@ object Puzzle extends LidraughtsController {
       Env.game.recentGoodGameActor ? true mapTo manifest[Option[String]] flatMap {
         _ ?? lidraughts.game.GameRepo.gameWithInitialFen flatMap {
           case Some((game, initialFen)) =>
-            Env.api.pdnDump(game, initialFen, none, PdnDump.WithFlags(clocks = false, draughtsResult = lidraughts.pref.Pref.default.draughtsResult)) map { pdn =>
+            Env.api.pdnDump(game, initialFen, none, PdnDump.WithFlags(clocks = false)) map { pdn =>
               Ok(pdn.render)
             }
           case _ =>
@@ -214,7 +214,7 @@ object Puzzle extends LidraughtsController {
             lidraughts.game.GameRepo.findRandomFinished(1000) flatMap {
               _ ?? { game =>
                 lidraughts.game.GameRepo.initialFen(game) flatMap { fen =>
-                  Env.api.pdnDump(game, fen, none, PdnDump.WithFlags(clocks = false, draughtsResult = lidraughts.pref.Pref.default.draughtsResult)) map { pdn =>
+                  Env.api.pdnDump(game, fen, none, PdnDump.WithFlags(clocks = false)) map { pdn =>
                     Ok(pdn.render)
                   }
                 }
@@ -246,7 +246,7 @@ object Puzzle extends LidraughtsController {
     negotiate(
       html = notFound,
       api = _ => Variant(key) match {
-        case Some(variant) if puzzleVariants.contains(variant) =>
+        case Some(variant) if puzzleVariants.contains(variant) && !variant.russian =>
           for {
             puzzles <- env.batch.select(
               me, variant,
@@ -269,7 +269,7 @@ object Puzzle extends LidraughtsController {
       data => negotiate(
         html = notFound,
         api = _ => Variant(key) match {
-          case Some(variant) if puzzleVariants.contains(variant) =>
+          case Some(variant) if puzzleVariants.contains(variant) && !variant.russian =>
             for {
               _ <- env.batch.solve(me, variant, data)
               me2 <- UserRepo byId me.id map (_ | me)

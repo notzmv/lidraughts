@@ -42,10 +42,10 @@ case class AnaMove(
           val movable = game.situation playable false
           val fen = draughts.format.Forsyth >> game
           val sit = game.situation
-          val captLen = if (sit.ghosts > 0) sit.captureLengthFrom(dest) else sit.allMovesCaptureLength
+          val captLen = if (sit.ghosts > 0) sit.captureLengthFrom(dest) else sit.allMovesCaptureLength.some
           val validMoves = AnaDests.validMoves(sit, game.situation.ghosts > 0 option dest, ~fullCapture)
           val truncatedMoves = (~fullCapture && ~captLen > 1) option AnaDests.truncateMoves(validMoves)
-          val truncatedDests = truncatedMoves.map { _ mapValues { _ flatMap (uci => draughts.Pos.posAt(uci.takeRight(2))) } }
+          val truncatedDests = truncatedMoves.map { _ mapValues { _ flatMap (uci => variant.boardSize.pos.posAt(uci.takeRight(2))) } }
           val dests = truncatedDests.getOrElse(validMoves mapValues { _ map (_.dest) })
           val destsUci = truncatedMoves.map(_.values.toList.flatten)
           val alternatives = (~puzzle && sit.ghosts == 0 && ~captLen > 2) option {
@@ -85,14 +85,15 @@ object AnaMove {
 
   def parse(o: JsObject) = for {
     d ← o obj "d"
-    orig ← d str "orig" flatMap draughts.Pos.posAt
-    dest ← d str "dest" flatMap draughts.Pos.posAt
+    v ← Some(draughts.variant.Variant orDefault ~d.str("variant"))
+    orig ← d str "orig" flatMap v.boardSize.pos.posAt
+    dest ← d str "dest" flatMap v.boardSize.pos.posAt
     fen ← d str "fen"
     path ← d str "path"
   } yield AnaMove(
     orig = orig,
     dest = dest,
-    variant = draughts.variant.Variant orDefault ~d.str("variant"),
+    variant = v,
     fen = fen,
     path = path,
     chapterId = d str "ch",

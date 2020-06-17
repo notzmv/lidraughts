@@ -30,7 +30,7 @@ private[i18n] final class JsDump(path: String) {
   )
 
   private def writeFullJson = I18nDb.langs foreach { lang =>
-    val dbs = List(I18nDb.Site, I18nDb.Arena)
+    val dbs = List(I18nDb.Site, I18nDb.Arena, I18nDb.Study)
     val keys = dbs.foldLeft(Set[String]()) { (set, ref) => set ++ dumpFromKey(asScalaSet(I18nDb(ref)(defaultLang.value).keySet).toSet, lang, ref) }
     val code = keys.mkString("{", ",", "}")
     val file = new File("%s/%s.all.json".format(pathFile.getCanonicalPath, lang.code))

@@ -162,15 +162,15 @@ interface WebAssemblyStatic {
 
 //declare var WebAssembly: WebAssemblyStatic | undefined;
 
-declare type VariantKey = 'standard' | 'antidraughts' | 'breakthrough' | 'fromPosition' | 'frisian' | 'frysk' | 'atomic'
+declare type VariantKey = 'standard' | 'antidraughts' | 'breakthrough' | 'russian' | 'fromPosition' | 'frisian' | 'frysk' | 'atomic'
 
 declare type Speed = 'bullet' | 'blitz' | 'classical' | 'correspondence' | 'unlimited'
 
-declare type Perf = 'bullet' | 'blitz' | 'classical' | 'correspondence' | 'antidraughts' | 'breakthrough' | 'fromPosition' | 'frisian' | 'frysk'
+declare type Perf = 'bullet' | 'blitz' | 'classical' | 'correspondence' | 'antidraughts' | 'breakthrough' | 'russian'  | 'fromPosition' | 'frisian' | 'frysk'
 
 declare type Color = 'white' | 'black';
 
-declare type Key = "00" | "01" | "02" | "03" | "04" | "05" | "06" | "07" | "08" | "09" | "10" | "11" | "12" | "13" | "14" | "15" | "16" | "17" | "18" | "19" | "20" | "21" | "22" | "23" | "24" | "25" | "26" | "27" | "28" | "29" | "30" | "31" | "32" | "33" | "34" | "35" | "36" | "37" | "38" | "39" | "40" | "41" | "42" | "43" | "44" | "45" | "46" | "47" | "48" | "49" | "50";
+declare type Key = '00' | '01' | '02' | '03' | '04' | '05' | '06' | '07' | '08' | '09' | '10' | '11' | '12' | '13' | '14' | '15' | '16' | '17' | '18' | '19' | '20' | '21' | '22' | '23' | '24' | '25' | '26' | '27' | '28' | '29' | '30' | '31' | '32' | '33' | '34' | '35' | '36' | '37' | '38' | '39' | '40' | '41' | '42' | '43' | '44' | '45' | '46' | '47' | '48' | '49' | '50';
 declare type Uci = string;
 declare type San = string;
 declare type Fen = string;
@@ -178,10 +178,17 @@ declare type Ply = number;
 
 interface Variant {
   key: VariantKey
+  board: BoardData
   name: string
   short: string
   title?: string
   gameType?: string
+}
+
+declare type BoardSize = [number, number]
+interface BoardData {
+  key: string
+  size: BoardSize
 }
 
 interface Paginator<A> {
@@ -257,7 +264,7 @@ declare namespace Tree {
     shapes?: Shape[];
     comp?: boolean;
     san?: string;
-    expandedSan?: string;
+    alg?: string; // added at runtime with correct settings & variant
     threefold?: boolean;
     fail?: boolean;
     puzzle?: string;
@@ -294,7 +301,7 @@ declare namespace Tree {
 
   export interface Opening {
     name: string;
-    eco: string;
+    code: string;
   }
 
   type GlyphId = number;

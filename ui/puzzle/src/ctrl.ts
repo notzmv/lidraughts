@@ -1,6 +1,6 @@
 import { build as treeBuild, ops as treeOps, path as treePath } from 'tree';
 import { ctrl as cevalCtrl, scan2uci } from 'ceval';
-import { readDests, readCaptureLength, decomposeUci } from 'draughts';
+import { readDests, readCaptureLength, decomposeUci, san2alg } from 'draughts';
 import { opposite } from 'draughtsground/util';
 import { countGhosts } from 'draughtsground/fen';
 import { animationDuration } from 'draughtsground/anim';
@@ -44,7 +44,7 @@ export default function (opts, redraw: () => void): Controller {
 
   function initiate(fromData) {
     data = fromData;
-    tree = treeBuild(data.game.treeParts ? treeOps.reconstruct(data.game.treeParts) : ({
+    tree = treeBuild(data.game.treeParts ? treeOps.reconstruct(data.game.treeParts, coordSystem()) : ({
       id: "",
       ply: data.history.ply - 1,
       fen: data.puzzle.fen,
@@ -55,6 +55,7 @@ export default function (opts, redraw: () => void): Controller {
           ply: data.history.ply,
           fen: data.history.fen,
           san: data.history.san,
+          alg: isAlgebraic() ? san2alg(data.history.san) : undefined,
           uci: data.history.uci,
           drops: undefined,
           tbhit: undefined,
@@ -109,7 +110,8 @@ export default function (opts, redraw: () => void): Controller {
       color: (dests && Object.keys(dests).length > 0) ? color : null,
       dests: dests || {},
       captLen: readCaptureLength(node.dests),
-      captureUci: (opts.pref.fullCapture && node.destsUci && node.destsUci.length) ? node.destsUci : undefined
+      captureUci: (opts.pref.fullCapture && node.destsUci && node.destsUci.length) ? node.destsUci : undefined,
+      variant: data.puzzle.variant.key
     } : {
         color: null,
         dests: {}
@@ -123,7 +125,8 @@ export default function (opts, redraw: () => void): Controller {
         enabled: false,
         variant: data.puzzle.variant.key
       },
-      check: !!node.check,
+      boardSize: data.puzzle.variant.board.size,
+      coordSystem: coordSystem(),
       lastMove: uciToLastMove(node.uci)
     };
     if (node.ply >= vm.initialNode.ply) {
@@ -173,6 +176,14 @@ export default function (opts, redraw: () => void): Controller {
     socket.sendAnaMove(move);
   };
 
+  function isAlgebraic(): boolean {
+    return opts.pref.coordSystem === 1 && data.puzzle.variant.board.key === '64';
+  }
+  
+  function coordSystem(): number {
+    return isAlgebraic() ? 1 : 0;
+  }
+
   var getDests = throttle(800, function () {
     if (!vm.node.dests && treePath.contains(vm.path, vm.initialPath) && (vm.node.destreq || 0) < 3) {
       const dests: any = {
@@ -191,7 +202,7 @@ export default function (opts, redraw: () => void): Controller {
   };
 
   var addNode = function (node, path) {
-    var newPath = tree.addNode(node, path);
+    var newPath = tree.addNode(node, path, false, coordSystem());
     if (newPath) { // path can be undefined when solution is clicked in the middle of opponent capt sequence
       const ghosts = countGhosts(node.fen);
       const playedMyself = jump(newPath);

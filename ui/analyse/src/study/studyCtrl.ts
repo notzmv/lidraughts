@@ -147,7 +147,7 @@ export default function (data: StudyData, ctrl: AnalyseCtrl, tagTypes: TagTypes,
     li.pubsub.emit('chat.writeable', data.features.chat);
     li.pubsub.emit('chat.permissions', {local: canContribute});
     li.pubsub.emit('palantir.toggle', data.features.chat && !!members.myMember());
-    const computer: boolean = !isGamebookPlay() && !!(data.chapter.features.computer || data.chapter.practice);
+    const computer: boolean = data.chapter.setup.variant.key !== 'russian' && !isGamebookPlay() && !!(data.chapter.features.computer || data.chapter.practice);
     if (!computer) ctrl.getCeval().enabled(false);
     ctrl.getCeval().allowed(computer);
     if (!data.chapter.features.explorer) ctrl.explorer.disable();
@@ -239,7 +239,7 @@ export default function (data: StudyData, ctrl: AnalyseCtrl, tagTypes: TagTypes,
     return ctrl.node;
   };
 
-  const share = shareCtrl(data, currentChapter, currentNode, redraw, ctrl.trans);
+  const share = shareCtrl(data, currentChapter, currentNode, redraw, ctrl.trans, () => ctrl.isAlgebraic());
 
   const practice: StudyPracticeCtrl | undefined = practiceData && practiceCtrl(ctrl, data, practiceData);
 
@@ -329,7 +329,7 @@ export default function (data: StudyData, ctrl: AnalyseCtrl, tagTypes: TagTypes,
           ctrl.tree.promoteAt(newPath, true);
         }
       }
-      const newPath = ctrl.tree.addNode(node, position.path, false);
+      const newPath = ctrl.tree.addNode(node, position.path, false, ctrl.coordSystem());
       if (!newPath) return xhrReload();
       const dests = (ctrl.data.pref.fullCapture && d.f) ? d.f : d.d;
       ctrl.tree.addDests(dests, newPath, d.o, undefined, d.u);

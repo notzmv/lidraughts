@@ -18,14 +18,14 @@ export interface Api {
   state: State;
 
   // get the position as a FEN string (only contains pieces, no flags)
-  // e.g. rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
-  getFen(): cg.FEN;
+  // e.g. W31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50:B1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+  getFen(algebraic?: boolean): cg.FEN;
 
   // change the view angle
   toggleOrientation(): void;
 
   // perform a move programmatically
-  move(orig: cg.Key, dest: cg.Key): void;
+  move(orig: cg.Key, dest: cg.Key, finishCapture?: Boolean): void;
 
   // add and/or remove arbitrary pieces on the board
   setPieces(pieces: cg.PiecesDiff): void;
@@ -101,7 +101,7 @@ export function start(state: State, redrawAll: cg.Redraw): Api {
 
     state,
 
-    getFen: () => fenWrite(state.pieces),
+    getFen: (algebraic?: boolean) => fenWrite(state.pieces, board.boardFields(state), algebraic),
 
     toggleOrientation,
 
@@ -117,8 +117,8 @@ export function start(state: State, redrawAll: cg.Redraw): Api {
       }
     },
 
-    move(orig, dest) {
-      anim(state => board.baseMove(state, orig, dest), state);
+    move(orig, dest, finishCapture?: Boolean) {
+      anim(state => board.baseMove(state, orig, dest, finishCapture), state);
     },
 
     newPiece(piece, key) {
@@ -182,7 +182,7 @@ export function start(state: State, redrawAll: cg.Redraw): Api {
     },
 
     getKeyAtDomPos(pos) {
-      return board.getKeyAtDomPos(pos, board.whitePov(state), state.dom.bounds());
+      return board.getKeyAtDomPos(pos, state.boardSize, board.whitePov(state), state.dom.bounds());
     },
 
     redrawAll,

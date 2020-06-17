@@ -13,9 +13,10 @@ object bits {
 
   def daily(p: lidraughts.puzzle.Puzzle, fen: String, lastMove: String) = a(
     href := routes.Puzzle.daily(),
-    cls := "mini-board cg-wrap parse-fen is2d",
+    cls := s"mini-board cg-wrap parse-fen is2d is${p.variant.boardSize.key}",
     dataColor := p.color.name,
     dataFen := fen,
+    dataBoard := s"${p.variant.boardSize.width}x${p.variant.boardSize.height}",
     dataLastmove := lastMove
   )(cgWrapContent)
 

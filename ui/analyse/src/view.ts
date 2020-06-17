@@ -31,6 +31,7 @@ import relayIntro from './study/relay/relayIntroView';
 import renderPlayerBars from './study/playerBars';
 import serverSideUnderboard from './serverSideUnderboard';
 import * as gridHacks from './gridHacks';
+import { toggleCoordinates } from 'draughtsground/fen';
 
 const li = window.lidraughts;
 
@@ -100,7 +101,7 @@ function inputs(ctrl: AnalyseCtrl): VNode | undefined {
       h('input.copyable.autoselect.analyse__underboard__fen', {
         attrs: {
           spellCheck: false,
-          value: ctrl.node.fen
+          value: ctrl.isAlgebraic() ? toggleCoordinates(ctrl.node.fen, true) : ctrl.node.fen
         },
         hook: bind('change', e => {
           const value = (e.target as HTMLInputElement).value;
@@ -277,9 +278,9 @@ function renderOpeningBox(ctrl: AnalyseCtrl) {
   let opening = ctrl.tree.getOpening(ctrl.nodeList);
   if (!opening && !ctrl.path) opening = ctrl.data.game.opening;
   if (opening) return h('div.opening_box', {
-    attrs: { title: opening.eco + ' ' + opening.name }
+    attrs: { title: opening.code + ' ' + opening.name }
   }, [
-      h('strong', opening.eco),
+      h('strong', opening.code),
       ' ' + opening.name
     ]);
 }
@@ -339,7 +340,7 @@ export default function(ctrl: AnalyseCtrl): VNode {
   }, [
     ctrl.keyboardHelp ? keyboardView(ctrl) : null,
     study ? studyView.overboard(study) : null,
-    intro || h(addChapterId(study, 'div.analyse__board.main-board'), {
+    intro || h(addChapterId(study, 'div.analyse__board.main-board.is' + ctrl.data.game.variant.board.key), {
       hook: (window.lidraughts.hasTouchEvents || ctrl.gamebookPlay()) ? undefined : bind('wheel', (e: WheelEvent) => wheel(ctrl, e))
     }, [
       ...(clocks || []),

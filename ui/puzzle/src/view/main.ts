@@ -14,9 +14,9 @@ import { Controller } from '../interfaces';
 function renderOpeningBox(ctrl: Controller) {
   var opening = ctrl.getTree().getOpening(ctrl.vm.nodeList);
   if (opening) return h('div.opening_box', {
-    attrs: { title: opening.eco + ' ' + opening.name }
+    attrs: { title: opening.code + ' ' + opening.name }
   }, [
-    h('strong', opening.eco),
+    h('strong', opening.code),
     ' ' + opening.name
   ]);
 }
@@ -100,7 +100,7 @@ export default function(ctrl: Controller): VNode {
       side.puzzleBox(ctrl),
       side.userBox(ctrl)
     ]),
-    h('div.puzzle__board.main-board' + (ctrl.pref.blindfold ? '.blindfold' : ''), {
+    h('div.puzzle__board.main-board.is' + ctrl.getData().puzzle.variant.board.key + (ctrl.pref.blindfold ? '.blindfold' : ''), {
       hook: hasTouchEvents ? undefined : bind('wheel', e => wheel(ctrl, e as WheelEvent))
     }, [
       draughtsground(ctrl)

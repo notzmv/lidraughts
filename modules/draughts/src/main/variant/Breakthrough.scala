@@ -8,10 +8,17 @@ case object Breakthrough extends Variant(
   name = "Breakthrough",
   shortName = "BT",
   title = "The first player who makes a king wins.",
-  standardInitialPosition = true
+  standardInitialPosition = true,
+  boardSize = Board.D100
 ) {
 
   def pieces = Standard.pieces
+  def initialFen = Standard.initialFen
+  def startingPosition = Standard.startingPosition
+
+  def captureDirs = Standard.captureDirs
+  def moveDirsColor = Standard.moveDirsColor
+  def moveDirsAll = Standard.moveDirsAll
 
   // Win on promotion
   override def specialEnd(situation: Situation) =
@@ -23,8 +30,12 @@ case object Breakthrough extends Variant(
     else if (situation.board.kingPosOf(Black).isDefined) Black.some
     else None
 
-  // No drawing rules
-  override def updatePositionHashes(board: Board, move: Move, hash: draughts.PositionHash): PositionHash =
+  def maxDrawingMoves(board: Board): Option[Int] = None
+
+  /**
+   * No drawing rules
+   */
+  def updatePositionHashes(board: Board, move: Move, hash: draughts.PositionHash): PositionHash =
     Hash(Situation(board, !move.piece.color))
 
 }

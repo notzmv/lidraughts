@@ -2,14 +2,15 @@ package draughts
 package opening
 
 final class FullOpening(
-    val eco: String,
+    val code: String,
     val name: String,
-    val fen: String
+    val fen: String,
+    val source: Option[String]
 ) {
 
-  def ecoName = s"$eco $name"
+  def fullName = source.fold(s"$code: $name") { s => s"$s $code: $name" }
 
-  override def toString = ecoName
+  override def toString = fullName
 
   def atPly(ply: Int) = FullOpening.AtPly(this, ply)
 }

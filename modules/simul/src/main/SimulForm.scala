@@ -46,7 +46,7 @@ object SimulForm {
     "clockIncrement" -> numberIn(clockIncrementChoices),
     "clockExtra" -> numberIn(clockExtraChoices),
     "variants" -> list {
-      number.verifying(Set(draughts.variant.Standard.id, draughts.variant.Frisian.id, draughts.variant.Frysk.id, draughts.variant.Antidraughts.id, draughts.variant.Breakthrough.id) contains _)
+      number.verifying(Set(draughts.variant.Standard.id, draughts.variant.Frisian.id, draughts.variant.Frysk.id, draughts.variant.Antidraughts.id, draughts.variant.Breakthrough.id, draughts.variant.Russian.id) contains _)
     }.verifying("atLeastOneVariant", _.nonEmpty),
     "color" -> stringIn(colorChoices),
     "targetPct" -> text(minLength = 0, maxLength = 3)
@@ -57,7 +57,7 @@ object SimulForm {
 
   lazy val applyVariants = Form(mapping(
     "variants" -> list {
-      number.verifying(Set(draughts.variant.Standard.id, draughts.variant.Frisian.id, draughts.variant.Frysk.id, draughts.variant.Antidraughts.id, draughts.variant.Breakthrough.id) contains _)
+      number.verifying(Set(draughts.variant.Standard.id, draughts.variant.Frisian.id, draughts.variant.Frysk.id, draughts.variant.Antidraughts.id, draughts.variant.Breakthrough.id, draughts.variant.Russian.id) contains _)
     }
   )(VariantsData.apply)(VariantsData.unapply)) fill VariantsData(
     variants = List(draughts.variant.Standard.id)

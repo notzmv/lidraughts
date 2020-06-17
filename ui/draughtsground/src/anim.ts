@@ -71,10 +71,10 @@ export function animationDuration(state: State) {
   return total;
 }
 
-function makePiece(key: cg.Key, piece: cg.Piece): AnimPiece {
+function makePiece(key: cg.Key, boardSize: cg.BoardSize, piece: cg.Piece): AnimPiece {
   return {
     key: key,
-    pos: util.key2pos(key),
+    pos: util.key2pos(key, boardSize),
     piece: piece
   };
 }
@@ -94,8 +94,8 @@ function ghostPiece(piece: cg.Piece): cg.Piece {
     return { role: piece.role, color: piece.color, promoted: piece.promoted, kingMoves: piece.kingMoves };
 }
 
-function isPromotable(p: AnimPiece): boolean {
-  return (p.piece.color === 'white' && p.pos[1] === 1) || (p.piece.color === 'black' && p.pos[1] === 10);
+function isPromotablePos(color: cg.Color, pos: cg.Pos, boardSize: cg.BoardSize): boolean {
+  return (color === 'white' && pos[1] === 1) || (color === 'black' && pos[1] === boardSize[1]);
 }
 
 function computePlan(prevPieces: cg.Pieces, current: State, fadeOnly: boolean = false, noCaptSequences: boolean = false): AnimPlan {
@@ -103,10 +103,12 @@ function computePlan(prevPieces: cg.Pieces, current: State, fadeOnly: boolean = 
   let missingsW: AnimPiece[] = [], missingsB: AnimPiece[] = [],
     newsW: AnimPiece[] = [], newsB: AnimPiece[] = [];
   const prePieces: AnimPieces = {},
-    samePieces: SamePieces = {};
+    samePieces: SamePieces = {},
+    bs = current.boardSize,
+    variant = (current.movable && current.movable.variant) || (current.premovable && current.premovable.variant);
   let curP: cg.Piece, preP: AnimPiece, i: any, prevGhosts: number = 0;
   for (i in prevPieces) {
-    prePieces[i] = makePiece(i as cg.Key, prevPieces[i]);
+    prePieces[i] = makePiece(i as cg.Key, bs, prevPieces[i]);
     if (prevPieces[i].role === 'ghostman' || prevPieces[i].role === 'ghostking')
       prevGhosts++;
   }
@@ -121,15 +123,15 @@ function computePlan(prevPieces: cg.Pieces, current: State, fadeOnly: boolean = 
           else
             missingsB.push(preP);
           if (curP.color === 'white')
-            newsW.push(makePiece(key, curP));
+            newsW.push(makePiece(key, bs, curP));
           else
-            newsB.push(makePiece(key, curP));
+            newsB.push(makePiece(key, bs, curP));
         }
       } else {
         if (curP.color === 'white')
-          newsW.push(makePiece(key, curP));
+          newsW.push(makePiece(key, bs, curP));
         else
-          newsB.push(makePiece(key, curP));
+          newsB.push(makePiece(key, bs, curP));
       }
     } else if (preP) {
       if (preP.piece.color === 'white')
@@ -164,96 +166,107 @@ function computePlan(prevPieces: cg.Pieces, current: State, fadeOnly: boolean = 
     preP = prePieces[doubleKey];
     if (curP.color === 'white' && missingsB.length !== 0) {
       missingsW.push(preP);
-      newsW.push(makePiece(doubleKey, curP));
+      newsW.push(makePiece(doubleKey, bs, curP));
     } else if (curP.color === 'black' && missingsW.length !== 0) {
       missingsB.push(preP);
-      newsB.push(makePiece(doubleKey, curP));
+      newsB.push(makePiece(doubleKey, bs, curP));
     }
   }
 
   let missings: AnimPiece[] = missingsW.concat(missingsB),
     news: AnimPiece[] = newsW.concat(newsB);
 
-  news.forEach(newP => {
-    preP = closer(newP, missings.filter(p =>
-      !samePieces[p.key] &&
-      newP.piece.color === p.piece.color &&
-      (
-        newP.piece.role === p.piece.role ||
-        (p.piece.role === 'man' && newP.piece.role === 'king' && isPromotable(newP)) ||
-        (p.piece.role === 'king' && newP.piece.role === 'man' && isPromotable(p))
+  if (news.length && missings.length && !fadeOnly) {
+    news.forEach(newP => {
+      let maybePromote = false, filteredMissings = missings.filter(p =>
+        !samePieces[p.key] && newP.piece.color === p.piece.color && (
+          newP.piece.role === p.piece.role ||
+          (p.piece.role === 'man' && newP.piece.role === 'king' && isPromotablePos(newP.piece.color, newP.pos, bs)) ||
+          (p.piece.role === 'king' && newP.piece.role === 'man' && isPromotablePos(p.piece.color, p.pos, bs))
+        )
       )
-    ));
-    if (preP && !fadeOnly) {
-      samePieces[preP.key] = true;
-      const tempRole: cg.Role | undefined = (preP.piece.role === 'man' && newP.piece.role === 'king' && isPromotable(newP)) ? 'man' : undefined;
-      if (captAnim && current.lastMove && current.lastMove[animateFrom] === preP.key && current.lastMove[current.lastMove.length - 1] === newP.key) {
+      if (!filteredMissings.length && variant === 'russian') {
+        maybePromote = true;
+        filteredMissings = missings.filter(p =>
+          !samePieces[p.key] && newP.piece.color === p.piece.color && (
+            (p.piece.role === 'man' && newP.piece.role === 'king') ||
+            (p.piece.role === 'king' && newP.piece.role === 'man')
+          )
+        )
+      }
+      preP = closer(newP, filteredMissings);
+      if (preP) {
+        samePieces[preP.key] = true;
+        let tempRole: cg.Role | undefined = (preP.piece.role === 'man' && newP.piece.role === 'king' && (maybePromote || isPromotablePos(newP.piece.color, newP.pos, bs))) ? 'man' : undefined;
+        if (captAnim && current.lastMove && current.lastMove[animateFrom] === preP.key && current.lastMove[current.lastMove.length - 1] === newP.key) {
 
-        let lastPos: cg.Pos = util.key2pos(current.lastMove[animateFrom + 1]), newPos: cg.Pos;
-        plan.anims[newP.key] = getVector(preP.pos, lastPos);
-        plan.nextPlan = nextPlan;
-        if (tempRole) plan.tempRole[newP.key] = tempRole;
+          let lastPos: cg.Pos = util.key2pos(current.lastMove[animateFrom + 1], bs), newPos: cg.Pos;
+          plan.anims[newP.key] = getVector(preP.pos, lastPos);
+          plan.nextPlan = nextPlan;
+          if (tempRole) plan.tempRole[newP.key] = tempRole;
 
-        const captKeys: Array<cg.Key> = new Array<cg.Key>();
-        let captKey = calcCaptKey(prevPieces, preP.pos[0], preP.pos[1], lastPos[0], lastPos[1]);
-        if (captKey) {
-          captKeys.push(captKey);
-          prevPieces[captKey] = ghostPiece(prevPieces[captKey]);
-        }
-
-        plan.captures = {};
-        missings.forEach(p => {
-          if (p.piece.color !== newP.piece.color) {
-            if (captKeys.indexOf(p.key) !== -1)
-              plan.captures[p.key] = ghostPiece(p.piece);
-            else
-              plan.captures[p.key] = p.piece;
-          }
-        });
-
-        let newPlan: AnimPlan = { anims: {}, captures: {}, tempRole: {} };
-        for (i = animateFrom + 2; i < current.lastMove.length; i++) {
-
-          newPos = util.key2pos(current.lastMove[i]);
-
-          nextPlan.anims[newP.key] = getVector(lastPos, newPos);
-          nextPlan.anims[newP.key][2] = lastPos[0] - newP.pos[0];
-          nextPlan.anims[newP.key][3] = lastPos[1] - newP.pos[1];
-          nextPlan.nextPlan = newPlan;
-          if (tempRole) nextPlan.tempRole[newP.key] = tempRole;
-
-          captKey = calcCaptKey(prevPieces, lastPos[0], lastPos[1], newPos[0], newPos[1]);
+          const captKeys: Array<cg.Key> = new Array<cg.Key>();
+          let captKey = calcCaptKey(prevPieces, bs, preP.pos[0], preP.pos[1], lastPos[0], lastPos[1]);
           if (captKey) {
             captKeys.push(captKey);
             prevPieces[captKey] = ghostPiece(prevPieces[captKey]);
           }
 
-          nextPlan.captures = {};
+          plan.captures = {};
           missings.forEach(p => {
             if (p.piece.color !== newP.piece.color) {
               if (captKeys.indexOf(p.key) !== -1)
-                nextPlan.captures[p.key] = ghostPiece(p.piece);
+                plan.captures[p.key] = ghostPiece(p.piece);
               else
-                nextPlan.captures[p.key] = p.piece;
+                plan.captures[p.key] = p.piece;
             }
           });
 
-          lastPos = newPos;
-          nextPlan = newPlan;
+          let newPlan: AnimPlan = { anims: {}, captures: {}, tempRole: {} };
+          for (i = animateFrom + 2; i < current.lastMove.length; i++) {
 
-          newPlan = { anims: {}, captures: {}, tempRole: {} };
+            newPos = util.key2pos(current.lastMove[i], bs);
 
+            nextPlan.anims[newP.key] = getVector(lastPos, newPos);
+            nextPlan.anims[newP.key][2] = lastPos[0] - newP.pos[0];
+            nextPlan.anims[newP.key][3] = lastPos[1] - newP.pos[1];
+            nextPlan.nextPlan = newPlan;
+            if (tempRole) {
+              if (variant === 'russian' && isPromotablePos(newP.piece.color, lastPos, bs)) {
+                tempRole = undefined;
+              } else {
+                nextPlan.tempRole[newP.key] = tempRole;
+              }
+            }
+            captKey = calcCaptKey(prevPieces, bs, lastPos[0], lastPos[1], newPos[0], newPos[1]);
+            if (captKey) {
+              captKeys.push(captKey);
+              prevPieces[captKey] = ghostPiece(prevPieces[captKey]);
+            }
+
+            nextPlan.captures = {};
+            missings.forEach(p => {
+              if (p.piece.color !== newP.piece.color) {
+                if (captKeys.indexOf(p.key) !== -1)
+                  nextPlan.captures[p.key] = ghostPiece(p.piece);
+                else
+                  nextPlan.captures[p.key] = p.piece;
+              }
+            });
+
+            lastPos = newPos;
+            nextPlan = newPlan;
+            newPlan = { anims: {}, captures: {}, tempRole: {} };
+          }
+
+        } else {
+          plan.anims[newP.key] = getVector(preP.pos, newP.pos);
+          if (tempRole) plan.tempRole[newP.key] = tempRole;
         }
-
-      } else {
-        plan.anims[newP.key] = getVector(preP.pos, newP.pos);
-        if (tempRole) plan.tempRole[newP.key] = tempRole;
       }
-    }
-  });
-
+    });
+  }
   return plan;
-
 }
 
 function getVector(preP: cg.Pos, newP: cg.Pos): AnimVector {
@@ -319,8 +332,9 @@ function animate<A>(mutation: Mutation<A>, state: State, fadeOnly: boolean = fal
     };
     if (!alreadyRunning) step(state, performance.now());
   } else {
-    if (state.animation.current && !sameArray(state.animation.current.lastMove, state.lastMove))
+    if (state.animation.current && !sameArray(state.animation.current.lastMove, state.lastMove)) {
       state.animation.current = undefined;
+    }
     // don't animate, just render right away
     state.dom.redraw();
   }

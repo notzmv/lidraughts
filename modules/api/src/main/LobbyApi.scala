@@ -3,6 +3,7 @@ package lidraughts.api
 import play.api.libs.json.{ Json, JsObject, JsArray }
 
 import lidraughts.game.Pov
+import lidraughts.game.JsonView.boardSizeWriter
 import lidraughts.lobby.SeekApi
 import lidraughts.pool.JsonView.poolConfigJsonWriter
 import lidraughts.setup.FilterConfig
@@ -45,7 +46,8 @@ final class LobbyApi(
     "lastMove" -> ~pov.game.lastMoveKeys,
     "variant" -> Json.obj(
       "key" -> pov.game.variant.key,
-      "name" -> pov.game.variant.name
+      "name" -> pov.game.variant.name,
+      "board" -> pov.game.variant.boardSize
     ),
     "speed" -> pov.game.speed.key,
     "perf" -> lidraughts.game.PerfPicker.key(pov.game),

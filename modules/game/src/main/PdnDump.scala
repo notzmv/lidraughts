@@ -18,15 +18,17 @@ final class PdnDump(
     val imported = game.pdnImport.flatMap { pdni =>
       Parser.full(pdni.pdn).toOption
     }
+    val boardPos = game.variant.boardSize.pos
+    val algebraic = flags.algebraic && boardPos.hasAlgebraic
     val tagsFuture =
-      if (flags.tags) tags(game, initialFen, imported, flags.draughtsResult, withOpening = flags.opening)
+      if (flags.tags) tags(game, initialFen, imported, flags.draughtsResult, algebraic, flags.opening)
       else fuccess(Tags(Nil))
     tagsFuture map { ts =>
       val turns = flags.moves ?? {
         val fenSituation = ts.fen.map(_.value) flatMap Forsyth.<<<
         val moves2 = if (fenSituation.exists(_.situation.color.black)) ".." +: game.pdnMovesConcat else game.pdnMovesConcat
         makeTurns(
-          moves2,
+          if (algebraic) san2alg(moves2, boardPos) else moves2,
           fenSituation.map(_.fullMoveNumber) | 1,
           flags.clocks ?? ~game.bothClockStates(true),
           game.startColor
@@ -34,6 +36,14 @@ final class PdnDump(
       }
       Pdn(ts, turns)
     }
+  }
+
+  private def san2alg(moves: PdnMoves, boardPos: draughts.BoardPos) = moves map { move =>
+    val capture = move.contains('x')
+    val fields = if (capture) move.split("x") else move.split("-")
+    val algebraicFields = fields.flatMap { boardPos.algebraic(_) }
+    val sep = if (capture) "x" else "-"
+    algebraicFields mkString sep
   }
 
   private def gameUrl(id: String) = s"$netBaseUrl/$id"
@@ -47,7 +57,7 @@ final class PdnDump(
     p.aiLevel.fold(u.fold(p.name | lidraughts.user.User.anonymous)(_.name))("lidraughts AI level " + _)
 
   private val customStartPosition: Set[draughts.variant.Variant] =
-    Set(draughts.variant.Frysk, draughts.variant.FromPosition)
+    Set(draughts.variant.Russian, draughts.variant.Frysk, draughts.variant.FromPosition)
 
   private def eventOf(game: Game) = {
     val perf = game.perfType.fold("Standard")(_.name)
@@ -68,10 +78,15 @@ final class PdnDump(
     initialFen: Option[FEN],
     imported: Option[ParsedPdn],
     draughtsResult: Boolean,
+    algebraic: Boolean,
     withOpening: Boolean
   ): Fu[Tags] = gameLightUsers(game) map {
     case (wu, bu) => Tags {
       val importedDate = imported.flatMap(_.tags(_.Date))
+      def convertedFen = initialFen.flatMap { fen =>
+        if (algebraic) Forsyth.toAlgebraic(game.variant, fen.value) map FEN
+        else fen.some
+      }
       List[Option[Tag]](
         Tag(_.Event, imported.flatMap(_.tags(_.Event)) | { if (game.imported) "Import" else eventOf(game) }).some,
         Tag(_.Site, gameUrl(game.id)).some,
@@ -103,8 +118,7 @@ final class PdnDump(
           }
         }).some
       ).flatten ::: customStartPosition(game.variant).??(List(
-          Tag(_.FEN, initialFen.fold("?")(_.value))
-        //Tag("SetUp", "1")
+          Tag(_.FEN, convertedFen.fold("?")(_.value.split(':').take(3).mkString(":")))
         ))
     }
   }
@@ -142,7 +156,8 @@ object PdnDump {
       evals: Boolean = true,
       opening: Boolean = true,
       literate: Boolean = false,
-      draughtsResult: Boolean = true
+      draughtsResult: Boolean = true,
+      algebraic: Boolean = false
   )
 
   def result(game: Game, draughtsResult: Boolean) =

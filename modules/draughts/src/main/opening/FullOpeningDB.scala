@@ -5,14 +5,22 @@ import format.FEN
 
 object FullOpeningDB {
 
-  private def all: Vector[FullOpening] = FullOpeningPart1.db ++ FullOpeningPart2.db
+  private def all: Vector[FullOpening] = Vector()
+  /*private def all: Vector[FullOpening] = OpeningTable.tableFMJD.positions.map { p =>
+    new FullOpening(
+      code = p.code,
+      name = p.name.getOrElse("?"),
+      fen = p.fen.split(':').take(3).mkString(":"),
+      source = OpeningTable.tableFMJD.name.some
+    )
+  } toVector*/
 
   lazy val byFen: collection.Map[String, FullOpening] =
     all.map { o =>
       o.fen -> o
     }(scala.collection.breakOut[Vector[_], (String, FullOpening), collection.mutable.AnyRefMap[String, FullOpening]])
 
-  def findByFen(fen: String) = byFen get fen.split(' ').take(3).mkString(" ")
+  def findByFen(fen: String) = byFen get fen.split(':').take(3).mkString(":")
 
   val SEARCH_MAX_PLIES = 40
 
@@ -30,7 +38,7 @@ object FullOpeningDB {
   def searchInFens(fens: List[FEN]): Option[FullOpening] =
     fens.foldRight(none[FullOpening]) {
       case (fen, None) => byFen get {
-        fen.value.split(' ').take(3) mkString " "
+        fen.value.split(':').take(3) mkString ":"
       }
       case (_, found) => found
     }

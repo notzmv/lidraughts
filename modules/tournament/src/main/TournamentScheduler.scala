@@ -76,9 +76,9 @@ private final class TournamentScheduler private (api: TournamentApi) extends Act
 
       val isHalloween = today.getDayOfMonth == 31 && today.getMonthOfYear == OCTOBER
 
-      val std = StartingPosition.initial
+      val std = draughts.variant.Standard.startingPosition
       def opening(offset: Int) = {
-        val positions = StartingPosition.featurable
+        val positions = Nil //StartingPosition.featurable
         positions((today.getDayOfYear + offset) % positions.size)
       }
 
@@ -134,11 +134,13 @@ Thank you all, you rock!"""
 
         List( // yearly variant tournaments!
           secondWeekOf(JANUARY).withDayOfWeek(MONDAY) -> Breakthrough,
+          secondWeekOf(MAY).withDayOfWeek(THURSDAY) -> Russian,
           secondWeekOf(FEBRUARY).withDayOfWeek(FRIDAY) -> Frysk,
           secondWeekOf(MARCH).withDayOfWeek(SATURDAY) -> Antidraughts,
           secondWeekOf(APRIL).withDayOfWeek(SUNDAY) -> Frisian,
 
           secondWeekOf(JULY).withDayOfWeek(MONDAY) -> Breakthrough,
+          secondWeekOf(NOVEMBER).withDayOfWeek(THURSDAY) -> Russian,
           secondWeekOf(AUGUST).withDayOfWeek(FRIDAY) -> Frysk,
           secondWeekOf(SEPTEMBER).withDayOfWeek(SATURDAY) -> Antidraughts,
           secondWeekOf(OCTOBER).withDayOfWeek(SUNDAY) -> Frisian
@@ -166,6 +168,7 @@ Thank you all, you rock!"""
 
             List( // monthly variant tournaments!
               month.firstWeek.withDayOfWeek(MONDAY) -> Breakthrough,
+              month.firstWeek.withDayOfWeek(THURSDAY) -> Russian,
               month.firstWeek.withDayOfWeek(FRIDAY) -> Frysk,
               month.firstWeek.withDayOfWeek(SATURDAY) -> Antidraughts,
               month.firstWeek.withDayOfWeek(SUNDAY) -> Frisian
@@ -193,6 +196,7 @@ Thank you all, you rock!"""
 
         List( // weekly variant tournaments!
           nextMonday -> Breakthrough,
+          nextThursday -> Russian,
           nextFriday -> Frysk,
           nextSaturday -> Antidraughts,
           nextSunday -> Frisian
@@ -208,7 +212,8 @@ Thank you all, you rock!"""
         ).flatten,
 
         List( // daily variant tournaments!
-          at(today, 20 - todayCET) map { date => Schedule(Daily, SuperBlitz, Frysk, std, date |> orTomorrow).plan },
+          at(today, 19 - todayCET) map { date => Schedule(Daily, SuperBlitz, Frysk, std, date |> orTomorrow).plan },
+          at(today, 20 - todayCET) map { date => Schedule(Daily, SuperBlitz, Russian, std, date |> orTomorrow).plan },
           at(today, 21 - todayCET) map { date => Schedule(Daily, SuperBlitz, Frisian, std, date |> orTomorrow).plan },
           at(today, 22 - todayCET) map { date => Schedule(Daily, SuperBlitz, Antidraughts, std, date |> orTomorrow).plan }
         ).flatten,

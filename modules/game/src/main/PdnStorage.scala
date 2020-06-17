@@ -47,7 +47,7 @@ private object PdnStorage {
       )
     }
 
-    private def chessPos(sq: Integer): Option[Pos] = Pos.posAt(JavaSquare.file(sq) + 1, JavaSquare.rank(sq) + 1)
+    private def chessPos(sq: Integer): Option[Pos] = draughts.variant.Standard.boardSize.pos.posAt(JavaSquare.file(sq) + 1, JavaSquare.rank(sq) + 1)
     private def chessRole(role: JavaRole): Role = role match {
       case JavaRole.PAWN => Man
       case JavaRole.KING => King
