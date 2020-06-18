@@ -83,7 +83,8 @@ object bits {
         )
     }
 
-  def jsI18n(implicit ctx: Context) = i18nJsObject(i18nKeys)
+  def jsI18n(implicit ctx: Context) = i18nJsObject(i18nKeys) ++
+    lidraughts.i18n.JsDump.keysToObject(i18nSwissKeys, lidraughts.i18n.I18nDb.Swiss, ctx.lang)
 
   private val i18nKeys = List(
     trans.join,
@@ -101,5 +102,10 @@ object bits {
     trans.standByX,
     trans.averageOpponent,
     trans.tournamentComplete
+  )
+
+  private val i18nSwissKeys = List(
+    trans.swiss.byes,
+    trans.swiss.absences
   )
 }

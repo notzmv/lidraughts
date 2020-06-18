@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="swissTournaments">Zwitserse toernooien</string>
+  <string name="byes">Byes</string>
+  <string name="absences">Aantal afwezig</string>
 </resources>

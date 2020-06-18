@@ -1236,6 +1236,8 @@ val `pasteYourPdnTextHereUpToNbGames` = new Translated("pasteYourPdnTextHereUpTo
 
 object swiss {
 val `swissTournaments` = new Translated("swissTournaments", Swiss)
+val `byes` = new Translated("byes", Swiss)
+val `absences` = new Translated("absences", Swiss)
 }
 
 }
