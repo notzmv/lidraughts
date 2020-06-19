@@ -14,6 +14,7 @@ object LangList {
 
   private[i18n] val all = Map(
     Lang("en", "GB") -> "English",
+    Lang("be", "BY") -> "Беларуская",
     Lang("cs", "CZ") -> "čeština",
     Lang("de", "DE") -> "Deutsch",
     Lang("el", "GR") -> "Ελληνικά",
