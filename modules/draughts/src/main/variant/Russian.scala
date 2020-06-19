@@ -11,7 +11,7 @@ case object Russian extends Variant(
   key = "russian",
   name = "Russian",
   shortName = "Russian",
-  title = "Russian draughts",
+  title = "Choice of capture, promotion during a multi-capture.",
   standardInitialPosition = false,
   boardSize = Board.D64
 ) {
