@@ -9,6 +9,7 @@ $(function() {
       for (var k in dests) dests[k] = dests[k].match(/.{2}/g);
       cg.set({
         turnColor: cg.state.orientation,
+        boardSize: [10, 10],
         captureLength: 1,
         movable: {
           free: false,

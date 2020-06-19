@@ -198,7 +198,7 @@
       var resizable = !!$this.data('resizable');
       var config = {
         coordinates: 0,
-        boardSize: board ? board.split('x').map(s => parseInt(s)) : undefined,
+        boardSize: board ? board.split('x').map(s => parseInt(s)) : [10, 10],
         viewOnly: !playable,
         resizable: resizable,
         fen: $this.data('fen') || lidraughts.readServerFen($this.data('z')),
