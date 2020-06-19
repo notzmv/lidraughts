@@ -375,7 +375,7 @@ object Pref {
     coords = Coords.OUTSIDE,
     replay = Replay.ALWAYS,
     gameResult = GameResult.DRAUGHTS,
-    coordSystem = CoordSystem.FIELDNUMBERS,
+    coordSystem = CoordSystem.ALGEBRAIC,
     clockTenths = ClockTenths.LOWTIME,
     challenge = Challenge.ALWAYS,
     message = Message.ALWAYS,

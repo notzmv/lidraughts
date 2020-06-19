@@ -223,7 +223,7 @@ object Api extends LidraughtsController {
     lidraughts.tournament.TournamentRepo byId id flatMap {
       _ ?? { tour =>
         GlobalLinearLimitPerIP(HTTPRequest lastRemoteAddress req) {
-          val flags = Game.requestPdnFlags(req, lidraughts.pref.Pref.default.draughtsResult, extended = false, lidraughts.pref.Pref.default.canAlgebraic)
+          val flags = Game.requestPdnFlags(req, lidraughts.pref.Pref.default.draughtsResult, extended = false, algebraicPref = false)
           val config = GameApiV2.ByTournamentConfig(
             tournamentId = tour.id,
             format = GameApiV2.Format byRequest req,

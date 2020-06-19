@@ -52,12 +52,12 @@ object Game extends LidraughtsController {
 
   def exportByUser(username: String) = OpenOrScoped()(
     open = ctx => handleExport(username, ctx.me, ctx.req, ctx.pref.draughtsResult, ctx.pref.canAlgebraic, oauth = false),
-    scoped = req => me => handleExport(username, me.some, req, defaultPref.draughtsResult, defaultPref.canAlgebraic, oauth = true)
+    scoped = req => me => handleExport(username, me.some, req, defaultPref.draughtsResult, algebraicPref = false, oauth = true)
   )
 
   def apiExportByUser(username: String) = AnonOrScoped()(
     anon = req => handleExport(username, none, req, defaultPref.draughtsResult, defaultPref.canAlgebraic, oauth = false),
-    scoped = req => me => handleExport(username, me.some, req, defaultPref.draughtsResult, defaultPref.canAlgebraic, oauth = true)
+    scoped = req => me => handleExport(username, me.some, req, defaultPref.draughtsResult, algebraicPref = false, oauth = true)
   )
 
   private def handleExport(username: String, me: Option[lidraughts.user.User], req: RequestHeader, draughtsResult: Boolean, algebraicPref: Boolean, oauth: Boolean) =
@@ -105,7 +105,7 @@ object Game extends LidraughtsController {
       val config = GameApiV2.ByIdsConfig(
         ids = req.body.split(',').take(300),
         format = GameApiV2.Format byRequest req,
-        flags = requestPdnFlags(req, defaultPref.draughtsResult, extended = false, defaultPref.canAlgebraic),
+        flags = requestPdnFlags(req, defaultPref.draughtsResult, extended = false, algebraicPref = false),
         perSecond = MaxPerSecond(20)
       )
       Ok.chunked(Env.api.gameApiV2.exportByIds(config)).withHeaders(
