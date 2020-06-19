@@ -223,6 +223,8 @@
   <string name="thisGameIsRated">Deze partij telt mee voor rating</string>
   <string name="rematch">Opnieuw spelen</string>
   <string name="rematchOfferSent">Uitnodiging voor nieuwe partij verstuurd</string>
+  <string name="rematchOfferSentWhite">Wit biedt een nieuwe partij aan</string>
+  <string name="rematchOfferSentBlack">Zwart biedt een nieuwe partij aan</string>
   <string name="rematchOfferAccepted">Uitnodiging voor nieuwe partij geaccepteerd</string>
   <string name="rematchOfferCanceled">Uitnodiging voor nieuwe partij geannuleerd</string>
   <string name="rematchOfferDeclined">Uitnodiging voor nieuwe partij geweigerd</string>
@@ -596,6 +598,7 @@ Een URL per regel</string>
   <string name="thisAccountIsClosed">Dit account is gesloten.</string>
   <string name="invalidUsernameOrPassword">Ongeldige gebruikersnaam of wachtwoord</string>
   <string name="incorrectPassword">Onjuist wachtwoord</string>
+  <string name="invalidAuthenticationCode">Onjuiste authenticatie code</string>
   <string name="emailMeALink">Email me een link</string>
   <string name="currentPassword">Huidig wachtwoord</string>
   <string name="newPassword">Nieuw wachtwoord</string>

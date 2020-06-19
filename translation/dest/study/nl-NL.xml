@@ -9,8 +9,8 @@
   <string name="whatAreStudies">Wat zijn studies?</string>
   <string name="allStudies">Alle studies</string>
   <string name="studiesCreatedByX">Studies gemaakt door %s</string>
-  <string name="noneYet">Nog geen...</string>
-  <string name="hot">Populair</string>
+  <string name="noneYet">Nog geen.</string>
+  <string name="hot">Trending</string>
   <string name="dateAddedNewest">Datum toegevoegd (nieuwste)</string>
   <string name="dateAddedOldest">Datum toegevoegd (oudste)</string>
   <string name="recentlyUpdated">Recent bijgewerkt</string>
@@ -62,6 +62,7 @@
   <string name="studyUrl">Studie URL</string>
   <string name="currentChapterUrl">Huidige hoofdstuk URL</string>
   <string name="youCanPasteThisInTheForumToEmbedTheChapter">Je kan dit op het forum plakken om het hoofdstuk in te sluiten</string>
+  <string name="startAtInitialPosition">Beginnen bij beginstand</string>
   <string name="startAtX">Beginnen bij %s</string>
   <string name="embedThisChapter">Dit hoofdstuk in je website of blog insluiten</string>
   <string name="readMoreAboutEmbeddingAStudyChapter">Lees meer over het insluiten van een studiehoofdstuk</string>
