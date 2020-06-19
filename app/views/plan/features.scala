@@ -34,8 +34,8 @@ object features {
               "Correspondence draughts with conditional premoves"
             ),
             tr(check)(
-              "Standard draughts and ",
-              a(href := routes.Page.variantHome)("the variants Frisian, Antidraughts, Breakthrough, Frysk!")
+              "International draughts and ",
+              a(href := routes.Page.variantHome)("5 variants (Frisian, Russian, Antidraughts, ...)")
             ),
             tr(custom("30 per day"))(
               s"Deep $engineName server analysis"
@@ -82,7 +82,7 @@ object features {
               "Forum, teams, messaging, friends, challenges"
             ),
             tr(check)(
-              "Available in 17 languages"
+              "Available in 18 languages"
             ),
             tr(check)(
               "Light/dark theme, custom boards, pieces and background"
