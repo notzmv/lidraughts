@@ -169,7 +169,7 @@ $(function() {
     if (gameId.length < 8) return;
     $.ajax({
       method: 'get',
-      url: '/' + gameId + '/mini',
+      url: '/' + gameId + '/mini?result=1',
       success: (result) => {
         if (checkExistingGames(result)) {
           insertBoard(result);
