@@ -87,7 +87,11 @@ object User extends LidraughtsController {
     OptionFuResult(lidraughts.user.UserRepo named username) { user =>
       (GameRepo lastPlayedPlaying user) orElse
         (GameRepo lastPlayed user) flatMap {
-          _.?? { pov => fuccess(html.game.bits.mini(pov, true)) }
+          _.?? { p =>
+            Env.round.proxy updateIfPresent p.game flatMap { game =>
+              fuccess(html.game.bits.mini(Pov(game, p.color), true))
+            }
+          }
         }
     }
   }
