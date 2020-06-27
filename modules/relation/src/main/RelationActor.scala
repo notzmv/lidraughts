@@ -121,7 +121,7 @@ private[relation] final class RelationActor(
   private def notifyFollowersFriendLeaves(friendsLeaving: List[LightUser]) =
     friendsLeaving foreach { leaving =>
       api fetchFollowersFromSecondary leaving.id map online.userIds.intersect foreach { ids =>
-        if (ids.nonEmpty) bus.publish(SendTos(ids.toSet, "following_leaves", leaving.titleName), 'socketUsers)
+        if (ids.nonEmpty) bus.publish(SendTos(ids.toSet, "following_leaves", leaving.fullTitleName), 'socketUsers)
       }
     }
 
