@@ -13,7 +13,9 @@ object Mobile {
     def mustUpgrade(v: String) = mustUpgradeFromVersions(v)
 
     // only call if a more recent version is available in both stores!
-    private val mustUpgradeFromVersions = Set("0.0.0")
+    private val mustUpgradeFromVersions = Set(
+      "1.0.0", "1.0.1", "1.0.2", "1.0.3", "1.0.4" /* no support for 64-variants */
+    )
 
   }
 
