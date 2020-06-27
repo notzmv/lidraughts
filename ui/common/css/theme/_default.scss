@@ -96,7 +96,7 @@ $c-font-shadow: white;
 $text-shadow: 0 1px 0 $c-font-shadow;
 
 $c-bot: $c-fancy;
-$c-title64: complement(c-clearer($c-primary, 12%));
+$c-title64: hsl(29, 77%, 41%);
 
 $c-page-input: $c-bg-low;
 
