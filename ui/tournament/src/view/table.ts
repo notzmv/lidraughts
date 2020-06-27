@@ -27,9 +27,14 @@ function featured(f): VNode {
 }
 
 function duelPlayerMeta(p: DuelPlayer) {
+  const title64 = p.t && p.t.endsWith('-64');
   return [
     h('em.rank', '#' + p.k),
-    p.t ? h('em.title', p.t) : null,
+    p.t ? h(
+      'em.title',
+      title64 ? { attrs: {'data-title64': true } } : (p.t == 'BOT' ? { attrs: {'data-bot': true } } : {}),
+      title64 ? p.t.slice(0, p.t.length - 3) : p.t
+    ) : null,
     h('em.rating', '' + p.r)
   ];
 }

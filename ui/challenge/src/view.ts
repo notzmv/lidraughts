@@ -125,14 +125,19 @@ function timeControl(c: TimeControl): string {
 
 function renderUser(u?: ChallengeUser): VNode {
   if (!u) return h('span', 'Open challenge');
-  const rating = u.rating + (u.provisional ? '?' : '');
+  const rating = u.rating + (u.provisional ? '?' : ''),
+    title64 = u.title && u.title.endsWith('-64');
   return h('a.ulpt.user-link', {
     attrs: { href: `/@/${u.name}`},
     class: { online: !!u.online }
   }, [
     h('i.line' + (u.patron ? '.patron' : '')),
     h('name', [
-      u.title && h('span.title', u.title == 'BOT' ? { attrs: { 'data-bot': true } } : {}, u.title + ' '),
+      u.title && h(
+        'span.title', 
+        title64 ? { attrs: {'data-title64': true } } : (u.title == 'BOT' ? { attrs: { 'data-bot': true } } : {}), 
+        (title64 ? u.title.slice(0, u.title.length - 3) : u.title) + ' '
+      ), 
       u.name + ' (' + rating + ') '
     ]),
       h('signal', u.lag === undefined ? [] : [1, 2, 3, 4].map((i) => h('i', {

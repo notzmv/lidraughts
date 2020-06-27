@@ -28,7 +28,7 @@ export default function(opts: RoundOpts): void {
           if (data.tv && data.tv.channel == o.channel) li.reload();
           else $('.tv-channels .' + o.channel + ' .champion').html(
             o.player ? [
-              o.player.title,
+              o.player.title ? (o.player.title.endsWith('-64') ? o.player.title.slice(0, o.player.title.length - 3) : o.player.title) : undefined,
               o.player.name,
               o.player.rating
             ].filter(x => x).join('&nbsp') : 'Anonymous');

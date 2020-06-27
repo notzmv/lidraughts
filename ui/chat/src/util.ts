@@ -2,7 +2,8 @@ import { h } from 'snabbdom'
 import { VNode } from 'snabbdom/vnode'
 
 export function userLink(u: string, title?: string) {
-  const trunc = u.substring(0, 14);
+  const trunc = u.substring(0, 14),
+    title64 = title && title.endsWith('-64');
   return h('a', {
     // can't be inlined because of thunks
     class: {
@@ -15,8 +16,9 @@ export function userLink(u: string, title?: string) {
   }, title ? [
     h(
       'span.title',
-      title == 'BOT' ? { attrs: {'data-bot': true } } : {},
-      title), trunc
+      title64 ? { attrs: {'data-title64': true } } : (title == 'BOT' ? { attrs: {'data-bot': true } } : {}),
+      title64 ? title.slice(0, title.length - 3) : title
+    ), trunc
   ] : [trunc]);
 }
 

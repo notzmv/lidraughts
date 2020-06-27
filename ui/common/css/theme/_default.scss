@@ -54,7 +54,7 @@ $c-brag-over: #fff; /* text over brag background */
 /* Error: red */
 $c-red: hsl(0, 60%, 50%);
 $c-error: $c-red;
-$c-error-over: #fff; /* text over brag background */
+$c-error-over: #fff; /* text over error background */
 
 /* Good: green */
 $c-good: $c-secondary;
@@ -70,7 +70,7 @@ $c-bad-over: $c-error-over;
 
 /* Fancy: pink */
 $c-fancy: hsl(294, 61%, 62%);
-$c-fancy-over: white; /* text over brag background */
+$c-fancy-over: white; /* text over fancy background */
 
 $c-link: $c-primary;
 $c-link-dim: $c-primary-dim;
@@ -96,6 +96,7 @@ $c-font-shadow: white;
 $text-shadow: 0 1px 0 $c-font-shadow;
 
 $c-bot: $c-fancy;
+$c-title64: complement(c-clearer($c-primary, 12%));
 
 $c-page-input: $c-bg-low;
 

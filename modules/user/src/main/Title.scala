@@ -24,6 +24,17 @@ object Title {
     Title("MFF") -> "Woman FMJD Master",
     Title("MNF") -> "Woman National Master",
     Title("cMNF") -> "Woman Candidate National Master",
+    Title("GMI-64") -> "International Grandmaster (64 squares)",
+    Title("MI-64") -> "International Master (64 squares)",
+    Title("MF-64") -> "FMJD Master (64 squares)",
+    Title("GMN-64") -> "National Grandmaster (64 squares)",
+    Title("MN-64") -> "National Master (64 squares)",
+    Title("cMN-64") -> "Candidate National Master (64 squares)",
+    Title("GMIF-64") -> "Woman International Grandmaster (64 squares)",
+    Title("MIF-64") -> "Woman International Master (64 squares)",
+    Title("MFF-64") -> "Woman FMJD Master (64 squares)",
+    Title("MNF-64") -> "Woman National Master (64 squares)",
+    Title("cMNF-64") -> "Woman Candidate National Master (64 squares)",
     LM -> "Lidraughts Master",
     BOT -> "Draughts Robot"
   )

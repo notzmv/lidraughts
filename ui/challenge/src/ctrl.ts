@@ -36,7 +36,7 @@ export default function(opts: ChallengeOpts, data: ChallengeData, redraw: () => 
 
   function showUser(user: ChallengeUser) {
     var rating = user.rating + (user.provisional ? '?' : '');
-    var fullName = (user.title ? user.title + ' ' : '') + user.name;
+    var fullName = (user.title ? (user.title.endsWith('-64') ? user.title.slice(0, user.title.length - 3) : user.title) + ' ' : '') + user.name;
     return fullName + ' (' + rating + ')';
   }
 

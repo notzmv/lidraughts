@@ -124,11 +124,14 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper =>
   ): Frag = userIdLink(userId.some, cssClass)
 
   def titleTag(title: Option[Title]): Option[Frag] = title map { t =>
+    val title64 = t.value.endsWith("-64")
     frag(
       span(
-        cls := s"title${(t == Title.BOT) ?? " data-bot"}",
+        cls := "title",
+        dataBot(t),
+        title64 option dataTitle64,
         st.title := Title.titleName(t)
-      )(t),
+      )(if (title64) t.value.dropRight(3) else t.value),
       nbsp
     )
   }

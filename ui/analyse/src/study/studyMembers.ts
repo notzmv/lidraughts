@@ -159,7 +159,7 @@ export function view(ctrl: StudyCtrl): VNode {
     var u = member.user;
     return h('span.user-link.ulpt', {
       attrs: { 'data-href': '/@/' + u.name }
-    }, (u.title ? u.title + ' ' : '') + u.name);
+    }, (u.title ? (u.title.endsWith('-64') ? u.title.slice(0, u.title.length - 3) : u.title) + ' ' : '') + u.name);
   };
 
   function statusIcon(member: StudyMember) {

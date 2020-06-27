@@ -51,6 +51,12 @@
   .title {
     color: $c-brag;
     font-weight: bold;
+    &[data-bot] {
+      color: $c-bot;
+    }
+    &[data-title64] {
+      color: $c-title64;
+    }
   }
   .rank {
     @extend %box-radius;

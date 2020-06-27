@@ -54,7 +54,16 @@ export function ratio2percent(r: number) {
 }
 
 export function playerName(p) {
-  return p.title ? [h('span.title', p.title), ' ' + p.name] : p.name;
+  if (!p.title) return p.name;
+  const title64 = p.title.endsWith('-64');
+  return [
+    h(
+      'span.title',
+      title64 ? { attrs: {'data-title64': true } } : (p.title == 'BOT' ? { attrs: {'data-bot': true } } : {}),
+      title64 ? p.title.slice(0, p.title.length - 3) : p.title
+    ), 
+    ' ' + p.name
+  ];
 }
 
 export function player(p, asLink: boolean, withRating: boolean, defender: boolean, withRatingDiff: boolean = true) {

@@ -19,7 +19,8 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
       ));
 
   if (user) {
-    const connecting = !player.onGame && ctrl.firstSeconds && user.online;
+    const connecting = !player.onGame && ctrl.firstSeconds && user.online,
+      title64 = user.title && user.title.endsWith('-64');
     return h(`div.ruser-${position}.ruser.user-link`, {
       class: {
         online: player.onGame,
@@ -42,8 +43,8 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
       }, user.title ? [
         h(
           'span.title',
-          user.title == 'BOT' ? { attrs: {'data-bot': true } } : {},
-          user.title
+          title64 ? { attrs: {'data-title64': true } } : (user.title == 'BOT' ? { attrs: {'data-bot': true } } : {}),
+          title64 ? user.title.slice(0, user.title.length - 3) : user.title
         ), ' ', user.username
       ] : [user.username]),
       rating ? h('rating', rating + (player.provisional ? '?' : '')) : null,
@@ -75,7 +76,7 @@ export function userHtml(ctrl: RoundController, player: Player, position: Positi
 
 export function userTxt(ctrl: RoundController, player: Player) {
   if (player.user) {
-    return (player.user.title ? player.user.title + ' ' : '') + player.user.username;
+    return (player.user.title ? (player.user.title.endsWith('-64') ? player.user.title.slice(0, player.user.title.length - 3) : player.user.title) + ' ' : '') + player.user.username;
   } else if (player.ai) return aiName(ctrl, player.ai)
   else return 'Anonymous';
 }

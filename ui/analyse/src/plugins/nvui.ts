@@ -241,7 +241,7 @@ function userHtml(ctrl: AnalyseController, player: Player) {
   return user ? h('span', [
     h('a', {
       attrs: { href: '/@/' + user.username }
-    }, user.title ? `${user.title} ${user.username}` : user.username),
+    }, user.title ? `${user.title.endsWith('-64') ? user.title.slice(0, user.title.length - 3) : user.title} ${user.username}` : user.username),
     rating ? ` ${rating}` : ``,
     ' ' + ratingDiff,
   ]) : 'Anonymous';

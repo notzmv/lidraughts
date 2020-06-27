@@ -96,12 +96,14 @@ trait GameHelper { self: I18nHelper with UserHelper with AiHelper with StringHel
     player.aiLevel.fold[Frag](
       player.userId.flatMap(lightUser).fold[Frag](lidraughts.user.User.anonymous) { user =>
         val title = user.title ifTrue withTitle map { t =>
+          val title64 = t.endsWith("-64")
           frag(
             span(
               cls := "title",
               (Title(t) == Title.BOT) option dataBotAttr,
+              title64 option dataTitle64,
               st.title := Title titleName Title(t)
-            )(t),
+            )(if (title64) t.dropRight(3) else t),
             " "
           )
         }

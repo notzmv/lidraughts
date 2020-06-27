@@ -5,12 +5,15 @@ var xhr = require('../xhr');
 function playerHtml(p, rating, provisional, fmjd, href) {
   var onlineStatus = p.online === undefined ? 'online' : (p.online ? 'online' : 'offline');
   var html = '<a class="text ulpt user-link ' + onlineStatus;
-  if (href)
-    html += '" href="' + href + '" target="_blank">';
-  else
-    html += '" href="/@/' + p.name + '">';
+  if (href) html += '" href="' + href + '" target="_blank">';
+  else html += '" href="/@/' + p.name + '">';
   html += p.patron ? '<i class="line patron"></i>' : '<i class="line"></i>';
-  html += (p.title ? ('<span class="title">' + p.title + '</span>') + ' ' : '') + p.name;
+  if (p.title) {
+    var title64 = p.title && p.title.endsWith('-64'),
+      dataTitle = title64 ? ' data-title64' : (p.title == 'BOT' ? ' data-bot' : '');
+    html += '<span class="title"'+ dataTitle + '>' + (title64 ? p.title.slice(0, p.title.length - 3) : p.title) + '</span>' + ' ';
+  }
+  html += p.name;
   if (fmjd) {
     html += '<em>' + fmjd + '</em> FMJD';
   } else {

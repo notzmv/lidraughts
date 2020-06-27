@@ -220,5 +220,5 @@ function drawTime(n: Notification) {
 
 function userFullName(u?: LightUser) {
   if (!u) return 'Anonymous';
-  return u.title ? u.title + ' ' + u.name : u.name;
+  return u.title ? (u.title.endsWith('-64') ? u.title.slice(0, u.title.length - 3) : u.title) + ' ' + u.name : u.name;
 }

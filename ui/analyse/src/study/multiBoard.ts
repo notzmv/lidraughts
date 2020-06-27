@@ -152,7 +152,7 @@ function makePreview(study: StudyCtrl) {
 
 function makePlayer(player: ChapterPreviewPlayer): VNode {
   return h('div.player', [
-    player.title ? `${player.title} ${player.name}` : player.name,
+    player.title ? `${player.title.endsWith('-64') ? player.title.slice(0, player.title.length - 3) : player.title} ${player.name}` : player.name,
     player.rating && h('span', '' + player.rating)
   ]);
 }

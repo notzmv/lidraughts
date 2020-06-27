@@ -5,13 +5,13 @@ var status = require('game/status');
 
 function miniPairing(ctrl) {
   return function(pairing) {
-    var game = pairing.game;
-    var player = pairing.player;
-    var result = pairing.game.status >= status.ids.aborted ? (
-      pairing.winnerColor === 'white' ? (ctrl.pref.draughtsResult ? '2-0' : '1-0')
-      : (pairing.winnerColor === 'black' ? (ctrl.pref.draughtsResult ? '0-2' : '0-1')
-      : (ctrl.pref.draughtsResult ? '1-1' : '½-½'))
-    ) : '*';
+    var game = pairing.game,
+      player = pairing.player,
+      result = pairing.game.status >= status.ids.aborted ? (
+        pairing.winnerColor === 'white' ? (ctrl.pref.draughtsResult ? '2-0' : '1-0')
+        : (pairing.winnerColor === 'black' ? (ctrl.pref.draughtsResult ? '0-2' : '0-1')
+        : (ctrl.pref.draughtsResult ? '1-1' : '½-½'))
+      ) : '*';
     return m('a', {
       class: (ctrl.data.host.gameId === game.id ? 'host ' : '') + (ctrl.evals !== undefined ? 'gauge_displayed' : ''),
       href: '/' + game.id + '/' + game.orient
@@ -35,7 +35,7 @@ function miniPairing(ctrl) {
         m('div.vstext__op', [
           player.name,
           m('br'),
-          player.title ? player.title + ' ' : '',
+          player.title ? (player.title.endsWith('-64') ? player.title.slice(0, player.title.length - 3) : player.title) + ' ' : '',
           player.officialRating ? ('FMJD ' + player.officialRating) : player.rating
         ])
       ]),

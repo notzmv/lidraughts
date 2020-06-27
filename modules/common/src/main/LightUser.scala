@@ -9,7 +9,8 @@ case class LightUser(
     isPatron: Boolean
 ) {
 
-  def titleName = title.fold(name)(_ + " " + name)
+  def shortTitle = title.map(t => if (t.endsWith("-64")) t.dropRight(3) else t)
+  def titleName = shortTitle.fold(name)(_ + " " + name)
 
   def isBot = title has "BOT"
 }

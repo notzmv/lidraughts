@@ -71,7 +71,13 @@ object bits {
 
   private def playerTitle(player: Player) =
     lightUser(player.userId).flatMap(_.title) map Title.apply map { t =>
-      span(cls := "title", dataBot(t), title := Title titleName t)(t.value)
+      val title64 = t.value.endsWith("-64")
+      span(
+        cls := "title",
+        dataBot(t),
+        title64 option dataTitle64,
+        title := Title titleName t
+      )(if (title64) t.value.dropRight(3) else t.value)
     }
 
   def vstext(pov: Pov, withResult: Boolean = false)(ctxOption: Option[Context]): Frag =

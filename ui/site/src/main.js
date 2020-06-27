@@ -162,10 +162,12 @@
           empty: '<div class="empty">No player found</div>',
           pending: lidraughts.spinnerHtml,
           suggestion: function(o) {
-            var tag = opts.tag || 'a';
+            var tag = opts.tag || 'a', 
+              title64 = o.title && o.title.endsWith('-64'),
+              dataTitle = title64 ? ' data-title64' : (o.title == 'BOT' ? ' data-bot' : '');
             return '<' + tag + ' class="ulpt user-link' + (o.online ? ' online' : '') + '" ' + (tag === 'a' ? '' : 'data-') + 'href="/@/' + o.name + '">' +
-              '<i class="line' + (o.patron ? ' patron' : '') + '"></i>' + (o.title ? '<span class="title">' + o.title + '</span>&nbsp;' : '')  + o.name +
-              '</' + tag + '>';
+              '<i class="line' + (o.patron ? ' patron' : '') + '"></i>' + (o.title ? '<span class="title"' + dataTitle + '>' + 
+              (title64 ? o.title.slice(0, o.title.length - 3) : o.title) + '</span>&nbsp;' : '') + o.name + '</' + tag + '>';
           }
         }
       }).on('typeahead:render', function() {
@@ -686,7 +688,10 @@
       if (!data || !data.nb) return this.element.addClass('none');
       if (this.number.length) this.number.text(data.nb);
       if (data.users) {
-        var tags = data.users.map($.userLink);
+        var tags = data.users.map(u => {
+          const split = u.split(' '), title64 = split.length > 1 && split[0].endsWith('-64');
+          return $.userLink(title64 ? split[0].slice(0, split[0].length - 3) + ' ' + split[1] : u);
+        });
         if (data.anons === 1) tags.push('Anonymous');
         else if (data.anons) tags.push('Anonymous (' + data.anons + ')');
         this.list.html(tags.join(', '));
@@ -712,7 +717,8 @@
     };
     var renderUser = function(user) {
       var icon = '<i class="line' + (user.patron ? ' patron' : '') + '"></i>';
-      var titleTag = user.title ? ('<span class="title"' + (user.title === 'BOT' ? ' data-bot' : '') + '>' + user.title + '</span>&nbsp;') : '';
+      var title64 = user.title && user.title.endsWith('-64');
+      var titleTag = user.title ? ('<span class="title"' + (user.title === 'BOT' ? ' data-bot' : (title64 ? ' data-title64' : '')) + '>' + (title64 ? user.title.slice(0, user.title.length - 3) : user.title) + '</span>&nbsp;') : '';
       var url = '/@/' + user.name;
       var tvButton = user.playing ? '<a data-icon="1" class="tv ulpt" data-pt-pos="nw" href="' + url + '/tv" data-href="' + url + '"></a>' : '';
       var studyButton = user.studying ? '<a data-icon="4" class="friend-study" href="' + url + '/studyTv"></a>' : '';

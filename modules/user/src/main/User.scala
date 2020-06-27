@@ -60,9 +60,13 @@ case class User(
 
   def usernameWithBestRating = s"$username (${perfs.bestRating})"
 
-  def titleUsername = title.fold(username)(t => s"$t $username")
+  private def shortTitle(t: String) = if (t.endsWith("-64")) t.dropRight(3) else t
 
-  def titleUsernameWithBestRating = title.fold(usernameWithBestRating)(_ + " " + usernameWithBestRating)
+  def titleUsername = title.fold(username)(t => s"${shortTitle(t.value)} $username")
+
+  def titleUsernameWithBestRating = title.fold(usernameWithBestRating) { t =>
+    shortTitle(t.value) + " " + usernameWithBestRating
+  }
 
   def profileOrDefault = profile | Profile.default
 
