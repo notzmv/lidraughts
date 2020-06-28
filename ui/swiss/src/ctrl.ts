@@ -144,7 +144,7 @@ export default class SwissCtrl {
     this.reloadSoonThrottle();
   }
 
-  private isIn = () => this.data.me && !this.data.me.absent;
+  private isIn = () => !!this.data.me && !this.data.me.absent;
 
   private redrawNbRounds = () =>
     $('.swiss__meta__round').text(`${this.data.round}/${this.data.nbRounds}`);

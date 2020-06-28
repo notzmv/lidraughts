@@ -3,13 +3,12 @@ import { VNode } from 'snabbdom/vnode'
 import klass from 'snabbdom/modules/class';
 import attributes from 'snabbdom/modules/attributes';
 import { Draughtsground } from 'draughtsground';
-import { SwissOpts, Redraw } from './interfaces';
+import { SwissOpts } from './interfaces';
 import SwissCtrl from './ctrl';
 import * as chat from 'chat';
 
 const patch = init([klass, attributes]);
 
-import makeCtrl from './ctrl';
 import view from './view/main';
 
 export function start(opts: SwissOpts) {
@@ -17,8 +16,8 @@ export function start(opts: SwissOpts) {
   const li = window.lidraughts;
   const element = document.querySelector('main.swiss') as HTMLElement;
   li.socket = li.StrongSocket(
-    '/swiss/' + opts.data.id + '/socket/v3', opts.data.socketVersion, {
-      receive: (t, d) => ctrl.socket.receive(t, d)
+    '/swiss/' + opts.data.id + '/socket/v3', opts.data.socketVersion || 0, {
+      receive: (t: string, d: any) => ctrl.socket.receive(t, d)
     });
   opts.classes = element.getAttribute('class');
   opts.socketSend = li.socket.send;

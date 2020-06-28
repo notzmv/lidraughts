@@ -34,7 +34,7 @@ function miniBoard(board: Board, boardSize: BoardData) {
       'data-live': board.id,
       'data-color': 'white',
       'data-fen': board.fen,
-      'data-lastmove': board.lastMove,
+      'data-lastmove': board.lastMove || '',
       'data-board': `${boardSize.size[0]}x${boardSize.size[1]}`,
     },
     hook: {
