@@ -774,11 +774,11 @@ Vienā līnijā  - tikai vienu norādi.</string>
   <string name="tournamentDoesNotExist">Šāds turnīrs neeksistē.</string>
   <string name="tournamentMayHaveBeenCanceled">Var gadīties, ka tas tika atcelts, ja visi spēlētāji pameta turnīru pirms tā sākuma.</string>
   <string name="returnToTournamentsHomepage">Atgriezties turnīru lapā</string>
-  <string name="weeklyPerfTypeRatingDistribution">Mēneša %s reitingu sadalījums</string>
-  <plurals name="nbPerfTypePlayersThisWeek">
-    <item quantity="zero">%1$s %2$s spēlētāji šonedēļ.</item>
-    <item quantity="one">%1$s %2$s spēlētājs šonedēļ.</item>
-    <item quantity="other">%1$s %2$s spēlētāji šonedēļ.</item>
+  <string name="monthlyPerfTypeRatingDistribution">Mēneša %s reitingu sadalījums</string>
+  <plurals name="nbPerfTypePlayersThisMonth">
+    <item quantity="zero">%1$s %2$s spēlētāji šomēnes.</item>
+    <item quantity="one">%1$s %2$s spēlētājs šomēnes.</item>
+    <item quantity="other">%1$s %2$s spēlētāji šomēnes.</item>
   </plurals>
   <string name="yourPerfTypeRatingIsRating">Tavs %1$s reitings ir %2$s.</string>
   <string name="youAreBetterThanPercentOfPerfTypePlayers">Tu esi labāks kā %1$s starp %2$s spēlētājiem.</string>

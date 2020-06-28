@@ -554,7 +554,7 @@
   <string name="tournamentDoesNotExist">Цього турніру не існує.</string>
   <string name="tournamentMayHaveBeenCanceled">Він міг бути скасований, якщо всі гравці залишили його до початку.</string>
   <string name="returnToTournamentsHomepage">Повернутися до домашньої сторінки турніру</string>
-  <string name="weeklyPerfTypeRatingDistribution">Місячний %s розподіл за рейтинґом</string>
+  <string name="monthlyPerfTypeRatingDistribution">Місячний %s розподіл за рейтинґом</string>
   <string name="yourPerfTypeRatingIsRating">Ваш %1$s рейтинг становить %2$s.</string>
   <string name="youAreBetterThanPercentOfPerfTypePlayers">Ви кращі від %1$s із %2$s гравців.</string>
   <string name="youDoNotHaveAnEstablishedPerfTypeRating">Ваш рейтинґ %s ще не визначений.</string>

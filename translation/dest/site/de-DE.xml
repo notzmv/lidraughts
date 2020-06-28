@@ -628,8 +628,8 @@
   <string name="tournamentDoesNotExist">Dieses Turnier existiert nicht.</string>
   <string name="tournamentMayHaveBeenCanceled">Womöglich wurde es abgesagt, weil zu Turnierbeginn kein Spieler (mehr) registriert war.</string>
   <string name="returnToTournamentsHomepage">Zurück zur Turnier-Homepage</string>
-  <string name="weeklyPerfTypeRatingDistribution">Monatliche %s-Wertungsverteilung</string>
-  <plurals name="nbPerfTypePlayersThisWeek">
+  <string name="monthlyPerfTypeRatingDistribution">Monatliche %s-Wertungsverteilung</string>
+  <plurals name="nbPerfTypePlayersThisMonth">
     <item quantity="one">Ein %2$s Spieler diese Monat.</item>
     <item quantity="other">%1$s %2$s Spieler diese Monat.</item>
   </plurals>

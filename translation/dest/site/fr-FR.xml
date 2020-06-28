@@ -632,10 +632,10 @@
   <string name="tournamentDoesNotExist">Ce tournoi n\'existe pas.</string>
   <string name="tournamentMayHaveBeenCanceled">Il a peut-être été annulé, si tous les joueurs l\'ont quitté avant le début.</string>
   <string name="returnToTournamentsHomepage">Retour à la page des tournois</string>
-  <string name="weeklyPerfTypeRatingDistribution">Distribution hebdomadaire des classements en %s</string>
-  <plurals name="nbPerfTypePlayersThisWeek">
-    <item quantity="one">Un joueur de %2$s cette semaine.</item>
-    <item quantity="other">%1$s joueurs de %2$s cette semaine.</item>
+  <string name="monthlyPerfTypeRatingDistribution">Distribution mensuelle des classements en %s</string>
+  <plurals name="nbPerfTypePlayersThisMonth">
+    <item quantity="one">Un joueur de %2$s ce mois-ci.</item>
+    <item quantity="other">%1$s joueurs de %2$s ce mois-ci.</item>
   </plurals>
   <string name="yourPerfTypeRatingIsRating">Votre classement en %1$s est de %2$s.</string>
   <string name="youAreBetterThanPercentOfPerfTypePlayers">Vous êtes meilleur que %1$s des joueurs de %2$s.</string>

@@ -697,13 +697,7 @@
   <string name="tournamentDoesNotExist">Гэты турнір не існуе.</string>
   <string name="tournamentMayHaveBeenCanceled">Магчыма, ён быў скасаваны, калі ўсе гульцы выйшлі да пачатку.</string>
   <string name="returnToTournamentsHomepage">Вярнуцца да галоўнай старонкі турніраў</string>
-  <string name="weeklyPerfTypeRatingDistribution">Штотыднёвае размеркаванне па рэйтынгу %s</string>
-  <plurals name="nbPerfTypePlayersThisWeek">
-    <item quantity="one">%1$s гулец у %2$s на гэтым тыдні.</item>
-    <item quantity="few">%1$s гульцы у %2$s на гэтым тыдні.</item>
-    <item quantity="many">%1$s гульцоў у %2$s на гэтым тыдні.</item>
-    <item quantity="other">%1$s гульцоў у %2$s на гэтым тыдні.</item>
-  </plurals>
+  <string name="monthlyPerfTypeRatingDistribution">Штомесячны размеркаванне па рэйтынгу %s</string>
   <string name="yourPerfTypeRatingIsRating">Ваш рэйтынг у рэжыме «%1$s» – %2$s.</string>
   <string name="youAreBetterThanPercentOfPerfTypePlayers">Вы гуляеце ў «%1$s» лепей за %2$s гульцоў.</string>
   <string name="youDoNotHaveAnEstablishedPerfTypeRating">Ваш рэйтынг у рэжыме «%s» яшчэ не вызначаны.</string>

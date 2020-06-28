@@ -818,8 +818,8 @@
   <string name="tournamentDoesNotExist">该锦标赛不存在。</string>
   <string name="tournamentMayHaveBeenCanceled">假如所有的选手在比赛开始之前离开锦标赛可能已被取消。</string>
   <string name="returnToTournamentsHomepage">返回锦标赛主页</string>
-  <string name="weeklyPerfTypeRatingDistribution">本月%s的积分分布</string>
-  <plurals name="nbPerfTypePlayersThisWeek">
+  <string name="monthlyPerfTypeRatingDistribution">本月%s的积分分布</string>
+  <plurals name="nbPerfTypePlayersThisMonth">
     <item quantity="one">本月有%1$s位棋手下%2$s</item>
     <item quantity="other">本月有%1$s位棋手下%2$s</item>
   </plurals>

@@ -705,12 +705,12 @@
   <string name="tournamentDoesNotExist">Такого турнира не существует.</string>
   <string name="tournamentMayHaveBeenCanceled">Может быть отменён в том случае, если все игроки покинули турнир до его старта.</string>
   <string name="returnToTournamentsHomepage">Главная страница турниров</string>
-  <string name="weeklyPerfTypeRatingDistribution">Еженедельное распределение рейтингов в %s</string>
-  <plurals name="nbPerfTypePlayersThisWeek">
-    <item quantity="one">%1$s игрок в %2$s на этой неделе.</item>
-    <item quantity="few">%1$s игрока в %2$s на этой неделе.</item>
-    <item quantity="many">%1$s игроков в %2$s на этой неделе.</item>
-    <item quantity="other">%1$s игроков в %2$s на этой неделе.</item>
+  <string name="monthlyPerfTypeRatingDistribution">Ежемесячное распределение рейтингов в %s</string>
+  <plurals name="nbPerfTypePlayersThisMonth">
+    <item quantity="one">%1$s игрок в %2$s на этой месяце.</item>
+    <item quantity="few">%1$s игрока в %2$s на этой месяце.</item>
+    <item quantity="many">%1$s игроков в %2$s на этой месяце.</item>
+    <item quantity="other">%1$s игроков в %2$s на этой месяце.</item>
   </plurals>
   <string name="yourPerfTypeRatingIsRating">Ваш рейтинг в %1$s — %2$s.</string>
   <string name="youAreBetterThanPercentOfPerfTypePlayers">Вы сильнее %1$s игроков в %2$s.</string>

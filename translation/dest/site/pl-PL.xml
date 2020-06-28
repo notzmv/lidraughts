@@ -703,12 +703,12 @@
   <string name="tournamentDoesNotExist">Taki turniej nie istnieje.</string>
   <string name="tournamentMayHaveBeenCanceled">Mógł zostać anulowany, jeżeli wszyscy gracze wycofali się przed jego rozpoczęciem.</string>
   <string name="returnToTournamentsHomepage">Wróć do turnieju</string>
-  <string name="weeklyPerfTypeRatingDistribution">Tygodniowy rozkład rankingu w wariancie %s</string>
-  <plurals name="nbPerfTypePlayersThisWeek">
-    <item quantity="one">%1$s gracz w tym tygodniu (%2$s).</item>
-    <item quantity="few">%1$s graczy w tym tygodniu (%2$s).</item>
-    <item quantity="many">%1$s graczy w tym tygodniu (%2$s).</item>
-    <item quantity="other">%1$s graczy w tym tygodniu (%2$s).</item>
+  <string name="monthlyPerfTypeRatingDistribution">Miesięczny rozkład rankingu w wariancie %s</string>
+  <plurals name="nbPerfTypePlayersThisMonth">
+    <item quantity="one">%1$s gracz w tym miesiącu (%2$s).</item>
+    <item quantity="few">%1$s graczy w tym miesiącu (%2$s).</item>
+    <item quantity="many">%1$s graczy w tym miesiącu (%2$s).</item>
+    <item quantity="other">%1$s graczy w tym miesiącu (%2$s).</item>
   </plurals>
   <string name="yourPerfTypeRatingIsRating">Twój ranking w wariancie %1$s to %2$s.</string>
   <string name="youAreBetterThanPercentOfPerfTypePlayers">Jesteś lepszy niż %1$s graczy (%2$s).</string>

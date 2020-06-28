@@ -819,8 +819,8 @@ One URL per line</string>
   <string name="tournamentDoesNotExist">This tournament does not exist.</string>
   <string name="tournamentMayHaveBeenCanceled">The tournament may have been cancelled if all players left before it started.</string>
   <string name="returnToTournamentsHomepage">Return to tournaments homepage</string>
-  <string name="weeklyPerfTypeRatingDistribution">Monthly %s rating distribution</string>
-  <plurals name="nbPerfTypePlayersThisWeek">
+  <string name="monthlyPerfTypeRatingDistribution">Monthly %s rating distribution</string>
+  <plurals name="nbPerfTypePlayersThisMonth">
     <item quantity="one">%1$s %2$s player this month.</item>
     <item quantity="other">%1$s %2$s players this month.</item>
   </plurals>

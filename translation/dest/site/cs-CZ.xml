@@ -548,7 +548,7 @@
   <string name="tournamentDoesNotExist">Tento turnaj neexistuje.</string>
   <string name="tournamentMayHaveBeenCanceled">Možná byl zrušen, jestliže jej opustili všichni hráči před jeho začátkem.</string>
   <string name="returnToTournamentsHomepage">Návrat na stránku turnajů</string>
-  <string name="weeklyPerfTypeRatingDistribution">Týdenní hodnocení pro %s</string>
+  <string name="monthlyPerfTypeRatingDistribution">Měsíční hodnocení pro %s</string>
   <string name="yourPerfTypeRatingIsRating">Vaše %1$s hodnocení je %2$s.</string>
   <string name="youAreBetterThanPercentOfPerfTypePlayers">Jste lepší než %1$s z %2$s hráčů.</string>
   <string name="youDoNotHaveAnEstablishedPerfTypeRating">Nemáte stanovené %s hodnocení.</string>

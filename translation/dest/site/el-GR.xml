@@ -629,10 +629,10 @@
   <string name="tournamentDoesNotExist">Αυτό το πρωτάθλημα δεν υπάρχει.</string>
   <string name="tournamentMayHaveBeenCanceled">Ίσως έχει ακυρωθεί, εάν όλοι οι παίκτες αποχώρησαν πριν το πρωτάθλημα ξεκινήσει.</string>
   <string name="returnToTournamentsHomepage">Επιστροφή στην αρχική σελίδα πρωταθλημάτων</string>
-  <string name="weeklyPerfTypeRatingDistribution">Μηνιαία κατανομή βαθμολογίας %s</string>
-  <plurals name="nbPerfTypePlayersThisWeek">
-    <item quantity="one">Ένας %2$s παίκτης αυτή την εβδομάδα.</item>
-    <item quantity="other">%1$s %2$s παίκτες αυτή την εβδομάδα.</item>
+  <string name="monthlyPerfTypeRatingDistribution">Μηνιαία κατανομή βαθμολογίας %s</string>
+  <plurals name="nbPerfTypePlayersThisMonth">
+    <item quantity="one">Ένας %2$s παίκτης αυτόν τον μήνα.</item>
+    <item quantity="other">%1$s %2$s παίκτες αυτόν τον μήνα.</item>
   </plurals>
   <string name="yourPerfTypeRatingIsRating">Η βαθμολογία σας στο %1$s είναι %2$s.</string>
   <string name="youAreBetterThanPercentOfPerfTypePlayers">Είστε καλύτεροι από %1$s των παικτών %2$s.</string>

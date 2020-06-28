@@ -597,7 +597,6 @@
   <string name="tournamentDoesNotExist">Энэ тэмцээн олдсонгүй.</string>
   <string name="tournamentMayHaveBeenCanceled">Тэмцээн эхлэхээс өмнө бүх тоглогчид тэмцээнийг орхисон бол энэхүү тэмцээн цуцлагдсан болно.</string>
   <string name="returnToTournamentsHomepage">Тэмцээний үндсэн нүүр хуудас руу буцах</string>
-  <string name="weeklyPerfTypeRatingDistribution">%s төрөл дэх таны 7 хоног тутмын чансаа</string>
   <string name="youDoNotHaveAnEstablishedPerfTypeRating">%s төрөлд таньд тогтсон чансаа алга байна.</string>
   <string name="checkYourEmail">Та цахим шуудангаа шалгана уу</string>
   <string name="weHaveSentYouAnEmailClickTheLink">Бид тань руу зурвас илгээлээ. Зурвас доторх холбоос хаяг дээр дарснаар хэрэглэгчийн данс тань идэвхжинэ.</string>
