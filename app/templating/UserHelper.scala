@@ -164,15 +164,15 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper =>
     withTitle: Boolean = true,
     withBestRating: Boolean = false,
     withPerfRating: Option[PerfType] = None,
-    text: Option[String] = None,
-    params: String = ""
+    params: String = "",
+    withProfileName: Boolean = false
   ): Frag = a(
     cls := userClass(user.id, cssClass, withOnline, withPowerTip),
     href := userUrl(user.username, params)
   )(
       withOnline ?? lineIcon(user),
       withTitle option titleTag(user.title),
-      text | user.username,
+      span(user.username, title := withProfileName.??(user.profileOrDefault.nonEmptyRealName)),
       userRating(user, withPerfRating, withBestRating)
     )
 

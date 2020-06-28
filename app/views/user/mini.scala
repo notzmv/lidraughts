@@ -21,7 +21,7 @@ object mini {
     div(cls := "upt__info")(
       div(cls := "upt__info__top")(
         div(cls := "left")(
-          userLink(u, withPowerTip = false),
+          userLink(u, withPowerTip = false, withProfileName = true),
           u.profileOrDefault.countryInfo map { c =>
             val hasRoomForNameText = u.username.size + c.shortName.size < 20
             span(
