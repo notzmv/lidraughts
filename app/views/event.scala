@@ -50,9 +50,9 @@ object event {
         ),
         h2(cls := "headline")(e.headline),
         e.description.map { d =>
-          p(cls := "desc")(richText(d))
+          p(cls := "desc")(lidraughts.common.String.html.markdownLinks(d))
         },
-        if (e.isFinished) p(cls := "desc")("The event is finished.")
+        if (e.isFinished) p(cls := "desc")(b("The event is finished."))
         else {
           if (e.isNow) a(href := e.url, cls := "button button-fat")(trans.eventInProgress())
           else ul(cls := "countdown", dataSeconds := ~e.secondsToStart)(
