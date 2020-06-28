@@ -77,12 +77,17 @@ object Tv extends LidraughtsController {
         gamesStr.split(",").toList.take(maxCollectionSize).map(_.split('/'))
       case _ => Nil
     }
-    def side(gameId: String) = gameIds.find(_.headOption.contains(gameId))
-      .flatMap(_.lastOption).flatMap(draughts.Color.apply).getOrElse(draughts.White)
     Env.tv.tv.getChampions zip Env.tv.tv.getGamesFromIds(gameIds.flatMap(_.headOption)) map {
       case (champs, games) => NoCache {
+        val povs = games.foldRight((List[Pov](), gameIds)) {
+          case (game, (povs, ids)) =>
+            val gId = ids.findRight(_.headOption.contains(game.id))
+            val color = gId.flatMap(_.lastOption).flatMap(draughts.Color.apply).getOrElse(draughts.White)
+            val pov = color.fold(Pov.white(game), Pov.black(game))
+            (pov :: povs, ids.filterNot(gId.contains))
+        }
         Ok(html.tv.gamesCollection(
-          games map { g => side(g.id).fold(Pov.white(g), Pov.black(g)) },
+          povs._1,
           champs
         ))
       }

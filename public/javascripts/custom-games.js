@@ -19,10 +19,10 @@ $(function() {
     href += 6;
     var gameId = boardHtml.slice(href, boardHtml.indexOf('"', href));
     if (gameId[0] === '/') gameId = gameId.slice(1);
-    if (gameId.indexOf('/') !== -1) {
+    if (gameId.endsWith('/white')) {
       gameId = gameId.slice(0, gameId.indexOf('/'));
     }
-    var gameIds = getGameIds(true);
+    var gameIds = getGameIds();
     if (gameIds.indexOf(gameId) !== -1) {
       alert('This game is already in the collection!');
       return false;
@@ -33,7 +33,7 @@ $(function() {
     var href = $elm.attr('href');
     if (href && href[0] === '/') {
       href = href.slice(1);
-      if (short && href.indexOf('/') !== -1) {
+      if (href.endsWith('/white') || (short && href.indexOf('/') !== -1)) {
         href = href.slice(0, href.indexOf('/'));
       }
     }
