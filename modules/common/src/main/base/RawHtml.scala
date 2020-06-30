@@ -175,8 +175,11 @@ final object RawHtml {
   }) map { img => s"""<img class="embed" src="$img" alt="$url"/>""" }
 
   private[this] val markdownLinkRegex = """\[([^]]++)\]\((https?://[^)]++)\)""".r
+  private[this] val markdownImageRegex = """!\[([^]]++)\]\((https?://[^)]++)\)""".r
 
-  def markdownLinks(text: String): String = nl2br {
-    markdownLinkRegex.replaceAllIn(escapeHtmlRaw(text), """<a href="$2">$1</a>""")
+  def markdownLinks(text: String, withImages: Boolean = true): String = nl2br {
+    val escaped = escapeHtmlRaw(text)
+    val maybeImages = if (withImages) markdownImageRegex.replaceAllIn(escaped, """<img src="$2" alt="$1">""") else escaped
+    markdownLinkRegex.replaceAllIn(maybeImages, """<a href="$2">$1</a>""")
   }
 }

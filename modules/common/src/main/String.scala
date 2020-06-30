@@ -68,8 +68,8 @@ final object String {
     def unescapeHtml(html: String): String =
       org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4(html)
 
-    def markdownLinks(text: String): Frag = raw {
-      RawHtml.markdownLinks(text)
+    def markdownLinks(text: String, withImages: Boolean = true): Frag = raw {
+      RawHtml.markdownLinks(text, withImages)
     }
 
     def safeJsonValue(jsValue: JsValue): String = {
