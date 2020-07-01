@@ -82,7 +82,6 @@ export function resultOf(tags: TagArray[], isWhite: boolean, draughtsResult: boo
 export function view(ctrl: StudyCtrl): VNode {
 
   const canContribute = ctrl.members.canContribute(),
-    configButton = canContribute ? h('act', { attrs: dataIcon('%') }) : null,
     current = ctrl.currentChapter();
 
   function update(vnode: VNode) {
@@ -148,10 +147,10 @@ export function view(ctrl: StudyCtrl): VNode {
     }, [
       h('span', loading ? h('span.ddloader') : ['' + (i + 1)]),
       h('h3', chapter.name),
-      configButton
+      canContribute ? h('act', { attrs: dataIcon('%') }) : null
     ]);
   }).concat(
-    ctrl.members.canContribute() ? [
+    canContribute ? [
       h('div.add', {
         hook: bind('click', ctrl.chapters.toggleNewForm, ctrl.redraw)
       }, [
