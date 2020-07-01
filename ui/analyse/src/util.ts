@@ -80,6 +80,16 @@ export function titleNameToId(titleName: string): string {
   return (split.length === 1 ? split[0] : split[1]).toLowerCase();
 }
 
+export function shortenTitleName(titleName: string): string {
+  const split = titleName.split(' ');
+  if (split.length <= 1) {
+    return split[0];
+  } else if (split[0].endsWith('-64')) {
+    return split[0].slice(0, split[0].length - 3) + ' ' + split[1];
+  }
+  return titleName;
+}
+
 export function spinner(): VNode {
   return h('div.spinner', [
     h('svg', { attrs: { viewBox: '0 0 40 40' } }, [

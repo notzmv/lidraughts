@@ -1,6 +1,6 @@
 import { h } from 'snabbdom'
 import { VNode } from 'snabbdom/vnode'
-import { bind, titleNameToId, onInsert } from '../util';
+import { bind, titleNameToId, shortenTitleName, onInsert } from '../util';
 import { prop, Prop } from 'common';
 import { modal } from '../modal';
 import { StudyMemberMap } from './interfaces';
@@ -17,7 +17,7 @@ export function ctrl(send: SocketSend, members: Prop<StudyMemberMap>, setTab: ()
     open,
     candidates() {
       const existing = members();
-      return followings.concat(spectators).filter(function(elem, idx, arr) {
+      return followings.concat(spectators).map(shortenTitleName).filter(function(elem, idx, arr) {
         return arr.indexOf(elem) >= idx && // remove duplicates
           !existing.hasOwnProperty(titleNameToId(elem)); // remove existing members
       }).sort();
