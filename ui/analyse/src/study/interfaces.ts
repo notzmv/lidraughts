@@ -53,6 +53,7 @@ export interface StudyCtrl {
   nextChapter(): StudyChapterMeta | undefined;
   mutateCgConfig(config: any): void;
   isUpdatedRecently(): boolean;
+  isInternalRelay(): boolean;
   setGamebookOverride(o: GamebookOverride): void;
   explorerGame(gameId: string, insert: boolean): void;
   onPremoveSet(): void;

@@ -8,6 +8,7 @@ export default class RelayCtrl {
   cooldown: boolean = false;
   clockInterval?: number;
   intro: RelayIntro;
+  internal: boolean;
 
   constructor(public data: RelayData, readonly send: SocketSend, readonly redraw: () => void, readonly members: any, chapter: StudyChapter) {
     this.applyChapterRelay(chapter, chapter.relay);
@@ -16,6 +17,7 @@ export default class RelayCtrl {
       active: !!this.data.markup && (location.pathname.match(/\//g)||[]).length < 4,
       disable: () => { this.intro.active = false }
     };
+    this.internal = this.data.sync.internal ? true : false;
   }
 
   setSync = (v: Boolean) => {

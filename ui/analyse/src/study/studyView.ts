@@ -48,6 +48,7 @@ function toolButton(opts: ToolButtonOpts): VNode {
 function buttons(root: AnalyseCtrl): VNode {
   const ctrl: StudyCtrl = root.study!,
     canContribute = ctrl.members.canContribute(),
+    internalRelay = ctrl.isInternalRelay(),
     showSticky = ctrl.data.features.sticky && (canContribute || (ctrl.vm.behind && ctrl.isUpdatedRecently())),
     noarg = root.trans.noarg;
   return h('div.study__buttons', [
@@ -61,7 +62,7 @@ function buttons(root: AnalyseCtrl): VNode {
         ctrl.vm.behind ? h('span.behind', '' + ctrl.vm.behind) : h('i.is'),
         'SYNC'
       ]) : null,
-      ctrl.members.canContribute() ? h('a.mode.write', {
+      canContribute ? h('a.mode.write', {
         attrs: { title: noarg('shareChanges') },
         class: { on: ctrl.vm.mode.write },
         hook: bind('click', ctrl.toggleWrite)
@@ -102,16 +103,16 @@ function buttons(root: AnalyseCtrl): VNode {
         hint: 'Multiboard',
         icon: iconTag('')
       }),
-      toolButton({
+      !internalRelay ? toolButton({
         ctrl,
         tab: 'share',
         hint: noarg('shareAndExport'),
         icon: iconTag('$')
-      }),
-      h('span.help', {
+      }) : null,
+      !internalRelay ? h('span.help', {
         attrs: { title: 'Need help? Get the tour!', 'data-icon': '' },
         hook: bind('click', ctrl.startTour)
-      })
+      }) : null
     ]),
     h('div.right', [
       gbOverrideButton(ctrl)

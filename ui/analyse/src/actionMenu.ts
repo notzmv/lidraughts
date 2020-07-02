@@ -156,7 +156,8 @@ export class Ctrl {
 export function view(ctrl: AnalyseCtrl): VNode {
   const d = ctrl.data,
     noarg = ctrl.trans.noarg,
-    canContinue = !ctrl.ongoing && !ctrl.embed && d.game.variant.key === 'standard' && !d.puzzleEditor,
+    isOngoing = ctrl.ongoing || (ctrl.study && ctrl.study.isInternalRelay()),
+    canContinue = !isOngoing && !ctrl.embed && d.game.variant.key === 'standard' && !d.puzzleEditor,
     canPuzzleEditor = !d.puzzleEditor && d.toPuzzleEditor && (d.game.variant.key === 'standard' || d.game.variant.key === 'frisian'),
     ceval = ctrl.getCeval(),
     mandatoryCeval = ctrl.mandatoryCeval();
@@ -167,7 +168,7 @@ export function view(ctrl: AnalyseCtrl): VNode {
         hook: bind('click', ctrl.flip),
         attrs: dataIcon('B')
       }, noarg('flipBoard')),
-      ctrl.ongoing ? null : h('a.button.button-empty', {
+      isOngoing ? null : h('a.button.button-empty', {
         attrs: {
           href: (d.userAnalysis ? '/editor?fen=' + ctrl.node.fen : '/' + d.game.id + '/edit?fen=' + ctrl.node.fen) + (d.game.variant.key !== 'standard' ? "&variant=" + d.game.variant.key : ''),
           rel: 'nofollow',

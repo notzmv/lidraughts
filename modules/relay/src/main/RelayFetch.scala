@@ -119,6 +119,7 @@ private final class RelayFetch(
 
   private def doProcess(relay: Relay): Fu[RelayGames] =
     if (relay.sync.simulId.isDefined) doFetchSimul(relay.sync.simulId.get, RelayFetch.maxChapters(relay))
+    else if (relay.sync.gameIds.isDefined) doFetchGames(relay.sync.gameIds.get, RelayFetch.maxChapters(relay), relay.name)
     // different indices may be fetched from the same upstream, so bypass cache
     else if (relay.sync.indices.exists(_.nonEmpty)) doFetchByIndex(relay.sync.upstream, relay.sync.indices.get, RelayFetch.maxChapters(relay))
     else cache getIfPresent relay.sync.upstream match {
@@ -140,7 +141,8 @@ private final class RelayFetch(
     opening = false
   )
 
-  private def doFetchSimul(simulId: String, max: Int): Fu[RelayGames] =
+  private def doFetchSimul(simulId: String, max: Int): Fu[RelayGames] = {
+    logger.info(s"Sync fetch simulId $simulId")
     simulFetch(simulId) flatMap {
       _ ?? { simul =>
         simul.isStarted ?? GameRepo.gamesFromPrimary(simul.gameIds).map(games => (simul, games).some)
@@ -158,6 +160,24 @@ private final class RelayFetch(
     } map { results =>
       MultiPdn(results.sortBy(_._1).take(max).map(_._2.render))
     } flatMap RelayFetch.multiPdnToGames.apply
+  }
+
+  private def doFetchGames(gameIds: List[String], max: Int, eventName: String): Fu[RelayGames] = {
+    logger.info(s"Sync fetch gameIds $gameIds")
+    gameIds.zipWithIndex.map {
+      case (gameId, i) =>
+        val number = i + 1
+        lidraughts.round.Env.current.proxy.gameIfPresent(gameId) orElse GameRepo.game(gameId) flatMap {
+          case Some(game) =>
+            pdnDump(game, FEN(game.variant.initialFen).some, pdnFlags) map {
+              number -> _.withEvent(eventName)
+            }
+          case _ => fufail(s"Invalid gameId $gameId")
+        }
+    }.sequenceFu map { results =>
+      MultiPdn(results.sortBy(_._1).take(max).map(_._2.render))
+    } flatMap RelayFetch.multiPdnToGames.apply
+  }
 
   private def doFetchByIndex(upstream: Upstream, indices: List[Int], max: Int): Fu[RelayGames] =
     indices.map { i: Int =>

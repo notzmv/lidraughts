@@ -75,12 +75,15 @@ object Relay {
   case class Sync(
       upstream: Sync.Upstream,
       indices: Option[List[Int]],
+      gameIds: Option[List[String]],
       simulId: Option[String],
       until: Option[DateTime], // sync until then; resets on move
       nextAt: Option[DateTime], // when to run next sync
       delay: Option[Int], // override time between two sync (rare)
       log: SyncLog
   ) {
+
+    def isInternal = gameIds.nonEmpty || simulId.nonEmpty
 
     def renew = copy(
       until = DateTime.now.plusHours(1).some

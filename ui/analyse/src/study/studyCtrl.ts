@@ -514,6 +514,9 @@ export default function (data: StudyData, ctrl: AnalyseCtrl, tagTypes: TagTypes,
     isUpdatedRecently() {
       return Date.now() - vm.updatedAt < 300 * 1000;
     },
+    isInternalRelay() {
+      return this.relay !== undefined && this.relay.internal && this.relay.data.sync.ongoing && !this.members.canContribute();
+    },
     toggleLike() {
       data.liked = !data.liked;
       redraw();

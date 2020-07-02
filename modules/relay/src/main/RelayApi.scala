@@ -61,6 +61,8 @@ final class RelayApi(
         name = Study.Name(relay.name).some,
         settings = Settings.init.copy(
           chat = Settings.UserSelection.Everyone,
+          computer = if (relay.sync.isInternal) Settings.UserSelection.Nobody else Settings.UserSelection.Everyone,
+          cloneable = if (relay.sync.isInternal) Settings.UserSelection.Nobody else Settings.UserSelection.Everyone,
           sticky = false
         ).some,
         from = Study.From.Relay(none).some
@@ -68,7 +70,7 @@ final class RelayApi(
   }
 
   def requestPlay(id: Relay.Id, v: Boolean): Funit = WithRelay(id) { relay =>
-    if (relay.sync.simulId.isEmpty)
+    if (!relay.sync.isInternal)
       clearFormatCache(Url parse relay.sync.upstream.url)
     update(relay) { r =>
       if (v) r.withSync(_.play) else r.withSync(_.pause)

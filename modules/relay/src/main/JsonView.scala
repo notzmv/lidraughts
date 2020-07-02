@@ -40,6 +40,6 @@ object JsonView {
       "ongoing" -> s.ongoing,
       "log" -> s.log.events,
       "url" -> s.upstream.url
-    )
+    ).add("internal" -> s.isInternal)
   }
 }

@@ -11,6 +11,7 @@ export interface RelaySync {
   ongoing: boolean;
   url: string;
   log: LogEvent[];
+  internal?: boolean;
 }
 
 export interface RelayIntro {

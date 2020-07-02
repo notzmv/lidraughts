@@ -56,6 +56,9 @@ object form {
         form3.hidden(form("gameIndices")),
         form3.hidden(form("simulId"))
       ),
+      if (isGranted(_.Admin))
+        form3.group(form("gameIds"), raw("Game IDs"), help = raw("Internal use only - overrides source url").some)(form3.input(_))
+      else form3.hidden(form("gameIds")),
       form3.split(
         form3.group(form("startsAt"), frag(
           "Start date ", strong(utcLink)
