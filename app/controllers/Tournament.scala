@@ -286,7 +286,7 @@ object Tournament extends LidraughtsController {
   def teamBattleEdit(id: String) = Auth { implicit ctx => me =>
     repo byId id flatMap {
       _ ?? {
-        case tour if tour.createdBy == me.id =>
+        case tour if tour.createdBy == me.id || isGranted(_.ManageTournament) =>
           tour.teamBattle ?? { battle =>
             lidraughts.team.TeamRepo.byOrderedIds(battle.sortedTeamIds) flatMap { teams =>
               Env.user.lightUserApi.preloadMany(teams.map(_.createdBy)) >> {
