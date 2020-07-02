@@ -483,6 +483,7 @@ object JsonView {
       "username" -> user.name
     ).add("title" -> user.title)
       .add("performance" -> player.performanceOption)
+      .add("team" -> player.team)
   }
 
   private def formatDate(date: DateTime) = ISODateTimeFormat.dateTime print date
