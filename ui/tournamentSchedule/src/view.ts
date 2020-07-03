@@ -30,22 +30,17 @@ function leftPos(time) {
 function laneGrouper(t) {
   if (t.schedule && t.schedule.freq === 'unique') {
     return -1;
-  } else if (t.variant.key === 'frisian') {
-    if (t.fullName.endsWith('Bullet Arena'))
-      return 0;   //frisian bullet among ordinary bullet
-    else if (t.schedule.freq === 'daily')
-      return 2; // dailies below blitz
-    else
-      return 1;  //all other timecontrols among blitz
+  } else if (t.variant.key === 'russian' || (t.variant.key === 'frisian' && t.schedule.freq === 'hourly')) {
+    return 2;   // variant lane below blitz: russian / frisian
   } else if (t.variant.key !== 'standard') {
     if (t.schedule.freq === 'daily')
-        return 2; // dailies below blitz
+      return 3; // daily variant tournaments below variant lane
     else
-        return 3; // others below that
+      return 4; // below that come variant weeklies and up 
+  } else if (t.perf.key === 'ultraBullet' || t.perf.key === 'rapid' || t.perf.key === 'classical') {
+    return 70 + t.perf.position;  // rare tournaments, always on bottom
   //} else if (t.variant.key !== 'standard' || (t.perf.key === 'rapid' && t.schedule.freq === 'hourly')) {
   //  return 99;
-  //} else if (t.perf.key === 'ultraBullet') {
-  //  return 70;
   //} else if (t.schedule && t.hasMaxRating) {
   //  return 50 + parseInt(t.fullName.slice(1,5)) / 10000;
   //} else if (t.schedule && t.schedule.speed === 'superblitz') {

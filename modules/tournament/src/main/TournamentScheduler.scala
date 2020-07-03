@@ -201,7 +201,7 @@ Thank you all, you rock!"""
           nextSaturday -> Antidraughts,
           nextSunday -> Frisian
         ).flatMap {
-            case (day, variant) => at(day, 20 - offsetCET(day)) map { date =>
+            case (day, variant) => at(day, (if (variant.frysk) 19 else 20) - offsetCET(day)) map { date =>
               Schedule(Weekly, Blitz, variant, std, date |> orNextWeek).plan
             }
           },
@@ -213,9 +213,9 @@ Thank you all, you rock!"""
 
         List( // daily variant tournaments!
           at(today, 17 - todayCET) map { date => Schedule(Daily, SuperBlitz, Russian, std, date |> orTomorrow).plan },
-          at(today, 20 - todayCET) map { date => Schedule(Daily, SuperBlitz, Frysk, std, date |> orTomorrow).plan },
-          at(today, 21 - todayCET) map { date => Schedule(Daily, SuperBlitz, Frisian, std, date |> orTomorrow).plan },
-          at(today, 22 - todayCET) map { date => Schedule(Daily, SuperBlitz, Antidraughts, std, date |> orTomorrow).plan }
+          at(today, 19 - todayCET) map { date => Schedule(Daily, SuperBlitz, Frysk, std, date |> orTomorrow).plan },
+          at(today, 20 - todayCET) map { date => Schedule(Daily, Blitz, Frisian, std, date |> orTomorrow).plan },
+          at(today, 21 - todayCET, 30) map { date => Schedule(Daily, SuperBlitz, Antidraughts, std, date |> orTomorrow).plan }
         ).flatten,
 
         List( // eastern tournaments!
@@ -228,27 +228,51 @@ Thank you all, you rock!"""
           val date = rightNow plusHours hourDelta
           val hour = date.getHourOfDay
           val bulletType = if (hour % 3 == 2) HippoBullet else Bullet
-          //Frisian bullet, not during daily frisian or daily/eastern bullet
-          val bulletVariant = if (hour % 3 == 1 && hour != 21 - todayCET && hour != 17 - todayCET && hour != 5 - todayCET) Frisian else Standard
-          val blitzType = if (hour % 6 == 0) Blitz else SuperBlitz
+          val blitzType = if (hour % 3 == 2) Blitz else SuperBlitz
           List(
-            at(date, hour) map { date => Schedule(Hourly, bulletType, bulletVariant, std, date).plan },
-            at(date, hour, 30) collect { case date if bulletType != HippoBullet => Schedule(Hourly, if (hour % 6 == 1) HyperBullet else Bullet, Standard, std, date).plan },
-            //no hourly blitz during frisian blitz, except at daily frisian
-            at(date, hour) collect { case date if hour % 3 != 2 || hour == 21 - todayCET => Schedule(Hourly, blitzType, Standard, std, date).plan }
+            at(date, hour) map { date => Schedule(Hourly, bulletType, Standard, std, date).plan },
+            at(date, hour, 30) collect { case date if bulletType != HippoBullet => Schedule(Hourly, if (hour % 3 == 1) HyperBullet else Bullet, Standard, std, date).plan },
+            at(date, hour) map { date => Schedule(Hourly, blitzType, Standard, std, date).plan }
           ).flatten
         },
 
-        // frisian blitz tournaments every 3rd hour!
+        // hourly variant tournaments (russian / frisian)!
         (0 to 6).toList.flatMap { hourDelta =>
           val date = rightNow plusHours hourDelta
           val hour = date.getHourOfDay
-          val speed = if (hour % 6 == 2) SuperBlitz else Blitz
-          // no frisian blitz during daily/eastern blitz
-          if (hour % 3 != 2 || hour == 18 - todayCET || hour == 19 - todayCET || hour == 6 - todayCET || hour == 7 - todayCET) Nil
-          else List(
-            at(date, hour) map { date => Schedule(Hourly, speed, Frisian, std, date).plan }
-          ).flatten
+          val hourCET = hour + todayCET
+          if (hourCET == 18) {
+            // always frisian bullet immediately after daily russian
+            List(
+              at(date, hour, 30) map { date => Schedule(Hourly, Bullet, Frisian, std, date).plan }
+            ).flatten
+          } else if (hour % 3 == 1) {
+            // hour #1: russian bullet, alternating a frisian bullet and with/without increment
+            // no frisian bullet during daily frisian, or in hour after daily russian (would be twice in a row)
+            val bulletVariant = if (hour % 6 == 1 && hourCET != 19 && hourCET != 20 && hourCET != 21) Frisian else Russian
+            List(
+              at(date, hour) map { date => Schedule(Hourly, Bullet, bulletVariant, std, date).plan },
+              at(date, hour, 30) map { date => Schedule(Hourly, Bullet, Russian, std, date).plan }
+            ).flatten
+          } else if (hour % 3 == 2) {
+            // hour #2: russian blitz
+            List(
+              at(date, hour) map { date => Schedule(Hourly, SuperBlitz, Russian, std, date).plan }
+            ).flatten
+          } else if (hourCET == 20 || hourCET == 21) {
+            // russian blitz during daily frisian
+            List(
+              at(date, hour) map { date => Schedule(Hourly, Blitz, Russian, std, date).plan }
+            ).flatten
+          } else if (hourCET == 17) {
+            // no frisian during daily russian
+            List()
+          } else {
+            // hour #3: frisian
+            List(
+              at(date, hour) map { date => Schedule(Hourly, SuperBlitz, Frisian, std, date).plan }
+            ).flatten
+          }
         }
       ).flatten
 
@@ -277,8 +301,6 @@ Thank you all, you rock!"""
     case s2 if s.freq.isDailyOrBetter && s2.freq.isDailyOrBetter && s.sameVariantAndSpeed(s2) => s sameDay s2
     // overlapping same variant
     case s2 if s.variant.exotic && s.sameVariant(s2) => interval(s) overlaps interval(s2)
-    // frisian bullet overlaps standard bullet
-    case s2 if s.frisianVsStandard(s2) && s.speed == Schedule.Speed.Bullet && s.similarSpeed(s2) => interval(s) overlaps interval(s2)
     // overlapping same rating limit
     case s2 if s2.hasMaxRating && s.sameMaxRating(s2) => interval(s) overlaps interval(s2)
     // overlapping similar

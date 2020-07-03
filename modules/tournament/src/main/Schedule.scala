@@ -38,8 +38,6 @@ case class Schedule(
 
   def sameVariant(other: Schedule) = variant.id == other.variant.id
 
-  def frisianVsStandard(other: Schedule) = variant.frisian && other.variant.standard
-
   def sameVariantAndSpeed(other: Schedule) = sameVariant(other) && sameSpeed(other)
 
   def sameFreq(other: Schedule) = freq == other.freq
@@ -159,6 +157,8 @@ object Schedule {
       case (Hourly, _, Rapid) if s.hasMaxRating => 57
       case (Hourly, _, Rapid | Classical) => 117
 
+      case (Daily, Russian | Antidraughts, _) => 90
+
       case (Daily | Eastern, Standard, SuperBlitz) => 120
       case (Daily | Eastern, Standard, Blitz) => 120
       case (Daily | Eastern, _, Blitz) => 90
@@ -206,9 +206,13 @@ object Schedule {
   private val timeZoneCET = DateTimeZone.forID("Europe/Amsterdam")
   def offsetCET(day: DateTime) = day.withTime(12, 0, 0, 0).withZone(timeZoneCET).getHourOfDay - 12
 
-  private def standardInc(s: Schedule) = s.at.getHourOfDay % 3 == 1 || s.at.getHourOfDay == 21 - offsetCET(s.at)
+  private val dailyIncDays = Set(dt.MONDAY, dt.WEDNESDAY, dt.SATURDAY)
+  private def dailyInc(s: Schedule) = dailyIncDays.contains(s.at.getDayOfWeek)
+
+  private def standardInc(s: Schedule) = s.at.getHourOfDay % 3 == 1
+  private def frisianInc(s: Schedule) = s.at.getHourOfDay % 6 == 0
   private def bulletInc(s: Schedule) = s.at.getHourOfDay % 3 == 0
-  private def dailyInc(s: Schedule) = Set(dt.MONDAY, dt.WEDNESDAY, dt.SATURDAY).contains(s.at.getDayOfWeek)
+  private def russianBulletInc(s: Schedule) = s.at.getHourOfDay % 6 == 4
 
   private[tournament] def clockFor(s: Schedule) = {
     import Freq._, Speed._
@@ -222,8 +226,9 @@ object Schedule {
       case (Daily, Antidraughts, SuperBlitz) => TC(3 * 60, 2)
       case (Weekly, Frisian, Blitz) => TC(5 * 60, 2)
       case (Hourly, Standard, Bullet) if bulletInc(s) => TC(60, 1)
+      case (Hourly, Russian, Bullet) if russianBulletInc(s) => TC(60, 1)
       case (Hourly, Standard, SuperBlitz) if standardInc(s) => TC(3 * 60, 2)
-      case (Hourly, Frisian, SuperBlitz) => TC(3 * 60, 2)
+      case (Hourly, Frisian, SuperBlitz) if frisianInc(s) => TC(3 * 60, 2)
       case (Shield, variant, Blitz) if variant.exotic => TC(3 * 60, 2)
 
       case (_, _, UltraBullet) => TC(15, 0)
