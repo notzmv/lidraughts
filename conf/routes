@@ -247,8 +247,8 @@ POST  /tournament/$id<\w{8}>/edit             controllers.Tournament.update(id: 
 GET   /tournament/help                        controllers.Tournament.help(system: Option[String] ?= None)
 GET   /tournament/limited-invitation          controllers.Tournament.limitedInvitation
 GET   /tournament/leaderboard                 controllers.Tournament.leaderboard
-#GET   /tournament/shields                     controllers.Tournament.shields
-#GET   /tournament/shields/:categ              controllers.Tournament.categShields(categ: String)
+GET   /tournament/shields                     controllers.Tournament.shields
+GET   /tournament/shields/:categ              controllers.Tournament.categShields(categ: String)
 
 # Tournament CRUD
 GET   /tournament/manager                     controllers.TournamentCrud.index(page: Int ?= 1)

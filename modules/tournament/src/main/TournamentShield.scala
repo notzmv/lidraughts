@@ -24,13 +24,12 @@ final class TournamentShieldApi(
     maxPerCateg.fold(h)(h.take)
   }
 
-  def byCategKey(k: String): Fu[Option[(Category, List[Award])]] = Category.byKey(k) ?? { categ =>
-    cache.get map {
-      _.value get categ map {
-        categ -> _
+  def byCategKey(k: String): Fu[Option[(Category, List[Award])]] =
+    Category.byKey(k).fold(fuccess(none[(Category, List[Award])])) { categ =>
+      cache.get map { history =>
+        Some(categ -> history.value.getOrElse(categ, Nil))
       }
     }
-  }
 
   def currentOwner(tour: Tournament): Fu[Option[OwnerId]] = tour.isShield ?? {
     Category.of(tour) ?? { cat =>
@@ -109,11 +108,6 @@ object TournamentShield {
 
   object Category {
 
-    case object UltraBullet extends Category(
-      of = Left(Schedule.Speed.UltraBullet),
-      iconChar = '{'
-    )
-
     case object HyperBullet extends Category(
       of = Left(Schedule.Speed.HyperBullet),
       iconChar = 'T'
@@ -139,11 +133,6 @@ object TournamentShield {
       iconChar = '#'
     )
 
-    case object Classical extends Category(
-      of = Left(Schedule.Speed.Classical),
-      iconChar = '+'
-    )
-
     case object Frisian extends Category(
       of = Right(draughts.variant.Frisian),
       iconChar = '\''
@@ -164,7 +153,12 @@ object TournamentShield {
       iconChar = ''
     )
 
-    val all: List[Category] = List(Bullet, SuperBlitz, Blitz, Rapid, Classical, HyperBullet, UltraBullet, Frisian, Frysk, Antidraughts, Breakthrough)
+    case object Russian extends Category(
+      of = Right(draughts.variant.Russian),
+      iconChar = ''
+    )
+
+    val all: List[Category] = List(Bullet, SuperBlitz, Blitz, Rapid, HyperBullet, Frisian, Frysk, Antidraughts, Breakthrough, Russian)
 
     def of(t: Tournament): Option[Category] = all.find(_ matches t)
 

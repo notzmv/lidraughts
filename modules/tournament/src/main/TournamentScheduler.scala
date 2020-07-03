@@ -18,10 +18,10 @@ private final class TournamentScheduler private (api: TournamentApi) extends Act
   import draughts.variant._
 
   /* Month plan:
-   * First week: Shield standard tournaments
-   * Second week: Yearly tournament
-   * Third week: Shield varitn tournaments
-   * Last week: Monthly tournaments
+   * First week: Monthly variant tournaments
+   * Second week: Yearly & Shield variant tournaments
+   * Third week: Shield standard tournaments
+   * Last week: Monthly standard tournaments
    */
 
   // def marathonDates = List(
@@ -175,6 +175,40 @@ Thank you all, you rock!"""
             ).flatMap {
                 case (day, variant) => at(day, 18 - offsetCET(day)) map { date =>
                   Schedule(Monthly, Blitz, variant, std, date).plan
+                }
+              },
+
+            List( // shield tournaments!
+              month.thirdWeek.withDayOfWeek(TUESDAY) -> HyperBullet,
+              month.thirdWeek.withDayOfWeek(WEDNESDAY) -> Bullet,
+              month.thirdWeek.withDayOfWeek(THURSDAY) -> SuperBlitz,
+              month.thirdWeek.withDayOfWeek(FRIDAY) -> Blitz,
+              month.thirdWeek.withDayOfWeek(SATURDAY) -> Rapid
+            ).flatMap {
+                case (day, speed) => at(day, 16 - offsetCET(day)) map { date =>
+                  Schedule(Shield, speed, Standard, std, date) plan {
+                    _.copy(
+                      name = s"${if (speed == Bullet) "Bullet Inc" else speed.toString} Shield",
+                      spotlight = Some(TournamentShield spotlight speed.toString)
+                    )
+                  }
+                }
+              },
+
+            List( // shield variant tournaments! (different days to not overlap with yearlies)
+              month.secondWeek.withDayOfWeek(WEDNESDAY) -> Breakthrough,
+              month.secondWeek.withDayOfWeek(THURSDAY) -> Frysk,
+              month.secondWeek.withDayOfWeek(FRIDAY) -> Antidraughts,
+              month.secondWeek.withDayOfWeek(SATURDAY) -> Frisian,
+              month.secondWeek.withDayOfWeek(SUNDAY) -> Russian
+            ).flatMap {
+                case (day, variant) => at(day, 16 - offsetCET(day)) map { date =>
+                  Schedule(Shield, Blitz, variant, std, date) plan {
+                    _.copy(
+                      name = s"${variant.name} Shield",
+                      spotlight = Some(TournamentShield spotlight variant.name)
+                    )
+                  }
                 }
               }
 

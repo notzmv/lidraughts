@@ -28,7 +28,7 @@ case class Schedule(
     case _ => s"${freq.toString} ${variant.name}"
   }
 
-  def openingTable = (freq.isWeeklyOrBetter && variant.russian) ?? variant.openingTables.headOption
+  def openingTable = (freq != Schedule.Freq.Shield && freq.isWeeklyOrBetter && variant.russian) ?? variant.openingTables.headOption
 
   def day = at.withTimeAtStartOfDay
 
@@ -229,6 +229,7 @@ object Schedule {
       case (Hourly, Russian, Bullet) if russianBulletInc(s) => TC(60, 1)
       case (Hourly, Standard, SuperBlitz) if standardInc(s) => TC(3 * 60, 2)
       case (Hourly, Frisian, SuperBlitz) if frisianInc(s) => TC(3 * 60, 2)
+      case (Shield, Standard, Bullet) => TC(60, 1)
       case (Shield, variant, Blitz) if variant.exotic => TC(3 * 60, 2)
 
       case (_, _, UltraBullet) => TC(15, 0)
@@ -252,15 +253,15 @@ object Schedule {
       val nbRatedGame = (s.freq, s.speed, s.variant) match {
 
         case (Hourly | Daily | Eastern, _, variant) if variant.exotic => 0
-        case (Weekly | Weekend | Monthly | Shield, _, variant) if variant.exotic => 0
+        case (Weekly | Weekend | Monthly | Yearly, _, variant) if variant.exotic => 0
 
         case (Hourly | Daily | Eastern, HyperBullet | Bullet, _) => 10
         case (Hourly | Daily | Eastern, HippoBullet | SuperBlitz | Blitz, _) => 5
         case (Hourly | Daily | Eastern, Rapid, _) => 5
 
-        case (Weekly | Weekend | Monthly | Shield, HyperBullet | Bullet, _) => 15
-        case (Weekly | Weekend | Monthly | Shield, HippoBullet | SuperBlitz | Blitz, _) => 10
-        case (Weekly | Weekend | Monthly | Shield, Rapid, _) => 5
+        case (Weekly | Weekend | Monthly | Yearly | Shield, HyperBullet | Bullet, _) => 15
+        case (Weekly | Weekend | Monthly | Yearly | Shield, HippoBullet | SuperBlitz | Blitz, _) => 10
+        case (Weekly | Weekend | Monthly | Yearly | Shield, Rapid, _) => 5
 
         case _ => 0
       }

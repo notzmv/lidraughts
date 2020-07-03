@@ -26,16 +26,21 @@ object shields {
               history.sorted.map {
                 case (categ, awards) => {
                   section(
-                    h2( /*a(href := routes.Tournament.categShields(categ.key))(
+                    h2(
+                      a(href := routes.Tournament.categShields(categ.key))(
                         span(cls := "shield-trophy")(categ.iconChar.toString),
                         categ.name
-                      )*/ ),
-                    ol(awards.map { aw =>
-                      li(
-                        userIdLink(aw.owner.value.some),
-                        a(href := routes.Tournament.show(aw.tourId))(showDate(aw.date))
                       )
-                    })
+                    ),
+                    ol(
+                      if (awards.isEmpty) li(nbsp)
+                      else awards.map { aw =>
+                        li(
+                          userIdLink(aw.owner.value.some),
+                          a(href := routes.Tournament.show(aw.tourId))(showDate(aw.date))
+                        )
+                      }
+                    )
                   )
                 }
               }
@@ -53,16 +58,19 @@ object shields {
           views.html.user.bits.communityMenu("shield"),
           div(cls := "page-menu__content box")(
             h1(
-              // a(href := routes.Tournament.shields, dataIcon := "I", cls := "text"),
+              a(href := routes.Tournament.shields, dataIcon := "I", cls := "text"),
               categ.name, " shields"
             ),
-            ol(awards.map { aw =>
-              li(
-                span(cls := "shield-trophy")(categ.iconChar.toString),
-                userIdLink(aw.owner.value.some),
-                a(href := routes.Tournament.show(aw.tourId))(showDate(aw.date))
-              )
-            })
+            ol(
+              if (awards.isEmpty) li(span("No shield winners yet!"))
+              else awards.map { aw =>
+                li(
+                  span(cls := "shield-trophy")(categ.iconChar.toString),
+                  userIdLink(aw.owner.value.some),
+                  a(href := routes.Tournament.show(aw.tourId))(showDate(aw.date))
+                )
+              }
+            )
           )
         )
       }

@@ -24,13 +24,13 @@ object otherTrophies {
         }
       )
     },
-    /*info.shields.map { shield =>
+    info.shields.map { shield =>
       a(
         cls := "shield-trophy combo-trophy",
         ariaTitle(s"${shield.categ.name} Shield"),
         href := routes.Tournament.shields
       )(shield.categ.iconChar.toString)
-    },*/
+    },
     info.revolutions.map { revol =>
       a(
         cls := "revol_trophy combo-trophy",
