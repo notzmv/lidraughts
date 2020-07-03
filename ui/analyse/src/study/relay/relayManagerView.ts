@@ -5,7 +5,7 @@ import { dataIcon, bind, onInsert } from '../../util';
 import { LogEvent } from './interfaces';
 
 export default function(ctrl: RelayCtrl): VNode | undefined {
-  if (ctrl.members.canContribute()) return h('div.relay-admin', {
+  if (ctrl.members.isOwner()) return h('div.relay-admin', {
     hook: onInsert(_ => window.lidraughts.loadCssPath('analyse.relay-admin'))
   }, [
     h('h2', [
