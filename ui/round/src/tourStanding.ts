@@ -29,12 +29,20 @@ export function tourStandingCtrl(data: TourPlayer[], name: string): TourStanding
         })
       }, [
         h('tbody', data.map((p: TourPlayer, i: number) => {
+          const title64 = p.t && p.t.endsWith('-64');
           return h('tr.' + p.n, [
             h('td.name', [
               h('span.rank', '' + (i + 1)),
-              h('a.user-link.ulpt', {
-                attrs: { href: `/@/${p.n}` }
-              }, (p.t ? p.t + ' ' : '') + p.n)
+              h('a.user-link.ulpt', 
+                { attrs: { href: `/@/${p.n}` } },
+                [
+                  p.t ? h(
+                    'em.title',
+                    title64 ? { attrs: {'data-title64': true } } : (p.t == 'BOT' ? { attrs: {'data-bot': true } } : {}),
+                    title64 ? p.t.slice(0, p.t.length - 3) : p.t
+                  ) : null,
+                  p.t ? ' ' + p.n : p.n
+                ])
             ]),
             h('td.total', p.f ? {
               class: { 'is-gold': true },
