@@ -702,7 +702,7 @@
 
   lidraughts.widget("friends", (function() {
     var getId = function(titleName) {
-      return titleName.toLowerCase().replace(/^\w+\s/, '');
+      return titleName.toLowerCase().replace(/^[\w\-]+\s/, '');
     };
     var makeUser = function(titleName) {
       var split = titleName.split(' ');
