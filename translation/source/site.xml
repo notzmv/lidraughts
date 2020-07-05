@@ -918,6 +918,9 @@ One URL per line</string>
   <string name="error.min">Must be greater or equal to %s</string>
   <string name="error.max">Must be less or equal to %s</string>
   <string name="error.unknown">Error</string>
+  <string name="error.pattern">Contains invalid characters</string>
+  <string name="mustNotContainLidraughts">Must not contain \"lidraughts\"</string>
+  <string name="mustNotContainATitleThatIsNotVerified">Must not contain a title that is not verified for your account</string>
   <string name="custom">Custom</string>
   <string name="notifications">Notifications</string>
   <string name="challenges">Challenges</string>

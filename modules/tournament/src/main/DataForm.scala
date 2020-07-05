@@ -62,7 +62,7 @@ final class DataForm {
       error = "error.unknown"
     ),
     Constraint[String] { (t: String) =>
-      if (t.toLowerCase contains "lidraughts") validation.Invalid(validation.ValidationError("Must not contain \"lidraughts\""))
+      if (t.toLowerCase contains "lidraughts") validation.Invalid(validation.ValidationError("mustNotContainLidraughts"))
       else validation.Valid
     }
   )

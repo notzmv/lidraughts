@@ -17,13 +17,10 @@ object SimulForm {
   private def nameType(host: User) = text.verifying(
     Constraints minLength 2,
     Constraints maxLength 40,
-    Constraints.pattern(
-      regex = """[\p{L}\p{N}-\s:,;]+""".r,
-      error = "error.unknown"
-    ),
+    Constraints.pattern(regex = """[\p{L}\p{N}-\s:,;]+""".r),
     Constraint[String] { (t: String) =>
       if (t.toLowerCase contains "lidraughts")
-        validation.Invalid(validation.ValidationError("Must not contain \"lidraughts\""))
+        validation.Invalid(validation.ValidationError("mustNotContainLidraughts"))
       else validation.Valid
     },
     Constraint[String] { (t: String) =>
@@ -35,7 +32,7 @@ object SimulForm {
             }
         }
       })
-        validation.Invalid(validation.ValidationError("Must not contain a title"))
+        validation.Invalid(validation.ValidationError("mustNotContainATitleThatIsNotVerified"))
       else validation.Valid
     }
   )

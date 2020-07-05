@@ -899,6 +899,9 @@ Een URL per regel</string>
   <string name="error.min">Moet groter dan of gelijk aan %s zijn</string>
   <string name="error.max">Moet kleiner dan of gelijk aan %s zijn</string>
   <string name="error.unknown">Fout</string>
+  <string name="error.pattern">Bevat ongeldige tekens</string>
+  <string name="mustNotContainLidraughts">Kan geen \"lidraughts\" bevatten</string>
+  <string name="mustNotContainATitleThatIsNotVerified">Kan geen titel bevatten die niet is geverifieerd voor jouw account</string>
   <string name="custom">Aangepast</string>
   <string name="notifications">Meldingen</string>
   <string name="challenges">Uitdagingen</string>
