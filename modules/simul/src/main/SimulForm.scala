@@ -6,7 +6,7 @@ import play.api.data.validation.{ Constraint, Constraints }
 
 import lidraughts.common.Form._
 import lidraughts.hub.lightTeam._
-import lidraughts.user.User
+import lidraughts.user.{ User, Title }
 
 object SimulForm {
 
@@ -30,7 +30,7 @@ object SimulForm {
       if (t.toUpperCase.split(' ').exists { word =>
         lidraughts.user.Title.all.exists {
           case (title, name) =>
-            !host.title.has(title) && {
+            !(host.title.has(title) || host.title.has(title.with64) || host.title.has(title.without64)) && {
               title.value == word || name.toUpperCase == word
             }
         }

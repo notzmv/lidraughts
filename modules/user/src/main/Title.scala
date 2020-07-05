@@ -1,6 +1,10 @@
 package lidraughts.user
 
-case class Title(value: String) extends AnyVal with StringValue
+case class Title(value: String) extends AnyVal with StringValue {
+  def is64 = value.endsWith("-64")
+  def with64 = if (!is64) Title(value + "-64") else this
+  def without64 = if (is64) Title(value.dropRight(3)) else this
+}
 
 object Title {
 

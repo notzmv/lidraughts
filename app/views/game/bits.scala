@@ -71,7 +71,7 @@ object bits {
 
   private def playerTitle(player: Player) =
     lightUser(player.userId).flatMap(_.title) map Title.apply map { t =>
-      val title64 = t.value.endsWith("-64")
+      val title64 = t.is64
       span(
         cls := "title",
         dataBot(t),

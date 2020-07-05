@@ -124,7 +124,7 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper =>
   ): Frag = userIdLink(userId.some, cssClass)
 
   def titleTag(title: Option[Title]): Option[Frag] = title map { t =>
-    val title64 = t.value.endsWith("-64")
+    val title64 = t.is64
     frag(
       span(
         cls := "title",

@@ -48,7 +48,7 @@ object Streamer {
       chatEnabled = true
     ),
     picturePath = none,
-    name = Name(s"${user.title.??(t => (if (t.value.endsWith("-64")) t.value.dropRight(3) else t) + " ")}${user.realNameOrUsername}"),
+    name = Name(s"${user.title.??(t => t.without64.value + " ")}${user.realNameOrUsername}"),
     headline = none,
     description = none,
     twitch = none,
