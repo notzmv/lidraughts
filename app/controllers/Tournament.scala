@@ -416,12 +416,12 @@ object Tournament extends LidraughtsController {
       case _ => notFound
     }
 
-  private val streamerCache = Env.memo.asyncCache.multi[Tour.ID, Set[UserModel.ID]](
+  private val streamerCache = Env.memo.asyncCache.multi[Tour.ID, List[UserModel.ID]](
     name = "tournament.streamers",
     f = tourId => Env.streamer.liveStreamApi.all.flatMap {
       _.streams.map { stream =>
         env.hasUser(tourId, stream.streamer.userId) map (_ option stream.streamer.userId)
-      }.sequenceFu.map(_.flatten.toSet)
+      }.sequenceFu.map(_.flatten)
     },
     expireAfter = _.ExpireAfterWrite(15.seconds)
   )

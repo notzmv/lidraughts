@@ -16,7 +16,7 @@ object side {
   def apply(
     tour: Tournament,
     verdicts: lidraughts.tournament.Condition.All.WithVerdicts,
-    streamers: Set[lidraughts.user.User.ID],
+    streamers: List[lidraughts.user.User.ID],
     shieldOwner: Option[TournamentShield.OwnerId],
     chat: Boolean
   )(implicit ctx: Context) = frag(
@@ -98,7 +98,7 @@ object side {
         }
       )
     ),
-    streamers.toList map views.html.streamer.bits.contextual,
+    streamers map views.html.streamer.bits.contextual,
     chat option views.html.chat.frag
   )
 
