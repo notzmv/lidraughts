@@ -60,7 +60,7 @@ final class DataForm {
     description = tour.description
   )
 
-  private val nameType = text.verifying(
+  private val nameType = clean(text).verifying(
     Constraints minLength 2,
     Constraints maxLength 30,
     Constraints.pattern(
@@ -94,7 +94,7 @@ final class DataForm {
     "teamBattleByTeam" -> optional(nonEmptyText),
     "berserkable" -> optional(boolean),
     "streakable" -> optional(boolean),
-    "description" -> optional(nonEmptyText(maxLength = 600))
+    "description" -> optional(clean(nonEmptyText(maxLength = 800)))
   )(TournamentSetup.apply)(TournamentSetup.unapply)
     .verifying("Invalid clock", _.validClock)
     .verifying("15s variant games cannot be rated", _.validRatedUltraBulletVariant)

@@ -4,7 +4,7 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.data.validation.Constraints
 
-import lidraughts.common.{ LameName, EmailAddress }
+import lidraughts.common.{ LameName, EmailAddress, Form => LidraughtsForm }
 import lidraughts.user.{ User, TotpSecret, UserRepo }
 import User.{ ClearPassword, TotpToken }
 
@@ -26,45 +26,48 @@ final class DataForm(
 
   def emptyWithCaptcha = withCaptcha(empty)
 
-  private val anyEmail = trimField(text).verifying(Constraints.emailAddress)
+  private val anyEmail = LidraughtsForm.clean(text).verifying(Constraints.emailAddress)
   private val acceptableEmail = anyEmail.verifying(emailValidator.acceptableConstraint)
   private def acceptableUniqueEmail(forUser: Option[User]) =
     acceptableEmail.verifying(emailValidator uniqueConstraint forUser)
 
   private def withAcceptableDns(m: Mapping[String]) = m verifying emailValidator.withAcceptableDns
 
-  private def trimField(m: Mapping[String]) = m.transform[String](_.trim, identity)
-
   private val preloadEmailDnsForm = Form(single("email" -> acceptableEmail))
 
   def preloadEmailDns(implicit req: play.api.mvc.Request[_]): Funit =
-    preloadEmailDnsForm.bindFromRequest.fold(
-      _ => funit,
-      email => emailValidator.preloadDns(EmailAddress(email))
-    )
+    preloadEmailDnsForm
+      .bindFromRequest()
+      .fold(
+        _ => funit,
+        email => emailValidator.preloadDns(EmailAddress(email))
+      )
 
   object signup {
 
-    private val username = trimField(nonEmptyText).verifying(
-      Constraints minLength 2,
-      Constraints maxLength 20,
-      Constraints.pattern(
-        regex = User.newUsernamePrefix,
-        error = "usernamePrefixInvalid"
-      ),
-      Constraints.pattern(
-        regex = User.newUsernameSuffix,
-        error = "usernameSuffixInvalid"
-      ),
-      Constraints.pattern(
-        regex = User.newUsernameChars,
-        error = "usernameCharsInvalid"
+    private val username = LidraughtsForm
+      .clean(nonEmptyText)
+      .verifying(
+        Constraints minLength 2,
+        Constraints maxLength 20,
+        Constraints.pattern(
+          regex = User.newUsernamePrefix,
+          error = "usernamePrefixInvalid"
+        ),
+        Constraints.pattern(
+          regex = User.newUsernameSuffix,
+          error = "usernameSuffixInvalid"
+        ),
+        Constraints.pattern(
+          regex = User.newUsernameChars,
+          error = "usernameCharsInvalid"
+        )
       )
-    ).verifying("usernameUnacceptable", u => !LameName.username(u))
+      .verifying("usernameUnacceptable", u => !LameName.username(u))
       .verifying("usernameAlreadyUsed", u => !UserRepo.nameExists(u).awaitSeconds(4))
 
     val website = Form(mapping(
-      "username" -> trimField(username),
+      "username" -> username,
       "password" -> text(minLength = 4),
       "email" -> withAcceptableDns(acceptableUniqueEmail(none)),
       "fp" -> optional(nonEmptyText),
@@ -72,7 +75,7 @@ final class DataForm(
     )(SignupData.apply)(_ => None))
 
     val mobile = Form(mapping(
-      "username" -> trimField(username),
+      "username" -> username,
       "password" -> text(minLength = 4),
       "email" -> withAcceptableDns(acceptableUniqueEmail(none))
     )(MobileSignupData.apply)(_ => None))

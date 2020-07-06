@@ -14,7 +14,7 @@ object SimulForm {
     u.count.game >= 10 && u.createdSinceDays(3) && !u.troll
   } || u.hasTitle || u.isVerified
 
-  private def nameType(host: User) = text.verifying(
+  private def nameType(host: User) = clean(text).verifying(
     Constraints minLength 2,
     Constraints maxLength 40,
     Constraints.pattern(regex = """[\p{L}\p{N}-\s:,;]+""".r),
@@ -48,7 +48,7 @@ object SimulForm {
     "color" -> stringIn(colorChoices),
     "targetPct" -> text(minLength = 0, maxLength = 3)
       .verifying("invalidTargetPercentage", pct => pct.length == 0 || parseIntOption(pct).fold(false)(p => p >= 50 && p <= 100)),
-    "text" -> text,
+    "text" -> clean(text),
     "team" -> optional(nonEmptyText)
   )(Setup.apply)(Setup.unapply)) fill empty(host)
 
