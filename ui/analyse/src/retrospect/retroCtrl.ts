@@ -108,7 +108,7 @@ export function make(root: AnalyseCtrl): RetroCtrl {
 
   function isCevalReady(node: Tree.Node): boolean {
     return node.ceval ? (
-      node.ceval.depth >= maxDepth ||
+      node.ceval.depth >= Math.min(maxDepth, root.ceval.effectiveMaxDepth()) ||
       (node.ceval.depth >= minDepth && node.ceval.millis > 7000)
     ) : false;
   };
