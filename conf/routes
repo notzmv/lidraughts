@@ -320,6 +320,7 @@ GET   /team/:id/users                         controllers.Team.users(id: String)
 GET   /team/:id/pm-all                        controllers.Team.pmAll(id: String)
 POST  /team/:id/pm-all                        controllers.Team.pmAllSubmit(id: String)
 GET   /team/:id/tournaments                   controllers.Team.tournaments(id: String)
+POST  /team/:id/subscribe                     controllers.Team.subscribe(id: String)
 
 # Analyse
 POST  /$gameId<\w{8}>/request-analysis        controllers.Analyse.requestAnalysis(gameId: String)

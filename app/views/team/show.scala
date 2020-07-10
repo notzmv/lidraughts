@@ -90,6 +90,17 @@ object show {
                       submitButton(cls := "button button-green")(joinTeam.txt())
                     )
                 ),
+                ctx.userId.ifTrue(t.enabled && info.mine) map { myId =>
+                  postForm(
+                    cls := "team-show__subscribe form3",
+                    action := routes.Team.subscribe(t.id)
+                  )(
+                      div(
+                        span(form3.cmnToggle("team-subscribe", "subscribe", checked = info.subscribed)),
+                        label(`for` := "team-subscribe")("Subscribe to team messages")
+                      )
+                    )
+                },
                 (info.mine && !info.createdByMe) option
                   postForm(cls := "quit", action := routes.Team.quit(t.id))(
                     submitButton(cls := "button button-empty button-red confirm")(quitTeam.txt())

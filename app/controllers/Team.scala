@@ -1,5 +1,7 @@
 package controllers
 
+import play.api.data.Form
+import play.api.data.Forms._
 import play.api.libs.json._
 import play.api.mvc._
 import scala.concurrent.duration._
@@ -196,6 +198,17 @@ object Team extends LidraughtsController {
     }
   )
 
+  def subscribe(teamId: String) = {
+    def doSub(req: Request[_], me: UserModel) =
+      Form(single("v" -> boolean))
+        .bindFromRequest()(req)
+        .fold(_ => funit, v => api.subscribe(teamId, me.id, v))
+    AuthOrScopedBody(_.Team.Write)(
+      auth = ctx => me => doSub(ctx.body, me) inject Redirect(routes.Team.show(teamId)),
+      scoped = req => me => doSub(req, me) inject jsonOkResult
+    )
+  }
+
   def requests = Auth { implicit ctx => me =>
     Env.team.cached.nbRequests invalidate me.id
     api requestsWithUsers me map { html.team.request.all(_) }
@@ -281,10 +294,12 @@ object Team extends LidraughtsController {
           },
         msg =>
           PmAllLimitPerUser(me.id) {
+            val url = s"${lidraughts.api.Env.current.Net.BaseUrl}${routes.Team.show(team.id)}"
             val full = s"""$msg
 ---
-You received this message because you are part of the team lidraughts.org${routes.Team.show(team.id)}."""
-            MemberRepo.userIdsByTeam(team.id) flatMap {
+You received this because you are subscribed to messages of the team $url."""
+
+            MemberRepo.subscribedUserIds(team.id) flatMap {
               Env.message.api.multiPost(me, _, team.name, full)
             } inject Redirect(routes.Team.show(team.id))
           }

@@ -69,6 +69,10 @@ final class TeamApi(
   def mine(me: User): Fu[List[Team]] =
     cached teamIds me.id flatMap { ids => coll.team.byIds[Team](ids.toArray) }
 
+  def isSubscribed = MemberRepo.isSubscribed _
+
+  def subscribe = MemberRepo.subscribe _
+
   def hasTeams(me: User): Fu[Boolean] = cached.teamIds(me.id).map(_.value.nonEmpty)
 
   def hasCreatedRecently(me: User): Fu[Boolean] =
@@ -147,7 +151,7 @@ final class TeamApi(
           timeline ! Propagate(TeamJoin(user.id, team.id)).toFollowersOf(user.id)
           bus.publish(JoinTeam(id = team.id, userId = user.id), 'team)
         }
-    } recover lidraughts.db.recoverDuplicateKey(_ => ())
+    } recover lidraughts.db.ignoreDuplicateKey
   }
 
   def quit(teamId: Team.ID, me: User): Fu[Option[Team]] =
