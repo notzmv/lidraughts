@@ -90,7 +90,7 @@ final class WinnersApi(
     yearlies <- fetchLastFreq(Freq.Yearly, DateTime.now.minusYears(1))
     monthlies <- fetchLastFreq(Freq.Monthly, DateTime.now.minusMonths(2))
     weeklies <- fetchLastFreq(Freq.Weekly, DateTime.now.minusWeeks(2))
-    dailies <- fetchLastFreq(Freq.Daily, DateTime.now.minusDays(2))
+    dailies <- fetchLastFreq(Freq.Daily, DateTime.now.minusDays(3))
     elites <- fetchLastFreq(Freq.Weekend, DateTime.now.minusWeeks(3))
     marathons <- fetchLastFreq(Freq.Marathon, DateTime.now.minusMonths(13))
   } yield {

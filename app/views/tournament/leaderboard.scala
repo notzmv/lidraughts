@@ -67,6 +67,7 @@ object leaderboard {
             freqWinners(winners.superblitz, PerfType.Blitz, "SuperBlitz"),
             freqWinners(winners.blitz, PerfType.Blitz, "Blitz"),
             freqWinners(winners.rapid, PerfType.Rapid, "Rapid"),
+            freqWinners(winners.classical, PerfType.Rapid, "Classical"),
             //marathonWinners,
             lidraughts.tournament.WinnersApi.variants.map { v =>
               PerfType.byVariant(v).map { pt =>
