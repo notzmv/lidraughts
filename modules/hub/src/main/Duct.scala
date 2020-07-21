@@ -26,6 +26,12 @@ trait Duct {
       }
     ).isEmpty) run(msg)
 
+  def ask[A](makeMsg: Promise[A] => Any): Fu[A] = {
+    val promise = Promise[A]()
+    this ! makeMsg(promise)
+    promise.future
+  }
+
   def queueSize = stateRef.get().fold(0)(_.size + 1)
 
   /*

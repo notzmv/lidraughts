@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache._
 
 import scala.collection.JavaConverters._
 import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.Promise
 import java.util.concurrent.TimeUnit
 
 final class DuctMap[D <: Duct](
@@ -25,6 +26,8 @@ final class DuctMap[D <: Duct](
   def tellAll(msg: Any) = ducts.asMap().asScala.foreach(_._2 ! msg)
 
   def tellIds(ids: Seq[String], msg: Any): Unit = ids foreach { tell(_, msg) }
+
+  def ask[A](id: String)(makeMsg: Promise[A] => Any): Fu[A] = getOrMake(id).ask(makeMsg)
 
   def exists(id: String): Boolean = ducts.getIfPresent(id) != null
 

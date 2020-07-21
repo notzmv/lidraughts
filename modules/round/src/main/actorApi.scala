@@ -134,7 +134,7 @@ package round {
   case class ForecastPlay(lastMove: draughts.Move)
   case class Cheat(color: Color)
   case class HoldAlert(playerId: String, mean: Int, sd: Int, ip: IpAddress)
-  case class GoBerserk(color: Color)
+  case class GoBerserk(color: Color, promise: Promise[Boolean])
   case object NoStart
   case object TooManyPlies
 }
