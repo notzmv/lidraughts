@@ -173,7 +173,7 @@ Thank you all, you rock!"""
               month.firstWeek.withDayOfWeek(SATURDAY) -> Antidraughts,
               month.firstWeek.withDayOfWeek(SUNDAY) -> Frisian
             ).flatMap {
-                case (day, variant) => at(day, 18 - offsetCET(day)) map { date =>
+                case (day, variant) => at(day, (if (variant.russian) 17 else 18) - offsetCET(day)) map { date =>
                   Schedule(Monthly, Blitz, variant, std, date).plan
                 }
               },
