@@ -14,14 +14,14 @@ final class PdnDump(
 
   import PdnDump._
 
-  def apply(game: Game, initialFen: Option[FEN], flags: WithFlags): Fu[Pdn] = {
+  def apply(game: Game, initialFen: Option[FEN], flags: WithFlags, hideRatings: Boolean = false): Fu[Pdn] = {
     val imported = game.pdnImport.flatMap { pdni =>
       Parser.full(pdni.pdn).toOption
     }
     val boardPos = game.variant.boardSize.pos
     val algebraic = flags.algebraic && boardPos.hasAlgebraic
     val tagsFuture =
-      if (flags.tags) tags(game, initialFen, imported, flags.draughtsResult, algebraic, flags.opening)
+      if (flags.tags) tags(game, initialFen, imported, flags.draughtsResult, algebraic, flags.opening, flags.profileName, !hideRatings)
       else fuccess(Tags(Nil))
     tagsFuture map { ts =>
       val turns = flags.moves ?? {
@@ -48,8 +48,21 @@ final class PdnDump(
 
   private def gameUrl(id: String) = s"$netBaseUrl/$id"
 
-  private def gameLightUsers(game: Game): Fu[(Option[LightUser], Option[LightUser])] =
-    (game.whitePlayer.userId ?? getLightUser) zip (game.blackPlayer.userId ?? getLightUser)
+  private def namedLightUser(userId: String) =
+    lidraughts.user.UserRepo.byId(userId) map {
+      _ ?? { u =>
+        LightUser(
+          id = u.id,
+          name = u.profile.flatMap(_.nonEmptyRealName).fold(u.username)(n => s"$n (${u.username})"),
+          title = u.title.map(_.value),
+          isPatron = u.plan.active
+        ).some
+      }
+    }
+
+  private def gameLightUsers(game: Game, withProfileName: Boolean): Fu[(Option[LightUser], Option[LightUser])] =
+    (game.whitePlayer.userId ?? { if (withProfileName) namedLightUser else getLightUser }) zip
+      (game.blackPlayer.userId ?? { if (withProfileName) namedLightUser else getLightUser })
 
   private def rating(p: Player) = p.rating.fold("?")(_.toString)
 
@@ -79,8 +92,10 @@ final class PdnDump(
     imported: Option[ParsedPdn],
     draughtsResult: Boolean,
     algebraic: Boolean,
-    withOpening: Boolean
-  ): Fu[Tags] = gameLightUsers(game) map {
+    withOpening: Boolean,
+    withProfileName: Boolean = false,
+    withRatings: Boolean = true
+  ): Fu[Tags] = gameLightUsers(game, withProfileName) map {
     case (wu, bu) => Tags {
       val importedDate = imported.flatMap(_.tags(_.Date))
       def convertedFen = initialFen.flatMap { fen =>
@@ -97,10 +112,10 @@ final class PdnDump(
         Tag(_.Result, result(game, draughtsResult)).some,
         importedDate.isEmpty option Tag(_.UTCDate, imported.flatMap(_.tags(_.UTCDate)) | Tag.UTCDate.format.print(game.createdAt)),
         importedDate.isEmpty option Tag(_.UTCTime, imported.flatMap(_.tags(_.UTCTime)) | Tag.UTCTime.format.print(game.createdAt)),
-        Tag(_.WhiteElo, rating(game.whitePlayer)).some,
-        Tag(_.BlackElo, rating(game.blackPlayer)).some,
-        ratingDiffTag(game.whitePlayer, _.WhiteRatingDiff),
-        ratingDiffTag(game.blackPlayer, _.BlackRatingDiff),
+        withRatings option Tag(_.WhiteElo, rating(game.whitePlayer)),
+        withRatings option Tag(_.BlackElo, rating(game.blackPlayer)),
+        withRatings ?? ratingDiffTag(game.whitePlayer, _.WhiteRatingDiff),
+        withRatings ?? ratingDiffTag(game.blackPlayer, _.BlackRatingDiff),
         wu.flatMap(_.shortTitle).map { t => Tag(_.WhiteTitle, t) },
         bu.flatMap(_.shortTitle).map { t => Tag(_.BlackTitle, t) },
         Tag(_.GameType, game.variant.gameType).some,
@@ -157,7 +172,8 @@ object PdnDump {
       opening: Boolean = true,
       literate: Boolean = false,
       draughtsResult: Boolean = true,
-      algebraic: Boolean = false
+      algebraic: Boolean = false,
+      profileName: Boolean = false
   )
 
   def result(game: Game, draughtsResult: Boolean) =

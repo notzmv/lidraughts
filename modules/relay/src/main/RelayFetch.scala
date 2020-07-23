@@ -118,8 +118,8 @@ private final class RelayFetch(
   import RelayFetch.GamesSeenBy
 
   private def doProcess(relay: Relay): Fu[RelayGames] =
-    if (relay.sync.simulId.isDefined) doFetchSimul(relay.sync.simulId.get, RelayFetch.maxChapters(relay))
-    else if (relay.sync.gameIds.isDefined) doFetchGames(relay.sync.gameIds.get, RelayFetch.maxChapters(relay), relay.name)
+    if (relay.sync.simulId.isDefined) doFetchSimul(relay.sync, RelayFetch.maxChapters(relay))
+    else if (relay.sync.gameIds.isDefined) doFetchGames(relay.sync, RelayFetch.maxChapters(relay), relay.name)
     // different indices may be fetched from the same upstream, so bypass cache
     else if (relay.sync.indices.exists(_.nonEmpty)) doFetchByIndex(relay.sync.upstream, relay.sync.indices.get, RelayFetch.maxChapters(relay))
     else cache getIfPresent relay.sync.upstream match {
@@ -141,7 +141,9 @@ private final class RelayFetch(
     opening = false
   )
 
-  private def doFetchSimul(simulId: String, max: Int): Fu[RelayGames] = {
+  private def doFetchSimul(sync: Relay.Sync, max: Int): Fu[RelayGames] = {
+    val simulId = ~sync.simulId
+    val flags = if (~sync.withProfileName) pdnFlags.copy(profileName = true) else pdnFlags
     logger.info(s"Sync fetch simulId $simulId")
     simulFetch(simulId) flatMap {
       _ ?? { simul =>
@@ -152,7 +154,7 @@ private final class RelayFetch(
         games.zipWithIndex.map {
           case (game, i) =>
             val number = i + 1
-            pdnDump(game, FEN(game.variant.initialFen).some, pdnFlags) map {
+            pdnDump(game, FEN(game.variant.initialFen).some, flags, flags.profileName) map {
               number -> _.withEvent(s"${simul.fullName} https://lidraughts.org/simul/${simul.id}")
             }
         } sequenceFu
@@ -162,14 +164,16 @@ private final class RelayFetch(
     } flatMap RelayFetch.multiPdnToGames.apply
   }
 
-  private def doFetchGames(gameIds: List[String], max: Int, eventName: String): Fu[RelayGames] = {
+  private def doFetchGames(sync: Relay.Sync, max: Int, eventName: String): Fu[RelayGames] = {
+    val gameIds = ~sync.gameIds
+    val flags = if (~sync.withProfileName) pdnFlags.copy(profileName = true) else pdnFlags
     logger.info(s"Sync fetch gameIds $gameIds")
     gameIds.zipWithIndex.map {
       case (gameId, i) =>
         val number = i + 1
         lidraughts.round.Env.current.proxy.gameIfPresent(gameId) orElse GameRepo.game(gameId) flatMap {
           case Some(game) =>
-            pdnDump(game, FEN(game.variant.initialFen).some, pdnFlags) map {
+            pdnDump(game, FEN(game.variant.initialFen).some, flags, flags.profileName) map {
               number -> _.withEvent(eventName)
             }
           case _ => fufail(s"Invalid gameId $gameId")

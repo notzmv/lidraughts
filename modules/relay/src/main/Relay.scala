@@ -77,6 +77,7 @@ object Relay {
       indices: Option[List[Int]],
       gameIds: Option[List[String]],
       simulId: Option[String],
+      withProfileName: Option[Boolean],
       until: Option[DateTime], // sync until then; resets on move
       nextAt: Option[DateTime], // when to run next sync
       delay: Option[Int], // override time between two sync (rare)

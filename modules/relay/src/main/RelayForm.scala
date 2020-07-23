@@ -24,6 +24,7 @@ object RelayForm {
     "gameIndices" -> optional(nonEmptyText.verifying("Invalid game indices", u => isCommaSeparatedNumbers(u))),
     "gameIds" -> optional(nonEmptyText.verifying("Invalid game IDs", u => isCommaSeparatedGameIds(u))),
     "simulId" -> optional(nonEmptyText),
+    "withProfileName" -> optional(boolean),
     "credit" -> optional(nonEmptyText),
     "startsAt" -> optional(utcDate),
     "throttle" -> optional(number(min = 2, max = 60))
@@ -52,6 +53,7 @@ object RelayForm {
       gameIndices: Option[String],
       gameIds: Option[String],
       simulId: Option[String],
+      withProfileName: Option[Boolean],
       credit: Option[String],
       startsAt: Option[DateTime],
       throttle: Option[Int]
@@ -83,6 +85,7 @@ object RelayForm {
       indices = gameIndices.map(_.split(',').flatMap(parseIntOption).toList),
       gameIds = gameIds.map(_.split(',').toList),
       simulId = simulId.filter(_.nonEmpty),
+      withProfileName = withProfileName,
       until = none,
       nextAt = none,
       delay = throttle,
@@ -122,6 +125,7 @@ object RelayForm {
       gameIndices = relay.sync.indices.map(_.mkString(",")),
       gameIds = relay.sync.gameIds.map(_.mkString(",")),
       simulId = relay.sync.simulId,
+      withProfileName = relay.sync.withProfileName,
       credit = relay.credit,
       startsAt = relay.startsAt,
       throttle = relay.sync.delay
