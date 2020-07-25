@@ -206,7 +206,7 @@ $(function() {
             result = self.find('.mini-board').data('result');
           if (result && result !== '*') {
             var userId = self.find('.vstext__pl').data('userid'),
-              newGame = userId && newGames[userId]
+              newGame = userId && newGames.hasOwnProperty(userId) && newGames[userId];
             if (newGame) {
               self.html(newGame);
               updated = true;
