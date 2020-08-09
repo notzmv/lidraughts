@@ -202,6 +202,8 @@ object User {
 
   val newUsernameChars = """(?i)[\w-]*""".r
 
+  val newUsernameLetters = """^([a-z0-9][\w-]?)+$""".r
+
   def couldBeUsername(str: User.ID) = historicalUsernameRegex.matches(str)
   def couldBeStartOfUsername(str: User.ID) = historicalUsernameStartRegex.matches(str)
 
