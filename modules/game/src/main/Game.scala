@@ -471,6 +471,14 @@ case class Game(
     }
     else "*"
 
+  def resultColor =
+    if (finishedOrAborted) winnerColor match {
+      case Some(White) => "white"
+      case Some(Black) => "black"
+      case _ => "draw"
+    }
+    else "*"
+
   def rated = mode.rated
   def casual = !rated
 

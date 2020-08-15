@@ -110,7 +110,7 @@ object Tv extends LidraughtsController {
       povs flatMap {
         _ map { pov =>
           Json.obj(
-            pov.player.userId.getOrElse(lidraughts.user.User.anonymous) -> html.game.bits.mini(pov, true).toString
+            pov.player.userId.getOrElse(lidraughts.user.User.anonymous) -> html.game.mini(pov).toString
           )
         }
       }

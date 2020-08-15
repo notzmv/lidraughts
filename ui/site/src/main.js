@@ -217,13 +217,85 @@
         resizable: resizable,
         fen: $this.data('fen') || lidraughts.readServerFen($this.data('z')),
         lastMove: lastMove,
-        drawable: { enabled: false, visible: false }
+        drawable: {
+          enabled: false,
+          visible: false
+        }
       };
       if (color) config.orientation = color;
       if (ground) ground.set(config);
       else $this.data('draughtsground', Draughtsground(this, config));
     });
   };
+
+  lidraughts.miniGame = (() => {
+    const fenColor = fen => fen.indexOf(' b') > 0 ? 'black' : 'white';
+    return {
+      init(node, data) {
+        const [fen, board, orientation, lm] = node.getAttribute('data-state').split('|'),
+          lms = lm ? String(lm) : '',
+          lastMove = lms && [lms.slice(-4, -2), lms.slice(-2)],
+          config = {
+            coordinates: 0,
+            boardSize: board ? board.split('x').map(s => parseInt(s)) : [10, 10],
+            viewOnly: true,
+            resizable: false,
+            fen,
+            orientation,
+            lastMove,
+            drawable: {
+              enabled: false,
+              visible: false
+            }
+          },
+          $el = $(node),
+          $cg = $el.find('.cg-wrap'),
+          turnColor = fenColor(fen);
+        $cg.data('draughtsground', Draughtsground($cg[0], config));
+        ['white', 'black'].forEach(color =>
+          $el.find('.mini-game__clock--' + color).each(function() {
+            $(this).clock({
+              time: parseInt(this.getAttribute('data-time')),
+              pause: color != turnColor
+            });
+          })
+        );
+        node.classList.remove('mini-game--init');
+        return node.getAttribute('data-live');
+      },
+      initAll() {
+        const nodes = Array.from(document.getElementsByClassName('mini-game--init')),
+          ids = nodes.map(lidraughts.miniGame.init).filter(id => id);
+        if (ids.length) lidraughts.StrongSocket.firstConnect.then(send =>
+          send('startWatching', ids.join(' '))
+        );
+      },
+      update(node, data) {
+        const $el = $(node),
+          lm = data.lm ? String(data.lm) : data.lm,
+          lastMove = lm && [lm.slice(-4, -2), lm.slice(-2)],
+          cg = $el.find('.cg-wrap').data('draughtsground');
+        cg.set({
+          fen: data.fen,
+          lastMove
+        });
+        const turnColor = fenColor(data.fen);
+        const renderClock = (time, color) => {
+          if (!isNaN(time)) $el.find('.mini-game__clock--' + color).clock('set', {
+            time,
+            pause: color != turnColor
+          });
+        };
+        renderClock(data.wc, 'white');
+        renderClock(data.bc, 'black');
+      },
+      finish(node, win) {
+        ['white', 'black'].forEach(color =>
+          $(node).find('.mini-game__clock--' + color).replaceWith(`<span class="mini-game__result">${win ? (win == color[0] ? 1 : 0) : '½'}</span>`)
+        );
+      }
+    }
+  })();
 
   $(function() {
     if (lidraughts.analyse) LidraughtsAnalyse.boot(lidraughts.analyse);
@@ -287,6 +359,7 @@
           lidraughts.timeago.render([].slice.call(document.getElementsByClassName('timeago'), 0, 99))
         );
       }
+
       function setTimeago(interval) {
         renderTimeago();
         setTimeout(() => setTimeago(interval * 1.1), interval);
@@ -659,8 +732,8 @@
     api.warmup = function() {
       if (enabled()) {
         // See goldfire/howler.js#715
-        Howler._autoResume();   // This resumes sound if suspended.
-        Howler._autoSuspend();  // This starts the 30s timer to suspend.
+        Howler._autoResume(); // This resumes sound if suspended.
+        Howler._autoSuspend(); // This starts the 30s timer to suspend.
       }
     };
 
@@ -694,7 +767,7 @@
     }
   });
 
-  lidraughts.widget("friends", (function() {
+  lidraughts.widget('friends', (function() {
     var getId = function(titleName) {
       return titleName.toLowerCase().replace(/^[\w\-]+\s/, '');
     };
@@ -743,7 +816,9 @@
           this.$friendBoxTitle.html(this.trans.vdomPlural('nbFriendsOnline', ids.length, $('<strong>').text(ids.length)));
           this.$nobody.toggleNone(!ids.length);
           this.element.find('.list').html(
-            ids.map(function(id) { return renderUser(users[id]); }).join('')
+            ids.map(function(id) {
+              return renderUser(users[id]);
+            }).join('')
           );
         }.bind(this));
       },
@@ -791,61 +866,54 @@
     };
   })());
 
-  lidraughts.widget("clock", {
+  lidraughts.widget('clock', {
     _create: function() {
-      var self = this;
-      var target = this.options.time * 1000 + Date.now();
-      var timeEl = this.element.find('.time')[0];
-      var tick = function() {
-        var remaining = target - Date.now();
-        if (remaining <= 0) clearInterval(self.interval);
-        timeEl.innerHTML = self._formatMs(remaining);
-      };
-      this.interval = setInterval(tick, 1000);
-      tick();
+      this.target = this.options.time * 1000 + Date.now();
+      if (!this.options.pause) this.interval = setInterval(this._render.bind(this), 1000);
+      this._render();
     },
 
-    _pad: function(x) { return (x < 10 ? '0' : '') + x; },
+    set: function(opts) {
+      this.options = opts;
+      this.target = this.options.time * 1000 + Date.now();
+      this._render();
+      clearInterval(this.interval);
+      if (!opts.pause) this.interval = setInterval(this._render.bind(this), 1000);
+    },
+
+    _render: function() {
+      this.element.text(this._formatMs(this.target - Date.now()));
+      this.element.toggleClass('clock--run', !this.options.pause);
+    },
+
+    _pad: function(x) {
+      return (x < 10 ? '0' : '') + x;
+    },
 
     _formatMs: function(msTime) {
-      var date = new Date(Math.max(0, msTime + 500));
-
-      var hours = date.getUTCHours(),
+      const date = new Date(Math.max(0, msTime + 500)),
+        hours = date.getUTCHours(),
         minutes = date.getUTCMinutes(),
         seconds = date.getUTCSeconds();
-
-      if (hours > 0) {
-        return hours + ':' + this._pad(minutes) + ':' + this._pad(seconds);
-      } else {
-        return minutes + ':' + this._pad(seconds);
-      }
+      return hours > 0 ?
+        hours + ':' + this._pad(minutes) + ':' + this._pad(seconds) :
+        minutes + ':' + this._pad(seconds);
     }
   });
 
   $(function() {
     lidraughts.pubsub.on('content_loaded', lidraughts.parseFen);
-
-    var socketOpened = false;
-
-    function startWatching() {
-      if (!socketOpened) return;
-      var ids = [];
-      $('.mini-board.live').removeClass("live").each(function() {
-        ids.push(this.getAttribute("data-live"));
-      });
-      if (ids.length) lidraughts.socket.send("startWatching", ids.join(" "));
-    }
-    lidraughts.pubsub.on('content_loaded', startWatching);
-    lidraughts.pubsub.on('socket.open', function() {
-      socketOpened = true;
-      startWatching();
-    });
+    lidraughts.pubsub.on('content_loaded', lidraughts.miniGame.initAll);
 
     lidraughts.requestIdleCallback(function() {
       lidraughts.parseFen();
+      lidraughts.miniGame.initAll();
       $('.chat__members').watchers();
       if (location.hash === '#blind' && !$('body').hasClass('blind-mode'))
-        $.post('/toggle-blind-mode', { enable: 1, redirect: '/' }, lidraughts.reload);
+      $.post('/toggle-blind-mode', {
+        enable: 1,
+        redirect: '/'
+      }, lidraughts.reload);
     });
   });
 
@@ -891,7 +959,9 @@
     $('#team-subscribe').on('change', function() {
       const v = this.checked;
       $(this).parents('form').each(function() {
-        $.post($(this).attr('action'), { v: v });
+        $.post($(this).attr('action'), {
+          v: v
+        });
       });
     });
   }

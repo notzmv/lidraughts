@@ -15,15 +15,14 @@ object widgets {
   def apply(
     games: Seq[Game],
     user: Option[lidraughts.user.User] = None,
-    ownerLink: Boolean = false,
-    mini: Boolean = false
+    ownerLink: Boolean = false
   )(implicit ctx: Context): Frag = games map { g =>
     val fromPlayer = user flatMap g.player
     val firstPlayer = fromPlayer | g.firstPlayer
     st.article(cls := "game-row paginated")(
       a(cls := "game-row__overlay", href := gameLink(g, firstPlayer.color, ownerLink)),
       div(cls := "game-row__board")(
-        gameFen(Pov(g, firstPlayer), withLink = false, withTitle = false)
+        mini(Pov(g, firstPlayer), withLink = false, withTitle = false)
       ),
       div(cls := "game-row__infos")(
         div(cls := "header", dataIcon := bits.gameIcon(g))(

@@ -34,9 +34,9 @@ private final class MoveBroadcast(system: akka.actor.ActorSystem) extends Troupe
 
     case ResultEvent(gameId, result) =>
       games get gameId foreach { mIds =>
-        val msg = Socket.makeMessage("res", play.api.libs.json.Json.obj(
+        val msg = Socket.makeMessage("finish", play.api.libs.json.Json.obj(
           "id" -> gameId,
-          "res" -> result
+          "win" -> result
         ))
         mIds foreach { mId =>
           members get mId foreach (_.member push msg)

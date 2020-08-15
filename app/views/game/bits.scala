@@ -12,41 +12,9 @@ object bits {
 
   private val dataUserId = attr("data-userid")
 
-  def featuredJs(pov: Pov): Frag = frag(
-    gameFenNoCtx(pov, tv = true),
-    vstext(pov)(none)
-  )
+  def featuredJs(pov: Pov): Frag = "TODO"
 
-  def mini(pov: Pov, withResult: Boolean = false)(implicit ctx: Context): Frag =
-    a(href := gameLink(pov))(
-      gameFen(pov, withLink = false, withResult = withResult),
-      vstext(pov, withResult)(ctx.some)
-    )
-
-  def miniGame(pov: Pov)(implicit ctx: Context): Frag =
-    a(href := gameLink(pov), cls := "mini-game")(
-      miniGamePlayer(!pov),
-      gameFen(pov, withLink = false),
-      miniGamePlayer(pov)
-    )
-
-  def miniGamePlayer(pov: Pov) =
-    span(cls := "mini-game__player")(
-      span(cls := "mini-game__user")(
-        playerUsername(pov.player, withRating = false, withTitle = true),
-        span(cls := "mini-game__rating")(lidraughts.game.Namer ratingString pov.player)
-      ),
-      pov.game.clock.map { c =>
-        span(cls := "mini-game__clock")(miniGameClock(c.remainingTime(pov.color)))
-      }
-    )
-
-  def miniGameClock(centis: chess.Centis) = {
-    val s = centis.roundSeconds
-    f"${s / 60}%02d:${s % 60}%02d"
-  }
-
-  def miniBoard(fen: draughts.format.FEN, color: draughts.Color = draughts.White, boardSize: draughts.Board.BoardSize): Frag = 
+  def miniBoard(fen: draughts.format.FEN, color: draughts.Color = draughts.White, boardSize: draughts.Board.BoardSize): Frag =
     div(
       cls := s"mini-board parse-fen cg-wrap is2d is${boardSize.key}",
       dataColor := color.name,

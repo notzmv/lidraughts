@@ -29,7 +29,7 @@ object gamesCollection {
           ),
           div(cls := "page-menu__content now-playing editable")(
             povs map { p =>
-              div(views.html.game.bits.mini(p, true))
+              div(views.html.game.mini(p))
             }
           )
         )

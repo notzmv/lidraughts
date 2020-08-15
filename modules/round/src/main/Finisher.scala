@@ -114,7 +114,7 @@ private[round] final class Finisher(
       ).flatMap {
           case (whiteO, blackO) => {
             val finish = FinishGame(g, whiteO, blackO)
-            val result = ResultEvent(g.id, g.resultChar)
+            val result = ResultEvent(g.id, g.resultColor)
             updateCountAndPerfs(finish) map { ratingDiffs =>
               message foreach { messenger.system(g, _) }
               GameRepo game g.id foreach { newGame =>
