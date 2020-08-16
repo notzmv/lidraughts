@@ -12,16 +12,6 @@ object bits {
 
   private val dataUserId = attr("data-userid")
 
-  def featuredJs(pov: Pov): Frag = "TODO"
-
-  def miniBoard(fen: draughts.format.FEN, color: draughts.Color = draughts.White, boardSize: draughts.Board.BoardSize): Frag =
-    div(
-      cls := s"mini-board parse-fen cg-wrap is2d is${boardSize.key}",
-      dataColor := color.name,
-      dataFen := fen.value,
-      dataBoard := s"${boardSize.width}x${boardSize.height}"
-    )(cgWrapContent)
-
   def gameIcon(game: Game): Char = game.perfType match {
     case _ if game.fromPosition => '*'
     case _ if game.imported => '/'

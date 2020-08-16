@@ -142,9 +142,6 @@
     }
   });
 
-  lidraughts.reverse = s => s.split('').reverse().join('');
-  lidraughts.readServerFen = t => atob(lidraughts.reverse(t));
-
   lidraughts.userAutocomplete = ($input, opts) => {
     opts = opts || {};
     lidraughts.loadCssPath('autocomplete');
@@ -194,38 +191,28 @@
     });
   };
 
-  lidraughts.parseFen = function($elem) {
-    if (!window.Draughtsground) return setTimeout(function() {
-      lidraughts.parseFen($elem);
-    }, 500); // if not loaded yet
-    // sometimes $elem is not a jQuery, can happen when content_loaded is triggered with random args
-    if (!$elem || !$elem.each) $elem = $('.parse-fen');
-    $elem.each(function() {
-      var $this = $(this).removeClass('parse-fen');
-      var lm = $this.data('lastmove');
-      if (lm) lm = String(lm);
-      var lastMove = lm && [lm.slice(-4, -2), lm.slice(-2)];
-      var color = $this.data('color') || lidraughts.readServerFen($(this).data('y'));
-      var ground = $this.data('draughtsground');
-      var board = $this.data('board');
-      var playable = !!$this.data('playable');
-      var resizable = !!$this.data('resizable');
-      var config = {
-        coordinates: 0,
-        boardSize: board ? board.split('x').map(s => parseInt(s)) : [10, 10],
-        viewOnly: !playable,
-        resizable: resizable,
-        fen: $this.data('fen') || lidraughts.readServerFen($this.data('z')),
-        lastMove: lastMove,
-        drawable: {
-          enabled: false,
-          visible: false
-        }
-      };
-      if (color) config.orientation = color;
-      if (ground) ground.set(config);
-      else $this.data('draughtsground', Draughtsground(this, config));
-    });
+  lidraughts.miniBoard = {
+    initAll() {
+      Array.from(document.getElementsByClassName('mini-board--init')).forEach(lidraughts.miniBoard.init);
+    },
+    init(node) {
+      if (!window.Draughtsground) return setTimeout(() => lidraughts.miniBoard.init(node), 500);
+      const $el = $(node).removeClass('mini-board--init'),
+        [fen, board, orientation, lm] = $el.data('state').split(','),
+        config = {
+          coordinates: 0,
+          boardSize: board ? board.split('x').map(s => parseInt(s)) : [10, 10],
+          viewOnly: !$el.data('playable'),
+          resizable: false,
+          fen,
+          lastMove: lm && [lm.slice(-4, -2), lm.slice(-2)],
+          drawable: {
+            enabled: false,
+            visible: false
+          }
+        };
+      $el.data('draughtsground', Draughtsground(node, config));
+    }
   };
 
   lidraughts.miniGame = (() => {
@@ -248,7 +235,7 @@
               visible: false
             }
           },
-          $el = $(node),
+          $el = $(node).removeClass('mini-game--init'),
           $cg = $el.find('.cg-wrap'),
           turnColor = fenColor(fen);
         $cg.data('draughtsground', Draughtsground($cg[0], config));
@@ -260,7 +247,6 @@
             });
           })
         );
-        node.classList.remove('mini-game--init');
         return node.getAttribute('data-live');
       },
       initAll() {
@@ -902,11 +888,11 @@
   });
 
   $(function() {
-    lidraughts.pubsub.on('content_loaded', lidraughts.parseFen);
+    lidraughts.pubsub.on('content_loaded', lidraughts.miniBoard.initAll);
     lidraughts.pubsub.on('content_loaded', lidraughts.miniGame.initAll);
 
     lidraughts.requestIdleCallback(function() {
-      lidraughts.parseFen();
+      lidraughts.miniBoard.initAll();
       lidraughts.miniGame.initAll();
       $('.chat__members').watchers();
       if (location.hash === '#blind' && !$('body').hasClass('blind-mode'))
