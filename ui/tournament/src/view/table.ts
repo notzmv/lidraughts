@@ -1,13 +1,15 @@
 import { h } from 'snabbdom'
 import { VNode } from 'snabbdom/vnode';
 import { opposite } from 'draughtsground/util';
-import { player as renderPlayer, miniBoard, bind } from './util';
-import { Duel, DuelPlayer, DuelTeams, TeamBattle } from '../interfaces';
+import { player as renderPlayer, bind } from './util';
+import { Duel, DuelPlayer, DuelTeams, TeamBattle, FeaturedGame } from '../interfaces';
 import { teamName } from './battle';
 import TournamentController from '../ctrl';
 
-function featuredPlayer(player) {
-  return h('div.tour__featured__player', [
+function featuredPlayer(game: FeaturedGame, color: Color) {
+  const player = game[color];
+  return h('span.mini-game__player', [
+    h('span.mini-game__user', [
     h('strong', '#' + player.rank),
     renderPlayer(player, true, true, false, false),
     player.berserk ? h('i', {
@@ -16,14 +18,31 @@ function featuredPlayer(player) {
         title: 'Berserk'
       }
     }) : null
+  ]),
+  game.clock ? h(`span.mini-game__clock.mini-game__clock--${color}`, {
+    attrs: {
+        'data-time': game.clock[color]
+      }
+    }) : h('span.mini-game__result', game.winner ? (game.winner == color ? '1' : '0') : '½')
   ]);
 }
 
-function featured(f): VNode {
-  return h('div.tour__featured', [
-    featuredPlayer(f[opposite(f.color)]),
-    miniBoard(f),
-    featuredPlayer(f[f.color])
+function featured(game: FeaturedGame): VNode {
+  return h(`div.tour__featured.mini-game.mini-game-${game.id}.mini-game--init is2d`, {
+    hook: {
+      insert(vnode) {
+        window.lichess.miniGame.init(vnode.elm as HTMLElement, `${game.fen},${game.orientation},${game.lastMove}`)
+        window.lichess.powertip.manualUserIn(vnode.elm as HTMLElement);
+      }
+    }
+  }, [
+    featuredPlayer(game, opposite(game.orientation)),
+    h('a.cg-wrap', {
+      attrs: {
+        href: `/${game.id}/${game.orientation}`
+      }
+    }),
+    featuredPlayer(game, game.orientation)
   ]);
 }
 

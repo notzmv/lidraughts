@@ -232,7 +232,7 @@
     const fenColor = fen => fen.indexOf(' b') > 0 ? 'black' : 'white';
     return {
       init(node, data) {
-        const [fen, board, orientation, lm] = node.getAttribute('data-state').split('|'),
+        const [fen, board, orientation, lm] = (data || node.getAttribute('data-state')).split('|'),
           lms = lm ? String(lm) : '',
           lastMove = lms && [lms.slice(-4, -2), lms.slice(-2)],
           config = {

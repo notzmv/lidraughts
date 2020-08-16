@@ -32,6 +32,12 @@ interface Lidraughts {
   socket: any;
   idleTimer(delay: number, onIdle: () => void, onWakeUp: () => void): void;
   parseFen(el: any): void;
+  miniGame: {
+    init(node: HTMLElement, data?: string): string;
+    initAll(): void;
+    update(node: HTMLElement, data: { fen: string, lm: string, wc?: number, bc?: number }): void;
+    finish(node: HTMLElement, win?: Color): void;
+  };
   hasToReload: boolean;
   ab: any;
   challengeApp: any;
