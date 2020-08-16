@@ -26,8 +26,9 @@ interface Lidraughts {
   powertip: any
   userAutocomplete: any
   StrongSocket: {
-    sri: string
+    sri: string;
     (url: string, version: number, cfg: any): any;
+    firstConnect: Promise<(tpe: string, data: any) => void>;
   }
   socket: any;
   idleTimer(delay: number, onIdle: () => void, onWakeUp: () => void): void;
