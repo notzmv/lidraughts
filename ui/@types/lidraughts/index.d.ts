@@ -32,7 +32,10 @@ interface Lidraughts {
   }
   socket: any;
   idleTimer(delay: number, onIdle: () => void, onWakeUp: () => void): void;
-  parseFen(el: any): void;
+  miniBoard: {
+    init(node: HTMLElement): void;
+    initAll(): void;
+  };
   miniGame: {
     init(node: HTMLElement, data?: string): string;
     initAll(): void;
