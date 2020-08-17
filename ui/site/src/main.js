@@ -198,20 +198,19 @@
     init(node) {
       if (!window.Draughtsground) return setTimeout(() => lidraughts.miniBoard.init(node), 500);
       const $el = $(node).removeClass('mini-board--init'),
-        [fen, board, orientation, lm] = $el.data('state').split(','),
-        config = {
-          coordinates: 0,
-          boardSize: board ? board.split('x').map(s => parseInt(s)) : [10, 10],
-          viewOnly: !$el.data('playable'),
-          resizable: false,
-          fen,
-          lastMove: lm && [lm.slice(-4, -2), lm.slice(-2)],
-          drawable: {
-            enabled: false,
-            visible: false
-          }
-        };
-      $el.data('draughtsground', Draughtsground(node, config));
+        [fen, board, orientation, lm] = $el.data('state').split(',');
+      $el.data('draughtsground', Draughtsground(node, {
+        coordinates: 0,
+        boardSize: board ? board.split('x').map(s => parseInt(s)) : [10, 10],
+        viewOnly: !node.getAttribute('data-playable'),
+        resizable: false,
+        fen,
+        lastMove: lm && [lm.slice(-4, -2), lm.slice(-2)],
+        drawable: {
+          enabled: false,
+          visible: false
+        }
+      }));  
     }
   };
 
