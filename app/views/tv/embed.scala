@@ -32,6 +32,7 @@ object embed {
           ),
           jQueryTag,
           jsAt("javascripts/vendor/draughtsground.min.js", false),
+          jsAt("compiled/util.js", defer = false),
           jsAt("compiled/tv.js", false)
         )
     )

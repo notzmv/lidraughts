@@ -13,6 +13,7 @@ object mini {
   private val dataLive = attr("data-live")
   private val dataState = attr("data-state")
   private val dataTime = attr("data-time")
+  private val cgWrap = span(cls := "cg-wrap")(cgWrapContent)
 
   def apply(
     pov: Pov,
@@ -32,7 +33,7 @@ object mini {
       renderState(pov)
     )(
         renderPlayer(!pov),
-        span(cls := "cg-wrap")(cgWrapContent),
+        cgWrap,
         renderPlayer(pov)
       )
   }
@@ -49,7 +50,7 @@ object mini {
       renderState(pov)
     )(
         renderPlayer(!pov),
-        span(cls := "cg-wrap")(cgWrapContent),
+        cgWrap,
         renderPlayer(pov)
       )
   }
