@@ -17,7 +17,7 @@ object bits {
   private val dataState = attr("data-state")
 
   def mini(pov: Pov): Tag => Tag =
-    mini(FEN(Forsyth.exportBoard(pov.game.board)), pov.game.variant.boardSize, pov.color, ~pov.game.lastMoveKeys) _
+    mini(FEN(Forsyth.boardAndColor(pov.game.situation)), pov.game.variant.boardSize, pov.color, ~pov.game.lastMoveKeys) _
 
   def mini(fen: draughts.format.FEN, boardSize: draughts.Board.BoardSize, color: draughts.Color = draughts.White, lastMove: String = "")(tag: Tag): Tag =
     tag(

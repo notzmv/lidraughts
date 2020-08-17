@@ -59,7 +59,7 @@ object mini {
 
   private def renderState(pov: Pov) = {
     val boardSize = pov.game.variant.boardSize
-    dataState := s"${Forsyth.exportBoard(pov.game.board)}|${boardSize.width}x${boardSize.height}|${pov.color.name}|${~pov.game.lastMoveKeys}"
+    dataState := s"${Forsyth.boardAndColor(pov.game.situation)}|${boardSize.width}x${boardSize.height}|${pov.color.name}|${~pov.game.lastMoveKeys}"
   }
 
   private def renderPlayer(pov: Pov) =

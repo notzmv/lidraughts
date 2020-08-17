@@ -286,7 +286,7 @@ final class JsonView(
     Json
       .obj(
         "id" -> game.id,
-        "fen" -> (draughts.format.Forsyth exportBoard game.board),
+        "fen" -> draughts.format.Forsyth.boardAndColor(game.situation),
         "orientation" -> game.naturalOrientation.name,
         "lastMove" -> ~game.lastMoveKeys,
         "white" -> ofPlayer(featured.white, game player draughts.White),
