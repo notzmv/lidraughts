@@ -405,8 +405,8 @@ lidraughts.miniBoard = {
 lidraughts.miniGame = (() => {
   const fenColor = fen => fen.indexOf(' b') > 0 ? 'black' : 'white';
   return {
-    init(node, data) {
-      const [fen, board, orientation, lm] = ((typeof data == 'string' && data) || node.getAttribute('data-state')).split('|'),
+    init(node) {
+      const [fen, board, orientation, lm] = node.getAttribute('data-state').split('|'),
         config = {
           coordinates: 0,
           boardSize: board ? board.split('x').map(s => parseInt(s)) : [10, 10],
