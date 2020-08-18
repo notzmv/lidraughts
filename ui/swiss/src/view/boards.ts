@@ -17,9 +17,12 @@ export function top(boards: Board[], boardSize: BoardData, draughtsResult: boole
 const renderBoard = (board: Board, boardSize: BoardData, draughtsResult: boolean): VNode =>
   h(`div.swiss__board.mini-game.mini-game-${board.id}.mini-game--init.is2d.is${boardSize.key}`, {
     key: board.id,
+    attrs: {
+      'data-state': `${board.fen}|${boardSize.size[0]}x${boardSize.size[1]}|${board.orientation}|${board.lastMove || ''}`,
+      'data-live': board.id
+    },
     hook: {
       insert(vnode) {
-        window.lidraughts.miniGame.init(vnode.elm as HTMLElement, `${board.fen}|${boardSize.size[0]}x${boardSize.size[1]}|${board.orientation}|${board.lastMove || ''}`)
         window.lidraughts.powertip.manualUserIn(vnode.elm as HTMLElement);
       }
     }
