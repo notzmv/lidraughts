@@ -43,10 +43,10 @@ object mini {
     val boardSize = game.variant.boardSize
     a(
       href := (if (tv) routes.Tv.index() else routes.Round.watcher(pov.gameId, pov.color.name)),
+      target := blank.option("_blank"),
       title := gameTitle(pov.game, pov.color),
       cls := s"mini-game mini-game-${game.id} mini-game--init is2d is${boardSize.key} ${isLive ?? "mini-game--live"} ${game.variant.key}",
       dataLive := isLive.option(game.id),
-      target := blank.option("_blank"),
       renderState(pov)
     )(
         renderPlayer(!pov, lidraughts.pref.Pref.default.draughtsResult),
