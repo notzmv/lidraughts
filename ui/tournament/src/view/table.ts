@@ -1,7 +1,7 @@
 import { h } from 'snabbdom'
 import { VNode } from 'snabbdom/vnode';
 import { opposite } from 'draughtsground/util';
-import { player as renderPlayer, bind } from './util';
+import { player as renderPlayer, bind, onInsert } from './util';
 import { Duel, DuelPlayer, DuelTeams, TeamBattle, FeaturedGame } from '../interfaces';
 import { teamName } from './battle';
 import TournamentController from '../ctrl';
@@ -31,13 +31,13 @@ function featuredPlayer(game: FeaturedGame, color: Color, draughtsResult: boolea
 }
 
 function featured(game: FeaturedGame, draughtsResult: boolean): VNode {
-  return h(`div.tour__featured.mini-game.mini-game-${game.id}.mini-game--init is2d`, {
-    hook: {
-      insert(vnode) {
-        window.lidraughts.miniGame.init(vnode.elm as HTMLElement, `${game.fen},${game.orientation},${game.lastMove}`)
-        window.lidraughts.powertip.manualUserIn(vnode.elm as HTMLElement);
-      }
-    }
+  const board = game.board;
+  return h(`div.tour__featured.mini-game.mini-game-${game.id}.mini-game--init.is2d.is${board.key}`, {
+    attrs: {
+      'data-state': `${game.fen}|${board.size[0]}x${board.size[1]}|${game.orientation}|${game.lastMove || ''}`,
+      'data-live': game.id
+    },
+    hook: onInsert(window.lidraughts.powertip.manualUserIn)
   }, [
     featuredPlayer(game, opposite(game.orientation), draughtsResult),
     h('a.cg-wrap', {
@@ -82,7 +82,13 @@ function renderDuel(battle?: TeamBattle, duelTeams?: DuelTeams) {
 }
 
 export default function(ctrl: TournamentController): VNode {
-  return h('div.tour__table', [
+  return h('div.tour__table', {
+    hook: {
+      postpatch() {
+        window.lidraughts.miniGame.initAll();
+      }
+    }
+  }, [
     ctrl.data.featured ? featured(ctrl.data.featured, ctrl.data.draughtsResult) : null,
     ctrl.data.duels.length ? h('section.tour__duels', {
       hook: bind('click', _ => !ctrl.disableClicks)

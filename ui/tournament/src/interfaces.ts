@@ -26,6 +26,7 @@ export interface FeaturedGame {
   lastMove: string;
   white: FeaturedPlayer;
   black: FeaturedPlayer;
+  board: BoardData;
   clock?: {
     white: number;
     black: number;
