@@ -1,5 +1,4 @@
 import { h } from 'snabbdom';
-import { Draughtsground } from 'draughtsground';
 import LobbyController from '../ctrl';
 
 function timer(pov) {
@@ -15,25 +14,18 @@ function timer(pov) {
 
 export default function(ctrl: LobbyController) {
   return h('div.now-playing',
-    ctrl.data.nowPlaying.map(function(pov) {
-      return h('a.' + pov.variant.key + (pov.isMyTurn ? '.my_turn' : ''), {
+    ctrl.data.nowPlaying.map(pov =>
+      h('a.' + pov.variant.key, {
         key: pov.gameId,
         attrs: { href: '/' + pov.fullId }
       }, [
-        h('div.mini-board.cg-wrap.is2d.is' + pov.variant.board.key, {
+        h('span.mini-board.cg-wrap.is2d.is' + pov.variant.board.key, {
+          attrs: {
+            'data-state': `${pov.fen}|${pov.variant.size[0]}x${pov.variant.board.size[1]}|${pov.color}|${pov.lastMove}`
+          },
           hook: {
             insert(vnode) {
-              const lm = String(pov.lastMove);
-              Draughtsground(vnode.elm as HTMLElement, {
-                coordinates: 0,
-                boardSize: pov.variant.board.size,
-                drawable: { enabled: false, visible: false },
-                resizable: false,
-                viewOnly: true,
-                orientation: pov.color,
-                fen: pov.fen,
-                lastMove: lm ? [lm.slice(-4, -2) as Key, lm.slice(-2) as Key] : undefined
-              });
+              window.lidraughts.miniBoard.init(vnode.elm as HTMLElement);
             }
           }
         }),
@@ -44,6 +36,6 @@ export default function(ctrl: LobbyController) {
             (pov.secondsLeft ? timer(pov) : [ctrl.trans.noarg('yourTurn')]) :
             h('span', '\xa0')) // &nbsp;
         ])
-      ]);
-    }));
+      ])
+    ));
 }

@@ -5,8 +5,8 @@
     --np-min-width: 50%;
   }
   grid-template-columns: repeat(auto-fill, minmax(var(--np-min-width), 1fr));
-  .mini-game {
-    @extend %box-radius;
+
+  > a {
     color: $c-font;
   }
   &:not(.editable) > a {
@@ -55,9 +55,6 @@
     }
   }
 
-  a {
-    color: $c-font;
-  }
   .indicator {
     color: $c-accent;
     margin-top: -3px;

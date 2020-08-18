@@ -8,10 +8,9 @@ function miniPairing(ctrl) {
     const game = pairing.game,
       player = pairing.player,
       title64 = player.title && player.title.endsWith('-64');
-    return m(`a.mini-game.mini-game-${game.id}.is2d.is${game.board.key}`, {
+    return m(`span.mini-game.mini-game-${game.id}.is2d.is${game.board.key}`, {
       class: (ctrl.data.host.gameId === game.id ? 'host ' : '') + (ctrl.evals !== undefined ? 'gauge_displayed' : ''),
       'data-live': game.clock ? game.id : '',
-      href: '/' + game.id + '/' + game.orient,
       config(el, isUpdate) {
         if (!isUpdate) {
           window.lidraughts.miniGame.init(el, `${game.fen}|${game.board.size[0]}x${game.board.size[1]}|${game.orient}|${game.lastMove}`)
