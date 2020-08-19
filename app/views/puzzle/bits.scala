@@ -5,16 +5,12 @@ import lidraughts.api.Context
 import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
 
-import controllers.routes
-
 object bits {
 
   private val dataLastmove = attr("data-lastmove")
 
   def daily(p: lidraughts.puzzle.Puzzle, fen: draughts.format.FEN, lastMove: String) =
-    views.html.board.bits.mini(fen, p.variant.boardSize, p.color, lastMove) {
-      a(href := routes.Puzzle.daily())
-    }
+    views.html.board.bits.mini(fen, p.variant.boardSize, p.color, lastMove)(span)
 
   def jsI18n()(implicit ctx: Context) = i18nJsObject(translations)
 
