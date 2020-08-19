@@ -8,6 +8,7 @@ import TournamentController from '../ctrl';
 
 function featuredPlayer(game: FeaturedGame, color: Color, draughtsResult: boolean) {
   const player = game[color];
+  const clock = game.c || game.clock; // temporary BC, remove me
   return h('span.mini-game__player', [
     h('span.mini-game__user', [
     h('strong', '#' + player.rank),
@@ -19,9 +20,9 @@ function featuredPlayer(game: FeaturedGame, color: Color, draughtsResult: boolea
       }
     }) : null
   ]),
-  game.c ? 
+  clock ? 
     h(`span.mini-game__clock.mini-game__clock--${color}`, {
-      attrs: { 'data-time': game.c[color] }
+      attrs: { 'data-time': clock[color] }
     }) : 
     h('span.mini-game__result', game.winner ? 
       (game.winner == color ? (draughtsResult ? '2' : '1') : '0') :
