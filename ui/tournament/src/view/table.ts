@@ -84,9 +84,8 @@ function renderDuel(battle?: TeamBattle, duelTeams?: DuelTeams) {
 export default function(ctrl: TournamentController): VNode {
   return h('div.tour__table', {
     hook: {
-      postpatch() {
-        window.lidraughts.miniGame.initAll();
-      }
+      insert: window.lidraughts.miniGame.initAll,
+      postpatch: window.lidraughts.miniGame.initAll
     }
   }, [
     ctrl.data.featured ? featured(ctrl.data.featured, ctrl.data.draughtsResult) : null,
