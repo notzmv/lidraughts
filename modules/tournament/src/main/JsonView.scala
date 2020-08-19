@@ -294,7 +294,8 @@ final class JsonView(
         "board" -> game.variant.boardSize
       )
       .add(
-        "clock" -> game.clock.ifTrue(game.isBeingPlayed).map { c =>
+        // not named `clock` to avoid conflict with lichobile
+        "c" -> game.clock.ifTrue(game.isBeingPlayed).map { c =>
           Json.obj(
             "white" -> c.remainingTime(draughts.White).roundSeconds,
             "black" -> c.remainingTime(draughts.Black).roundSeconds

@@ -27,7 +27,7 @@ export interface FeaturedGame {
   white: FeaturedPlayer;
   black: FeaturedPlayer;
   board: BoardData;
-  clock?: {
+  c?: {
     white: number;
     black: number;
   };

@@ -19,9 +19,9 @@ function featuredPlayer(game: FeaturedGame, color: Color, draughtsResult: boolea
       }
     }) : null
   ]),
-  game.clock ? 
+  game.c ? 
     h(`span.mini-game__clock.mini-game__clock--${color}`, {
-      attrs: { 'data-time': game.clock[color] }
+      attrs: { 'data-time': game.c[color] }
     }) : 
     h('span.mini-game__result', game.winner ? 
       (game.winner == color ? (draughtsResult ? '2' : '1') : '0') :
