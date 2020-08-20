@@ -89,11 +89,6 @@ function controls(ctrl: SwissCtrl, pag: Pager): VNode {
 
 function nextRound(ctrl: SwissCtrl): VNode | undefined {
   if (!ctrl.opts.schedule || ctrl.data.nbOngoing) return;
-  const attrs: any = {
-    name: 'date',
-    placeholder: 'Schedule the next round',
-  };
-  if (ctrl.data.nextRound) attrs.value = ctrl.data.nextRound.at;
   return h('form.schedule-next-round', {
     class: {
       required: !ctrl.data.nextRound
@@ -104,7 +99,11 @@ function nextRound(ctrl: SwissCtrl): VNode | undefined {
     }
   }, [
     h('input', {
-      attrs,
+      attrs: {
+        name: 'date',
+        placeholder: 'Schedule the next round',
+        value: ctrl.data.nextRound?.at || ''
+      },
       hook: onInsert((el: HTMLInputElement) =>
         setTimeout(() => $(el).flatpickr({
           minDate: 'today',
@@ -151,6 +150,8 @@ function joinButton(ctrl: SwissCtrl): VNode | undefined {
       attrs: dataIcon('b'),
       hook: bind('click', ctrl.withdraw, ctrl.redraw)
     }, ctrl.trans.noarg('withdraw')));
+
+    return undefined;
 }
 
 function joinTheGame(ctrl: SwissCtrl) {
