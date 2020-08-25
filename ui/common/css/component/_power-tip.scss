@@ -7,6 +7,14 @@
   display: none;
   position: absolute;
   z-index: z('powertip');
+
+  .mini-game__player {
+    padding: 3px .5em .3em .7em;
+
+    &:first-child {
+      padding: .3em .5em 3px .7em;
+    }
+  }
 }
 #powerTip {
   .info {
@@ -27,7 +35,7 @@
   &__info {
     @extend %flex-column;
     height: 83px;
-    padding: 4px 5px 4px 2px;
+    padding: .4em .5em .3em .5em;
     border-bottom: $border;
     overflow: hidden;
     &__top {
@@ -98,7 +106,7 @@
       color: #fff;
     }
     span {
-      padding: .2em .5em;
+      padding: .3em .5em .3em .5em;
       margin: 0;
     }
   }
