@@ -145,9 +145,9 @@ lidraughts.powertip = (() => {
   };
 
   function onIdleForAll(par, sel, fun) {
-    lidraughts.requestIdleCallback(function() {
-      Array.prototype.forEach.call(par.querySelectorAll(sel), fun);
-    });
+    lidraughts.requestIdleCallback(() =>
+      Array.prototype.forEach.call(par.querySelectorAll(sel), el => fun(el)) // do not codegolf to `fun`
+    )
   }
 
   return {
