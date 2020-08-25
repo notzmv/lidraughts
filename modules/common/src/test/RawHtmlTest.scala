@@ -138,8 +138,8 @@ class RawHtmlTest extends Specification {
       justMarkdownLinks(md) must_== md
     }
 
-    "addBr" in {
-      justMarkdownLinks("\n") must_== "<br>"
+    " not addBr" in {
+      justMarkdownLinks("\n") must_== "\n"
     }
 
     "escape html" in {
