@@ -84,9 +84,9 @@ object post {
   }
 
   def reactions(post: Post, canReact: Boolean)(implicit ctx: Context) = {
-    val mine = ctx.me ?? { Post.reactionsOf(~post.reactions, _) }
+    val mine = ctx.me ?? { Post.Reaction.of(~post.reactions, _) }
     div(cls := List("reactions" -> true, "reactions-auth" -> (ctx.isAuth && canReact)))(
-      Post.reactionsList.map { r =>
+      Post.Reaction.list.map { r =>
         val users = ~post.reactions.flatMap(_ get r)
         val size = users.size
         button(

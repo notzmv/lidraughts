@@ -84,7 +84,9 @@ final class PostApi(
           fufail("Post can no longer be edited")
         case (_, post) =>
           val newPost = post.editPost(DateTime.now, spam replace newText)
-          env.postColl.update($id(post.id), newPost) inject newPost
+          (newPost.text != post.text).?? {
+            env.postColl.update($id(post.id), newPost).void
+          } inject newPost
       }
     }
 
@@ -115,9 +117,9 @@ final class PostApi(
   } run
 
   def react(postId: String, me: User, reaction: String, v: Boolean): Fu[Option[Post]] =
-    Post.reactions(reaction) ?? {
+    Post.Reaction.set(reaction) ?? {
       if (v) lidraughts.mon.forum.reaction(reaction)()
-      PostRepo.coll.findAndUpdate(
+      env.postColl.findAndUpdate(
         selector = $id(postId),
         update = {
           if (v) $addToSet(s"reactions.$reaction" -> me.id)

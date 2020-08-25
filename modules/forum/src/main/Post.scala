@@ -1,9 +1,10 @@
 package lidraughts.forum
 
-import lidraughts.user.User
 import org.joda.time.DateTime
 import ornicar.scalalib.Random
 import scala.concurrent.duration._
+
+import lidraughts.user.User
 
 case class OldVersion(text: String, createdAt: DateTime)
 
@@ -57,7 +58,12 @@ case class Post(
     // We only store a maximum of 5 historical versions of the post to prevent abuse of storage space
     val history = (oldVersion :: ~editHistory).take(5)
 
-    copy(editHistory = history.some, text = newText, updatedAt = updated.some)
+    copy(
+      editHistory = history.some,
+      text = newText,
+      updatedAt = updated.some,
+      reactions = reactions.map(_.view.filter(k => !Post.Reaction.positive(k._1)).toMap)
+    )
   }
 
   def hasEdits = editHistory.isDefined
@@ -74,13 +80,23 @@ object Post {
 
   val idSize = 8
 
-  val reactionsList = List("+1", "-1", "laugh", "thinking", "heart", "horsey")
-  val reactions = reactionsList.toSet
+  object Reaction {
+    val PlusOne = "+1"
+    val MinusOne = "-1"
+    val Laugh = "laugh"
+    val Thinking = "thinking"
+    val Heart = "heart"
+    val Horsey = "horsey"
 
-  def reactionsOf(reactions: Reactions, me: User): Set[String] =
-    reactions.view.collect {
-      case (reaction, users) if users(me.id) => reaction
-    }.toSet
+    val list: List[String] = List(PlusOne, MinusOne, Laugh, Thinking, Heart, Horsey)
+    val set = list.toSet
+    val positive: Set[String] = Set(PlusOne, Laugh, Heart, Horsey)
+
+    def of(reactions: Reactions, me: User): Set[String] =
+      reactions.view.collect {
+        case (reaction, users) if users(me.id) => reaction
+      }.toSet
+  }
 
   def make(
     topicId: String,

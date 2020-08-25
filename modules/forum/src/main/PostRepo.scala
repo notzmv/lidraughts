@@ -16,7 +16,7 @@ sealed abstract class PostRepo(troll: Boolean) {
   import BSONHandlers.PostBSONHandler
 
   // dirty
-  val coll = Env.current.postColl
+  private val coll = Env.current.postColl
 
   private val trollFilter = !troll ?? $doc("troll" -> false)
 
