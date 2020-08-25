@@ -1,13 +1,13 @@
 package views
 package html.tournament
 
+import controllers.routes
+
 import lidraughts.api.Context
 import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
-import lidraughts.common.String.html.richText
+import lidraughts.common.String.html.markdownLinksOrRichText
 import lidraughts.tournament.{ Tournament, TournamentShield, TeamBattle }
-
-import controllers.routes
 
 object side {
 
@@ -48,7 +48,7 @@ object side {
       tour.teamBattle map teamBattle(tour),
       tour.spotlight map { s =>
         st.section(
-          lidraughts.common.String.html.markdownLinks(s.description),
+          markdownLinksOrRichText(s.description),
           shieldOwner map { owner =>
             p(cls := "defender", dataIcon := "5")(
               "Defender:",
@@ -58,7 +58,7 @@ object side {
         )
       },
       tour.description map { d =>
-        st.section(cls := "description")(richText(d))
+        st.section(cls := "description")(markdownLinksOrRichText(d))
       },
       verdicts.relevant option st.section(dataIcon := "7", cls := List(
         "conditions" -> true,

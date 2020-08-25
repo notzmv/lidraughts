@@ -71,6 +71,7 @@ object String {
   val atUsernameRegex = RawHtml.atUsernameRegex
 
   object html {
+
     def richText(rawText: String, nl2br: Boolean = true): Frag = raw {
       val withLinks = RawHtml.addLinks(rawText)
       if (nl2br) RawHtml.nl2br(withLinks) else withLinks
@@ -88,9 +89,16 @@ object String {
     def unescapeHtml(html: String): String =
       org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4(html)
 
-    def markdownLinks(text: String, withImages: Boolean = true): Frag = raw {
-      RawHtml.markdownLinks(text, withImages)
+    def markdownLinksOrRichText(text: String, withImages: Boolean = true): Frag = {
+      val marked = RawHtml.justMarkdownLinks(text, withImages)
+      if (marked == text) richText(text)
+      else nl2brUnsafe(marked)
     }
+
+    def markdownLinks(text: String, withImages: Boolean = true): Frag =
+      nl2brUnsafe {
+        RawHtml.justMarkdownLinks(text, withImages)
+      }
 
     def safeJsonValue(jsValue: JsValue): String = {
       // Borrowed from:

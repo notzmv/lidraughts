@@ -226,7 +226,7 @@ final private class TourFields(me: User, form: Form[_])(implicit ctx: Context) {
     )
   def description =
     form3.group(form("description"), trans.tournamentDescription(), help = trans.tournamentDescriptionHelp().some)(
-      form3.textarea(_)(rows := 3)
+      form3.textarea(_)(rows := 4)
     )
   def password =
     form3.group(form("password"), trans.password(), help = trans.makePrivateTournament().some)(
