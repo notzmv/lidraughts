@@ -288,6 +288,7 @@ final class JsonView(
         "id" -> game.id,
         "fen" -> draughts.format.Forsyth.boardAndColor(game.situation),
         "orientation" -> game.naturalOrientation.name,
+        "color" -> game.naturalOrientation.name, // app BC https://github.com/ornicar/lila/issues/7195
         "lastMove" -> ~game.lastMoveKeys,
         "white" -> ofPlayer(featured.white, game player draughts.White),
         "black" -> ofPlayer(featured.black, game player draughts.Black),
