@@ -407,32 +407,34 @@ lidraughts.miniGame = (() => {
   return {
     init(node) {
       if (!window.Draughtsground) setTimeout(() => lidraughts.miniGame.init(node), 200);
-      const [fen, board, orientation, lm] = node.getAttribute('data-state').split('|'),
-        config = {
-          coordinates: 0,
-          boardSize: board ? board.split('x').map(s => parseInt(s)) : [10, 10],
-          viewOnly: true,
-          resizable: false,
-          fen,
-          orientation,
-          lastMove: lm && [lm.slice(-4, -2), lm.slice(-2)],
-          drawable: {
-            enabled: false,
-            visible: false
-          }
-        },
-        $el = $(node).removeClass('mini-game--init'),
-        $cg = $el.find('.cg-wrap'),
-        turnColor = fenColor(fen);
-      $cg.data('draughtsground', Draughtsground($cg[0], config));
-      ['white', 'black'].forEach(color =>
-        $el.find('.mini-game__clock--' + color).each(function() {
-          $(this).clock({
-            time: parseInt(this.getAttribute('data-time')),
-            pause: color != turnColor
-          });
-        })
-      );
+      else {
+        const [fen, board, orientation, lm] = node.getAttribute('data-state').split('|'),
+          config = {
+            coordinates: 0,
+            boardSize: board ? board.split('x').map(s => parseInt(s)) : [10, 10],
+            viewOnly: true,
+            resizable: false,
+            fen,
+            orientation,
+            lastMove: lm && [lm.slice(-4, -2), lm.slice(-2)],
+            drawable: {
+              enabled: false,
+              visible: false
+            }
+          },
+          $el = $(node).removeClass('mini-game--init'),
+          $cg = $el.find('.cg-wrap'),
+          turnColor = fenColor(fen);
+        $cg.data('draughtsground', Draughtsground($cg[0], config));
+        ['white', 'black'].forEach(color =>
+          $el.find('.mini-game__clock--' + color).each(function() {
+            $(this).clock({
+              time: parseInt(this.getAttribute('data-time')),
+              pause: color != turnColor
+            });
+          })
+        );
+      }
       return node.getAttribute('data-live');
     },
     initAll() {
