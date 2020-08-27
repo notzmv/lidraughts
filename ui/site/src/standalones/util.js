@@ -406,6 +406,7 @@ lidraughts.miniGame = (() => {
   const fenColor = fen => fen.indexOf(' b') > 0 ? 'black' : 'white';
   return {
     init(node) {
+      if (!window.Draughtsground) setTimeout(() => lidraughts.miniGame.init(node), 200);
       const [fen, board, orientation, lm] = node.getAttribute('data-state').split('|'),
         config = {
           coordinates: 0,
@@ -446,7 +447,7 @@ lidraughts.miniGame = (() => {
         lm = data.lm ? String(data.lm) : data.lm,
         lastMove = lm && [lm.slice(-4, -2), lm.slice(-2)],
         cg = $el.find('.cg-wrap').data('draughtsground');
-      cg.set({
+      if (cg) cg.set({
         fen: data.fen,
         lastMove
       });
