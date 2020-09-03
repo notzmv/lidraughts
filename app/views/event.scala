@@ -50,7 +50,7 @@ object event {
         ),
         h2(cls := "headline")(e.headline),
         e.description.map { d =>
-          p(cls := "desc")(lidraughts.common.String.html.markdownLinks(d))
+          p(cls := "desc")(lidraughts.common.String.html.markdownLinksOrRichText(d))
         },
         if (e.isFinished) p(cls := "desc")(b("The event is finished."))
         else {

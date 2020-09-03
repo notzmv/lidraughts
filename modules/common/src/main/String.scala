@@ -90,15 +90,11 @@ object String {
       org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4(html)
 
     def markdownLinksOrRichText(text: String, withImages: Boolean = true): Frag = {
-      val marked = RawHtml.justMarkdownLinks(text, withImages)
-      if (marked == text) richText(text)
+      val escaped = escapeHtmlRaw(text)
+      val marked = RawHtml.justMarkdownLinksEscaped(escaped, withImages)
+      if (marked == escaped) richText(text)
       else nl2brUnsafe(marked)
     }
-
-    def markdownLinks(text: String, withImages: Boolean = true): Frag =
-      nl2brUnsafe {
-        RawHtml.justMarkdownLinks(text, withImages)
-      }
 
     def safeJsonValue(jsValue: JsValue): String = {
       // Borrowed from:
