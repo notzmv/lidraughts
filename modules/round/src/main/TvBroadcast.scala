@@ -34,8 +34,8 @@ private final class TvBroadcast extends Actor {
           "fen" -> s"${game.turnColor.letter.toUpper}:$fen",
           "lm" -> move
         )
-          .add("cw" -> game.clock.map(_.remainingTime(draughts.White).roundSeconds))
-          .add("bw" -> game.clock.map(_.remainingTime(draughts.Black).roundSeconds))
+          .add("wc" -> game.clock.map(_.remainingTime(draughts.White).roundSeconds))
+          .add("bc" -> game.clock.map(_.remainingTime(draughts.Black).roundSeconds))
       )
   }
 
