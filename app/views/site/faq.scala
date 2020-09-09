@@ -21,7 +21,7 @@ object faq {
     active = "faq",
     moreCss = cssTag("faq")
   ) {
-      main(cls := "faq small-page box box-pad")(
+      div(cls := "faq small-page box box-pad")(
         h1("Frequently Asked Questions"),
         h2("Lidraughts"),
         question(
