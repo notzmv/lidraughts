@@ -33,10 +33,17 @@ private[api] final class Cli(bus: lidraughts.common.Bus) extends lidraughts.comm
           case _ => s"The user email must be set to <username>@erase.forever for erasing to start."
         }
       }
-    case "announce" :: msgWords =>
-      val msg = msgWords mkString " "
-      bus.publish(lidraughts.hub.actorApi.Announce(msg), 'announce)
-      fuccess(s"Announcing: $msg")
+    case "announce" :: "cancel" :: Nil =>
+      AnnounceStore set none
+      bus.publish(AnnounceStore.cancel, 'announce)
+      fuccess("Removed announce")
+    case "announce" :: msgWords => AnnounceStore.set(msgWords mkString " ") match {
+      case Some(announce) =>
+        bus.publish(announce, 'announce)
+        fuccess(announce.json.toString)
+      case None =>
+        fuccess("Invalid announce. Format: `announce <length> <unit> <words...>` or just `announce cancel` to cancel it")
+    }
   }
 
   private def remindDeploy(event: Deploy): Fu[String] = {
