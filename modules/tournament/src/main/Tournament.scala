@@ -40,6 +40,7 @@ case class Tournament(
 
   def isPrivate = password.isDefined
   def isHidden = isPrivate && !isUnique
+  def isWipable = !isPrivate && !isScheduled
 
   def fullName = schedule.map(_.freq).fold(s"$name $system") {
     case Schedule.Freq.ExperimentalMarathon | Schedule.Freq.Marathon | Schedule.Freq.Unique => name
