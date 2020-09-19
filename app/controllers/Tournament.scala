@@ -303,7 +303,7 @@ object Tournament extends LidraughtsController {
   def teamBattleUpdate(id: String) = AuthBody { implicit ctx => me =>
     repo byId id flatMap {
       _ ?? {
-        case tour if tour.createdBy == me.id && tour.isFinished =>
+        case tour if tour.createdBy == me.id && !tour.isFinished =>
           implicit val req = ctx.body
           lidraughts.tournament.TeamBattle.DataForm.empty.bindFromRequest.fold(
             err => BadRequest(html.tournament.teamBattle.edit(tour, err)).fuccess,
