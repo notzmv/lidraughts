@@ -138,28 +138,32 @@ final class PdnDump(
     }
   }
 
-  private def makeTurns(moves: Seq[String], from: Int, clocks: Vector[Centis], startColor: Color): List[draughtsPdn.Turn] =
+  private def makeTurns(moves: Seq[String], from: Int, clocks: Vector[Centis], startColor: Color): List[draughtsPdn.Turn] = {
+    val clockOffset = startColor.fold(0, 1)
+    val firstBlackClock = startColor.fold(1, 0)
     (moves grouped 2).zipWithIndex.toList map {
       case (moves, index) =>
-        val clockOffset = startColor.fold(0, 1)
+        val whiteClock = index * 2 - clockOffset
         draughtsPdn.Turn(
           number = index + from,
           white = moves.headOption filter (".." !=) map { san =>
             draughtsPdn.Move(
               san = san,
               turn = Color.White,
-              secondsLeft = (clocks lift (index * 2 - clockOffset) map (_.roundSeconds), clocks lift (index * 2 + 1 - clockOffset) map (_.roundSeconds))
+              secondsLeft = (clocks lift whiteClock map (_.roundSeconds), clocks lift (whiteClock - 1).atLeast(firstBlackClock) map (_.roundSeconds))
             )
           },
           black = moves lift 1 map { san =>
             draughtsPdn.Move(
               san = san,
               turn = Color.Black,
-              secondsLeft = (clocks lift (index * 2 - clockOffset) map (_.roundSeconds), clocks lift (index * 2 + 1 - clockOffset) map (_.roundSeconds))
+              secondsLeft = (clocks lift whiteClock map (_.roundSeconds), clocks lift (whiteClock + 1) map (_.roundSeconds))
             )
           }
         )
     } filterNot (_.isEmpty)
+  }
+
 }
 
 object PdnDump {
