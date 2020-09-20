@@ -101,6 +101,7 @@ object bits {
     trans.viewMoreTournaments,
     trans.averageOpponent,
     trans.ratedTournament,
-    trans.casualTournament
+    trans.casualTournament,
+    trans.thematic
   )
 }

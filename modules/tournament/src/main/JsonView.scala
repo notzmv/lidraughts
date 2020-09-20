@@ -106,7 +106,9 @@ final class JsonView(
         "variant" -> full.option(tour.variant.key)
       ).add("spotlight" -> tour.spotlight)
         .add("berserkable" -> tour.berserkable)
+        .add("streakable" -> tour.streakable)
         .add("position" -> full.option(tour.position).filterNot(_.initialVariant(tour.variant)).map(positionJson))
+        .add("openingTable" -> tour.openingTable.map(openingTableJson))
         .add("verdicts" -> verdicts.map(Condition.JSONHandlers.verdictsFor(_, lang)))
         .add("schedule" -> tour.schedule.map(scheduleJson))
         .add("private" -> tour.isPrivate)
@@ -486,6 +488,11 @@ object JsonView {
     "fen" -> s.fen
   ).add("name", s.name)
     .add("wikiPath", s.wikiPath)
+
+  private[tournament] def openingTableJson(t: draughts.OpeningTable) = Json.obj(
+    "key" -> t.key,
+    "name" -> t.name
+  )
 
   private[tournament] implicit val spotlightWrites: OWrites[Spotlight] = OWrites { s =>
     Json.obj(

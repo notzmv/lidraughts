@@ -79,7 +79,7 @@ export default function (opts, redraw: () => void): Controller {
     setTimeout(function () {
       jump(initialPath);
       redraw();
-      speech.node(vm.node, false);
+      speech.node(vm.node, false, undefined, isAlgebraic());
     }, 500);
 
     // just to delay button display
@@ -214,7 +214,7 @@ export default function (opts, redraw: () => void): Controller {
       if (progress) applyProgress(progress, ghosts);
       redraw();
       if (ghosts === 0 || playedMyself) {
-        speech.node(playedMyself ? node : vm.node, false);
+        speech.node(playedMyself ? node : vm.node, false, undefined, isAlgebraic());
       }
     }
   };
@@ -443,7 +443,7 @@ export default function (opts, redraw: () => void): Controller {
       prevSan = playedLastMoveMyself() && mergedNodes && mergedNodes.length > 1 && mergedNodes[mergedNodes.length - 2].san,
       captSan = prevSan ? prevSan.indexOf('x') : -1,
       captKey = (prevSan && captSan !== -1) ? prevSan.slice(captSan + 1) as Key : undefined;
-    speech.node(vm.node, true, captKey);
+    speech.node(vm.node, true, captKey, isAlgebraic());
   };
 
   function viewSolution() {

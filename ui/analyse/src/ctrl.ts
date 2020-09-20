@@ -415,7 +415,7 @@ export default class AnalyseCtrl {
         prevSan = playedMyself && mergedNodes && mergedNodes.length > 1 && mergedNodes[mergedNodes.length - 2].san,
         captSan = prevSan ? prevSan.indexOf('x') : -1,
         captKey = (prevSan && captSan !== -1) ? prevSan.slice(captSan + 1) as Key : undefined;
-      speech.node(this.node, captKey);
+      speech.node(this.node, captKey, this.isAlgebraic());
     }
     this.justPlayed = this.justDropped = this.justCaptured = undefined;
     this.explorer.setNode();
