@@ -71,7 +71,7 @@ object form {
       jsTag("tournamentForm.js")
     )
   ) {
-      val isTeamBattle = form("teamBattleByTeam").value.nonEmpty
+      val isTeamBattle = tour.isTeamBattle || form("teamBattleByTeam").value.nonEmpty
       val fields = new TourFields(me, form)
       main(cls := "page-small")(
         div(cls := "tour__form box box-pad")(
