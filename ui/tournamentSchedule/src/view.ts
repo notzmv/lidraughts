@@ -103,7 +103,7 @@ function tournamentClass(tour) {
       'tsht-joinable': !finished,
       'tsht-user-created': userCreated,
       'tsht-major': tour.major,
-      'tsht-thematic': !!tour.position,
+      'tsht-thematic': (!!tour.position || !!tour.openingTable),
       'tsht-short': tour.minutes <= 30,
       'tsht-max-rating': !userCreated && tour.hasMaxRating
     };
@@ -146,7 +146,7 @@ function renderTournament(ctrl, tour) {
         h('span.text', [
           displayClock(tour.clock) + ' ',
           tour.variant.key === 'standard' ? null : tour.variant.name + ' ',
-          tour.position ? 'Thematic ' : null,
+          (tour.position || tour.openingTable) ? ctrl.trans('thematic') + ' ' : null,
           tour.rated ? ctrl.trans('ratedTournament') : ctrl.trans('casualTournament')
         ]),
         tour.nbPlayers ? h('span.nb-players', {

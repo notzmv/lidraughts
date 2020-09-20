@@ -52,6 +52,7 @@ final class ApiJsonView(lightUser: LightUser.Getter) {
   ).add("hasMaxRating", tour.conditions.maxRating.isDefined)
     .add("private", tour.isPrivate)
     .add("position", tour.position.some.filterNot(_.initialVariant(tour.variant)) map positionJson)
+    .add("openingTable" -> tour.openingTable.map(openingTableJson))
     .add("schedule", tour.schedule map scheduleJson)
 
   def fullJson(tour: Tournament): Fu[JsObject] = for {
