@@ -9,8 +9,8 @@ function onSpeechChange(enabled: boolean) {
   else if (window.LidraughtsSpeech && !enabled) window.LidraughtsSpeech = undefined;
 }
 
-export function node(n: Tree.Node, k?: Key) {
-  withSpeech(s => s.step(n, true, k));
+export function node(n: Tree.Node, k?: Key, algebraic?: boolean) {
+  withSpeech(s => s.step(n, true, k, algebraic));
 }
 
 function withSpeech(f: (speech: LidraughtsSpeech) => void) {

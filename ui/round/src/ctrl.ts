@@ -221,13 +221,13 @@ export default class RoundController {
     );
   };
 
-  private isAlgebraic = (d: RoundData): boolean => {
+  isAlgebraic = (d: RoundData): boolean => {
     return d.pref.coordSystem === 1 && d.game.variant.board.key === '64';
-  }
+  };
   
   coordSystem = (): number => {
     return this.isAlgebraic(this.data) ? 1 : 0;
-  }
+  };
 
   isLate = () => this.replaying() && status.playing(this.data);
 
@@ -407,7 +407,7 @@ export default class RoundController {
     this.onChange();
     if (this.keyboardMove) this.keyboardMove.update(step, playedColor != d.player.color);
     if (this.music) this.music.jump(o);
-    speech.step(o);
+    speech.step(o, this.isAlgebraic(this.data));
   };
 
   private clearJust() {

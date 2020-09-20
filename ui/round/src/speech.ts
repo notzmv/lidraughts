@@ -28,11 +28,11 @@ export function status(ctrl: RoundController) {
 
 
 export function userJump(ctrl: RoundController, ply: Ply) {
-  withSpeech(s => s.step(ctrl.stepAt(ply), true));
+  withSpeech(s => s.step(ctrl.stepAt(ply), true, undefined, ctrl.isAlgebraic(ctrl.data)));
 }
 
-export function step(step: { san?: San }) {
-  withSpeech(s => s.step(step, false));
+export function step(step: { san?: San }, algebraic: boolean) {
+  withSpeech(s => s.step(step, false, undefined, algebraic));
 }
 
 function withSpeech(f: (speech: LidraughtsSpeech) => void) {
