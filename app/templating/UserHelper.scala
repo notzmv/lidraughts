@@ -172,7 +172,7 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper =>
   )(
       withOnline ?? lineIcon(user),
       withTitle option titleTag(user.title),
-      span(user.username, title := withProfileName.??(user.profileOrDefault.nonEmptyRealName)),
+      if (withProfileName && !withPowerTip) span(user.username, title := user.profileOrDefault.nonEmptyRealName) else user.username,
       userRating(user, withPerfRating, withBestRating)
     )
 
