@@ -67,6 +67,7 @@ object BSONHandlers {
         password = r.strO("password"),
         conditions = conditions,
         noBerserk = r boolD "noBerserk",
+        noStreak = r boolD "noStreak",
         schedule = for {
           doc <- r.getO[Bdoc]("schedule")
           freq <- doc.getAs[Schedule.Freq]("freq")
@@ -96,6 +97,7 @@ object BSONHandlers {
       "password" -> o.password,
       "conditions" -> o.conditions.ifNonEmpty,
       "noBerserk" -> w.boolO(o.noBerserk),
+      "noStreak" -> w.boolO(o.noStreak),
       "schedule" -> o.schedule.map { s =>
         $doc(
           "freq" -> s.freq,

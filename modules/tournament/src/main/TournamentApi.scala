@@ -67,6 +67,7 @@ final class TournamentApi(
       position = DataForm.startingPosition(position | setup.realVariant.initialFen, setup.realVariant),
       openingTable = position.flatMap(draughts.OpeningTable.byKey).filter(setup.realVariant.openingTables.contains),
       berserkable = setup.berserkable | true,
+      streakable = setup.streakable | true,
       description = setup.description
     ) |> { tour =>
         tour.perfType.fold(tour) { perfType =>
@@ -96,6 +97,7 @@ final class TournamentApi(
       position = DataForm.startingPosition(position | realVariant.initialFen, realVariant),
       openingTable = position.flatMap(draughts.OpeningTable.byKey).filter(realVariant.openingTables.contains),
       noBerserk = !(~berserkable),
+      noStreak = !(~streakable),
       description = description
     ) |> { tour =>
         tour.perfType.fold(tour) { perfType =>
@@ -380,7 +382,7 @@ final class TournamentApi(
         cached.sheet.update(tour, userId) map { sheet =>
           player.copy(
             score = sheet.total,
-            fire = sheet.onFire,
+            fire = tour.streakable && sheet.onFire,
             ratingDiff = finishing.fold(player.ratingDiff)(player.ratingDiff + _.playerByUserId(userId).fold(0)(_.ratingDiff.getOrElse(0))),
             rating = perf.fold(player.rating)(_.intRating),
             provisional = perf.fold(player.provisional)(_.provisional),

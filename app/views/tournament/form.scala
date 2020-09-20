@@ -44,6 +44,7 @@ object form {
                 fields.password,
                 condition(form, auto = true, teams = teams),
                 fields.berserkableHack,
+                fields.streakableHack,
                 fields.startDate()
               )
             ),
@@ -87,7 +88,8 @@ object form {
               div(cls := "form")(
                 fields.password,
                 views.html.tournament.form.condition(form, auto = true, teams = teams),
-                fields.berserkableHack
+                fields.berserkableHack,
+                fields.streakableHack
               )
             ),
             form3.actions(
@@ -128,13 +130,16 @@ object form {
       }
     ),
     form3.split(
+      form3.checkbox(form("berserkable"), raw("Allow berserk"), help = raw("Let players halve their clock time to gain an extra point").some, half = true),
+      form3.checkbox(form("streakable"), raw("Arena streaks"), help = raw("After 2 wins, consecutive wins grant 4 points instead of 2").some, half = true)
+    ),
+    form3.split(
       (ctx.me.exists(_.hasTitle) || isGranted(_.ManageTournament)) ?? {
         form3.checkbox(form("conditions.titled"), raw("Only titled players"), help = raw("Require an official title to join the tournament").some, half = true)
-      },
-      form3.checkbox(form("berserkable"), raw("Allow Berserk"), help = raw("Let players halve their clock time to gain an extra point").some, half = true)
+      }
     ),
     (auto && teams.size > 0) ?? {
-      form3.group(form("conditions.teamMember.teamId"), trans.onlyMembersOfTeam(), half = false)(form3.select(_, List(("", trans.noRestriction.txt())) ::: teams))
+      form3.group(form("conditions.teamMember.teamId"), trans.onlyMembersOfTeam())(form3.select(_, List(("", trans.noRestriction.txt())) ::: teams))
     }
   )
 
@@ -213,6 +218,8 @@ final private class TourFields(me: User, form: Form[_])(implicit ctx: Context) {
     )
   def berserkableHack =
     input(tpe := "hidden", st.name := form("berserkable").name, value := "false") // hack allow disabling berserk
+  def streakableHack =
+    input(tpe := "hidden", st.name := form("streakable").name, value := "false") // hack allow disabling streaks
   def startDate(withHelp: Boolean = true) =
     form3.group(
       form("startDate"),

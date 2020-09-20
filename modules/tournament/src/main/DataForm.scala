@@ -33,6 +33,7 @@ final class DataForm {
     rated = true.some,
     conditions = Condition.DataForm.AllSetup.default,
     berserkable = true.some,
+    streakable = true.some,
     description = none
   )
 
@@ -51,6 +52,7 @@ final class DataForm {
     password = tour.password,
     conditions = Condition.DataForm.AllSetup(tour.conditions),
     berserkable = tour.berserkable.some,
+    streakable = tour.streakable.some,
     description = tour.description
   )
 
@@ -85,6 +87,7 @@ final class DataForm {
     "password" -> optional(nonEmptyText),
     "conditions" -> Condition.DataForm.all,
     "berserkable" -> optional(boolean),
+    "streakable" -> optional(boolean),
     "description" -> optional(nonEmptyText(maxLength = 600))
   )(TournamentSetup.apply)(TournamentSetup.unapply)
     .verifying("Invalid clock", _.validClock)
@@ -146,6 +149,7 @@ private[tournament] case class TournamentSetup(
     password: Option[String],
     conditions: Condition.DataForm.AllSetup,
     berserkable: Option[Boolean],
+    streakable: Option[Boolean],
     description: Option[String]
 ) {
 
