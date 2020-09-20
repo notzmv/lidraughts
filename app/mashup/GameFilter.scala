@@ -98,7 +98,9 @@ object GameFilterMenu {
         sort = $sort desc "pdni.ca",
         nb = nb
       )(page)
-      case All => std(Query started user.id)
+      case All => std(Query started user.id) flatMap {
+        _.mapFutureResults(Env.round.proxy.updateIfPresent)
+      }
       case Me => std(Query.opponents(user, me | user))
       case Rated => std(Query rated user.id)
       case Win => std(Query win user.id)
@@ -108,9 +110,13 @@ object GameFilterMenu {
         selector = Query nowPlaying user.id,
         sort = $empty,
         nb = nb
-      )(page) addEffect { p =>
-        p.currentPageResults.filter(_.finishedOrAborted) foreach GameRepo.unsetPlayingUids
-      }
+      )(page)
+        .flatMap {
+          _.mapFutureResults(Env.round.proxy.updateIfPresent)
+        }
+        .addEffect { p =>
+          p.currentPageResults.filter(_.finishedOrAborted) foreach GameRepo.unsetPlayingUids
+        }
       case Search => userGameSearch(user, page)
     }
   }
