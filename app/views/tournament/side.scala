@@ -79,6 +79,7 @@ object side {
         }
       )),
       tour.noBerserk option div(cls := "text", dataIcon := "`")(trans.noBerserkAllowed()),
+      tour.noStreak option div(cls := "text", dataIcon := "Q")("No arena streaks"),
       !tour.isScheduled && !tour.isTeamBattle option frag(trans.by(userIdLink(tour.createdBy.some)), br),
       (!tour.isStarted || (tour.isScheduled && tour.isThematic)) option absClientDateTime(tour.startsAt),
       tour.isThematic option p(cls := "opening")(

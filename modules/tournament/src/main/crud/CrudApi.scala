@@ -31,7 +31,8 @@ final class CrudApi {
     description = tour.spotlight.??(_.description),
     conditions = Condition.DataForm.AllSetup(tour.conditions),
     password = tour.password,
-    berserkable = !tour.noBerserk
+    berserkable = !tour.noBerserk,
+    streakable = !tour.noStreak
   )
 
   def update(old: Tournament, data: CrudForm.Data) =
@@ -70,6 +71,7 @@ final class CrudApi {
     waitMinutes = 0,
     startDate = none,
     berserkable = true,
+    streakable = true,
     teamBattle = none,
     description = none
   )
@@ -105,6 +107,7 @@ final class CrudApi {
       position = DataForm.startingPosition(position | realVariant.initialFen, realVariant),
       openingTable = position.flatMap(draughts.OpeningTable.byKey).filter(realVariant.openingTables.contains),
       noBerserk = !data.berserkable,
+      noStreak = !data.streakable,
       password = password
     ) |> { tour =>
         tour.perfType.fold(tour) { perfType =>

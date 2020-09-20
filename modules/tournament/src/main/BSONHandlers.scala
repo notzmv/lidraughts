@@ -70,6 +70,7 @@ object BSONHandlers {
         conditions = conditions,
         teamBattle = r.getO[TeamBattle]("teamBattle"),
         noBerserk = r boolD "noBerserk",
+        noStreak = r boolD "noStreak",
         schedule = for {
           doc <- r.getO[Bdoc]("schedule")
           freq <- doc.getAs[Schedule.Freq]("freq")
@@ -100,6 +101,7 @@ object BSONHandlers {
       "conditions" -> o.conditions.ifNonEmpty,
       "teamBattle" -> o.teamBattle,
       "noBerserk" -> w.boolO(o.noBerserk),
+      "noStreak" -> w.boolO(o.noStreak),
       "schedule" -> o.schedule.map { s =>
         $doc(
           "freq" -> s.freq,

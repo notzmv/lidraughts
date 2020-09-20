@@ -37,6 +37,10 @@ trait Score {
   val value: Int
 }
 
+sealed trait Streakable
+case object Streaks extends Streakable
+case object NoStreaks extends Streakable
+
 trait ScoreSheet {
   def scores: List[Score]
   def total: Int
@@ -48,5 +52,5 @@ trait ScoringSystem {
 
   def emptySheet: Sheet
 
-  def sheet(userId: String, pairings: Pairings): Sheet
+  def sheet(userId: String, pairings: Pairings, streakable: Streakable): Sheet
 }

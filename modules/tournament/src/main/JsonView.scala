@@ -304,11 +304,11 @@ final class JsonView(
       .add("title" -> light.flatMap(_.title))
   }
 
-  private def sheetJson(sheet: ScoreSheet) = sheet match {
+  private def sheetJson(streakable: Boolean)(sheet: ScoreSheet) = sheet match {
     case s: arena.ScoringSystem.Sheet => Json.obj(
       "scores" -> s.scores.reverse.map(arenaSheetScoreJson),
       "total" -> s.total
-    ).add("fire" -> s.onFire)
+    ).add("fire" -> (streakable && s.onFire))
   }
 
   private def arenaSheetScoreJson(score: arena.ScoringSystem.Score) =
@@ -332,7 +332,7 @@ final class JsonView(
         "rating" -> p.rating,
         "ratingDiff" -> p.ratingDiff,
         "score" -> p.score,
-        "sheet" -> sheet.map(sheetJson)
+        "sheet" -> sheet.map(sheetJson(tour.streakable))
       ).add("title" -> light.flatMap(_.title))
         .add("provisional" -> p.provisional)
         .add("withdraw" -> p.withdraw)

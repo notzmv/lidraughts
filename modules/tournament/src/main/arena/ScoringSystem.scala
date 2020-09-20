@@ -48,7 +48,8 @@ private[tournament] object ScoringSystem extends AbstractScoringSystem {
 
   val emptySheet = Sheet(Nil)
 
-  def sheet(userId: String, pairings: Pairings): Sheet = Sheet {
+  def sheet(userId: String, pairings: Pairings, streakable: Streakable): Sheet = Sheet {
+    val streaks = streakable == Streaks
     val nexts = (pairings drop 1 map some) :+ None
     pairings.zip(nexts).foldLeft(List.empty[Score]) {
       case (scores, (p, n)) =>
@@ -59,13 +60,14 @@ private[tournament] object ScoringSystem extends AbstractScoringSystem {
           case None if p.quickDraw => Score(ResDQ, Normal, berserk)
           case None => Score(
             ResDraw,
-            if (isOnFire(scores)) Double else Normal,
+            if (streaks && isOnFire(scores)) Double else Normal,
             berserk
           )
           case Some(w) if userId == w => Score(
             ResWin,
-            if (isOnFire(scores)) Double
-            else if (scores.headOption ?? (_.flag == StreakStarter)) StreakStarter
+            if (!streaks) Normal
+            else if (isOnFire(scores)) Double
+            else if (scores.headOption.exists(_.flag == StreakStarter)) StreakStarter
             else n match {
               case None => StreakStarter
               case Some(s) if s.winner.contains(userId) => StreakStarter

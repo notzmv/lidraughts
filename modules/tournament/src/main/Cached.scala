@@ -50,20 +50,20 @@ private[tournament] final class Cached(
 
     import arena.ScoringSystem.Sheet
 
-    private case class SheetKey(tourId: Tournament.ID, userId: User.ID)
+    private case class SheetKey(tourId: Tournament.ID, userId: User.ID, streakable: Streakable)
 
     def apply(tour: Tournament, userId: User.ID): Fu[Sheet] =
-      cache.get(SheetKey(tour.id, userId))
+      cache.get(SheetKey(tour.id, userId, if (tour.streakable) Streaks else NoStreaks))
 
     def update(tour: Tournament, userId: User.ID): Fu[Sheet] = {
-      val key = SheetKey(tour.id, userId)
+      val key = SheetKey(tour.id, userId, if (tour.streakable) Streaks else NoStreaks)
       cache.refresh(key)
       cache.get(key)
     }
 
     private def compute(key: SheetKey): Fu[Sheet] =
       PairingRepo.finishedByPlayerChronological(key.tourId, key.userId) map {
-        arena.ScoringSystem.sheet(key.userId, _)
+        arena.ScoringSystem.sheet(key.userId, _, key.streakable)
       }
 
     private val cache = asyncCache.multi[SheetKey, Sheet](

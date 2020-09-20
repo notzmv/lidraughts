@@ -24,6 +24,7 @@ case class Tournament(
     conditions: Condition.All,
     teamBattle: Option[TeamBattle] = None,
     noBerserk: Boolean = false,
+    noStreak: Boolean = false,
     schedule: Option[Schedule],
     nbPlayers: Int,
     createdAt: DateTime,
@@ -41,6 +42,7 @@ case class Tournament(
 
   def isPrivate = password.isDefined
   def isHidden = isPrivate && !isUnique
+  def isWipable = !isPrivate && !isScheduled
 
   def isTeamBattle = teamBattle.isDefined
 
@@ -109,6 +111,7 @@ case class Tournament(
     else s"${minutes / 60}h" + (if (minutes % 60 != 0) s" ${(minutes % 60)}m" else "")
 
   def berserkable = !noBerserk && system.berserkable && clock.berserkable
+  def streakable = !noStreak
 
   def clockStatus = secondsToFinish |> { s => "%02d:%02d".format(s / 60, s % 60) }
 
@@ -150,6 +153,7 @@ object Tournament {
     waitMinutes: Int,
     startDate: Option[DateTime],
     berserkable: Boolean,
+    streakable: Boolean,
     teamBattle: Option[TeamBattle],
     description: Option[String]
   ) = Tournament(
@@ -173,6 +177,7 @@ object Tournament {
     conditions = Condition.All.empty,
     teamBattle = teamBattle,
     noBerserk = !berserkable,
+    noStreak = !streakable,
     schedule = None,
     startsAt = startDate | {
       DateTime.now plusMinutes waitMinutes

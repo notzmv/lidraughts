@@ -23,12 +23,10 @@ case class Puzzle(
     mate: Boolean
 ) {
 
+  def fenFullMove = fen.split(':').find(_.startsWith("F")).flatMap(m => parseIntOption(m.drop(1))) | 1
+
   // ply after "initial move" when we start solving
-  def initialPly: Int = {
-    fen.split(':').find(_.startsWith("F")) flatMap (m => parseIntOption(m.drop(1))) map { move =>
-      move * 2 - color.fold(0, 1)
-    }
-  } | 0
+  def initialPly: Int = fenFullMove * 2 - color.fold(0, 1)
 
   // (1 - 3)/(1 + 3) = -0.5
   def enabled = vote.ratio > AggregateVote.minRatio || vote.nb < AggregateVote.minVotes
@@ -56,7 +54,7 @@ case class Puzzle(
     for {
       sit1 <- Forsyth.<<@(variant, fen)
       sit2 <- sit1.move(initialMove).toOption.map(_.situationAfter)
-    } yield Forsyth >> SituationPlus(sit2, color.fold(2, 1))
+    } yield Forsyth >> SituationPlus(sit2, fenFullMove + color.fold(1, 0))
   }
 }
 

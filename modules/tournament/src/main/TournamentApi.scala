@@ -72,6 +72,7 @@ final class TournamentApi(
       position = DataForm.startingPosition(position | setup.realVariant.initialFen, setup.realVariant),
       openingTable = position.flatMap(draughts.OpeningTable.byKey).filter(setup.realVariant.openingTables.contains),
       berserkable = setup.berserkable | true,
+      streakable = setup.streakable | true,
       teamBattle = setup.teamBattleByTeam map TeamBattle.init,
       description = setup.description
     ) |> { tour =>
@@ -102,6 +103,7 @@ final class TournamentApi(
       position = DataForm.startingPosition(position | realVariant.initialFen, realVariant),
       openingTable = position.flatMap(draughts.OpeningTable.byKey).filter(realVariant.openingTables.contains),
       noBerserk = !(~berserkable),
+      noStreak = !(~streakable),
       description = description
     ) |> { tour =>
         tour.perfType.fold(tour) { perfType =>
@@ -253,7 +255,12 @@ final class TournamentApi(
 
   def verdicts(tour: Tournament, me: Option[User], getUserTeamIds: User => Fu[List[TeamId]]): Fu[Condition.All.WithVerdicts] = me match {
     case None => fuccess(tour.conditions.accepted)
-    case Some(user) => verify(tour.conditions, user, getUserTeamIds)
+    case Some(user) => {
+      tour.isStarted ?? PlayerRepo.exists(tour.id, user.id)
+    } flatMap {
+      case true => fuccess(tour.conditions.accepted)
+      case _ => verify(tour.conditions, user, getUserTeamIds)
+    }
   }
 
   def join(
@@ -413,7 +420,7 @@ final class TournamentApi(
         cached.sheet.update(tour, userId) map { sheet =>
           player.copy(
             score = sheet.total,
-            fire = sheet.onFire,
+            fire = tour.streakable && sheet.onFire,
             ratingDiff = finishing.fold(player.ratingDiff)(player.ratingDiff + _.playerByUserId(userId).fold(0)(_.ratingDiff.getOrElse(0))),
             rating = perf.fold(player.rating)(_.intRating),
             provisional = perf.fold(player.provisional)(_.provisional),
