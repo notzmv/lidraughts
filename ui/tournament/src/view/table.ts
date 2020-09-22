@@ -82,11 +82,13 @@ function renderDuel(battle?: TeamBattle, duelTeams?: DuelTeams) {
   ]);
 }
 
+const initMiniGame = (node: VNode) => window.lidraughts.miniGame.initAll(node.elm as HTMLElement);
+
 export default function(ctrl: TournamentController): VNode {
   return h('div.tour__table', {
     hook: {
-      insert: window.lidraughts.miniGame.initAll,
-      postpatch: window.lidraughts.miniGame.initAll
+      insert: initMiniGame,
+      postpatch: initMiniGame
     }
   }, [
     ctrl.data.featured ? featured(ctrl.data.featured, ctrl.data.draughtsResult) : null,

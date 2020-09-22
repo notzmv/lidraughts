@@ -34,11 +34,11 @@ interface Lidraughts {
   idleTimer(delay: number, onIdle: () => void, onWakeUp: () => void): void;
   miniBoard: {
     init(node: HTMLElement): void;
-    initAll(): void;
+    initAll(parent?: HTMLElement): void;
   };
   miniGame: {
-    init(node: HTMLElement, data?: string): string;
-    initAll(): void;
+    init(node: HTMLElement): string | null;
+    initAll(parent?: HTMLElement): void;
     update(node: HTMLElement, data: { fen: string, lm: string, wc?: number, bc?: number }): void;
     finish(node: HTMLElement, win?: Color): void;
   };
