@@ -134,7 +134,13 @@ final class TournamentApi(
     filterExistingTeamIds: Set[TeamId] => Fu[Set[TeamId]]
   ): Funit =
     filterExistingTeamIds(data.potentialTeamIds) flatMap { teamIds =>
-      TournamentRepo.setTeamBattle(tour.id, TeamBattle(teamIds, data.nbLeaders))
+      PlayerRepo.bestTeamIdsByTour(tour.id, TeamBattle(teamIds, data.nbLeaders)) flatMap { rankedTeams =>
+        val allTeamIds = teamIds ++ rankedTeams.foldLeft(Set.empty[TeamId]) {
+          case (missing, team) if !teamIds.contains(team.teamId) => missing + team.teamId
+          case (acc, _) => acc
+        }
+        TournamentRepo.setTeamBattle(tour.id, TeamBattle(allTeamIds, data.nbLeaders))
+      }
     }
 
   private[tournament] def makePairings(oldTour: Tournament, users: WaitingUsers, startAt: Long): Unit = {

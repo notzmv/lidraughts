@@ -77,8 +77,7 @@ object PlayerRepo {
           case (rt, pos) => rt.copy(rank = pos + 1)
         }
       } map { ranked =>
-        if (ranked.size == battle.teams.size) ranked
-        else ranked ::: battle.teams.foldLeft(List.empty[RankedTeam]) {
+        ranked ::: battle.teams.foldLeft(List.empty[RankedTeam]) {
           case (missing, team) if !ranked.exists(_.teamId == team) =>
             RankedTeam(missing.headOption.fold(ranked.size)(_.rank) + 1, team, Nil) :: missing
           case (acc, _) => acc
