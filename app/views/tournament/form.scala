@@ -46,7 +46,7 @@ object form {
               fields.advancedSettings,
               div(cls := "form")(
                 !isTeamBattle option fields.password,
-                condition(form, auto = true, teams = teams),
+                condition(form, auto = true, teams = if (isTeamBattle) Nil else teams),
                 fields.berserkableHack,
                 fields.streakableHack,
                 fields.startDate()
@@ -93,7 +93,7 @@ object form {
               fields.advancedSettings,
               div(cls := "form")(
                 !isTeamBattle option fields.password,
-                views.html.tournament.form.condition(form, auto = true, teams = teams),
+                views.html.tournament.form.condition(form, auto = true, teams = if (isTeamBattle) Nil else teams),
                 fields.berserkableHack,
                 fields.streakableHack
               )
