@@ -82,7 +82,7 @@ final class CrosstableApi(
 
   private val matchupProjection = $doc(F.lastPlayed -> false)
 
-  private def getMatchup(u1: User.ID, u2: User.ID): Fu[Option[Matchup]] =
+  def getMatchup(u1: User.ID, u2: User.ID): Fu[Option[Matchup]] =
     matchupColl.find(select(u1, u2), matchupProjection).uno[Matchup]
 
   private def createWithTimeout(u1: User.ID, u2: User.ID, timeout: FiniteDuration) =

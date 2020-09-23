@@ -56,13 +56,17 @@ object JsonView {
     )
   }
 
-  /*implicit val matchupWrites = OWrites[Crosstable.Matchup] { m =>
+  implicit val matchupWrites = OWrites[Crosstable.Matchup] { m =>
     Json.obj(
       "users" -> m.users,
       "nbGames" -> m.users.nbGames
     )
   }
-  implicit val crosstableWithMatchupWrites = Json.writes[Crosstable.WithMatchup]*/
+
+  def crosstable(ct: Crosstable, matchup: Option[Crosstable.Matchup]) =
+    crosstableWrites
+      .writes(ct)
+      .add("matchup" -> matchup)
 
   implicit val blursWriter: OWrites[Blurs] = OWrites { blurs =>
     Json.obj("nb" -> blurs.nb).add("bits" -> (blurs match {
