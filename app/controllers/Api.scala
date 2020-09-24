@@ -197,8 +197,10 @@ object Api extends LidraughtsController {
     key = "crosstable.api.ip"
   )
 
-  def crosstable(u1: String, u2: String) = ApiRequest { req =>
+  def crosstable(name1: String, name2: String) = ApiRequest { req =>
     CrosstableRateLimitPerIP(HTTPRequest lastRemoteAddress req, cost = 1) {
+      import lidraughts.user.User.normalize
+      val (u1, u2) = (normalize(name1), normalize(name2))
       Env.game.crosstableApi(u1, u2, timeout = 15.seconds) flatMap { ct =>
         (ct.results.nonEmpty && getBool("matchup", req)).?? {
           Env.game.crosstableApi.getMatchup(u1, u2)
