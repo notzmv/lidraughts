@@ -50,8 +50,8 @@ final class Env(
   )
 
   val trf = new SwissTrf(
+    playerColl = playerColl,
     sheetApi = sheetApi,
-    rankingApi = rankingApi,
     baseUrl = NetBaseUrl
   )
 

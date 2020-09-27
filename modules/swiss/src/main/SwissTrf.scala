@@ -1,22 +1,27 @@
 package lidraughts.swiss
 
+import reactivemongo.bson._
+
+import lidraughts.db.dsl._
+import lidraughts.user.User
+
 // https://www.fide.com/FIDE/handbook/C04Annex2_TRF16.pdf
 final class SwissTrf(
+    playerColl: Coll,
     sheetApi: SwissSheetApi,
-    rankingApi: SwissRankingApi,
     baseUrl: String
 ) {
 
   private type Bits = List[(Int, String)]
+  private type PlayerIds = Map[User.ID, Int]
 
   def apply(swiss: Swiss): Fu[List[String]] =
-    rankingApi(swiss) flatMap { apply(swiss, _) }
-
-  def apply(swiss: Swiss, ranking: Ranking): Fu[List[String]] =
-    sheetApi.source(swiss).map { lines =>
-      tournamentLines(swiss) ::: lines
-        .map((playerLine(swiss, ranking) _).tupled)
-        .map(formatLine)
+    fetchPlayerIds(swiss) flatMap { playerIds =>
+      sheetApi.source(swiss).map { lines =>
+        tournamentLines(swiss) ::: lines
+          .map((playerLine(swiss, playerIds) _).tupled)
+          .map(formatLine)
+      }
     }
 
   private def tournamentLines(swiss: Swiss) =
@@ -35,11 +40,11 @@ final class SwissTrf(
 
   private def playerLine(
     swiss: Swiss,
-    ranking: Ranking
+    playerIds: PlayerIds
   )(p: SwissPlayer, pairings: Map[SwissRound.Number, SwissPairing], sheet: SwissSheet): Bits =
     List(
       3 -> "001",
-      8 -> ranking.getOrElse(p.userId, 0).toString,
+      8 -> playerIds.getOrElse(p.userId, 0).toString,
       (15 + p.userId.size) -> p.userId,
       52 -> p.rating.toString,
       84 -> "%1.1f".formatLocal(java.util.Locale.US, sheet.points.value)
@@ -48,7 +53,7 @@ final class SwissTrf(
           case (rn, outcome) =>
             val pairing = pairings get rn
             List(
-              95 -> pairing.map(_ opponentOf p.userId).flatMap(ranking.get).??(_.toString),
+              95 -> pairing.map(_ opponentOf p.userId).flatMap(playerIds.get).??(_.toString),
               97 -> pairing.map(_ colorOf p.userId).??(_.fold("w", "b")),
               99 -> {
                 import SwissSheet._
@@ -80,4 +85,28 @@ final class SwissTrf(
     }
 
   private val dateFormatter = org.joda.time.format.DateTimeFormat forStyle "M-"
+
+  private def fetchPlayerIds(swiss: Swiss): Fu[PlayerIds] =
+    SwissPlayer
+      .fields { p =>
+        import BsonHandlers._
+        import reactivemongo.api.collections.bson.BSONBatchCommands.AggregationFramework._
+        playerColl
+          .aggregateOne(
+            Match($doc(p.swissId -> swiss.id)),
+            List(
+              Sort(Descending(p.rating)),
+              Group(BSONNull)("us" -> PushField(p.userId))
+            )
+          )
+          .map {
+            ~_.flatMap(_.getAs[List[User.ID]]("us"))
+          }
+          .map {
+            _.view.zipWithIndex.map {
+              case (userId, index) =>
+                (userId, index + 1)
+            }.toMap
+          }
+      }
 }

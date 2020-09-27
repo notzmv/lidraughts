@@ -5,7 +5,7 @@ import lidraughts.rating.Perf
 import lidraughts.user.{ Perfs, User }
 
 case class SwissPlayer(
-    id: SwissPlayer.Id, // random
+    id: SwissPlayer.Id, // swissId:userId
     swissId: Swiss.Id,
     userId: User.ID,
     rating: Int,

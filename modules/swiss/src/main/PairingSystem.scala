@@ -11,7 +11,7 @@ final private class PairingSystem(
 
   def apply(swiss: Swiss): Fu[List[SwissPairing.ByeOrPending]] =
     rankingApi(swiss) flatMap { ranking =>
-      trf(swiss, ranking).map {
+      trf(swiss).map {
         invoke(swiss, _) |> reader(ranking.map(_.swap))
       }
     }
