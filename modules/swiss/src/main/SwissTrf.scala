@@ -13,15 +13,15 @@ final class SwissTrf(
 ) {
 
   private type Bits = List[(Int, String)]
-  private type PlayerIds = Map[User.ID, Int]
 
   def apply(swiss: Swiss): Fu[List[String]] =
-    fetchPlayerIds(swiss) flatMap { playerIds =>
-      sheetApi.source(swiss).map { lines =>
-        tournamentLines(swiss) ::: lines
-          .map((playerLine(swiss, playerIds) _).tupled)
-          .map(formatLine)
-      }
+    fetchPlayerIds(swiss) flatMap { apply(swiss, _) }
+
+  def apply(swiss: Swiss, playerIds: PlayerIds): Fu[List[String]] =
+    sheetApi.source(swiss).map { lines =>
+      tournamentLines(swiss) ::: lines
+        .map((playerLine(swiss, playerIds) _).tupled)
+        .map(formatLine)
     }
 
   private def tournamentLines(swiss: Swiss) =
@@ -86,7 +86,7 @@ final class SwissTrf(
 
   private val dateFormatter = org.joda.time.format.DateTimeFormat forStyle "M-"
 
-  private def fetchPlayerIds(swiss: Swiss): Fu[PlayerIds] =
+  def fetchPlayerIds(swiss: Swiss): Fu[PlayerIds] =
     SwissPlayer
       .fields { p =>
         import BsonHandlers._

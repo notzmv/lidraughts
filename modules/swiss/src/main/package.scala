@@ -1,6 +1,7 @@
 package lidraughts
 
 import lidraughts.socket.WithSocket
+import lidraughts.user.User
 
 package object swiss extends PackageObject with WithSocket {
 
@@ -9,5 +10,8 @@ package object swiss extends PackageObject with WithSocket {
   private[swiss] val logger = lidraughts.log("swiss")
 
   private[swiss] type Ranking = Map[lidraughts.user.User.ID, Int]
-  private[swiss] type RankingSwap = Map[Int, lidraughts.user.User.ID]
+
+  // FIDE TRF player IDs
+  private[swiss] type PlayerIds = Map[User.ID, Int]
+  private[swiss] type IdPlayers = Map[Int, User.ID]
 }

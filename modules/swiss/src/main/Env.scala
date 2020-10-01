@@ -57,7 +57,6 @@ final class Env(
 
   private val pairingSystem = new PairingSystem(
     trf = trf,
-    rankingApi = rankingApi,
     executable = PairingExecutable
   )
 

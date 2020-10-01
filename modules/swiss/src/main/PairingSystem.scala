@@ -5,14 +5,13 @@ import scala.concurrent.blocking
 
 final private class PairingSystem(
     trf: SwissTrf,
-    rankingApi: SwissRankingApi,
     executable: String
 ) {
 
   def apply(swiss: Swiss): Fu[List[SwissPairing.ByeOrPending]] =
-    rankingApi(swiss) flatMap { ranking =>
+    trf.fetchPlayerIds(swiss) flatMap { playerIds =>
       trf(swiss).map {
-        invoke(swiss, _) |> reader(ranking.map(_.swap))
+        invoke(swiss, _) |> reader(playerIds.map(_.swap))
       }
     }
 
@@ -36,19 +35,19 @@ final private class PairingSystem(
       } else stdout.toList
     }
 
-  private def reader(rankingSwap: RankingSwap)(output: List[String]): List[SwissPairing.ByeOrPending] =
+  private def reader(idsToPlayers: IdPlayers)(output: List[String]): List[SwissPairing.ByeOrPending] =
     output
       .drop(1) // first line is the number of pairings
       .map(_ split ' ')
       .collect {
         case Array(p, "0") =>
-          parseIntOption(p) flatMap rankingSwap.get map { userId =>
+          parseIntOption(p) flatMap idsToPlayers.get map { userId =>
             Left(SwissPairing.Bye(userId))
           }
         case Array(w, b) =>
           for {
-            white <- parseIntOption(w) flatMap rankingSwap.get
-            black <- parseIntOption(b) flatMap rankingSwap.get
+            white <- parseIntOption(w) flatMap idsToPlayers.get
+            black <- parseIntOption(b) flatMap idsToPlayers.get
           } yield Right(SwissPairing.Pending(white, black))
       }
       .flatten
