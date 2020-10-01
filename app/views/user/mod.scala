@@ -228,6 +228,7 @@ object mod {
             th("Game"),
             th("Centi-Piece", br, "(Avg ± SD)"),
             th("Move Times", br, "(Avg ± SD)"),
+            th(span(title := "The percentage of best moves by Scan.")("Best moves")),
             th(span(title := "The frequency of which the user leaves the game page.")("Blurs")),
             th(span(title := "Bot detection using grid click analysis.")("Bot")),
             th(span(title := "Aggregate match")(raw("&Sigma;")))
@@ -262,6 +263,11 @@ object mod {
                 s" ${result.mtAvg / 10} ± ${result.mtSd / 10}",
                 (~result.mtStreak) ?? frag(br, "STREAK")
               ),
+              result.bestMoves.fold(td)(bestMoves =>
+                td(
+                  span(cls := s"sig sig_${Display.bestMovesSig(result)}", dataIcon := "J"),
+                  s" $bestMoves%"
+                )),
               td(
                 span(cls := s"sig sig_${Display.blurSig(result)}", dataIcon := "J"),
                 s" ${result.blurs}%",

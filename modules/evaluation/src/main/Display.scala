@@ -26,6 +26,15 @@ object Display {
       case _ => 1
     }
 
+  def bestMovesSig(pa: PlayerAssessment): Int =
+    pa.bestMoves.fold(1) { bestMoves =>
+      if (bestMoves > 90) 5
+      else if (bestMoves > 80) 4
+      else if (bestMoves > 70) 3
+      else if (bestMoves > 60) 2
+      else 1
+    }
+
   def holdSig(pa: PlayerAssessment): Int = if (pa.flags.suspiciousHoldAlert) 5 else 1
 
 }

@@ -84,7 +84,7 @@ private[api] final class RoundApi(
             withNote(note)_ compose
             withBookmark(bookmarked)_ compose
             withTree(pov, analysis, initialFen, withFlags, pov.game.metadata.pdnImport.isDefined)_ compose
-            withAnalysis(pov.game, analysis)_
+            withAnalysis(pov.game, analysis, ctx.me ?? Granter(_.Hunter))_
           )(json)
         }
     }.mon(_.round.api.watcher)
@@ -170,8 +170,8 @@ private[api] final class RoundApi(
     )
     else json
 
-  private def withAnalysis(g: Game, o: Option[Analysis])(json: JsObject) =
-    json.add("analysis", o.map { a => analysisJson.bothPlayers(g, a) })
+  private def withAnalysis(g: Game, o: Option[Analysis], nbm: Boolean = false)(json: JsObject) =
+    json.add("analysis", o.map { a => analysisJson.bothPlayers(g, a, nbm) })
 
   private def withTournament(pov: Pov, tourOption: Option[TourAndRanks])(json: JsObject) =
     json.add("tournament" -> tourOption.map { data =>

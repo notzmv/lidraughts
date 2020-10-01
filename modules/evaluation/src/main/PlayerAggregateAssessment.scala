@@ -19,6 +19,7 @@ case class PlayerAssessment(
     mtAvg: Int,
     mtSd: Int,
     blurs: Int,
+    bestMoves: Option[Int],
     hold: Boolean,
     blurStreak: Option[Int],
     mtStreak: Option[Boolean]

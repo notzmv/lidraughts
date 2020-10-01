@@ -28,6 +28,24 @@ function renderPlayer(ctrl: AnalyseCtrl, color: Color): VNode {
      'Anonymous');
 }
 
+function renderBestMovesPct(ctrl: AnalyseCtrl, color: Color): VNode[] {
+  const d = ctrl.data;
+  if (d.analysis && d.treeParts.length) {
+    const nbm = d.analysis[color].nbm;
+    if (nbm) {
+      const first = d.treeParts[0], 
+        last = d.treeParts[d.treeParts.length - 1],
+        totalPlies = Math.floor(((last.displayPly || last.ply) - first.ply) / 2),
+        pct = 100 - Math.floor(nbm.length * 100 / totalPlies);
+      return [h('span.bestmoves',
+        { hook: bind('mousedown', () => ctrl.toggleBestMoves(color)) },
+        pct + '%'
+      ), h('span', ' (' + (totalPlies - nbm.length) + '/' + totalPlies + ')')];
+    }
+  }
+  return [];
+}
+
 const advices = [
   ['inaccuracy', 'inaccuracies', '?!'],
   ['mistake', 'mistakes', '?'],
@@ -35,37 +53,37 @@ const advices = [
 ];
 
 function playerTable(ctrl: AnalyseCtrl, color: Color): VNode {
-    const d = ctrl.data, trans = ctrl.trans.noarg;
-    const acpl = d.analysis![color].acpl;
-    return h('table', {
-        hook: {
-            insert(vnode) {
-                window.lidraughts.powertip.manualUserIn(vnode.elm);
-            }
-        }
-    }, [
-            h('thead', h('tr', [
-                h('td', h('i.is.color-icon.' + color)),
-                h('th', renderPlayer(ctrl, color))
-            ])),
-            h('tbody',
-                advices.map(a => {
-                    const nb: number = d.analysis![color][a[0]];
-                    const attrs: VNodeData = nb ? {
-                      'data-color': color,
-                      'data-symbol': a[2]
-                    } : {};
-                    return h('tr' + (nb ? '.symbol' : ''), { attrs }, [
-                      h('td', '' + nb),
-                      h('th', trans(a[1]))
-                    ]);
-                }).concat(
-                    h('tr', [
-                        h('td', '' + (defined(acpl) ? acpl : '?')),
-                        h('th', trans('averageCentipieceLoss'))
-                    ])
-                    ))
-        ])
+  const d = ctrl.data, trans = ctrl.trans.noarg;
+  const acpl = d.analysis![color].acpl;
+  return h('table', {
+    hook: {
+      insert(vnode) {
+        window.lidraughts.powertip.manualUserIn(vnode.elm);
+      }
+    }
+  }, [
+      h('thead', h('tr', [
+        h('td', h('i.is.color-icon.' + color)),
+        h('th', [renderPlayer(ctrl, color)].concat(renderBestMovesPct(ctrl, color)))
+      ])),
+      h('tbody',
+        advices.map(a => {
+          const nb: number = d.analysis![color][a[0]];
+          const attrs: VNodeData = nb ? {
+            'data-color': color,
+            'data-symbol': a[2]
+          } : {};
+          return h('tr' + (nb ? '.symbol' : ''), { attrs }, [
+            h('td', '' + nb),
+            h('th', trans(a[1]))
+          ]);
+        }).concat(
+          h('tr', [
+            h('td', '' + (defined(acpl) ? acpl : '?')),
+            h('th', trans('averageCentipieceLoss'))
+          ])
+        ))
+    ])
 }
 
 function doRender(ctrl: AnalyseCtrl): VNode {

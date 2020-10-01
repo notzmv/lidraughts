@@ -101,6 +101,7 @@ export default class AnalyseCtrl {
   music?: any;
   nvui?: NvuiPlugin;
   initDests: boolean; // set to true when dests have been loaded on init
+  showBestMoves: string;
 
   constructor(readonly opts: AnalyseOpts, readonly redraw: Redraw) {
 
@@ -273,6 +274,19 @@ export default class AnalyseCtrl {
 
   turnColor(): Color {
     return util.plyColor(this.node.ply);
+  }
+
+  markNotBestMove(path: Tree.Path): boolean {
+    if (!this.showBestMoves || !this.data.analysis || !this.tree.pathIsMainline(path)) return false;
+    const nbm = this.data.analysis[this.showBestMoves].nbm || [];
+    const node = this.tree.nodeAtPath(path);
+    return nbm.includes((node.displayPly || node.ply) - 1);
+  }
+
+  toggleBestMoves(c: Color) {
+    if (this.showBestMoves === c) this.showBestMoves = '';
+    else this.showBestMoves = c;
+    this.redraw();
   }
 
   togglePlay(delay: AutoplayDelay): void {

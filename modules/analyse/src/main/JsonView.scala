@@ -26,16 +26,17 @@ object JsonView {
 
   import Accuracy.povToPovLike
 
-  def player(pov: Accuracy.PovLike)(analysis: Analysis) =
+  def player(pov: Accuracy.PovLike, withBestMoves: Boolean = false)(analysis: Analysis) =
     analysis.summary.find(_._1 == pov.color).map(_._2).map(s =>
       JsObject(s map {
         case (nag, nb) => nag.toString.toLowerCase -> JsNumber(nb)
-      }).add("acpl" -> lidraughts.analyse.Accuracy.mean(pov, analysis)))
+      }).add("acpl" -> lidraughts.analyse.Accuracy.mean(pov, analysis))
+        .add("nbm" -> withBestMoves.??(analysis.notBestPlies.map(_.filter(draughts.Color.fromPly(_) == pov.color)))))
 
-  def bothPlayers(game: Game, analysis: Analysis) = Json.obj(
+  def bothPlayers(game: Game, analysis: Analysis, withBestMoves: Boolean = false) = Json.obj(
     "id" -> analysis.id,
-    "white" -> player(game.whitePov)(analysis),
-    "black" -> player(game.blackPov)(analysis)
+    "white" -> player(game.whitePov, withBestMoves)(analysis),
+    "black" -> player(game.blackPov, withBestMoves)(analysis)
   )
 
   def bothPlayers(pov: Accuracy.PovLike, analysis: Analysis) = Json.obj(

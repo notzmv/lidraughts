@@ -113,6 +113,9 @@ case class Assessible(analysed: Analysed, color: Color) {
   lazy val mtAvg: Int = listAverage(~game.moveTimes(color) map (_.roundTenths)).toInt
   lazy val mtSd: Int = listDeviation(~game.moveTimes(color) map (_.roundTenths)).toInt
   lazy val blurs: Int = game.playerBlurPercent(color)
+  lazy val bestMoves: Option[Int] = analysis.notBestPlies.map {
+    100 - _.count(Color.fromPly(_) == color) * 100 / game.playerMoves(color)
+  }
 
   def playerAssessment: PlayerAssessment =
     PlayerAssessment(
@@ -129,6 +132,7 @@ case class Assessible(analysed: Analysed, color: Color) {
       mtAvg = mtAvg,
       mtSd = mtSd,
       blurs = blurs,
+      bestMoves = bestMoves,
       hold = suspiciousHoldAlert,
       blurStreak = highestChunkBlurs.some.filter(0 <),
       mtStreak = highlyConsistentMoveTimeStreaks.some.filter(identity)

@@ -9,6 +9,7 @@ case class Analysis(
     id: String, // game ID, or chapter ID if studyId is set
     studyId: Option[String],
     infos: List[Info],
+    notBestPlies: Option[List[Int]], // plies where Scan's best move was not played
     startPly: Int,
     uid: Option[String], // requester lidraughts ID
     by: Option[String], // analyser lidraughts ID
@@ -62,6 +63,7 @@ object Analysis {
         id = r str "_id",
         studyId = r strO "studyId",
         infos = Info.decodeList(raw, startPly) err s"Invalid analysis data $raw",
+        notBestPlies = r.getO[List[Int]]("nbp"),
         startPly = startPly,
         uid = r strO "uid",
         by = r strO "by",
@@ -72,6 +74,7 @@ object Analysis {
       "_id" -> o.id,
       "studyId" -> o.studyId,
       "data" -> Info.encodeList(o.infos),
+      "nbp" -> o.notBestPlies,
       "ply" -> w.intO(o.startPly),
       "uid" -> o.uid,
       "by" -> o.by,

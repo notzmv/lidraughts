@@ -29,22 +29,27 @@ private final class AnalysisBuilder(evalCache: DraughtsnetEvalCache, evalCacheMi
       val uciList = work.game.uciList
       draughts.Replay(uciList, work.game.initialFen.map(_.value), work.game.variant, true).fold(
         fufail(_),
-        replay => UciToPdn(replay, Analysis(
-          id = work.game.id,
-          studyId = work.game.studyId,
-          infos = makeInfos(mergeEvalsAndCached(work, evals, cachedFull), uciList, work.startPly),
-          startPly = work.startPly,
-          uid = work.sender.userId,
-          by = !client.Lidraughts option client.userId.value,
-          date = DateTime.now
-        )) match {
-          case (analysis, errors) =>
-            errors foreach { e => logger.debug(s"[UciToPdn] $debug $e") }
-            if (analysis.valid) {
-              if (!isPartial && analysis.emptyRatio >= 1d / 10)
-                fufail(s"${work.game.variant.key} analysis $debug has ${analysis.nbEmptyInfos} empty infos out of ${analysis.infos.size}")
-              else fuccess(analysis)
-            } else fufail(s"${work.game.variant.key} analysis $debug is empty")
+        replay => {
+          val infos = makeInfos(mergeEvalsAndCached(work, evals, cachedFull), uciList, work.startPly)
+          val isInitial = replay.setup.isInitial
+          UciToPdn(replay, Analysis(
+            id = work.game.id,
+            studyId = work.game.studyId,
+            infos = infos,
+            notBestPlies = infos.collect { case info if (info.ply > 8 || !isInitial) && info.best.nonEmpty => info.ply - 1 }.some,
+            startPly = work.startPly,
+            uid = work.sender.userId,
+            by = !client.Lidraughts option client.userId.value,
+            date = DateTime.now
+          )) match {
+            case (analysis, errors) =>
+              errors foreach { e => logger.debug(s"[UciToPdn] $debug $e") }
+              if (analysis.valid) {
+                if (!isPartial && analysis.emptyRatio >= 1d / 10)
+                  fufail(s"${work.game.variant.key} analysis $debug has ${analysis.nbEmptyInfos} empty infos out of ${analysis.infos.size}")
+                else fuccess(analysis)
+              } else fufail(s"${work.game.variant.key} analysis $debug is empty")
+          }
         }
       )
     }
@@ -59,22 +64,27 @@ private final class AnalysisBuilder(evalCache: DraughtsnetEvalCache, evalCacheMi
       val uciList = work.game.uciList
       draughts.Replay(uciList, work.game.initialFen.map(_.value), work.game.variant, true).fold(
         fufail(_),
-        replay => UciToPdn(replay, Analysis(
-          id = work.game.id,
-          studyId = work.game.studyId,
-          infos = makeInfos(mergeEvalsAndCached(work, evals, cachedFull), uciList, work.startPly),
-          startPly = work.startPly,
-          uid = work.sender.userId,
-          by = none,
-          date = DateTime.now
-        )) match {
-          case (analysis, errors) =>
-            errors foreach { e => logger.debug(s"[UciToPdn] $debug $e") }
-            if (analysis.valid) {
-              if (!allowIncomplete && analysis.nbEmptyInfos > 1)
-                fufail(s"${work.game.variant.key} analysis $debug has ${analysis.nbEmptyInfos} empty infos out of ${analysis.infos.size}")
-              else fuccess(analysis)
-            } else fufail(s"${work.game.variant.key} analysis $debug is empty")
+        replay => {
+          val infos = makeInfos(mergeEvalsAndCached(work, evals, cachedFull), uciList, work.startPly)
+          val isInitial = replay.setup.isInitial
+          UciToPdn(replay, Analysis(
+            id = work.game.id,
+            studyId = work.game.studyId,
+            infos = infos,
+            notBestPlies = infos.collect { case info if (info.ply > 8 || !isInitial) && info.best.nonEmpty => info.ply - 1 }.some,
+            startPly = work.startPly,
+            uid = work.sender.userId,
+            by = none,
+            date = DateTime.now
+          )) match {
+            case (analysis, errors) =>
+              errors foreach { e => logger.debug(s"[UciToPdn] $debug $e") }
+              if (analysis.valid) {
+                if (!allowIncomplete && analysis.nbEmptyInfos > 1)
+                  fufail(s"${work.game.variant.key} analysis $debug has ${analysis.nbEmptyInfos} empty infos out of ${analysis.infos.size}")
+                else fuccess(analysis)
+              } else fufail(s"${work.game.variant.key} analysis $debug is empty")
+          }
         }
       )
     }
