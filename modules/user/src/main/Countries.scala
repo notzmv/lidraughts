@@ -272,6 +272,7 @@ object Countries {
   ).sortBy(_.name) ::: List(
     // whatever
     C("_adygea", "Adygea"),
+    C("_belarus-wrw", "Belarus White-red-white"),
     C("_east-turkestan", "East Turkestan"),
     C("EU", "European Union"),
     C("_united-nations", "United Nations"),
