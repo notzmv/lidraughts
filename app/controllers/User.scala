@@ -249,7 +249,8 @@ object User extends LidraughtsController {
           "frysk" -> leaderboards.frysk,
           "antidraughts" -> leaderboards.antidraughts,
           "breakthrough" -> leaderboards.breakthrough,
-          "russian" -> leaderboards.russian
+          "russian" -> leaderboards.russian,
+          "brazilian" -> leaderboards.brazilian
         ))
       }
     )

@@ -158,7 +158,12 @@ object TournamentShield {
       iconChar = ''
     )
 
-    val all: List[Category] = List(Bullet, SuperBlitz, Blitz, Rapid, HyperBullet, Frisian, Frysk, Antidraughts, Breakthrough, Russian)
+    case object Brazilian extends Category(
+      of = Right(draughts.variant.Brazilian),
+      iconChar = ''
+    )
+
+    val all: List[Category] = List(Bullet, SuperBlitz, Blitz, Rapid, HyperBullet, Frisian, Frysk, Antidraughts, Breakthrough, Russian, Brazilian)
 
     def of(t: Tournament): Option[Category] = all.find(_ matches t)
 

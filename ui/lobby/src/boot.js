@@ -253,6 +253,9 @@ module.exports = function(cfg, element) {
         case '11':
           key = 'russian'
           break;
+        case '12':
+          key = 'brazilian'
+          break;
       }
       $ratings.hide().filter('.' + key).show();
     };

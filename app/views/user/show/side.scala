@@ -68,6 +68,7 @@ object side {
         showNonEmptyPerf(u.perfs.breakthrough, PerfType.Breakthrough),
         br,
         showPerf(u.perfs.russian, PerfType.Russian),
+        showPerf(u.perfs.brazilian, PerfType.Brazilian),
         br,
         u.noBot option showPerf(u.perfs.puzzle(draughts.variant.Standard), PerfType.Puzzle),
         u.noBot option showNonEmptyPerf(u.perfs.puzzle(draughts.variant.Frisian), PerfType.PuzzleFrisian),

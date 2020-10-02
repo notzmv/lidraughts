@@ -56,6 +56,7 @@ final class TournamentApi(
     val position = setup.realVariant match {
       case draughts.variant.Standard => setup.positionStandard
       case draughts.variant.Russian => setup.positionRussian
+      case draughts.variant.Brazilian => setup.positionBrazilian
       case _ => none
     }
     val tour = Tournament.make(
@@ -90,6 +91,7 @@ final class TournamentApi(
     val position = realVariant match {
       case draughts.variant.Standard => positionStandard
       case draughts.variant.Russian => positionRussian
+      case draughts.variant.Brazilian => positionBrazilian
       case _ => none
     }
     val tour = old.copy(

@@ -32,6 +32,7 @@ export const perfIcons = {
   'Blitz':')',
   'Breakthrough':'',
   'Russian':'',
+  'Brazilian':'',
   'UltraBullet':'{',
   'Bullet':'T',
   'Classical':'+',

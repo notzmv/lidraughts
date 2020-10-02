@@ -4,7 +4,7 @@ package crud
 import BSONHandlers._
 import org.joda.time.DateTime
 
-import draughts.variant.{ Russian, Standard }
+import draughts.variant.{ Brazilian, Russian, Standard }
 import lidraughts.common.paginator.Paginator
 import lidraughts.db.dsl._
 import lidraughts.db.paginator.Adapter
@@ -25,6 +25,7 @@ final class CrudApi {
     variant = tour.variant.id,
     positionStandard = if (tour.variant.standard) tour.openingTable.fold(tour.position.fen)(_.key).some else Standard.initialFen.some,
     positionRussian = if (tour.variant.russian) tour.openingTable.fold(tour.position.fen)(_.key).some else Russian.initialFen.some,
+    positionBrazilian = if (tour.variant.brazilian) tour.openingTable.fold(tour.position.fen)(_.key).some else Brazilian.initialFen.some,
     date = tour.startsAt,
     image = ~tour.spotlight.flatMap(_.iconImg),
     headline = tour.spotlight.??(_.headline),
@@ -83,6 +84,7 @@ final class CrudApi {
     val position = realVariant match {
       case Standard => positionStandard
       case Russian => positionRussian
+      case Brazilian => positionBrazilian
       case _ => none
     }
     tour.copy(

@@ -116,6 +116,14 @@ object PerfType {
     iconChar = ''
   )
 
+  case object Brazilian extends PerfType(
+    23,
+    key = "brazilian",
+    name = draughts.variant.Brazilian.name,
+    title = "Brazilian draughts",
+    iconChar = ''
+  )
+
   case object Puzzle extends PerfType(
     20,
     key = "puzzle",
@@ -140,7 +148,7 @@ object PerfType {
     iconChar = '-'
   )
 
-  val all: List[PerfType] = List(UltraBullet, Bullet, Blitz, Rapid, Classical, Correspondence, Standard, Frisian, Frysk, Antidraughts, Breakthrough, Russian, Puzzle, PuzzleFrisian, PuzzleRussian)
+  val all: List[PerfType] = List(UltraBullet, Bullet, Blitz, Rapid, Classical, Correspondence, Standard, Frisian, Frysk, Antidraughts, Breakthrough, Russian, Brazilian, Puzzle, PuzzleFrisian, PuzzleRussian)
   val byKey = all map { p => (p.key, p) } toMap
   val byId = all map { p => (p.id, p) } toMap
 
@@ -155,11 +163,11 @@ object PerfType {
 
   def id2key(id: Perf.ID): Option[Perf.Key] = byId get id map (_.key)
 
-  val nonPuzzle: List[PerfType] = List(UltraBullet, Bullet, Blitz, Rapid, Classical, Correspondence, Frisian, Frysk, Antidraughts, Breakthrough, Russian)
+  val nonPuzzle: List[PerfType] = List(UltraBullet, Bullet, Blitz, Rapid, Classical, Correspondence, Frisian, Frysk, Antidraughts, Breakthrough, Russian, Brazilian)
   val nonGame: List[PerfType] = List(Puzzle, PuzzleFrisian, PuzzleRussian)
-  val leaderboardable: List[PerfType] = List(Bullet, Blitz, Rapid, Classical, UltraBullet, Frisian, Frysk, Antidraughts, Breakthrough, Russian)
-  val variants: List[PerfType] = List(Frisian, Frysk, Antidraughts, Breakthrough, Russian)
-  val variantsPlus: List[PerfType] = List(Standard, Frisian, Frysk, Antidraughts, Breakthrough, Russian)
+  val leaderboardable: List[PerfType] = List(Bullet, Blitz, Rapid, Classical, UltraBullet, Frisian, Frysk, Antidraughts, Breakthrough, Russian, Brazilian)
+  val variants: List[PerfType] = List(Frisian, Frysk, Antidraughts, Breakthrough, Russian, Brazilian)
+  val variantsPlus: List[PerfType] = List(Standard, Frisian, Frysk, Antidraughts, Breakthrough, Russian, Brazilian)
   val standard: List[PerfType] = List(Bullet, Blitz, Rapid, Classical, Correspondence)
 
   def isGame(pt: PerfType) = !nonGame.contains(pt)
@@ -174,6 +182,7 @@ object PerfType {
     case Antidraughts => draughts.variant.Antidraughts
     case Breakthrough => draughts.variant.Breakthrough
     case Russian => draughts.variant.Russian
+    case Brazilian => draughts.variant.Brazilian
     case _ => draughts.variant.Standard
   }
 
@@ -183,6 +192,7 @@ object PerfType {
     case draughts.variant.Antidraughts => Antidraughts.some
     case draughts.variant.Breakthrough => Breakthrough.some
     case draughts.variant.Russian => Russian.some
+    case draughts.variant.Brazilian => Brazilian.some
     case _ => none
   }
 

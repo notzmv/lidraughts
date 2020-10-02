@@ -90,7 +90,7 @@ function buttons(root: AnalyseCtrl): VNode {
         icon: h('i.glyph-icon'),
         count: (root.node.glyphs || []).length
       }) : null,
-      root.data.game.variant.key !== 'russian' ? toolButton({
+      (root.data.game.variant.key !== 'russian' && root.data.game.variant.key !== 'brazilian') ? toolButton({
         ctrl,
         tab: 'serverEval',
         hint: noarg('computerAnalysis'),

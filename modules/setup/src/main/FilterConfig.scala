@@ -39,7 +39,8 @@ object FilterConfig {
     draughts.variant.Antidraughts,
     draughts.variant.Frysk,
     draughts.variant.Breakthrough,
-    draughts.variant.Russian
+    draughts.variant.Russian,
+    draughts.variant.Brazilian
   )
 
   val modes = Mode.all

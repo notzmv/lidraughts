@@ -35,7 +35,7 @@ object features {
             ),
             tr(check)(
               "International draughts and ",
-              a(href := routes.Page.variantHome)("5 variants (Frisian, Russian, Antidraughts, ...)")
+              a(href := routes.Page.variantHome)("6 variants (Frisian, Russian, Antidraughts, ...)")
             ),
             tr(custom("30 per day"))(
               s"Deep $engineName server analysis"

@@ -18,19 +18,6 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper =>
     else if (progress < 0) badTag(cls := "rp")(math.abs(progress))
     else emptyFrag
 
-  val topBarSortedPerfTypes: List[PerfType] = List(
-    PerfType.Bullet,
-    PerfType.Blitz,
-    PerfType.Rapid,
-    PerfType.Classical,
-    PerfType.Correspondence,
-    PerfType.Frisian,
-    PerfType.Frysk,
-    PerfType.Antidraughts,
-    PerfType.Breakthrough,
-    PerfType.Russian
-  )
-
   def showPerfRating(rating: Int, name: String, nb: Int, provisional: Boolean, icon: Char)(implicit ctx: Context): Frag =
     span(
       title := s"$name rating over ${nb.localize} games",

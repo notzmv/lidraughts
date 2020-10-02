@@ -8,7 +8,7 @@ import play.api.data.validation.{ Constraint, Constraints }
 
 import draughts.Mode
 import draughts.StartingPosition
-import draughts.variant.{ Variant, Standard, Russian }
+import draughts.variant.{ Brazilian, Variant, Standard, Russian }
 import lidraughts.common.Form._
 import lidraughts.hub.lightTeam._
 import lidraughts.user.User
@@ -28,6 +28,7 @@ final class DataForm {
     variant = draughts.variant.Standard.id.toString.some,
     positionStandard = Standard.initialFen.some,
     positionRussian = Russian.initialFen.some,
+    positionBrazilian = Brazilian.initialFen.some,
     password = None,
     mode = none,
     rated = true.some,
@@ -48,6 +49,7 @@ final class DataForm {
     variant = tour.variant.id.toString.some,
     positionStandard = if (tour.variant.standard) tour.openingTable.fold(tour.position.fen)(_.key).some else Standard.initialFen.some,
     positionRussian = if (tour.variant.russian) tour.openingTable.fold(tour.position.fen)(_.key).some else Russian.initialFen.some,
+    positionBrazilian = if (tour.variant.brazilian) tour.openingTable.fold(tour.position.fen)(_.key).some else Brazilian.initialFen.some,
     mode = none,
     rated = tour.mode.rated.some,
     password = tour.password,
@@ -84,6 +86,7 @@ final class DataForm {
     "variant" -> optional(text.verifying(v => guessVariant(v).isDefined)),
     "position_standard" -> optional(nonEmptyText),
     "position_russian" -> optional(nonEmptyText),
+    "position_brazilian" -> optional(nonEmptyText),
     "mode" -> optional(number.verifying(Mode.all map (_.id) contains _)), // deprecated, use rated
     "rated" -> optional(boolean),
     "password" -> optional(nonEmptyText),
@@ -127,7 +130,7 @@ object DataForm {
   val waitMinuteChoices = options(waitMinutes, "%d minute{s}")
   val waitMinuteDefault = 5
 
-  val validVariants = List(Standard, Frisian, Frysk, Antidraughts, Breakthrough, Russian)
+  val validVariants = List(Standard, Frisian, Frysk, Antidraughts, Breakthrough, Russian, Brazilian)
 
   def guessVariant(from: String): Option[Variant] = validVariants.find { v =>
     v.key == from || parseIntOption(from).exists(v.id ==)
@@ -147,6 +150,7 @@ private[tournament] case class TournamentSetup(
     variant: Option[String],
     positionStandard: Option[String],
     positionRussian: Option[String], // NOTE: Safe for variants without standard initial position (i.e. 64 squares)
+    positionBrazilian: Option[String],
     mode: Option[Int], // deprecated, use rated
     rated: Option[Boolean],
     password: Option[String],

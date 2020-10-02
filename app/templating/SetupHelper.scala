@@ -142,7 +142,8 @@ trait SetupHelper { self: I18nHelper =>
       variantTuple(draughts.variant.Frysk) :+
       variantTuple(draughts.variant.Antidraughts) :+
       variantTuple(draughts.variant.Breakthrough) :+
-      variantTuple(draughts.variant.Russian)
+      variantTuple(draughts.variant.Russian) :+
+      variantTuple(draughts.variant.Brazilian)
 
   def translatedVariantChoicesWithFen(implicit ctx: Context) =
     translatedVariantChoices(ctx) :+

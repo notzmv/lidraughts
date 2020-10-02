@@ -318,6 +318,7 @@ object User {
     PerfType.Frysk,
     PerfType.Antidraughts,
     PerfType.Breakthrough,
-    PerfType.Russian
+    PerfType.Russian,
+    PerfType.Brazilian
   )
 }

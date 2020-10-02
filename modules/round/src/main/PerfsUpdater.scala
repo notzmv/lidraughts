@@ -35,6 +35,8 @@ final class PerfsUpdater(
             updateRatings(ratingsW.breakthrough, ratingsB.breakthrough, result)
           case draughts.variant.Russian =>
             updateRatings(ratingsW.russian, ratingsB.russian, result)
+          case draughts.variant.Brazilian =>
+            updateRatings(ratingsW.brazilian, ratingsB.brazilian, result)
           case draughts.variant.Standard => game.speed match {
             case Speed.Bullet =>
               updateRatings(ratingsW.bullet, ratingsB.bullet, result)
@@ -75,6 +77,7 @@ final class PerfsUpdater(
       antidraughts: Rating,
       breakthrough: Rating,
       russian: Rating,
+      brazilian: Rating,
       ultraBullet: Rating,
       bullet: Rating,
       blitz: Rating,
@@ -89,6 +92,7 @@ final class PerfsUpdater(
     antidraughts = perfs.antidraughts.toRating,
     breakthrough = perfs.breakthrough.toRating,
     russian = perfs.russian.toRating,
+    brazilian = perfs.brazilian.toRating,
     ultraBullet = perfs.ultraBullet.toRating,
     bullet = perfs.bullet.toRating,
     blitz = perfs.blitz.toRating,
@@ -136,6 +140,7 @@ final class PerfsUpdater(
         antidraughts = addRatingIf(game.ratingVariant.antidraughts, perfs.antidraughts, ratings.antidraughts),
         breakthrough = addRatingIf(game.ratingVariant.breakthrough, perfs.breakthrough, ratings.breakthrough),
         russian = addRatingIf(game.ratingVariant.russian, perfs.russian, ratings.russian),
+        brazilian = addRatingIf(game.ratingVariant.brazilian, perfs.brazilian, ratings.brazilian),
         ultraBullet = addRatingIf(isStd && speed == Speed.UltraBullet, perfs.ultraBullet, ratings.ultraBullet),
         bullet = addRatingIf(isStd && speed == Speed.Bullet, perfs.bullet, ratings.bullet),
         blitz = addRatingIf(isStd && speed == Speed.Blitz, perfs.blitz, ratings.blitz),
@@ -150,6 +155,7 @@ final class PerfsUpdater(
         antidraughts = r(PT.Antidraughts, perfs.antidraughts, perfs1.antidraughts),
         breakthrough = r(PT.Breakthrough, perfs.breakthrough, perfs1.breakthrough),
         russian = r(PT.Russian, perfs.russian, perfs1.russian),
+        brazilian = r(PT.Brazilian, perfs.brazilian, perfs1.brazilian),
         ultraBullet = r(PT.UltraBullet, perfs.ultraBullet, perfs1.ultraBullet),
         bullet = r(PT.Bullet, perfs.bullet, perfs1.bullet),
         blitz = r(PT.Blitz, perfs.blitz, perfs1.blitz),

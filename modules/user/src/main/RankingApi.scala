@@ -80,6 +80,7 @@ final class RankingApi(
     antidraughts ← topPerf(PerfType.Antidraughts.id, nb)
     breakthrough ← topPerf(PerfType.Breakthrough.id, nb)
     russian ← topPerf(PerfType.Russian.id, nb)
+    brazilian ← topPerf(PerfType.Brazilian.id, nb)
   } yield Perfs.Leaderboards(
     ultraBullet = ultraBullet,
     bullet = bullet,
@@ -90,7 +91,8 @@ final class RankingApi(
     frysk = frysk,
     antidraughts = antidraughts,
     breakthrough = breakthrough,
-    russian = russian
+    russian = russian,
+    brazilian = brazilian
   )
 
   object weeklyStableRanking {

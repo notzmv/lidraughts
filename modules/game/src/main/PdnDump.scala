@@ -70,7 +70,7 @@ final class PdnDump(
     p.aiLevel.fold(u.fold(p.name | lidraughts.user.User.anonymous)(_.name))("lidraughts AI level " + _)
 
   private val customStartPosition: Set[draughts.variant.Variant] =
-    Set(draughts.variant.Russian, draughts.variant.Frysk, draughts.variant.FromPosition)
+    Set(draughts.variant.Russian, draughts.variant.Brazilian, draughts.variant.Frysk, draughts.variant.FromPosition)
 
   private def eventOf(game: Game) = {
     val perf = game.perfType.fold("Standard")(_.name)
