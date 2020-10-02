@@ -49,6 +49,7 @@ team {
       color: $c-link;
     }
     team {
+      @extend %break-word;
       font-size: 1rem;
     }
   }
