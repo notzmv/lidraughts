@@ -48,7 +48,7 @@ case class AnaMove(
           val truncatedDests = truncatedMoves.map { _ mapValues { _ flatMap (uci => variant.boardSize.pos.posAt(uci.takeRight(2))) } }
           val dests = truncatedDests.getOrElse(validMoves mapValues { _ map (_.dest) })
           val destsUci = truncatedMoves.map(_.values.toList.flatten)
-          val alternatives = (~puzzle && sit.ghosts == 0 && ~captLen > 2) option {
+          val alternatives = (~puzzle && sit.ghosts == 0 && ~captLen > 1) option {
             game.situation.validMovesFinal.values.toList.flatMap(_.map { m =>
               Node.Alternative(
                 uci = m.toUci.uci,

@@ -656,7 +656,7 @@ export default class AnalyseCtrl {
   }
 
   private setAlternatives(node: Tree.Node, parent: Tree.Node) {
-    if (node.uci && node.uci.length > 6 && countGhosts(node.fen) === 0) {
+    if (node.uci && node.uci.length >= 6 && countGhosts(node.fen) === 0) {
       if (parent.alternatives && parent.alternatives.length > 1) {
         const alts = new Array<Tree.Alternative>();
         for (const alt of parent.alternatives) {
