@@ -160,7 +160,7 @@ object TournamentShield {
 
     case object Brazilian extends Category(
       of = Right(draughts.variant.Brazilian),
-      iconChar = ''
+      iconChar = '('
     )
 
     val all: List[Category] = List(Bullet, SuperBlitz, Blitz, Rapid, HyperBullet, Frisian, Frysk, Antidraughts, Breakthrough, Russian, Brazilian)

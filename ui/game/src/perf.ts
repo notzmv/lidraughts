@@ -11,6 +11,6 @@ export const perf = {
     antidraughts: "@",
     breakthrough: "",
     russian: "",
-    brazilian: ""
+    brazilian: "("
   }
 };

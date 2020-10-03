@@ -121,7 +121,7 @@ object PerfType {
     key = "brazilian",
     name = draughts.variant.Brazilian.name,
     title = "Brazilian draughts",
-    iconChar = ''
+    iconChar = '('
   )
 
   case object Puzzle extends PerfType(
