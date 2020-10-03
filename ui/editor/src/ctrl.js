@@ -26,9 +26,13 @@ module.exports = function(cfg) {
       name: this.trans('loadPosition')
   }];
 
+  this.positionsKey = function() {
+    return (this.data.variant.key === 'russian' || this.data.variant.key === 'brazilian') ? 'draughts64' : this.data.variant.key;
+  }.bind(this);
+  
   this.makePositionMap = function() {
-    const positionMap = {};
-    const positions = cfg.positions && cfg.positions[this.data.variant.key];
+    const positionMap = {},
+      positions = cfg.positions && cfg.positions[this.positionsKey()];
     if (positions) positions.forEach(function(cat) { 
       cat.positions.forEach(function(pos) {
         positionMap[pos.fen.split(':').slice(0, 3).join(':')] = pos;

@@ -3,7 +3,7 @@ package tournament
 
 import play.api.data.{ Field, Form }
 
-import draughts.variant.{ Variant, Standard, Russian }
+import draughts.variant.{ Variant, Standard, Russian, Brazilian }
 import lidraughts.api.Context
 import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
@@ -35,6 +35,7 @@ object form {
             form3.split(fields.rated, fields.variant),
             fields.startPosition(Standard),
             fields.startPosition(Russian),
+            fields.startPosition(Brazilian),
             fields.clock,
             form3.split(
               form3.group(form("minutes"), trans.duration(), half = true)(form3.select(_, DataForm.minuteChoices)),
@@ -82,6 +83,7 @@ object form {
             form3.split(fields.rated, fields.variant),
             fields.startPosition(Standard),
             fields.startPosition(Russian),
+            fields.startPosition(Brazilian),
             fields.clock,
             form3.split(
               if (DataForm.minutes contains tour.minutes) form3.group(form("minutes"), trans.duration(), half = true)(form3.select(_, DataForm.minuteChoices))

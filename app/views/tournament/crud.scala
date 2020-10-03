@@ -87,7 +87,8 @@ object crud {
     form3.split(
       frag(
         startPosition(form, draughts.variant.Standard),
-        startPosition(form, draughts.variant.Russian)
+        startPosition(form, draughts.variant.Russian),
+        startPosition(form, draughts.variant.Brazilian)
       ),
       form3.checkbox(
         form("teamBattle"),

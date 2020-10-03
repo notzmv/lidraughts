@@ -73,8 +73,8 @@ function controls(ctrl, fen) {
           }, '- ' + ctrl.trans.noarg('boardEditor') + ' -'),
           ctrl.extraPositions.map(position2option)
         ]),
-        ctrl.data.positions[ctrl.data.variant.key] ? 
-          ctrl.data.positions[ctrl.data.variant.key].map(function(cat) {
+        ctrl.data.positions[ctrl.positionsKey()] ? 
+          ctrl.data.positions[ctrl.positionsKey()].map(function(cat) {
              return optgroup(cat.name, cat.positions.map(position2option))
           }) : null
       ]) : null
