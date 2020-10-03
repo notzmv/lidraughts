@@ -28,7 +28,8 @@ case class Schedule(
     case _ => s"${freq.toString} ${variant.name}"
   }
 
-  def openingTable = (freq != Schedule.Freq.Shield && freq.isWeeklyOrBetter && variant.russian) ?? variant.openingTables.headOption
+  def openingTable =
+    (freq != Schedule.Freq.Shield && freq.isWeeklyOrBetter && (variant.russian || variant.brazilian)) ?? variant.openingTables.headOption
 
   def day = at.withTimeAtStartOfDay
 
@@ -157,7 +158,7 @@ object Schedule {
       case (Hourly, _, Rapid) if s.hasMaxRating => 57
       case (Hourly, _, Rapid | Classical) => 117
 
-      case (Daily, Russian | Antidraughts, _) => 90
+      case (Daily, Russian | Brazilian | Antidraughts, _) => 90
 
       case (Daily | Eastern, Standard, SuperBlitz) => 120
       case (Daily | Eastern, Standard, Blitz) => 120

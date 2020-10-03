@@ -134,12 +134,14 @@ Thank you all, you rock!"""
 
         List( // yearly variant tournaments!
           secondWeekOf(JANUARY).withDayOfWeek(MONDAY) -> Breakthrough,
+          secondWeekOf(JUNE).withDayOfWeek(WEDNESDAY) -> Brazilian,
           secondWeekOf(MAY).withDayOfWeek(THURSDAY) -> Russian,
           secondWeekOf(FEBRUARY).withDayOfWeek(FRIDAY) -> Frysk,
           secondWeekOf(MARCH).withDayOfWeek(SATURDAY) -> Antidraughts,
           secondWeekOf(APRIL).withDayOfWeek(SUNDAY) -> Frisian,
 
           secondWeekOf(JULY).withDayOfWeek(MONDAY) -> Breakthrough,
+          secondWeekOf(DECEMBER).withDayOfWeek(WEDNESDAY) -> Brazilian,
           secondWeekOf(NOVEMBER).withDayOfWeek(THURSDAY) -> Russian,
           secondWeekOf(AUGUST).withDayOfWeek(FRIDAY) -> Frysk,
           secondWeekOf(SEPTEMBER).withDayOfWeek(SATURDAY) -> Antidraughts,
@@ -168,6 +170,7 @@ Thank you all, you rock!"""
 
             List( // monthly variant tournaments!
               month.firstWeek.withDayOfWeek(MONDAY) -> Breakthrough,
+              month.firstWeek.withDayOfWeek(WEDNESDAY) -> Brazilian,
               month.firstWeek.withDayOfWeek(THURSDAY) -> Russian,
               month.firstWeek.withDayOfWeek(FRIDAY) -> Frysk,
               month.firstWeek.withDayOfWeek(SATURDAY) -> Antidraughts,
@@ -196,6 +199,7 @@ Thank you all, you rock!"""
               },
 
             List( // shield variant tournaments! (different days to not overlap with yearlies)
+              month.secondWeek.withDayOfWeek(TUESDAY) -> Brazilian,
               month.secondWeek.withDayOfWeek(WEDNESDAY) -> Breakthrough,
               month.secondWeek.withDayOfWeek(THURSDAY) -> Frysk,
               month.secondWeek.withDayOfWeek(FRIDAY) -> Antidraughts,
@@ -230,6 +234,7 @@ Thank you all, you rock!"""
 
         List( // weekly variant tournaments!
           nextMonday -> Breakthrough,
+          nextWednesday -> Brazilian,
           nextThursday -> Russian,
           nextFriday -> Frysk,
           nextSaturday -> Antidraughts,
@@ -247,6 +252,7 @@ Thank you all, you rock!"""
 
         List( // daily variant tournaments!
           at(today, 17 - todayCET) map { date => Schedule(Daily, SuperBlitz, Russian, std, date |> orTomorrow).plan },
+          at(today, 18 - todayCET, 30) map { date => Schedule(Daily, SuperBlitz, Brazilian, std, date |> orTomorrow).plan },
           at(today, 19 - todayCET) map { date => Schedule(Daily, SuperBlitz, Frysk, std, date |> orTomorrow).plan },
           at(today, 20 - todayCET) map { date => Schedule(Daily, Blitz, Frisian, std, date |> orTomorrow).plan },
           at(today, 21 - todayCET, 30) map { date => Schedule(Daily, SuperBlitz, Antidraughts, std, date |> orTomorrow).plan }
@@ -275,15 +281,13 @@ Thank you all, you rock!"""
           val date = rightNow plusHours hourDelta
           val hour = date.getHourOfDay
           val hourCET = hour + todayCET
-          if (hourCET == 18) {
-            // always frisian bullet immediately after daily russian
-            List(
-              at(date, hour, 30) map { date => Schedule(Hourly, Bullet, Frisian, std, date).plan }
-            ).flatten
+          if (hourCET == 17 || hourCET == 18 || hourCET == 19) {
+            // no tournaments during daily russian / brazilian
+            List()
           } else if (hour % 3 == 1) {
             // hour #1: russian bullet, alternating a frisian bullet and with/without increment
-            // no frisian bullet during daily frisian, or in hour after daily russian (would be twice in a row)
-            val bulletVariant = if (hour % 6 == 1 && hourCET != 19 && hourCET != 20 && hourCET != 21) Frisian else Russian
+            // no frisian bullet during daily frisian
+            val bulletVariant = if (hour % 6 == 1 && hourCET != 20 && hourCET != 21) Frisian else Russian
             List(
               at(date, hour) map { date => Schedule(Hourly, Bullet, bulletVariant, std, date).plan },
               at(date, hour, 30) map { date => Schedule(Hourly, Bullet, Russian, std, date).plan }
@@ -298,9 +302,6 @@ Thank you all, you rock!"""
             List(
               at(date, hour) map { date => Schedule(Hourly, Blitz, Russian, std, date).plan }
             ).flatten
-          } else if (hourCET == 17) {
-            // no frisian during daily russian
-            List()
           } else {
             // hour #3: frisian
             List(

@@ -30,8 +30,8 @@ function leftPos(time) {
 function laneGrouper(t) {
   if (t.schedule && t.schedule.freq === 'unique') {
     return -1;
-  } else if (t.variant.key === 'russian' || (t.variant.key === 'frisian' && t.schedule.freq === 'hourly')) {
-    return 2;   // variant lane below blitz: russian / frisian
+  } else if (t.variant.key === 'russian' || t.variant.key === 'brazilian' || (t.variant.key === 'frisian' && t.schedule.freq === 'hourly')) {
+    return 2;   // variant lane below blitz: russian / frisian / brazilian
   } else if (t.variant.key !== 'standard') {
     if (t.schedule.freq === 'daily')
       return 3; // daily variant tournaments below variant lane
