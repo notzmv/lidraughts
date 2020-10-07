@@ -111,6 +111,9 @@ function controls(ctrl, fen) {
       }, ctrl.trans.noarg('clearBoard'))
     ]) : [
       m('div.actions', [
+        m('a.button.button-empty.text[data-icon=q]', {
+          onclick: ctrl.clearBoard
+        }, ctrl.trans.noarg('clearBoard')),
         m('a.button.button-empty.text[data-icon=B]', {
           onclick: function() {
             ctrl.draughtsground.toggleOrientation();
