@@ -450,7 +450,7 @@ export default function (opts, redraw: () => void): Controller {
     if (!vm.canViewSolution) return;
     sendResult(false);
     vm.mode = 'view';
-    const merged: Tree.Node | undefined = mergeSolution(vm.initialNode, data.puzzle.branch, data.puzzle.color);
+    const merged: Tree.Node | undefined = mergeSolution(vm.initialNode, data.puzzle.branch, data.puzzle.color, isAlgebraic());
     reorderChildren(vm.initialPath, true);
 
     // try and play the solution next move
