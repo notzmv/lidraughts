@@ -182,11 +182,15 @@ export function view(ctrl: StudyChapterNewFormCtrl): VNode {
                 const data = b[0];
                 data.embed = true;
                 data.options = {
-                  inlineCastling: true,
                   onChange: ctrl.vm.editorFen
                 };
                 ctrl.vm.editor = window['LidraughtsEditor'](vnode.elm as HTMLElement, data);
                 ctrl.vm.editorFen(ctrl.vm.editor.getFen());
+                const el = (vnode.elm as HTMLElement).parentElement,
+                  elVariant = el && el.querySelector('#chapter-variant'),
+                  elOrientation = el && el.querySelector('#chapter-orientation');
+                if (elVariant) ctrl.vm.editor.changeVariant((elVariant as HTMLInputElement).value);
+                if (elOrientation) ctrl.vm.editor.setOrientation((elOrientation as HTMLInputElement).value);
               });
             },
             destroy: _ => {
