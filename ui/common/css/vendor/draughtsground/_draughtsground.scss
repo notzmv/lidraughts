@@ -104,7 +104,7 @@ piece {
 
 cg-helper {
   position: absolute;
-  display: table; /* hack: round to full pixel size in chrome */
+  display: table; // hack to round to full pixel size in chrome
   bottom: 0;
 }
 
