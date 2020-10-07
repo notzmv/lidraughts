@@ -26,7 +26,7 @@ private[tv] final class ChannelTrouper(
   // the list of candidates by descending rating order
   private var manyIds = List.empty[Game.ID]
 
-  private val candidateIds = new lidraughts.memo.ExpireSetMemo(3 minutes)
+  private val candidateIds = new lidraughts.memo.ExpireSetMemo(10 minutes)
 
   protected val process: Trouper.Receive = {
 
