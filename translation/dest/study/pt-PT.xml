@@ -94,10 +94,6 @@
   <string name="loadAPositionFromFen">Carregar uma posição do FEN</string>
   <string name="loadAGameFromPdn">Carregar um jogo do PDN</string>
   <string name="automatic">Automático</string>
-  <plurals name="pasteYourPdnTextHereUpToNbGames">
-    <item quantity="one">Cole seu texto PDN aqui, até %s jogo</item>
-    <item quantity="other">Cole seu texto PDN aqui, até %s jogos</item>
-  </plurals>
   <string name="urlOfTheGame">URL do jogo</string>
   <string name="loadAGameFromXOrY">Carregar um jogo de %1$s ou %2$s</string>
   <string name="createChapter">Criar capítulo</string>

@@ -97,11 +97,6 @@
   <string name="loadAPositionFromFen">Ielādēt pozīciju no FEN</string>
   <string name="loadAGameFromPdn">Ielādēt spēli no PDN</string>
   <string name="automatic">Automātisks</string>
-  <plurals name="pasteYourPdnTextHereUpToNbGames">
-    <item quantity="zero">Ielīmējiet PDN tekstu šeit, ne vairāk kā %s spēles</item>
-    <item quantity="one">Ielīmējiet PDN tekstu šeit, ne vairāk kā %s spēli</item>
-    <item quantity="other">Ielīmējiet PDN tekstu šeit, ne vairāk kā %s spēles</item>
-  </plurals>
   <string name="urlOfTheGame">Spēles URL</string>
   <string name="loadAGameFromXOrY">Ielādēt spēli no %1$s vai %2$s</string>
   <string name="createChapter">Izveidot nodaļu</string>

@@ -91,9 +91,6 @@
   <string name="loadAPositionFromFen">局面を FEN で読み込み</string>
   <string name="loadAGameFromPdn">棋譜を PDN で読み込み</string>
   <string name="automatic">自動</string>
-  <plurals name="pasteYourPdnTextHereUpToNbGames">
-    <item quantity="other">ここに PDN をペースト（%s 局まで）</item>
-  </plurals>
   <string name="urlOfTheGame">棋譜の URL</string>
   <string name="loadAGameFromXOrY">%1$s か %2$s から棋譜を読み込み</string>
   <string name="createChapter">章を作成</string>

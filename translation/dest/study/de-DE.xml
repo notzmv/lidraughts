@@ -95,8 +95,8 @@
   <string name="loadAGameFromPdn">Lade eine Partie mittels PDN</string>
   <string name="automatic">Automatisch</string>
   <plurals name="pasteYourPdnTextHereUpToNbGames">
-    <item quantity="one">Füge dein PDN hier ein, bis zu %s Partie</item>
-    <item quantity="other">Füge dein PDN hier ein, bis zu %s Partien</item>
+    <item quantity="one">Füge dein PDN hier ein, bis zu %s Partie, die jeweils durch eine leere Zeile getrennt sind</item>
+    <item quantity="other">Füge dein PDN hier ein, bis zu %s Partien, die jeweils durch eine leere Zeile getrennt sind</item>
   </plurals>
   <string name="urlOfTheGame">URL der Partie</string>
   <string name="loadAGameFromXOrY">Partie von %1$s oder %2$s laden</string>

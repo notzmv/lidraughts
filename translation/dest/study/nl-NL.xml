@@ -95,8 +95,8 @@
   <string name="loadAGameFromPdn">Laad een spel via een PDN</string>
   <string name="automatic">Automatisch</string>
   <plurals name="pasteYourPdnTextHereUpToNbGames">
-    <item quantity="one">Plak je PDN tekst hier, tot %s spel mogelijk</item>
-    <item quantity="other">Plak je PDN tekst hier, tot %s spellen mogelijk</item>
+    <item quantity="one">Plak je PDN tekst hier, tot %s spel mogelijk, elk gescheiden door een lege regel</item>
+    <item quantity="other">Plak je PDN tekst hier, tot %s spellen mogelijk, elk gescheiden door een lege regel</item>
   </plurals>
   <string name="urlOfTheGame">URL van het spel</string>
   <string name="loadAGameFromXOrY">Laad een spel van %1$s of %2$s</string>

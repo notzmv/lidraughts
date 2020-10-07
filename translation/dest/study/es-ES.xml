@@ -94,10 +94,6 @@
   <string name="loadAPositionFromFen">Cargar una partida vía código FEN</string>
   <string name="loadAGameFromPdn">Cargar una partida vía código PDN</string>
   <string name="automatic">Automática</string>
-  <plurals name="pasteYourPdnTextHereUpToNbGames">
-    <item quantity="one">Pega aquí el código PDN, %s partida como máximo</item>
-    <item quantity="other">Pega aquí el código PDN, %s partidas como máximo</item>
-  </plurals>
   <string name="urlOfTheGame">URL de la partida</string>
   <string name="loadAGameFromXOrY">Cargar una partida desde %1$s o %2$s</string>
   <string name="createChapter">Crear capítulo</string>
