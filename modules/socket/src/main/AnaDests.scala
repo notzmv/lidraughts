@@ -85,6 +85,7 @@ object AnaDests {
       unique = uci._2.slice(0, i)
     }
     if (i == uci._2.length) uci
+    else if (i == 2) (none, uci._2.slice(0, 4))
     else (none, unique)
   }
 
@@ -101,7 +102,7 @@ object AnaDests {
         else pos -> moves.foldLeft(List[BoardWithUci]()) { (acc, move) =>
           val sameDestUcis = moves.filter(m => m != move && m.dest == move.dest && (m.orig == m.dest || m.after != move.after)).map(m => (m.after.some, m.toUci.uci))
           val uci = (move.after.some, move.toUci.uci)
-          val newUci = if (sameDestUcis.isEmpty) uci else uniqueUci(sameDestUcis, uci)
+          val newUci = if (sameDestUcis.isEmpty && move.orig != move.dest) uci else uniqueUci(sameDestUcis, uci)
           if (!acc.contains(newUci)) {
             if (newUci._2.length != uci._2.length) truncated = true
             newUci :: acc
