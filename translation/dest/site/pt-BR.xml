@@ -331,7 +331,8 @@
   <string name="fromPosition">A partir da posição</string>
   <string name="continueFromHere">Continuar daqui</string>
   <string name="importGame">Importar partida</string>
-  <string name="importGameExplanation">Após colar uma partida em PDN você poderá revisá-la interativamente, consultar uma análise de computador, utilizar o chat e compartilhar um link.</string>
+  <string name="importGameExplanation">Após colar uma partida em PDN você poderá revisá-la interativamente,
+consultar uma análise de computador, utilizar o chat e compartilhar um link.</string>
   <plurals name="nbImportedGames">
     <item quantity="one">%s de partidas importadas</item>
     <item quantity="other">%s de partidas importadas</item>

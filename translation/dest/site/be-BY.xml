@@ -355,7 +355,8 @@
   <string name="fromPosition">З пазіцыі</string>
   <string name="continueFromHere">Працягнуць адсюль</string>
   <string name="importGame">Імпартаваць гульню</string>
-  <string name="importGameExplanation">Калі вы імпартуеце PDN-натацыю гульні, вы атрымаеце спасылку на гэтую гульню і зможаце праглядаць яе паўтор у браўзеры і аналізаваць яе. Таксама будзе даступны чат.</string>
+  <string name="importGameExplanation">Калі вы імпартуеце PDN-натацыю гульні вы атрымаеце спасылку на гэтую гульню,
+і зможаце праглядаць яе паўтор у браўзеры і аналізаваць яе. Таксама будзе даступны чат.</string>
   <plurals name="nbImportedGames">
     <item quantity="one">%s імпартаваная гульня</item>
     <item quantity="few">%s імпартаваныя гульні</item>

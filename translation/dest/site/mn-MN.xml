@@ -286,7 +286,8 @@
   <string name="fromPosition">Энэ байрлалаас үргэлжлүүлэн тоглох</string>
   <string name="continueFromHere">Энэ байрлалаас үргэлжлүүлэх</string>
   <string name="importGame">Өрөг импортлох</string>
-  <string name="importGameExplanation">Өрөгийн PDN-г оруулсанаар та өргийг дахин тоглуулах, компьютер шинжилгээ хийх, чат бичих болон бусдад түгээх холбоос авах боломжтой.</string>
+  <string name="importGameExplanation">Өрөгийн PDN-г оруулсанаар та өргийг дахин тоглуулах, компьютер шинжилгээ хийх,
+чат бичих болон бусдад түгээх холбоос авах боломжтой.</string>
   <plurals name="nbImportedGames">
     <item quantity="one">Импортлогдсон өргийн тоо: %s</item>
     <item quantity="other">Импортлогдсон өргийн тоо: %s</item>

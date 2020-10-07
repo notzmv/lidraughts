@@ -255,7 +255,8 @@
   <string name="fromPosition">Z pozice</string>
   <string name="continueFromHere">Pokračovat zde</string>
   <string name="importGame">Importuj hru</string>
-  <string name="importGameExplanation">Vložení partie ve formátu PDN Vám umožní přehrání partie, získáte počítačovou analýzu, chat ke hře a URL ke sdílení hry.</string>
+  <string name="importGameExplanation">Vložení partie ve formátu PDN Vám umožní přehrání partie,
+získáte počítačovou analýzu, chat ke hře a URL ke sdílení hry.</string>
   <string name="retry">Zkusit znovu</string>
   <string name="reconnecting">Připojování</string>
   <plurals name="nbFriendsOnline">
