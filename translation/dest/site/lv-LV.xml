@@ -72,6 +72,16 @@
   <string name="recentGames">Nesenas spēles</string>
   <string name="topGames">Populārākās spēles</string>
   <string name="masterDbExplanation">Dzīvās turnīru spēles, kas spēlētas starp %1$s+ meistariem reitinga diapazonā no %2$s līdz %3$s</string>
+  <plurals name="winInXHalfMoves">
+	<item quantity="zero">Uzvara %s pusgājienos</item>
+    <item quantity="one">Uzvara %s pusgājienā</item>
+    <item quantity="other">Uzvara %s pusgājienos</item>
+  </plurals>
+  <plurals name="drawInXHalfMoves">
+	<item quantity="zero">Neizšķirts %s pusgājienos</item>
+    <item quantity="one">Neizšķirts %s pusgājienā</item>
+    <item quantity="other">Neizšķirts %s pusgājienos</item>
+  </plurals>
   <string name="noGameFound">Neviena spēle nav atrasta</string>
   <string name="maybeIncludeMoreGamesFromThePreferencesMenu">Varbūt iekļaujiet vairāk spēļu uzstādījumu izvēlnē?</string>
   <string name="openingExplorer">Atklātņu pārlūks</string>
@@ -107,18 +117,28 @@
   <string name="drawOffersNotAllowed">Piedāvāt neižšķirtu nav atļauts</string>
   <string name="draw">Neizšķirts</string>
   <plurals name="nbPlayers">
-    <item quantity="zero">%s spēlētāji</item>
+    <item quantity="zero">%s spēlētāju</item>
     <item quantity="one">%s spēlētājs</item>
     <item quantity="other">%s spēlētāji</item>
   </plurals>
+  <plurals name="nbOpponents">
+    <item quantity="zero">%s pretinieku</item>
+    <item quantity="one">%s pretinieks</item>
+    <item quantity="other">%s pretinieki</item>
+  </plurals>
   <string name="currentGames">Pašreizējās spēles</string>
   <plurals name="nbGames">
-    <item quantity="zero">Apskatīt visas %s spēles</item>
+    <item quantity="zero">Apskatīt %s spēļu</item>
     <item quantity="one">Apskatīt %s spēli</item>
-    <item quantity="other">%s spēles</item>
+    <item quantity="other">Apskatīt %s spēles</item>
+  </plurals>
+  <plurals name="nbGamesOngoing">
+    <item quantity="zero">Norisinās %s spēļu</item>
+    <item quantity="one">Norisinās %s spēle</item>
+    <item quantity="other">Norisinās %s spēles</item>
   </plurals>
   <plurals name="nbBookmarks">
-    <item quantity="zero">%s grāmatzīmes</item>
+    <item quantity="zero">%s grāmatzīmju</item>
     <item quantity="one">%s grāmatzīme</item>
     <item quantity="other">%s grāmatzīmes</item>
   </plurals>
@@ -145,12 +165,12 @@
   <string name="daysPerTurn">Dienu skaits uz gājienu</string>
   <string name="oneDay">Vienu dienu</string>
   <plurals name="nbDays">
-    <item quantity="zero">%s dienas</item>
+    <item quantity="zero">%s dienu</item>
     <item quantity="one">%s diena</item>
     <item quantity="other">%s dienas</item>
   </plurals>
   <plurals name="nbHours">
-    <item quantity="zero">%s stundas</item>
+    <item quantity="zero">%s stundu</item>
     <item quantity="one">%s stunda</item>
     <item quantity="other">%s stundas</item>
   </plurals>
@@ -172,13 +192,13 @@
   <string name="rank">Rangs</string>
   <string name="rankX">Rangs: %s</string>
   <plurals name="nbPuzzles">
-    <item quantity="zero">%s puzles</item>
-    <item quantity="one">%s puzle</item>
-    <item quantity="other">%s puzles</item>
+    <item quantity="zero">%s vingrinājumu</item>
+    <item quantity="one">%s vingrinājums</item>
+    <item quantity="other">%s vingrinājumi</item>
   </plurals>
   <string name="gamesPlayed">Izspēlētās spēles</string>
   <plurals name="nbGamesWithYou">
-    <item quantity="zero">%s savstarpējās spēles</item>
+    <item quantity="zero">%s savstarpējo spēļu</item>
     <item quantity="one">%s savstarpējā spēle</item>
     <item quantity="other">%s savstarpējās spēles</item>
   </plurals>
@@ -240,32 +260,37 @@
     <item quantity="other">%s ar reitingu</item>
   </plurals>
   <plurals name="nbWins">
-    <item quantity="zero">%s uzvaras</item>
+    <item quantity="zero">%s uzvaru</item>
     <item quantity="one">%s uzvara</item>
     <item quantity="other">%s uzvaras</item>
   </plurals>
   <plurals name="nbLosses">
-    <item quantity="zero">%s zaudējumi</item>
+    <item quantity="zero">%s zaudējumu</item>
     <item quantity="one">%s zaudējums</item>
     <item quantity="other">%s zaudējumi</item>
   </plurals>
   <plurals name="nbDraws">
-    <item quantity="zero">%s neizšķirti</item>
+    <item quantity="zero">%s neizšķirtu</item>
     <item quantity="one">%s neizšķirts</item>
     <item quantity="other">%s neizšķirti</item>
   </plurals>
+  <plurals name="nbVictories">
+    <item quantity="zero">%s uzvaru</item>
+    <item quantity="one">%s uzvara</item>
+    <item quantity="other">%s uzvaras</item>
+  </plurals>
   <plurals name="nbPlaying">
-    <item quantity="zero">%s tiek spēlētas</item>
-    <item quantity="one">%s tiek spēlēta</item>
-    <item quantity="other">%s tiek spēlētas</item>
+    <item quantity="zero">tiek spēlēts %s partiju</item>
+    <item quantity="one">tiek spēlēta %s partija</item>
+    <item quantity="other">tiek spēlētas %s partijas</item>
   </plurals>
   <string name="exportGames">Eksportēt spēles</string>
   <string name="exportSimulGames">Eksportēt simultānspēles</string>
   <string name="ratingRange">Reitinga diapazons</string>
   <plurals name="giveNbSeconds">
-    <item quantity="zero">Piešķirt %s sekundes</item>
-    <item quantity="one">Piešķirt %s sekundi</item>
-    <item quantity="other">Piešķirt %s sekundes</item>
+    <item quantity="zero">Piešķirt %s sekunžu papildlaika</item>
+    <item quantity="one">Piešķirt %s sekundi papildlaika</item>
+    <item quantity="other">Piešķirt %s sekundes papildlaika</item>
   </plurals>
   <string name="giveMoreTime">Piešķirt vairāk laika</string>
   <string name="thisPlayerUsesDraughtsComputerAssistance">Šis spēlētējs dambretē izmanto datorprogrammas ģenerētus gājienus – krāpjas</string>
@@ -290,7 +315,7 @@
   <string name="tournaments">Turnīri</string>
   <string name="tournamentPoints">Turnīru punkti</string>
   <plurals name="nbTournamentPoints">
-    <item quantity="zero">%s turnīra punkti</item>
+    <item quantity="zero">%s turnīra punktu</item>
     <item quantity="one">%s turnīra punkts</item>
     <item quantity="other">%s turnīra punkti</item>
   </plurals>
@@ -299,24 +324,24 @@
   <string name="backToSimul">Apakaļ uz simultānturnīru</string>
   <string name="thematic">Tematisks</string>
   <plurals name="moreThanNbRatedGames">
-    <item quantity="zero">≥ %s reitinga spēles</item>
+    <item quantity="zero">≥ %s reitinga spēļu</item>
     <item quantity="one">≥ %s reitinga spēle</item>
     <item quantity="other">≥ %s reitinga spēles</item>
   </plurals>
   <plurals name="moreThanNbPerfRatedGames">
-    <item quantity="zero">≥ %1$s %2$s reitinga spēles</item>
+    <item quantity="zero">≥ %1$s %2$s reitinga spēļu</item>
     <item quantity="one">≥ %1$s %2$s reitinga spēle</item>
     <item quantity="other">≥ %1$s %2$s reitinga spēles</item>
   </plurals>
   <plurals name="needNbMorePerfGames">
-    <item quantity="zero">Tev nepieciešams izspēlēt vēl %1$s %2$s reitinga spēles</item>
-    <item quantity="one">Tev nepieciešams izspēlēt vēl %1$s %2$s reitinga spēli</item>
-    <item quantity="other">Tev nepieciešams izspēlēt vēl %1$s %2$s reitinga spēles</item>
+    <item quantity="zero">Tev jāizspēlē vēl %1$s %2$s reitinga spēļu</item>
+    <item quantity="one">Tev jāizspēlē vēl %1$s %2$s reitinga spēli</item>
+    <item quantity="other">Tev jāizspēlē vēl %1$s %2$s reitinga spēles</item>
   </plurals>
   <plurals name="needNbMoreGames">
-    <item quantity="zero">Tev nepieciešams izspēlēt vēl %s reitinga spēles</item>
-    <item quantity="one">Tev nepieciešams izspēlēt vēl %s reitinga spēli</item>
-    <item quantity="other">Tev nepieciešams izspēlēt vēl %s reitinga spēles</item>
+    <item quantity="zero">Tev jāizspēlē vēl %s reitinga spēļu</item>
+    <item quantity="one">Tev jāizspēlē vēl %s reitinga spēli</item>
+    <item quantity="other">Tev izspēlēt vēl %s reitinga spēles</item>
   </plurals>
   <string name="yourPerfRatingIsProvisional">%s ir tavs pagaidu reitings</string>
   <string name="yourPerfRatingIsTooHigh">Tavs %1$s reitings (%2$s) ir pārāk augsts</string>
@@ -330,7 +355,7 @@
   <string name="siteDescription">Tiešsaistes dambretes serveris priekš brīvas spēles. Spēlējiet dambreti uz tīras saskarnes. Nav nepieciešama reģistrācija vai īpašs spraudnis; bez reklāmas. Spēlē  dambreti turnīros, ar draugiem vai nejauši izvēlētiem pretiniekiem.</string>
   <string name="teams">Komandas</string>
   <plurals name="nbMembers">
-    <item quantity="zero">%s biedri</item>
+    <item quantity="zero">%s biedru</item>
     <item quantity="one">%s biedrs</item>
     <item quantity="other">%s biedri</item>
   </plurals>
@@ -363,7 +388,7 @@
   <string name="importGameExplanation">Iekopējot spēles PDN, iegūsi atkārtojumu, datora analīzi,
 spēles tērzētavu un URL saiti, kas dos pieeju citiem.</string>
   <plurals name="nbImportedGames">
-    <item quantity="zero">%s importētās spēles</item>
+    <item quantity="zero">%s importētu spēļu</item>
     <item quantity="one">%s importētā spēle</item>
     <item quantity="other">%s importētās spēles</item>
   </plurals>
@@ -391,14 +416,14 @@ spēles tērzētavu un URL saiti, kas dos pieeju citiem.</string>
   <string name="followsYou">Sekotāji</string>
   <string name="xStartedFollowingY">%1$s sāka sekot %2$s</string>
   <plurals name="nbFollowers">
-    <item quantity="zero">%s sekotāji</item>
+    <item quantity="zero">%s sekotāju</item>
     <item quantity="one">%s sekotājs</item>
     <item quantity="other">%s sekotāji</item>
   </plurals>
   <plurals name="nbFollowing">
-    <item quantity="zero">%s sekotie</item>
-    <item quantity="one">%s sekotais</item>
-    <item quantity="other">%s sekotie</item>
+    <item quantity="zero">%s sekojamu spēlētāju</item>
+    <item quantity="one">%s sekojams spēlētājs</item>
+    <item quantity="other">%s sekojami spēlētāji</item>
   </plurals>
   <string name="more">Vairāk</string>
   <string name="memberSince">Dalībnieks kopš</string>
@@ -415,7 +440,7 @@ spēles tērzētavu un URL saiti, kas dos pieeju citiem.</string>
   <string name="source">Avots</string>
   <string name="graph">Grafiks</string>
   <plurals name="lessThanNbMinutes">
-    <item quantity="zero">Mazāk kā %s minūtes</item>
+    <item quantity="zero">Mazāk kā %s minūšu</item>
     <item quantity="one">Mazāk kā %s minūte</item>
     <item quantity="other">Mazāk kā %s minūtes</item>
   </plurals>
@@ -516,7 +541,7 @@ Vienā līnijā  - tikai vienu norādi.</string>
   <string name="thankYou">Paldies!</string>
   <string name="ratingX">Reitings: %s</string>
   <plurals name="playedXTimes">
-    <item quantity="zero">Spēlēts %s reizes</item>
+    <item quantity="zero">Spēlēts %s reižu</item>
     <item quantity="one">Spēlēts %s reizi</item>
     <item quantity="other">Spēlēts %s reizes</item>
   </plurals>
@@ -526,7 +551,7 @@ Vienā līnijā  - tikai vienu norādi.</string>
   <string name="thisPuzzleIsCorrect">Vingrinājums ir pareizs un interesants</string>
   <string name="thisPuzzleIsWrong">Vingrinājums ir aplams vai garlaicīgs</string>
   <plurals name="nbGamesInPlay">
-    <item quantity="zero">Pašlaik norisinās %s spēles</item>
+    <item quantity="zero">Pašlaik norisinās %s spēļu</item>
     <item quantity="one">Pašlaik norisinās %s spēle</item>
     <item quantity="other">Pašlaik norisinās %s spēles</item>
   </plurals>
@@ -641,14 +666,14 @@ Vienā līnijā  - tikai vienu norādi.</string>
   <string name="allInformationIsPublicAndOptional">Visa informācija ir publiska un nav obligāta.</string>
   <string name="yourCityRegionOrDepartment">Tava pilsēta, novads vai reģions.</string>
   <plurals name="maximumNbCharacters">
-    <item quantity="zero">Maksimums: %s simboli.</item>
+    <item quantity="zero">Maksimums: %s simbolu.</item>
     <item quantity="one">Maksimums: %s simbols.</item>
     <item quantity="other">Maksimums: %s simboli.</item>
   </plurals>
   <plurals name="blocks">
-    <item quantity="zero">%s bloķētie</item>
-    <item quantity="one">%s bloķētais</item>
-    <item quantity="other">%s bloķētie</item>
+    <item quantity="zero">%s bloķētu</item>
+    <item quantity="one">%s bloķēts</item>
+    <item quantity="other">%s bloķēti</item>
   </plurals>
   <string name="biographyDescription">Pastāsti par sevi un par to, kas tev patīk dambretē – iecienītām atklātnēm, partijām, spēlētājiem…</string>
   <string name="listBlockedPlayers">Parādīt bloķēto spēlētāju sarakstu</string>
@@ -687,7 +712,7 @@ Vienā līnijā  - tikai vienu norādi.</string>
   <string name="onlyOnInitialPosition">Tikai sākotnējajā pozīcijā</string>
   <string name="menu">Izvēlne</string>
   <plurals name="nbForumPosts">
-    <item quantity="zero">%s foruma ieraksti</item>
+    <item quantity="zero">%s foruma ierakstu</item>
     <item quantity="one">%s foruma ieraksts</item>
     <item quantity="other">%s foruma ieraksti</item>
   </plurals>
@@ -695,7 +720,7 @@ Vienā līnijā  - tikai vienu norādi.</string>
   <string name="watchGames">Skatīties spēles</string>
   <string name="tpTimeSpentOnTV">TV laiks: %s</string>
   <string name="watch">Skaties</string>
-  <string name="videoLibrary">Video bibliotēka</string>
+  <string name="videoLibrary">Videoklipu bibliotēka</string>
   <string name="mobileApp">Mobilā aplikācija</string>
   <string name="webmasters">Tīmekļa pārziņi</string>
   <string name="about">Par</string>
@@ -776,7 +801,7 @@ Vienā līnijā  - tikai vienu norādi.</string>
   <string name="returnToTournamentsHomepage">Atgriezties turnīru lapā</string>
   <string name="monthlyPerfTypeRatingDistribution">Mēneša %s reitingu sadalījums</string>
   <plurals name="nbPerfTypePlayersThisMonth">
-    <item quantity="zero">%1$s %2$s spēlētāji šomēnes.</item>
+    <item quantity="zero">%1$s %2$s spēlētāju šomēnes.</item>
     <item quantity="one">%1$s %2$s spēlētājs šomēnes.</item>
     <item quantity="other">%1$s %2$s spēlētāji šomēnes.</item>
   </plurals>
@@ -874,7 +899,7 @@ Vienā līnijā  - tikai vienu norādi.</string>
   <string name="challenges">Izaicinājumi</string>
   <string name="perfRatingX">Reitings: %s</string>
   <plurals name="nbSecondsToPlayTheFirstMove">
-    <item quantity="zero">%s sekundes lai izdarītu pirmo gājienu</item>
+    <item quantity="zero">%s sekunžu lai izdarītu pirmo gājienu</item>
     <item quantity="one">%s sekunde lai izdarītu pirmo gājienu</item>
     <item quantity="other">%s sekundes lai izdarītu pirmo gājienu</item>
   </plurals>
@@ -932,9 +957,19 @@ Vienā līnijā  - tikai vienu norādi.</string>
   <string name="preview">Priekšskats</string>
   <string name="advantage">Pārsvars</string>
   <plurals name="nbSeconds">
-    <item quantity="zero">%s sekundes</item>
+    <item quantity="zero">%s sekunžu</item>
     <item quantity="one">%s sekunde</item>
     <item quantity="other">%s sekundes</item>
+  </plurals>
+  <plurals name="nbMinutes">
+    <item quantity="zero">%s minūšu</item>
+    <item quantity="one">%s minūte</item>
+    <item quantity="other">%s minūtes</item>
+  </plurals>
+  <plurals name="nbTurns">
+    <item quantity="zero">%s gājienu</item>
+    <item quantity="one">%s gājiens</item>
+    <item quantity="other">%s gājieni</item>
   </plurals>
   <string name="opening">Atklātne</string>
   <string name="middlegame">Vidusspēle</string>
@@ -951,8 +986,8 @@ Vienā līnijā  - tikai vienu norādi.</string>
   <string name="noConditionalPremoves">Nav uzstādīto nosacījuma priekšgājienu</string>
   <string name="playX">Spēlēt %s</string>
   <plurals name="andSaveNbPremoveLines">
-    <item quantity="zero">un saglabāt %s priekšgājienu variantus</item>
+    <item quantity="zero">un saglabāt %s priekšgājienu variantu</item>
     <item quantity="one">un saglabāt %s priekšgājienu variantu</item>
     <item quantity="other">un saglabāt %s priekšgājienu variantus</item>
   </plurals>
- </resources>
+</resources>

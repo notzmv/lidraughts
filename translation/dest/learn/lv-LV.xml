@@ -36,7 +36,7 @@ neaizsargātu kauliņu!</string>
   <string name="boardSetup">Dēlīša uzstādīšana</string>
   <string name="howTheGameStarts">Kā sākas spēle</string>
   <string name="boardSetupIntro">Satiekas divas armijas, gatavas kaujai.</string>
-    <string name="thisIsTheInitialPosition">Šī ir sākumpozīcija
+  <string name="thisIsTheInitialPosition">Šī ir sākumpozīcija
 katrā dambretes spēlē!
 Lai turpinātu, izdari gājienu.</string>
   <string name="boardSetupComplete">Lieliski! Tu proti uzlikt dambretes dēlīti pareizi.</string>
