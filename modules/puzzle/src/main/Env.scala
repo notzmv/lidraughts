@@ -91,7 +91,7 @@ final class Env(
 
   def cli = new lidraughts.common.Cli {
     def process = {
-      case "puzzle" :: "disable" :: key :: id :: Nil if key == "standard" || key == "frisian" =>
+      case "puzzle" :: "disable" :: key :: id :: Nil if lidraughts.pref.Pref.puzzleVariants.exists(_.key == key) =>
         Variant.byKey.get(key) ?? { v =>
           parseIntOption(id) ?? { id =>
             api.puzzle.disable(v, id) inject "Done"
