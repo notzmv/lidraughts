@@ -42,7 +42,7 @@ final class SwissStatsApi(
     swissColl.byId[Swiss](id.value) flatMap {
       _.filter(_.nbPlayers > 0).fold(fuccess(SwissStats())) { swiss =>
         sheetApi
-          .source(swiss)
+          .source(swiss, sort = $empty)
           .map {
             _.foldLeft(SwissStats()) {
               case (stats, (player, pairings, sheet)) =>

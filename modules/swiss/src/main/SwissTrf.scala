@@ -14,14 +14,18 @@ final class SwissTrf(
 
   private type Bits = List[(Int, String)]
 
-  def apply(swiss: Swiss): Fu[List[String]] =
-    fetchPlayerIds(swiss) flatMap { apply(swiss, _) }
+  def apply(swiss: Swiss, sorted: Boolean): Fu[List[String]] =
+    fetchPlayerIds(swiss) flatMap { apply(swiss, _, sorted) }
 
-  def apply(swiss: Swiss, playerIds: PlayerIds): Fu[List[String]] =
-    sheetApi.source(swiss).map { lines =>
-      tournamentLines(swiss) ::: lines
-        .map((playerLine(swiss, playerIds) _).tupled)
-        .map(formatLine)
+  def apply(swiss: Swiss, playerIds: PlayerIds, sorted: Boolean): Fu[List[String]] =
+    SwissPlayer.fields { f =>
+      sheetApi
+        .source(swiss, sort = sorted.??($doc(f.rating -> -1)))
+        .map { lines =>
+          tournamentLines(swiss) ::: lines
+            .map((playerLine(swiss, playerIds) _).tupled)
+            .map(formatLine)
+        }
     }
 
   private def tournamentLines(swiss: Swiss) =

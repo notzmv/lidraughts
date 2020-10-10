@@ -71,7 +71,10 @@ final private class SwissSheetApi(
   import reactivemongo.api.ReadPreference
   import BsonHandlers._
 
-  def source(swiss: Swiss): Fu[List[(SwissPlayer, Map[SwissRound.Number, SwissPairing], SwissSheet)]] = {
+  def source(
+    swiss: Swiss,
+    sort: Bdoc
+  ): Fu[List[(SwissPlayer, Map[SwissRound.Number, SwissPairing], SwissSheet)]] = {
     val readPreference =
       if (swiss.finishedAt.exists(_ isBefore DateTime.now.minusSeconds(10)))
         ReadPreference.secondaryPreferred
@@ -80,7 +83,7 @@ final private class SwissSheetApi(
       .fields { f =>
         playerColl
           .find($doc(f.swissId -> swiss.id))
-          .sort($sort desc f.score)
+          .sort(sort)
       }
       .cursor[SwissPlayer](readPreference)
       .gather[List](4) flatMap {
