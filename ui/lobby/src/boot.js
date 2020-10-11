@@ -250,6 +250,7 @@ module.exports = function(cfg, element) {
           break;
         case '9':
           key = 'breakthrough'
+          break;
         case '11':
           key = 'russian'
           break;
