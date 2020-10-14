@@ -39,7 +39,7 @@ case class Puzzle(
       if (rawUci.isEmpty) rawUci
       else
         Forsyth.<<@(variant, fen).fold(rawUci) {
-          _.validMoves.get(rawUci.get.orig).fold(rawUci)(
+          _.validMovesFinal.get(rawUci.get.orig).fold(rawUci)(
             _.find {
               move => move.dest == rawUci.get.dest
             } match {
@@ -53,7 +53,7 @@ case class Puzzle(
   def fenAfterInitialMove: Option[String] = {
     for {
       sit1 <- Forsyth.<<@(variant, fen)
-      sit2 <- sit1.move(initialMove).toOption.map(_.situationAfter)
+      sit2 <- sit1.move(initialMove.orig, initialMove.dest, initialMove.promotion, true).toOption.map(_.situationAfter)
     } yield Forsyth >> SituationPlus(sit2, fenFullMove + color.fold(1, 0))
   }
 }

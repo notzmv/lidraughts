@@ -724,11 +724,11 @@ export default class AnalyseCtrl {
     const nodesUci = new Array<string[]>();
     treeOps.allVariationsNodeList(this.tree.root).map(variation => treeOps.expandMergedNodes(variation)).forEach(
       moves => {
-        const movesUci = new Array<string>(); // moves.map(move => move.uci!);
+        const movesUci = new Array<string>();
         for (const move of moves) {
           const uci = move.uci;
           if (uci && uci.length > 0) {
-            if (uci.length > 4) {
+            if (uci.length > 4 && movesUci.length) {
               for (let i = 0; i + 4 <= uci.length; i += 2) {
                 movesUci.push(uci.slice(i, i + 4));
               }
