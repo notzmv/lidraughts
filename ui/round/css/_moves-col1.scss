@@ -10,7 +10,7 @@
       opacity: .7;
     }
     body.playing.zen & {
-      display: none;
+      visibility: hidden;
     }
   }
   .moves {
