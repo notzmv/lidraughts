@@ -382,6 +382,9 @@
 .icon-phone:before {
   content: "\e020";
 }
+.icon-russian-target:before {
+  content: "\e021";
+}
 .icon-share-alt:before {
   content: "\24";
 }

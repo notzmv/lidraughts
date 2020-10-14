@@ -21,7 +21,7 @@ OS2Version: 3
 OS2_WeightWidthSlopeOnly: 0
 OS2_UseTypoMetrics: 0
 CreationTime: 1554434404
-ModificationTime: 1602018039
+ModificationTime: 1602689372
 PfmFamily: 17
 TTFWeight: 400
 TTFWidth: 5
@@ -77,15 +77,14 @@ ShortTable: maxp 16
 EndShort
 LangName: 1033 "" "" "Regular" "FontForge 2.0 : lidraughts : 5-4-2019" "" "Version 1.0"
 GaspTable: 1 65535 2 0
-Encoding: UnicodeBmp
-Compacted: 1
+Encoding: Custom
 UnicodeInterp: none
 NameList: AGL For New Fonts
 DisplaySize: -48
 AntiAlias: 1
 FitToEm: 0
 WinInfo: 0 38 14
-BeginChars: 65539 116
+BeginChars: 117 117
 
 StartChar: .notdef
 Encoding: 0 -1 0
@@ -98,7 +97,7 @@ Validated: 1
 EndChar
 
 StartChar: fontawesome-webfont-40
-Encoding: 33 33 1
+Encoding: 1 33 1
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -150,7 +149,7 @@ Validated: 545
 EndChar
 
 StartChar: link
-Encoding: 34 34 2
+Encoding: 2 34 2
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -207,7 +206,7 @@ Validated: 33
 EndChar
 
 StartChar: rabbit
-Encoding: 35 35 3
+Encoding: 3 35 3
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -308,7 +307,7 @@ Validated: 33
 EndChar
 
 StartChar: share-alt
-Encoding: 36 36 4
+Encoding: 4 36 4
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -349,7 +348,7 @@ Validated: 513
 EndChar
 
 StartChar: gear
-Encoding: 37 37 5
+Encoding: 5 37 5
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -411,7 +410,7 @@ Validated: 1
 EndChar
 
 StartChar: repo
-Encoding: 38 38 6
+Encoding: 6 38 6
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -479,7 +478,7 @@ Validated: 9
 EndChar
 
 StartChar: pompebled
-Encoding: 39 39 7
+Encoding: 7 39 7
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -503,11 +502,11 @@ SplineSet
  260.978515625 280.993164062 260.978515625 280.993164062 268.7421875 279.772460938 c 4,28,29
  277.23828125 279.927734375 277.23828125 279.927734375 282.174804688 286.122070312 c 4,0,1
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: flag
-Encoding: 40 40 8
+Encoding: 8 40 8
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -537,11 +536,11 @@ SplineSet
  302.147460938 291.0234375 302.147460938 291.0234375 202.229492188 292.059570312 c 0,32,33
  199.59375 292.069335938 199.59375 292.069335938 198.16015625 292.067382812 c 0,18,19
 EndSplineSet
-Validated: 524321
+Validated: 33
 EndChar
 
 StartChar: flame
-Encoding: 41 41 9
+Encoding: 9 41 9
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -583,7 +582,7 @@ Validated: 41
 EndChar
 
 StartChar: feather
-Encoding: 42 42 10
+Encoding: 10 42 10
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -631,7 +630,7 @@ Validated: 33
 EndChar
 
 StartChar: turtle
-Encoding: 43 43 11
+Encoding: 11 43 11
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -713,7 +712,7 @@ Validated: 41
 EndChar
 
 StartChar: nuclear
-Encoding: 44 44 12
+Encoding: 12 44 12
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -945,7 +944,7 @@ Validated: 41
 EndChar
 
 StartChar: arrow-streamline-target
-Encoding: 45 45 13
+Encoding: 13 45 13
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -1068,7 +1067,7 @@ Validated: 553
 EndChar
 
 StartChar: buffer
-Encoding: 46 46 14
+Encoding: 14 46 14
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -1127,7 +1126,7 @@ Validated: 1
 EndChar
 
 StartChar: upload-cloud
-Encoding: 47 47 15
+Encoding: 15 47 15
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -1164,7 +1163,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-42
-Encoding: 48 48 16
+Encoding: 16 48 16
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -1228,7 +1227,7 @@ Validated: 513
 EndChar
 
 StartChar: television-tv
-Encoding: 49 49 17
+Encoding: 17 49 17
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -1278,7 +1277,7 @@ Validated: 553
 EndChar
 
 StartChar: hand-stop
-Encoding: 50 50 18
+Encoding: 18 50 18
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -1351,7 +1350,7 @@ Validated: 553
 EndChar
 
 StartChar: ionicons
-Encoding: 51 51 19
+Encoding: 19 51 19
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -1386,7 +1385,7 @@ Validated: 1
 EndChar
 
 StartChar: delicious
-Encoding: 52 52 20
+Encoding: 20 52 20
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -1424,7 +1423,7 @@ Validated: 5
 EndChar
 
 StartChar: shield
-Encoding: 53 53 21
+Encoding: 21 53 21
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -1456,7 +1455,7 @@ Validated: 5
 EndChar
 
 StartChar: ink-pen
-Encoding: 54 54 22
+Encoding: 22 54 22
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -1514,7 +1513,7 @@ Validated: 553
 EndChar
 
 StartChar: ionicons-1
-Encoding: 55 55 23
+Encoding: 23 55 23
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -1566,7 +1565,7 @@ Validated: 513
 EndChar
 
 StartChar: crown
-Encoding: 56 56 24
+Encoding: 24 56 24
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -1650,7 +1649,7 @@ Validated: 5
 EndChar
 
 StartChar: chart-line
-Encoding: 57 57 25
+Encoding: 25 57 25
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -1699,7 +1698,7 @@ Validated: 545
 EndChar
 
 StartChar: graduate-cap
-Encoding: 58 58 26
+Encoding: 26 58 26
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -1753,7 +1752,7 @@ Validated: 517
 EndChar
 
 StartChar: email-plane
-Encoding: 59 59 27
+Encoding: 27 59 27
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -1777,7 +1776,7 @@ Validated: 517
 EndChar
 
 StartChar: zoom-in
-Encoding: 60 60 28
+Encoding: 28 60 28
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -1826,7 +1825,7 @@ Validated: 513
 EndChar
 
 StartChar: screen-full
-Encoding: 61 61 29
+Encoding: 29 61 29
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -1876,7 +1875,7 @@ Validated: 521
 EndChar
 
 StartChar: atom
-Encoding: 62 62 30
+Encoding: 30 62 30
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -1981,7 +1980,7 @@ Validated: 41
 EndChar
 
 StartChar: list
-Encoding: 63 63 31
+Encoding: 31 63 31
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2097,7 +2096,7 @@ Validated: 1
 EndChar
 
 StartChar: antidraughts
-Encoding: 64 64 32
+Encoding: 32 64 32
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2254,7 +2253,7 @@ Validated: 37
 EndChar
 
 StartChar: microscope
-Encoding: 65 65 33
+Encoding: 33 65 33
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2317,7 +2316,7 @@ Validated: 41
 EndChar
 
 StartChar: loop-alt2
-Encoding: 66 66 34
+Encoding: 34 66 34
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2369,7 +2368,7 @@ Validated: 513
 EndChar
 
 StartChar: crown-king-1
-Encoding: 67 67 35
+Encoding: 35 67 35
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2418,7 +2417,7 @@ Validated: 521
 EndChar
 
 StartChar: fontawesome-webfont-24
-Encoding: 68 68 36
+Encoding: 36 68 36
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2445,7 +2444,7 @@ Validated: 545
 EndChar
 
 StartChar: fontawesome-webfont-25
-Encoding: 69 69 37
+Encoding: 37 69 37
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2475,7 +2474,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-26
-Encoding: 70 70 38
+Encoding: 38 70 38
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2543,7 +2542,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-27
-Encoding: 71 71 39
+Encoding: 39 71 39
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2565,7 +2564,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-28
-Encoding: 72 72 40
+Encoding: 40 72 40
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2594,7 +2593,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-29
-Encoding: 73 73 41
+Encoding: 41 73 41
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2623,7 +2622,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-30
-Encoding: 74 74 42
+Encoding: 42 74 42
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2648,7 +2647,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-31
-Encoding: 75 75 43
+Encoding: 43 75 43
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2686,7 +2685,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-32
-Encoding: 76 76 44
+Encoding: 44 76 44
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2727,7 +2726,7 @@ Validated: 513
 EndChar
 
 StartChar: arrow-full-lowerright
-Encoding: 77 77 45
+Encoding: 45 77 45
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2747,7 +2746,7 @@ Validated: 521
 EndChar
 
 StartChar: arrow-full-upperright
-Encoding: 78 78 46
+Encoding: 46 78 46
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2767,7 +2766,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-33
-Encoding: 79 79 47
+Encoding: 47 79 47
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2821,7 +2820,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-41
-Encoding: 80 80 48
+Encoding: 48 80 48
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2873,7 +2872,7 @@ Validated: 545
 EndChar
 
 StartChar: burning-fire
-Encoding: 81 81 49
+Encoding: 49 81 49
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2933,7 +2932,7 @@ Validated: 553
 EndChar
 
 StartChar: arrow-sans-down
-Encoding: 82 82 50
+Encoding: 50 82 50
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2949,7 +2948,7 @@ Validated: 521
 EndChar
 
 StartChar: arrow-sans-up
-Encoding: 83 83 51
+Encoding: 51 83 51
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -2965,7 +2964,7 @@ Validated: 521
 EndChar
 
 StartChar: fontawesome-webfont-34
-Encoding: 84 84 52
+Encoding: 52 84 52
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -3001,7 +3000,7 @@ Validated: 513
 EndChar
 
 StartChar: crossed-swords-small
-Encoding: 85 85 53
+Encoding: 53 85 53
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -3048,7 +3047,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-35
-Encoding: 86 86 54
+Encoding: 54 86 54
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -3093,7 +3092,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-36
-Encoding: 87 87 55
+Encoding: 55 87 55
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -3138,7 +3137,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-37
-Encoding: 88 88 56
+Encoding: 56 88 56
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -3173,7 +3172,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-38
-Encoding: 89 89 57
+Encoding: 57 89 57
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -3208,7 +3207,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-39
-Encoding: 90 90 58
+Encoding: 58 90 58
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -3246,7 +3245,7 @@ Validated: 513
 EndChar
 
 StartChar: reorder
-Encoding: 91 91 59
+Encoding: 59 91 59
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -3291,7 +3290,7 @@ Validated: 1
 EndChar
 
 StartChar: earth-globe-streamline
-Encoding: 92 92 60
+Encoding: 60 92 60
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -3357,7 +3356,7 @@ Validated: 553
 EndChar
 
 StartChar: book
-Encoding: 93 93 61
+Encoding: 61 93 61
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -3459,7 +3458,7 @@ Validated: 33
 EndChar
 
 StartChar: graph
-Encoding: 94 94 62
+Encoding: 62 94 62
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -3511,7 +3510,7 @@ Validated: 9
 EndChar
 
 StartChar: frysk
-Encoding: 95 95 63
+Encoding: 63 95 63
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -3570,10 +3569,11 @@ SplineSet
  40.662109375 302.389648438 40.662109375 302.389648438 68.7744140625 275.565429688 c 5,94,95
  94.3759765625 262.106445312 94.3759765625 262.106445312 122.547851562 262.05078125 c 4,64,65
 EndSplineSet
+Validated: 524329
 EndChar
 
 StartChar: body-cut
-Encoding: 96 96 64
+Encoding: 64 96 64
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -3763,7 +3763,7 @@ Validated: 553
 EndChar
 
 StartChar: fontawesome-webfont-1
-Encoding: 97 97 65
+Encoding: 65 97 65
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -3804,7 +3804,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-2
-Encoding: 98 98 66
+Encoding: 66 98 66
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -3879,7 +3879,7 @@ Validated: 545
 EndChar
 
 StartChar: fontawesome-webfont-3
-Encoding: 99 99 67
+Encoding: 67 99 67
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -3944,7 +3944,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-4
-Encoding: 100 100 68
+Encoding: 68 100 68
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -4044,7 +4044,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-5
-Encoding: 101 101 69
+Encoding: 69 101 69
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -4111,7 +4111,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-6
-Encoding: 102 102 70
+Encoding: 70 102 70
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -4204,7 +4204,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-7
-Encoding: 103 103 71
+Encoding: 71 103 71
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -4273,7 +4273,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-8
-Encoding: 104 104 72
+Encoding: 72 104 72
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -4370,7 +4370,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont
-Encoding: 105 105 73
+Encoding: 73 105 73
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -4418,7 +4418,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-9
-Encoding: 106 106 74
+Encoding: 74 106 74
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -4469,7 +4469,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-10
-Encoding: 107 107 75
+Encoding: 75 107 75
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -4513,7 +4513,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-11
-Encoding: 108 108 76
+Encoding: 76 108 76
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -4546,7 +4546,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-12
-Encoding: 109 109 77
+Encoding: 77 109 77
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -4590,7 +4590,7 @@ Validated: 513
 EndChar
 
 StartChar: cogs
-Encoding: 110 110 78
+Encoding: 78 110 78
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -4791,7 +4791,7 @@ Validated: 1
 EndChar
 
 StartChar: tag
-Encoding: 111 111 79
+Encoding: 79 111 79
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -4841,7 +4841,7 @@ Validated: 9
 EndChar
 
 StartChar: fontawesome-webfont-15
-Encoding: 112 112 80
+Encoding: 80 112 80
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -4896,7 +4896,7 @@ Validated: 513
 EndChar
 
 StartChar: trash-bin
-Encoding: 113 113 81
+Encoding: 81 113 81
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -4994,7 +4994,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-17
-Encoding: 114 114 82
+Encoding: 82 114 82
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -5043,7 +5043,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-18
-Encoding: 115 115 83
+Encoding: 83 115 83
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -5090,7 +5090,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-19
-Encoding: 116 116 84
+Encoding: 84 116 84
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -5127,7 +5127,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-20
-Encoding: 117 117 85
+Encoding: 85 117 85
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -5151,7 +5151,7 @@ Validated: 513
 EndChar
 
 StartChar: eye-view-1
-Encoding: 118 118 86
+Encoding: 86 118 86
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -5191,7 +5191,7 @@ Validated: 553
 EndChar
 
 StartChar: fontawesome-webfont-21
-Encoding: 119 119 87
+Encoding: 87 119 87
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -5247,7 +5247,7 @@ Validated: 545
 EndChar
 
 StartChar: fontawesome-webfont-22
-Encoding: 120 120 88
+Encoding: 88 120 88
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -5313,7 +5313,7 @@ Validated: 545
 EndChar
 
 StartChar: search-find
-Encoding: 121 121 89
+Encoding: 89 121 89
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -5355,7 +5355,7 @@ Validated: 513
 EndChar
 
 StartChar: fontawesome-webfont-23
-Encoding: 122 122 90
+Encoding: 90 122 90
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -5402,7 +5402,7 @@ Validated: 513
 EndChar
 
 StartChar: pointer
-Encoding: 123 123 91
+Encoding: 91 123 91
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -5434,7 +5434,7 @@ Validated: 33
 EndChar
 
 StartChar: color-palette
-Encoding: 125 125 92
+Encoding: 92 125 92
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -5512,7 +5512,7 @@ Validated: 553
 EndChar
 
 StartChar: hookah
-Encoding: 126 126 93
+Encoding: 93 126 93
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -5638,7 +5638,7 @@ Validated: 9
 EndChar
 
 StartChar: tools
-Encoding: 57344 57344 94
+Encoding: 96 57344 94
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -5722,7 +5722,7 @@ Validated: 33
 EndChar
 
 StartChar: bullseye
-Encoding: 57345 57345 95
+Encoding: 97 57345 95
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -5791,7 +5791,7 @@ Validated: 1
 EndChar
 
 StartChar: agent
-Encoding: 57346 57346 96
+Encoding: 98 57346 96
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -5908,7 +5908,7 @@ Validated: 41
 EndChar
 
 StartChar: mic
-Encoding: 57347 57347 97
+Encoding: 99 57347 97
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -5966,7 +5966,7 @@ Validated: 5
 EndChar
 
 StartChar: bar-chart
-Encoding: 57348 57348 98
+Encoding: 100 57348 98
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -6024,7 +6024,7 @@ Validated: 513
 EndChar
 
 StartChar: info-circled
-Encoding: 57349 57349 99
+Encoding: 101 57349 99
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -6068,7 +6068,7 @@ Validated: 545
 EndChar
 
 StartChar: screen-desktop
-Encoding: 57350 57350 100
+Encoding: 102 57350 100
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -6118,7 +6118,7 @@ Validated: 513
 EndChar
 
 StartChar: phone-mobile
-Encoding: 57351 57351 101
+Encoding: 103 57351 101
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -6172,7 +6172,7 @@ Validated: 513
 EndChar
 
 StartChar: th-large
-Encoding: 57352 57352 102
+Encoding: 104 57352 102
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -6236,7 +6236,7 @@ Validated: 513
 EndChar
 
 StartChar: heart-o
-Encoding: 57353 57353 103
+Encoding: 105 57353 103
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -6299,7 +6299,7 @@ Validated: 513
 EndChar
 
 StartChar: flag-checkered
-Encoding: 57354 57354 104
+Encoding: 106 57354 104
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -6402,10 +6402,10 @@ Validated: 549
 EndChar
 
 StartChar: h-square
-Encoding: 57355 57355 105
+Encoding: 107 57355 105
 Width: 512
 GlyphClass: 2
-Flags: WO
+Flags: W
 LayerCount: 2
 Fore
 SplineSet
@@ -6454,10 +6454,11 @@ SplineSet
  336.37109375 296.881835938 336.37109375 296.881835938 299.849609375 318.721679688 c 4,70,71
  281.521484375 329.125 281.521484375 329.125 261 329.37109375 c 4,56,57
 EndSplineSet
+Validated: 524801
 EndChar
 
 StartChar: t-shirt
-Encoding: 57356 57356 106
+Encoding: 108 57356 106
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -6512,7 +6513,7 @@ Validated: 553
 EndChar
 
 StartChar: heart
-Encoding: 57357 57357 107
+Encoding: 109 57357 107
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -6548,7 +6549,7 @@ Validated: 1
 EndChar
 
 StartChar: radio-tower
-Encoding: 57358 57358 108
+Encoding: 110 57358 108
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -6635,7 +6636,7 @@ Validated: 553
 EndChar
 
 StartChar: bell-o
-Encoding: 57359 57359 109
+Encoding: 111 57359 109
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -6699,7 +6700,7 @@ Validated: 513
 EndChar
 
 StartChar: disc
-Encoding: 57360 57360 110
+Encoding: 112 57360 110
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -6724,7 +6725,7 @@ Validated: 1
 EndChar
 
 StartChar: crown1-1
-Encoding: 57369 57369 111
+Encoding: 114 57369 111
 Width: 512
 GlyphClass: 2
 Flags: W
@@ -6817,378 +6818,378 @@ Validated: 553
 EndChar
 
 StartChar: arrow-frisian-target
-Encoding: 57361 57361 112
+Encoding: 113 57361 112
 Width: 512
 GlyphClass: 2
 Flags: W
 LayerCount: 2
 Fore
 SplineSet
-355 61 m 5,0,-1
- 355 61 l 5,1,-1
- 403 15 l 6,2,3
- 407 11 407 11 407 6.5 c 132,-1,4
- 407 2 407 2 403 -1 c 132,-1,5
- 399 -4 399 -4 396 -4 c 4,6,7
- 390 -3 390 -3 388 -1 c 6,8,-1
- 340 46 l 5,9,-1
- 340 46 l 5,10,-1
- 339 46 l 5,11,-1
- 354 61 l 5,12,-1
- 355 61 l 5,0,-1
-314 26 m 5,13,14
- 286 8 286 8 256 -1 c 5,15,16
- 287 8 287 8 314 26 c 5,13,14
-195 17 m 4,17,18
- 138 26 138 26 91 61 c 5,19,20
- 40 128 40 128 40 211 c 4,21,22
- 40 222 40 222 41 233 c 4,23,24
- 48 323 48 323 107 388 c 4,25,26
- 146 430 146 430 195 430 c 4,27,28
- 197 430 197 430 200 430 c 4,29,30
- 238 428 238 428 264 403 c 4,31,32
- 292 376 292 376 291 343 c 4,33,34
- 291 325 291 325 283 305 c 4,35,36
- 273 281 273 281 255 261 c 4,37,38
- 251 256 251 256 252 251 c 4,39,40
- 252 249 252 249 252 246 c 4,41,42
- 254 238 254 238 262 236 c 132,-1,43
- 270 234 270 234 276 241 c 4,44,45
- 314 281 314 281 354 281 c 4,46,47
- 360 281 360 281 367 280 c 4,48,49
- 391 276 391 276 412 255 c 4,50,51
- 441 227 441 227 441 186 c 4,52,53
- 441 176 441 176 440 166 c 4,54,55
- 433 124 433 124 405 92 c 4,56,57
- 339 21 339 21 249 15 c 4,58,59
- 240 14 240 14 232 14 c 4,60,61
- 214 14 214 14 195 17 c 4,17,18
-199 37 m 4,62,63
- 216 34 216 34 233 34 c 4,64,65
- 297 34 297 34 353 73 c 4,66,67
- 373 87 373 87 388 104 c 4,68,69
- 423 143 423 143 424 188 c 4,70,71
- 424 192 424 192 423 196 c 4,72,73
- 421 229 421 229 400 250 c 5,74,75
- 382 263 382 263 362 263 c 4,76,77
- 343 263 343 263 322 251 c 4,78,79
- 314 247 314 247 299 236 c 4,80,81
- 276 220 276 220 265 215 c 5,82,83
- 241 216 241 216 233 239 c 4,84,85
- 230 246 230 246 231 251 c 4,86,87
- 231 256 231 256 234 259 c 4,88,89
- 273 303 273 303 273 338 c 4,90,91
- 273 351 273 351 267 362 c 4,92,93
- 262 374 262 374 252 385 c 4,94,95
- 228 409 228 409 198 409 c 4,96,97
- 184 409 184 409 168 404 c 4,98,99
- 142 394 142 394 120 371 c 4,100,101
- 93 340 93 340 77 302 c 4,102,103
- 63 265 63 265 60 225 c 4,104,105
- 60 219 60 219 60 213 c 4,106,107
- 60 180 60 180 70 147 c 4,108,109
- 81 108 81 108 106 76 c 5,110,111
- 148 45 148 45 199 37 c 4,62,63
-408 484 m 5,112,-1
- 413 429 l 5,113,-1
- 468 434 l 5,114,-1
- 458 398 l 5,115,116
- 428 316 428 316 386 313 c 4,117,118
- 384 313 384 313 381 313 c 4,119,120
- 362 313 362 313 343 326 c 5,121,-1
- 338 321 l 5,122,-1
- 338 321 l 5,123,-1
- 318 296 l 5,124,-1
- 318 296 l 5,125,-1
- 314 291 l 5,126,-1
- 311 287 l 6,127,-1
- 311 287 l 6,128,-1
- 294 265 l 5,129,-1
- 268 235 l 5,130,131
- 281 220 281 220 284 198 c 4,132,133
- 285 193 285 193 285 188 c 4,134,135
- 285 158 285 158 260 140 c 4,136,137
- 244 128 244 128 225 125 c 4,138,139
- 221 125 221 125 218 125 c 4,140,141
- 188 125 188 125 167 149 c 4,142,143
- 154 165 154 165 153 185 c 4,144,145
- 153 189 153 189 152 193 c 4,146,147
- 152 223 152 223 177 242 c 4,148,149
- 193 255 193 255 212 257 c 4,150,151
- 216 257 216 257 219 257 c 4,152,153
- 238 257 238 257 251 249 c 5,154,-1
- 271 273 l 5,155,-1
- 294 301 l 6,156,-1
- 294 301 l 6,157,-1
- 303 312 l 5,158,-1
- 302 312 l 5,159,160
- 303 312 303 312 302 312 c 6,161,-1
- 326 340 l 5,162,163
- 304 363 304 363 304 384 c 132,-1,164
- 304 405 304 405 321 424 c 4,165,166
- 336 442 336 442 356 456 c 132,-1,167
- 376 470 376 470 392 477 c 6,168,-1
- 408 484 l 5,112,-1
-354 464 m 5,169,-1
- 353 463 l 5,170,-1
- 354 464 l 5,169,-1
-388 450 m 5,171,172
- 385 447 385 447 378 444 c 4,173,174
- 371 439 371 439 368 437 c 5,175,-1
- 372 397 l 5,176,-1
- 391 420 l 5,177,-1
- 391 427 l 5,178,-1
- 388 450 l 5,171,172
-471 450 m 5,179,-1
- 441 447 l 5,180,-1
- 471 450 l 5,179,-1
-348 420 m 5,181,182
- 329 400 329 400 326 387 c 5,183,184
- 328 373 328 373 331 367 c 4,185,186
- 335 362 335 362 339 357 c 5,187,-1
- 353 372 l 5,188,-1
- 351 388 l 5,189,-1
- 348 420 l 5,181,182
-438 410 m 5,190,-1
- 408 407 l 5,191,-1
- 356 343 l 5,192,193
- 370 334 370 334 381 334 c 4,194,195
- 382 334 382 334 383 334 c 4,196,197
- 418 337 418 337 435 400 c 4,198,199
- 436 405 436 405 438 410 c 5,190,-1
-345 397 m 5,200,-1
- 345 396 l 5,201,-1
- 345 397 l 5,200,-1
-268 332 m 5,202,203
- 268 331 268 331 269 331 c 5,204,-1
- 268 332 l 5,202,203
-270 331 m 5,205,-1
- 270 331 l 5,206,207
- 270 330 270 330 270 331 c 5,205,-1
-272 330 m 5,208,209
- 272 329 272 329 272 330 c 5,210,211
- 272 329 272 329 272 330 c 5,212,213
- 272 329 272 329 272 330 c 5,208,209
-274 329 m 5,214,-1
- 275 328 l 5,215,-1
- 275 329 l 5,216,-1
- 274 329 l 5,214,-1
-276 328 m 5,217,-1
- 276 328 l 4,218,-1
- 276 328 l 5,219,-1
- 276 328 l 5,217,-1
-278 327 m 5,220,-1
- 278 327 l 4,221,-1
- 278 327 l 5,222,-1
- 278 327 l 5,220,-1
-280 326 m 5,223,-1
- 280 326 l 6,224,-1
- 281 325 l 5,225,-1
- 280 326 l 5,226,-1
- 280 326 l 5,223,-1
-217 324 m 4,227,228
- 218 324 218 324 219 324 c 4,229,230
- 255 324 255 324 284 307 c 5,231,-1
- 279 294 l 5,232,-1
- 274 287 l 5,233,234
- 248 302 248 302 219 302 c 4,235,236
- 213 302 213 302 207 301 c 4,237,238
- 157 296 157 296 128 254 c 4,239,240
- 108 226 108 226 109 193 c 4,241,242
- 109 187 109 187 109 180 c 4,243,244
- 115 130 115 130 157 100 c 4,245,246
- 185 80 185 80 218 80 c 4,247,248
- 224 80 224 80 230 81 c 4,249,250
- 281 87 281 87 310 129 c 4,251,252
- 329 157 329 157 329 191 c 4,253,254
- 329 196 329 196 329 202 c 4,255,256
- 325 237 325 237 302 263 c 5,257,-1
- 317 272 l 5,258,-1
- 322 274 l 5,259,260
- 346 243 346 243 350 204 c 4,261,262
- 351 196 351 196 351 188 c 4,263,264
- 351 138 351 138 315 100 c 4,265,266
- 281 65 281 65 232 59 c 4,267,268
- 225 58 225 58 218 59 c 4,269,270
- 167 59 167 59 128 94 c 4,271,272
- 92 128 92 128 87 178 c 4,273,274
- 86 186 86 186 86 193 c 4,275,276
- 86 245 86 245 122 282 c 4,277,278
- 162 322 162 322 205 323 c 4,279,280
- 212 323 212 323 217 324 c 4,227,228
-282 325 m 5,281,282
- 283 325 283 325 283 324 c 4,283,-1
- 282 324 l 5,284,-1
- 282 325 l 5,281,282
-284 324 m 5,285,-1
- 284 323 l 5,286,-1
- 285 323 l 5,287,-1
- 284 323 l 5,288,-1
- 284 324 l 5,285,-1
-286 323 m 5,289,-1
- 286 322 l 6,290,-1
- 287 322 l 5,291,-1
- 286 322 l 5,292,-1
- 286 323 l 5,289,-1
-288 321 m 5,293,-1
- 288 321 l 5,294,-1
- 288 321 l 5,295,-1
- 288 321 l 5,296,-1
- 288 321 l 5,293,-1
-299 314 m 5,297,-1
- 299 314 l 5,298,-1
- 300 314 l 5,299,-1
- 299 314 l 5,300,-1
- 299 314 l 5,297,-1
-300 313 m 5,301,-1
- 302 312 l 5,302,-1
- 300 313 l 5,301,-1
-352 307 m 5,303,-1
- 352 306 l 5,304,-1
- 352 307 l 5,303,-1
-373 277 m 5,305,-1
- 373 277 l 5,305,-1
-376 272 m 5,306,307
- 375 272 375 272 376 272 c 5,306,307
-379 266 m 5,308,-1
- 379 266 l 5,309,-1
- 379 266 l 5,308,-1
-380 264 m 5,310,-1
- 380 264 l 5,310,-1
-381 261 m 5,311,-1
- 381 261 l 5,312,-1
- 381 261 l 5,313,-1
- 381 261 l 5,311,-1
-382 260 m 5,314,-1
- 382 259 l 5,315,-1
- 382 260 l 5,314,-1
-382 258 m 5,316,-1
- 383 257 l 5,317,-1
- 382 258 l 5,316,-1
-383 256 m 5,318,-1
- 384 255 l 5,319,320
- 383 255 383 255 383 256 c 5,318,-1
-384 254 m 5,321,-1
- 384 253 l 5,322,-1
- 384 254 l 5,321,-1
-384 252 m 5,323,-1
- 385 251 l 5,324,-1
- 384 252 l 5,323,-1
-385 251 m 5,325,-1
- 386 249 l 5,326,327
- 385 250 385 250 385 251 c 5,325,-1
-386 248 m 5,328,-1
- 386 247 l 5,329,-1
- 386 248 l 5,328,-1
-386 247 m 5,330,-1
- 387 245 l 5,331,-1
- 386 247 l 5,330,-1
-387 245 m 5,332,333
- 387 244 387 244 388 243 c 5,334,335
- 387 244 387 244 387 245 c 5,332,333
-388 243 m 5,336,-1
- 388 241 l 5,337,338
- 388 242 388 242 388 243 c 5,336,-1
-388 241 m 5,339,340
- 388 240 388 240 389 239 c 5,341,342
- 388 240 388 240 388 241 c 5,339,340
-389 239 m 5,343,344
- 389 238 389 238 389 237 c 5,345,-1
- 389 239 l 5,343,344
-217 236 m 4,346,347
- 215 235 215 235 214 235 c 4,348,349
- 189 233 189 233 179 209 c 4,350,351
- 175 201 175 201 175 192 c 4,352,353
- 175 164 175 164 201 150 c 4,354,355
- 209 146 209 146 217 146 c 4,356,357
- 220 146 220 146 223 147 c 4,358,359
- 250 150 250 150 259 173 c 4,360,361
- 263 182 263 182 263 191 c 4,362,363
- 263 206 263 206 254 218 c 5,364,-1
- 240 199 l 6,365,-1
- 240 197 l 4,366,367
- 241 195 241 195 241 190 c 4,368,369
- 241 177 241 177 228 171 c 4,370,371
- 224 170 224 170 221 170 c 4,372,373
- 219 170 219 170 218 169 c 4,374,375
- 205 169 205 169 199 182 c 4,376,377
- 197 187 197 187 197 191 c 4,378,379
- 197 206 197 206 210 211 c 4,380,-1
- 216 213 l 6,381,-1
- 222 213 l 5,382,-1
- 237 232 l 5,383,384
- 226 236 226 236 220 236 c 4,385,386
- 218 236 218 236 217 236 c 4,346,347
-389 237 m 5,387,-1
- 390 235 l 5,388,-1
- 389 237 l 5,387,-1
-390 235 m 5,389,390
- 390 234 390 234 390 233 c 5,391,-1
- 390 235 l 5,389,390
-390 233 m 5,392,-1
- 391 232 l 5,393,-1
- 390 233 l 5,392,-1
-392 227 m 5,394,-1
- 392 226 l 5,395,-1
- 392 227 l 5,394,-1
-392 225 m 5,396,397
- 392 224 392 224 392 223 c 5,398,-1
- 392 225 l 5,396,397
-392 223 m 5,399,400
- 392 222 392 222 393 221 c 5,401,-1
- 392 223 l 5,399,400
-393 221 m 5,402,-1
- 393 219 l 5,403,-1
- 393 221 l 5,402,-1
-393 219 m 5,404,-1
- 393 217 l 5,405,-1
- 393 219 l 5,404,-1
-393 217 m 5,406,-1
- 394 215 l 5,407,-1
- 393 217 l 5,406,-1
-394 215 m 5,408,409
- 393 215 393 215 394 213 c 5,410,411
- 393 215 393 215 394 215 c 5,408,409
-394 213 m 5,412,413
- 395 212 395 212 394 211 c 5,414,415
- 395 213 395 213 394 213 c 5,412,413
-394 211 m 5,416,417
- 395 210 395 210 394 209 c 4,418,419
- 395 204 395 204 395 198 c 5,420,421
- 393 204 393 204 394 209 c 4,422,423
- 395 211 395 211 394 211 c 5,416,417
-21 174 m 5,424,425
- 21 173 21 173 21 171 c 132,-1,426
- 21 169 21 169 21 168 c 5,427,428
- 21 169 21 169 21 171 c 132,-1,429
- 21 173 21 173 21 174 c 5,424,425
-388 140 m 5,430,-1
- 387 138 l 5,431,432
- 388 139 388 139 388 140 c 5,430,-1
-149 29 m 5,433,434
- 151 28 151 28 152 28 c 5,435,436
- 151 28 151 28 149 29 c 5,433,434
-153 27 m 5,437,438
- 155 26 155 26 156 26 c 5,439,440
- 154 26 154 26 153 27 c 5,437,438
-184 18 m 5,441,442
- 186 18 186 18 187 17 c 5,443,444
- 185 18 185 18 184 18 c 5,441,442
-88 67 m 5,445,-1
- 104 52 l 5,446,-1
- 103 51 l 5,447,-1
- 58 3 l 6,448,449
- 55 0 55 0 50 0 c 4,450,451
- 43 0 43 0 41 3 c 4,452,453
- 37 7 37 7 37 11 c 132,-1,454
- 37 15 37 15 41 18 c 6,455,-1
- 88 67 l 5,445,-1
+347 61 m 5,0,-1
+ 347 61 l 5,1,-1
+ 395 15 l 6,2,3
+ 399 11 399 11 399 6.5 c 132,-1,4
+ 399 2 399 2 395 -1 c 132,-1,5
+ 391 -4 391 -4 388 -4 c 4,6,7
+ 382 -3 382 -3 380 -1 c 6,8,-1
+ 332 46 l 5,9,-1
+ 332 46 l 5,10,-1
+ 331 46 l 5,11,-1
+ 346 61 l 5,12,-1
+ 347 61 l 5,0,-1
+306 26 m 5,13,14
+ 278 8 278 8 248 -1 c 5,15,16
+ 279 8 279 8 306 26 c 5,13,14
+187 17 m 4,17,18
+ 130 26 130 26 83 61 c 5,19,20
+ 32 128 32 128 32 211 c 4,21,22
+ 32 222 32 222 33 233 c 4,23,24
+ 40 323 40 323 99 388 c 4,25,26
+ 138 430 138 430 187 430 c 4,27,28
+ 189 430 189 430 192 430 c 4,29,30
+ 230 428 230 428 256 403 c 4,31,32
+ 284 376 284 376 283 343 c 4,33,34
+ 283 325 283 325 275 305 c 4,35,36
+ 265 281 265 281 247 261 c 4,37,38
+ 243 256 243 256 244 251 c 4,39,40
+ 244 249 244 249 244 246 c 4,41,42
+ 246 238 246 238 254 236 c 132,-1,43
+ 262 234 262 234 268 241 c 4,44,45
+ 306 281 306 281 346 281 c 4,46,47
+ 352 281 352 281 359 280 c 4,48,49
+ 383 276 383 276 404 255 c 4,50,51
+ 433 227 433 227 433 186 c 4,52,53
+ 433 176 433 176 432 166 c 4,54,55
+ 425 124 425 124 397 92 c 4,56,57
+ 331 21 331 21 241 15 c 4,58,59
+ 232 14 232 14 224 14 c 4,60,61
+ 206 14 206 14 187 17 c 4,17,18
+191 37 m 4,62,63
+ 208 34 208 34 225 34 c 4,64,65
+ 289 34 289 34 345 73 c 4,66,67
+ 365 87 365 87 380 104 c 4,68,69
+ 415 143 415 143 416 188 c 4,70,71
+ 416 192 416 192 415 196 c 4,72,73
+ 413 229 413 229 392 250 c 5,74,75
+ 374 263 374 263 354 263 c 4,76,77
+ 335 263 335 263 314 251 c 4,78,79
+ 306 247 306 247 291 236 c 4,80,81
+ 268 220 268 220 257 215 c 5,82,83
+ 233 216 233 216 225 239 c 4,84,85
+ 222 246 222 246 223 251 c 4,86,87
+ 223 256 223 256 226 259 c 4,88,89
+ 265 303 265 303 265 338 c 4,90,91
+ 265 351 265 351 259 362 c 4,92,93
+ 254 374 254 374 244 385 c 4,94,95
+ 220 409 220 409 190 409 c 4,96,97
+ 176 409 176 409 160 404 c 4,98,99
+ 134 394 134 394 112 371 c 4,100,101
+ 85 340 85 340 69 302 c 4,102,103
+ 55 265 55 265 52 225 c 4,104,105
+ 52 219 52 219 52 213 c 4,106,107
+ 52 180 52 180 62 147 c 4,108,109
+ 73 108 73 108 98 76 c 5,110,111
+ 140 45 140 45 191 37 c 4,62,63
+400 484 m 5,112,-1
+ 405 429 l 5,113,-1
+ 460 434 l 5,114,-1
+ 450 398 l 5,115,116
+ 420 316 420 316 378 313 c 4,117,118
+ 376 313 376 313 373 313 c 4,119,120
+ 354 313 354 313 335 326 c 5,121,-1
+ 330 321 l 5,122,-1
+ 330 321 l 5,123,-1
+ 310 296 l 5,124,-1
+ 310 296 l 5,125,-1
+ 306 291 l 5,126,-1
+ 303 287 l 6,127,-1
+ 303 287 l 6,128,-1
+ 286 265 l 5,129,-1
+ 260 235 l 5,130,131
+ 273 220 273 220 276 198 c 4,132,133
+ 277 193 277 193 277 188 c 4,134,135
+ 277 158 277 158 252 140 c 4,136,137
+ 236 128 236 128 217 125 c 4,138,139
+ 213 125 213 125 210 125 c 4,140,141
+ 180 125 180 125 159 149 c 4,142,143
+ 146 165 146 165 145 185 c 4,144,145
+ 145 189 145 189 144 193 c 4,146,147
+ 144 223 144 223 169 242 c 4,148,149
+ 185 255 185 255 204 257 c 4,150,151
+ 208 257 208 257 211 257 c 4,152,153
+ 230 257 230 257 243 249 c 5,154,-1
+ 263 273 l 5,155,-1
+ 286 301 l 6,156,-1
+ 286 301 l 6,157,-1
+ 295 312 l 5,158,-1
+ 294 312 l 5,159,160
+ 295 312 295 312 294 312 c 6,161,-1
+ 318 340 l 5,162,163
+ 296 363 296 363 296 384 c 132,-1,164
+ 296 405 296 405 313 424 c 4,165,166
+ 328 442 328 442 348 456 c 132,-1,167
+ 368 470 368 470 384 477 c 6,168,-1
+ 400 484 l 5,112,-1
+346 464 m 5,169,-1
+ 345 463 l 5,170,-1
+ 346 464 l 5,169,-1
+380 450 m 5,171,172
+ 377 447 377 447 370 444 c 4,173,174
+ 363 439 363 439 360 437 c 5,175,-1
+ 364 397 l 5,176,-1
+ 383 420 l 5,177,-1
+ 383 427 l 5,178,-1
+ 380 450 l 5,171,172
+463 450 m 5,179,-1
+ 433 447 l 5,180,-1
+ 463 450 l 5,179,-1
+340 420 m 5,181,182
+ 321 400 321 400 318 387 c 5,183,184
+ 320 373 320 373 323 367 c 4,185,186
+ 327 362 327 362 331 357 c 5,187,-1
+ 345 372 l 5,188,-1
+ 343 388 l 5,189,-1
+ 340 420 l 5,181,182
+430 410 m 5,190,-1
+ 400 407 l 5,191,-1
+ 348 343 l 5,192,193
+ 362 334 362 334 373 334 c 4,194,195
+ 374 334 374 334 375 334 c 4,196,197
+ 410 337 410 337 427 400 c 4,198,199
+ 428 405 428 405 430 410 c 5,190,-1
+337 397 m 5,200,-1
+ 337 396 l 5,201,-1
+ 337 397 l 5,200,-1
+260 332 m 5,202,203
+ 260 331 260 331 261 331 c 5,204,-1
+ 260 332 l 5,202,203
+262 331 m 5,205,-1
+ 262 331 l 5,206,207
+ 262 330 262 330 262 331 c 5,205,-1
+264 330 m 5,208,209
+ 264 329 264 329 264 330 c 5,210,211
+ 264 329 264 329 264 330 c 5,212,213
+ 264 329 264 329 264 330 c 5,208,209
+266 329 m 5,214,-1
+ 267 328 l 5,215,-1
+ 267 329 l 5,216,-1
+ 266 329 l 5,214,-1
+268 328 m 5,217,-1
+ 268 328 l 4,218,-1
+ 268 328 l 5,219,-1
+ 268 328 l 5,217,-1
+270 327 m 5,220,-1
+ 270 327 l 4,221,-1
+ 270 327 l 5,222,-1
+ 270 327 l 5,220,-1
+272 326 m 5,223,-1
+ 272 326 l 6,224,-1
+ 273 325 l 5,225,-1
+ 272 326 l 5,226,-1
+ 272 326 l 5,223,-1
+209 324 m 4,227,228
+ 210 324 210 324 211 324 c 4,229,230
+ 247 324 247 324 276 307 c 5,231,-1
+ 271 294 l 5,232,-1
+ 266 287 l 5,233,234
+ 240 302 240 302 211 302 c 4,235,236
+ 205 302 205 302 199 301 c 4,237,238
+ 149 296 149 296 120 254 c 4,239,240
+ 100 226 100 226 101 193 c 4,241,242
+ 101 187 101 187 101 180 c 4,243,244
+ 107 130 107 130 149 100 c 4,245,246
+ 177 80 177 80 210 80 c 4,247,248
+ 216 80 216 80 222 81 c 4,249,250
+ 273 87 273 87 302 129 c 4,251,252
+ 321 157 321 157 321 191 c 4,253,254
+ 321 196 321 196 321 202 c 4,255,256
+ 317 237 317 237 294 263 c 5,257,-1
+ 309 272 l 5,258,-1
+ 314 274 l 5,259,260
+ 338 243 338 243 342 204 c 4,261,262
+ 343 196 343 196 343 188 c 4,263,264
+ 343 138 343 138 307 100 c 4,265,266
+ 273 65 273 65 224 59 c 4,267,268
+ 217 58 217 58 210 59 c 4,269,270
+ 159 59 159 59 120 94 c 4,271,272
+ 84 128 84 128 79 178 c 4,273,274
+ 78 186 78 186 78 193 c 4,275,276
+ 78 245 78 245 114 282 c 4,277,278
+ 154 322 154 322 197 323 c 4,279,280
+ 204 323 204 323 209 324 c 4,227,228
+274 325 m 5,281,282
+ 275 325 275 325 275 324 c 4,283,-1
+ 274 324 l 5,284,-1
+ 274 325 l 5,281,282
+276 324 m 5,285,-1
+ 276 323 l 5,286,-1
+ 277 323 l 5,287,-1
+ 276 323 l 5,288,-1
+ 276 324 l 5,285,-1
+278 323 m 5,289,-1
+ 278 322 l 6,290,-1
+ 279 322 l 5,291,-1
+ 278 322 l 5,292,-1
+ 278 323 l 5,289,-1
+280 321 m 5,293,-1
+ 280 321 l 5,294,-1
+ 280 321 l 5,295,-1
+ 280 321 l 5,296,-1
+ 280 321 l 5,293,-1
+291 314 m 5,297,-1
+ 291 314 l 5,298,-1
+ 292 314 l 5,299,-1
+ 291 314 l 5,300,-1
+ 291 314 l 5,297,-1
+292 313 m 5,301,-1
+ 294 312 l 5,302,-1
+ 292 313 l 5,301,-1
+344 307 m 5,303,-1
+ 344 306 l 5,304,-1
+ 344 307 l 5,303,-1
+365 277 m 5,305,-1
+ 365 277 l 5,305,-1
+368 272 m 5,306,307
+ 367 272 367 272 368 272 c 5,306,307
+371 266 m 5,308,-1
+ 371 266 l 5,309,-1
+ 371 266 l 5,308,-1
+372 264 m 5,310,-1
+ 372 264 l 5,310,-1
+373 261 m 5,311,-1
+ 373 261 l 5,312,-1
+ 373 261 l 5,313,-1
+ 373 261 l 5,311,-1
+374 260 m 5,314,-1
+ 374 259 l 5,315,-1
+ 374 260 l 5,314,-1
+374 258 m 5,316,-1
+ 375 257 l 5,317,-1
+ 374 258 l 5,316,-1
+375 256 m 5,318,-1
+ 376 255 l 5,319,320
+ 375 255 375 255 375 256 c 5,318,-1
+376 254 m 5,321,-1
+ 376 253 l 5,322,-1
+ 376 254 l 5,321,-1
+376 252 m 5,323,-1
+ 377 251 l 5,324,-1
+ 376 252 l 5,323,-1
+377 251 m 5,325,-1
+ 378 249 l 5,326,327
+ 377 250 377 250 377 251 c 5,325,-1
+378 248 m 5,328,-1
+ 378 247 l 5,329,-1
+ 378 248 l 5,328,-1
+378 247 m 5,330,-1
+ 379 245 l 5,331,-1
+ 378 247 l 5,330,-1
+379 245 m 5,332,333
+ 379 244 379 244 380 243 c 5,334,335
+ 379 244 379 244 379 245 c 5,332,333
+380 243 m 5,336,-1
+ 380 241 l 5,337,338
+ 380 242 380 242 380 243 c 5,336,-1
+380 241 m 5,339,340
+ 380 240 380 240 381 239 c 5,341,342
+ 380 240 380 240 380 241 c 5,339,340
+381 239 m 5,343,344
+ 381 238 381 238 381 237 c 5,345,-1
+ 381 239 l 5,343,344
+209 236 m 4,346,347
+ 207 235 207 235 206 235 c 4,348,349
+ 181 233 181 233 171 209 c 4,350,351
+ 167 201 167 201 167 192 c 4,352,353
+ 167 164 167 164 193 150 c 4,354,355
+ 201 146 201 146 209 146 c 4,356,357
+ 212 146 212 146 215 147 c 4,358,359
+ 242 150 242 150 251 173 c 4,360,361
+ 255 182 255 182 255 191 c 4,362,363
+ 255 206 255 206 246 218 c 5,364,-1
+ 232 199 l 6,365,-1
+ 232 197 l 4,366,367
+ 233 195 233 195 233 190 c 4,368,369
+ 233 177 233 177 220 171 c 4,370,371
+ 216 170 216 170 213 170 c 4,372,373
+ 211 170 211 170 210 169 c 4,374,375
+ 197 169 197 169 191 182 c 4,376,377
+ 189 187 189 187 189 191 c 4,378,379
+ 189 206 189 206 202 211 c 4,380,-1
+ 208 213 l 6,381,-1
+ 214 213 l 5,382,-1
+ 229 232 l 5,383,384
+ 218 236 218 236 212 236 c 4,385,386
+ 210 236 210 236 209 236 c 4,346,347
+381 237 m 5,387,-1
+ 382 235 l 5,388,-1
+ 381 237 l 5,387,-1
+382 235 m 5,389,390
+ 382 234 382 234 382 233 c 5,391,-1
+ 382 235 l 5,389,390
+382 233 m 5,392,-1
+ 383 232 l 5,393,-1
+ 382 233 l 5,392,-1
+384 227 m 5,394,-1
+ 384 226 l 5,395,-1
+ 384 227 l 5,394,-1
+384 225 m 5,396,397
+ 384 224 384 224 384 223 c 5,398,-1
+ 384 225 l 5,396,397
+384 223 m 5,399,400
+ 384 222 384 222 385 221 c 5,401,-1
+ 384 223 l 5,399,400
+385 221 m 5,402,-1
+ 385 219 l 5,403,-1
+ 385 221 l 5,402,-1
+385 219 m 5,404,-1
+ 385 217 l 5,405,-1
+ 385 219 l 5,404,-1
+385 217 m 5,406,-1
+ 386 215 l 5,407,-1
+ 385 217 l 5,406,-1
+386 215 m 5,408,409
+ 385 215 385 215 386 213 c 5,410,411
+ 385 215 385 215 386 215 c 5,408,409
+386 213 m 5,412,413
+ 387 212 387 212 386 211 c 5,414,415
+ 387 213 387 213 386 213 c 5,412,413
+386 211 m 5,416,417
+ 387 210 387 210 386 209 c 4,418,419
+ 387 204 387 204 387 198 c 5,420,421
+ 385 204 385 204 386 209 c 4,422,423
+ 387 211 387 211 386 211 c 5,416,417
+13 174 m 5,424,425
+ 13 173 13 173 13 171 c 132,-1,426
+ 13 169 13 169 13 168 c 5,427,428
+ 13 169 13 169 13 171 c 132,-1,429
+ 13 173 13 173 13 174 c 5,424,425
+380 140 m 5,430,-1
+ 379 138 l 5,431,432
+ 380 139 380 139 380 140 c 5,430,-1
+141 29 m 5,433,434
+ 143 28 143 28 144 28 c 5,435,436
+ 143 28 143 28 141 29 c 5,433,434
+145 27 m 5,437,438
+ 147 26 147 26 148 26 c 5,439,440
+ 146 26 146 26 145 27 c 5,437,438
+176 18 m 5,441,442
+ 178 18 178 18 179 17 c 5,443,444
+ 177 18 177 18 176 18 c 5,441,442
+80 67 m 5,445,-1
+ 96 52 l 5,446,-1
+ 95 51 l 5,447,-1
+ 50 3 l 6,448,449
+ 47 0 47 0 42 0 c 4,450,451
+ 35 0 35 0 33 3 c 4,452,453
+ 29 7 29 7 29 11 c 132,-1,454
+ 29 15 29 15 33 18 c 6,455,-1
+ 80 67 l 5,445,-1
 EndSplineSet
 Validated: 2597
 EndChar
 
 StartChar: questiondown
-Encoding: 191 191 113
+Encoding: 94 191 113
 Width: 512
 VWidth: 0
 Flags: W
@@ -7198,7 +7199,7 @@ Validated: 1
 EndChar
 
 StartChar: Ograve
-Encoding: 210 210 114
+Encoding: 95 210 114
 Width: 512
 Flags: W
 LayerCount: 2
@@ -7235,7 +7236,7 @@ Validated: 1
 EndChar
 
 StartChar: uniE020
-Encoding: 57376 57376 115
+Encoding: 115 57376 115
 Width: 512
 Flags: W
 LayerCount: 2
@@ -7260,6 +7261,149 @@ SplineSet
  493 455 l 2,0,1
 EndSplineSet
 Validated: 33
+EndChar
+
+StartChar: russian-target
+Encoding: 116 57377 116
+Width: 512
+Flags: WO
+LayerCount: 2
+Fore
+SplineSet
+463.705078125 492.790039062 m 5,0,-1
+ 464.430664062 437.603515625 l 5,1,-1
+ 518.594726562 438.317382812 l 5,2,3
+ 518.594726562 438.317382812 518.594726562 438.317382812 500.655273438 393.71875 c 5,4,5
+ 466.555664062 327.385742188 466.555664062 327.385742188 427.060546875 325.701171875 c 4,6,7
+ 405.90234375 326.305664062 405.90234375 326.305664062 385.955078125 342.537109375 c 5,8,-1
+ 384.016601562 340.547851562 l 5,9,-1
+ 377.619140625 334.201171875 l 5,10,11
+ 393.788085938 313.80078125 393.788085938 313.80078125 394.3203125 298.000976562 c 6,12,-1
+ 394.3203125 190.815429688 l 5,13,-1
+ 394.3203125 83.62890625 l 6,14,15
+ 393.506835938 67.0205078125 393.506835938 67.0205078125 377.55078125 47.349609375 c 5,16,-1
+ 407.538085938 16.6953125 l 6,17,18
+ 413.458984375 9.189453125 413.458984375 9.189453125 407.538085938 1.7197265625 c 4,19,20
+ 404.151367188 -0.81640625 404.151367188 -0.81640625 400.549804688 -1.275390625 c 4,21,22
+ 395.490234375 -0.572265625 395.490234375 -0.572265625 392.563476562 1.7197265625 c 6,23,-1
+ 362.577148438 32.3720703125 l 5,24,25
+ 342.369140625 15.5712890625 342.369140625 15.5712890625 326.262695312 15.5712890625 c 6,26,-1
+ 219.075195312 15.5712890625 l 5,27,-1
+ 111.890625 15.5712890625 l 6,28,29
+ 95.408203125 16.380859375 95.408203125 16.380859375 75.8759765625 32.1201171875 c 5,30,-1
+ 46.13671875 1.7197265625 l 6,31,32
+ 41.64453125 -1.275390625 41.64453125 -1.275390625 38.1494140625 -1.275390625 c 4,33,34
+ 33.8056640625 -0.572265625 33.8056640625 -0.572265625 30.1630859375 1.7197265625 c 4,35,36
+ 24.2421875 9.2236328125 24.2421875 9.2236328125 30.1630859375 16.6953125 c 6,37,-1
+ 60.7021484375 47.234375 l 5,38,39
+ 44.3662109375 67.7412109375 44.3662109375 67.7412109375 43.8310546875 83.62890625 c 6,40,-1
+ 43.8310546875 190.815429688 l 5,41,-1
+ 43.8310546875 298.000976562 l 6,42,43
+ 43.8310546875 323.51953125 43.8310546875 323.51953125 76.58984375 350.096679688 c 4,44,45
+ 96.265625 366.060546875 96.265625 366.060546875 111.890625 366.060546875 c 6,46,-1
+ 219.075195312 366.060546875 l 5,47,-1
+ 326.262695312 366.060546875 l 6,48,49
+ 342.919921875 365.245117188 342.919921875 365.245117188 362.657226562 349.189453125 c 5,50,-1
+ 370.065429688 356.59765625 l 5,51,-1
+ 370.423828125 357.6640625 l 5,52,53
+ 350.842773438 382.322265625 350.842773438 382.322265625 353.021484375 403.153320312 c 132,-1,54
+ 355.201171875 423.984375 355.201171875 423.984375 372.767578125 440.59375 c 132,-1,55
+ 390.333984375 457.204101562 390.333984375 457.204101562 410.54296875 468.802734375 c 132,-1,56
+ 430.750976562 480.40234375 430.750976562 480.40234375 447.228515625 486.595703125 c 6,57,-1
+ 463.705078125 492.790039062 l 5,0,-1
+441.640625 460.813476562 m 5,58,59
+ 438.090820312 458.723632812 438.090820312 458.723632812 430.985351562 455.052734375 c 4,60,61
+ 423.543945312 451.143554688 423.543945312 451.143554688 420.326171875 449.290039062 c 6,62,-1
+ 420.850585938 409.43359375 l 5,63,-1
+ 442.028320312 431.176757812 l 5,64,-1
+ 441.948242188 437.309570312 l 5,65,-1
+ 441.640625 460.813476562 l 5,58,59
+522.994140625 452.940429688 m 5,66,-1
+ 493.357421875 452.549804688 l 5,67,-1
+ 522.994140625 452.940429688 l 5,66,-1
+399.052734375 434.700195312 m 5,68,69
+ 379.228515625 417 379.228515625 417 374.927734375 403.720703125 c 5,70,71
+ 376.434570312 384.76171875 376.434570312 384.76171875 385.55078125 373.1953125 c 5,72,-1
+ 399.68359375 386.668945312 l 5,73,-1
+ 399.471679688 402.924804688 l 5,74,-1
+ 399.052734375 434.700195312 l 5,68,69
+487.197265625 416.439453125 m 5,75,-1
+ 457.561523438 416.049804688 l 5,76,-1
+ 401.08203125 358.067382812 l 5,77,78
+ 415.684570312 347.016601562 415.684570312 347.016601562 426.780273438 347.162109375 c 4,79,80
+ 457.353515625 348.938476562 457.353515625 348.938476562 487.197265625 416.439453125 c 5,75,-1
+394.216796875 411.908203125 m 5,81,-1
+ 394.756835938 410.830078125 l 5,82,-1
+ 394.216796875 411.908203125 l 5,81,-1
+124.557617188 343.19921875 m 6,83,84
+ 100.69140625 343.19921875 100.69140625 343.19921875 78.126953125 313.013671875 c 4,85,86
+ 67.1474609375 297.423828125 67.1474609375 297.423828125 66.6904296875 285.333984375 c 6,87,-1
+ 66.6904296875 190.815429688 l 5,88,-1
+ 66.6904296875 96.2958984375 l 6,89,90
+ 66.6904296875 72.4306640625 66.6904296875 72.4306640625 96.876953125 49.8662109375 c 4,91,92
+ 112.467773438 38.8876953125 112.467773438 38.8876953125 124.557617188 38.4306640625 c 6,93,-1
+ 219.075195312 38.4306640625 l 5,94,-1
+ 313.591796875 38.4306640625 l 6,95,96
+ 337.458984375 38.4306640625 337.458984375 38.4306640625 360.024414062 68.6171875 c 4,97,98
+ 371.00390625 84.20703125 371.00390625 84.20703125 371.4609375 96.2958984375 c 6,99,-1
+ 371.4609375 190.815429688 l 5,100,-1
+ 371.4609375 285.333984375 l 6,101,102
+ 370.684570312 299.171875 370.684570312 299.171875 358.451171875 315.033203125 c 5,103,-1
+ 346.638671875 303.220703125 l 5,104,-1
+ 328.637695312 285.219726562 l 5,105,-1
+ 316.688476562 273.270507812 l 5,106,107
+ 346.256835938 236.328125 346.256835938 236.328125 346.638671875 190.407226562 c 4,108,109
+ 346.638671875 124.286132812 346.638671875 124.286132812 293.063476562 86.18359375 c 4,110,111
+ 259.298828125 62.9619140625 259.298828125 62.9619140625 218.850585938 62.619140625 c 4,112,113
+ 153.33203125 62.619140625 153.33203125 62.619140625 114.904296875 116.1953125 c 4,114,115
+ 91.4091796875 150.06640625 91.4091796875 150.06640625 91.0615234375 190.407226562 c 4,116,117
+ 91.0615234375 256.294921875 91.0615234375 256.294921875 145.072265625 294.631835938 c 4,118,119
+ 178.888671875 317.8515625 178.888671875 317.8515625 218.850585938 318.196289062 c 4,120,121
+ 267.212890625 317.512695312 267.212890625 317.512695312 301.713867188 288.24609375 c 5,122,-1
+ 313.662109375 300.194335938 l 5,123,-1
+ 331.6640625 318.196289062 l 5,124,-1
+ 343.49609375 330.028320312 l 5,125,126
+ 326.724609375 342.702148438 326.724609375 342.702148438 313.591796875 343.19921875 c 6,127,-1
+ 219.075195312 343.19921875 l 5,128,-1
+ 124.557617188 343.19921875 l 6,83,84
+218.850585938 297.23046875 m 4,129,130
+ 162.912109375 297.23046875 162.912109375 297.23046875 131.19140625 250.016601562 c 4,131,132
+ 113.3515625 222.364257812 113.3515625 222.364257812 113.025390625 190.407226562 c 4,133,134
+ 113.025390625 132.787109375 113.025390625 132.787109375 161.268554688 100.948242188 c 4,135,136
+ 188.182617188 83.9052734375 188.182617188 83.9052734375 218.850585938 83.583984375 c 4,137,138
+ 276.58203125 83.583984375 276.58203125 83.583984375 308.309570312 132.08203125 c 4,139,140
+ 325.356445312 159.236328125 325.356445312 159.236328125 325.673828125 190.407226562 c 4,141,142
+ 325.005859375 228.770507812 325.005859375 228.770507812 301.713867188 257.296875 c 5,143,-1
+ 270.764648438 227.346679688 l 5,144,145
+ 282.415039062 211.661132812 282.415039062 211.661132812 282.745117188 190.407226562 c 4,146,147
+ 282.745117188 151.384765625 282.745117188 151.384765625 248.26953125 133.58984375 c 4,148,149
+ 233.966796875 126.759765625 233.966796875 126.759765625 218.850585938 126.513671875 c 4,150,151
+ 180.1015625 126.513671875 180.1015625 126.513671875 162.032226562 161.428710938 c 4,152,153
+ 155.206054688 175.674804688 155.206054688 175.674804688 154.956054688 190.407226562 c 4,154,155
+ 154.956054688 229.15625 154.956054688 229.15625 189.87109375 247.225585938 c 4,156,157
+ 204.118164062 254.051757812 204.118164062 254.051757812 218.850585938 254.301757812 c 4,158,159
+ 240.985351562 253.662109375 240.985351562 253.662109375 255.7890625 242.321289062 c 5,160,-1
+ 286.73828125 273.270507812 l 5,161,162
+ 255.728515625 296.854492188 255.728515625 296.854492188 218.850585938 297.23046875 c 4,129,130
+218.850585938 233.336914062 m 4,163,164
+ 190.263671875 233.336914062 190.263671875 233.336914062 179.818359375 206.162109375 c 4,165,166
+ 177.099609375 198.060546875 177.099609375 198.060546875 176.919921875 190.407226562 c 4,167,168
+ 176.919921875 161.03125 176.919921875 161.03125 203.643554688 150.389648438 c 4,169,170
+ 211.506835938 147.6640625 211.506835938 147.6640625 218.850585938 147.478515625 c 4,171,172
+ 248.3515625 147.478515625 248.3515625 147.478515625 258.868164062 174.65234375 c 4,173,174
+ 261.599609375 182.73828125 261.599609375 182.73828125 261.779296875 190.407226562 c 4,175,176
+ 261.24609375 202.364257812 261.24609375 202.364257812 255.7890625 212.37109375 c 5,177,-1
+ 239.815429688 195.399414062 l 5,178,-1
+ 240.1875 193.715820312 l 6,179,180
+ 240.6953125 191.2109375 240.6953125 191.2109375 240.814453125 190.407226562 c 4,181,182
+ 240.814453125 173.498046875 240.814453125 173.498046875 223.627929688 169.9296875 c 4,183,184
+ 220.754882812 169.524414062 220.754882812 169.524414062 218.850585938 169.442382812 c 4,185,186
+ 201.779296875 174.383789062 201.779296875 174.383789062 197.884765625 190.407226562 c 5,187,188
+ 202.510742188 207.56640625 202.510742188 207.56640625 218.850585938 211.373046875 c 6,189,-1
+ 224.840820312 211.373046875 l 5,190,-1
+ 240.814453125 227.346679688 l 5,191,192
+ 228.418945312 233.017578125 228.418945312 233.017578125 218.850585938 233.336914062 c 4,163,164
+EndSplineSet
 EndChar
 EndChars
 EndSplineFont

@@ -63,7 +63,7 @@ object dev {
 announce 10 minutes Lidraughts will restart!
 announce cancel
 change asset version
-puzzle disable [standard|frisian] 150
+puzzle disable {variant} 150
 team disable foobar
 team enable foobar
 draughtsnet client create {username} [analysis|move|commentary|all]

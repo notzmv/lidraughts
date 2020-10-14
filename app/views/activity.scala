@@ -87,7 +87,11 @@ object activity {
 
   private def renderVariantPuzzles(p: Puzzles, v: draughts.variant.Variant)(implicit ctx: Context) =
     entryTag(
-      iconTag(""),
+      v match {
+        case draughts.variant.Frisian => iconTag("")
+        case draughts.variant.Russian => iconTag("")
+        case _ => iconTag("-")
+      },
       scoreFrag(p.score),
       div(
         trans.activity.solvedNbVariantPuzzles.plural(p.score.size, p.score.size, v.name),
