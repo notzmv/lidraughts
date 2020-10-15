@@ -13,7 +13,7 @@ import lidraughts.hub.lightTeam.TeamId
 import lidraughts.quote.Quote.quoteWriter
 import lidraughts.rating.PerfType
 import lidraughts.socket.Socket.SocketVersion
-import lidraughts.user.User
+import lidraughts.user.{ User, UserRepo }
 
 final class SwissJson(
     swissColl: Coll,
@@ -115,20 +115,25 @@ final class SwissJson(
         playerColl
           .find($doc(f.swissId -> swiss.id))
           .sort($sort desc f.score)
-          .list[SwissPlayer](3) map { top3 =>
+          .list[SwissPlayer](3) flatMap { top3 =>
             // check that the winner is still correctly denormalized
-            top3.headOption.map(_.userId).filter(w => swiss.winnerId.fold(true)(w !=)) foreach {
-              swissColl.updateField($id(swiss.id), "winnerId", _).void
-            }
-            JsArray {
-              top3.map { player =>
-                playerJsonBase(
-                  player,
-                  lightUserApi.sync(player.userId) | LightUser.fallback(player.userId),
-                  performance = true
-                )
+            top3.headOption
+              .map(_.userId)
+              .filter(w => swiss.winnerId.fold(true)(w !=))
+              .foreach {
+                swissColl.updateField($id(swiss.id), "winnerId", _).void
               }
-            }.some
+            UserRepo.filterEngine(top3.map(_.userId)) map { engines =>
+              JsArray(
+                top3.map { player =>
+                  playerJsonBase(
+                    player,
+                    lightUserApi.sync(player.userId) | LightUser.fallback(player.userId),
+                    performance = true
+                  ).add("engine", engines(player.userId))
+                }
+              ).some
+            }
           }
       }
     }
