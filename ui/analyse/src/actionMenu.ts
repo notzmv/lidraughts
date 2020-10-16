@@ -158,7 +158,7 @@ export function view(ctrl: AnalyseCtrl): VNode {
     noarg = ctrl.trans.noarg,
     isOngoing = ctrl.ongoing || (ctrl.study && ctrl.study.isInternalRelay()),
     canContinue = !isOngoing && !ctrl.embed && d.game.variant.key === 'standard' && !d.puzzleEditor,
-    canPuzzleEditor = !d.puzzleEditor && d.toPuzzleEditor && (d.game.variant.key === 'standard' || d.game.variant.key === 'frisian'),
+    canPuzzleEditor = !d.puzzleEditor && d.toPuzzleEditor && (d.game.variant.key === 'standard' || d.game.variant.key === 'frisian' || d.game.variant.key === 'russian'),
     ceval = ctrl.getCeval(),
     mandatoryCeval = ctrl.mandatoryCeval();
 
