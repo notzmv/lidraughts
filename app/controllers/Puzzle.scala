@@ -74,7 +74,7 @@ object Puzzle extends LidraughtsController {
   }
 
   def showOrVariant(something: String) = Variant(something) match {
-    case Some(variant) if puzzleVariants.contains(variant) && !variant.russian => homeVariant(variant)
+    case Some(variant) if puzzleVariants.contains(variant) => homeVariant(variant)
     case _ => parseIntOption(something) match {
       case Some(id) => show(id, Standard)
       case _ => Open { implicit ctx => notFound(ctx) }
@@ -117,7 +117,7 @@ object Puzzle extends LidraughtsController {
   def newPuzzleStandard = newPuzzle(Standard)
 
   def newPuzzleVariant(key: String) = Variant(key) match {
-    case Some(variant) if puzzleVariants.contains(variant) && !variant.russian => newPuzzle(variant)
+    case Some(variant) if puzzleVariants.contains(variant) => newPuzzle(variant)
     case _ => Open { implicit ctx => notFound(ctx) }
   }
 
@@ -135,7 +135,7 @@ object Puzzle extends LidraughtsController {
   def round2Standard(id: PuzzleId) = round2(id, Standard)
 
   def round2Variant(id: PuzzleId, key: String) = Variant(key) match {
-    case Some(variant) if puzzleVariants.contains(variant) && !variant.russian => round2(id, variant)
+    case Some(variant) if puzzleVariants.contains(variant) => round2(id, variant)
     case _ => OpenBody { implicit ctx => fuccess(BadRequest("bad variant")) map (_ as JSON) }
   }
 
@@ -246,7 +246,7 @@ object Puzzle extends LidraughtsController {
     negotiate(
       html = notFound,
       api = _ => Variant(key) match {
-        case Some(variant) if puzzleVariants.contains(variant) && !variant.russian =>
+        case Some(variant) if puzzleVariants.contains(variant) =>
           for {
             puzzles <- env.batch.select(
               me, variant,
@@ -269,7 +269,7 @@ object Puzzle extends LidraughtsController {
       data => negotiate(
         html = notFound,
         api = _ => Variant(key) match {
-          case Some(variant) if puzzleVariants.contains(variant) && !variant.russian =>
+          case Some(variant) if puzzleVariants.contains(variant) =>
             for {
               _ <- env.batch.solve(me, variant, data)
               me2 <- UserRepo byId me.id map (_ | me)

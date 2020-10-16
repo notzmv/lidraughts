@@ -47,7 +47,7 @@ lidraughts.puzzle = ${
               views.html.base.bits.mselect(
                 "puzzle-variant",
                 span(cls := "text", dataIcon := iconByVariant(puzzle.variant))(trans.variantPuzzles(puzzle.variant.name)),
-                lidraughts.pref.Pref.puzzleVariants.filter(draughts.variant.Russian !=).map { v =>
+                lidraughts.pref.Pref.puzzleVariants.map { v =>
                   a(
                     dataIcon := iconByVariant(v),
                     cls := (puzzle.variant == v).option("current"),
