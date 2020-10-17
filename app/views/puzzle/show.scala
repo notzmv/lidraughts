@@ -34,7 +34,7 @@ lidraughts.puzzle = ${
         image = cdnUrl(routes.Export.puzzlePngVariant(puzzle.id, puzzle.variant.key).url).some,
         title = s"${if (puzzle.variant.standard) "Draughts" else puzzle.variant.name} tactic #${puzzle.id} - ${puzzle.color.name.capitalize} to play",
         url = s"$netBaseUrl${routes.Puzzle.showVariant(puzzle.id, puzzle.variant.key).url}",
-        description = s"Lidraughts tactic trainer: " + puzzle.color.fold(
+        description = s"Lidraughts tactics trainer: " + puzzle.color.fold(
           trans.findTheBestMoveForWhite,
           trans.findTheBestMoveForBlack
         ).txt() + s" Played by ${puzzle.attempts} players."
