@@ -60,13 +60,7 @@ final class DataForm {
     description = tour.description
   )
 
-  private val nameType = clean(text).verifying(
-    Constraints minLength 2,
-    Constraints maxLength 30,
-    Constraints.pattern(
-      regex = """[\p{L}\p{N}-\s:,;]+""".r,
-      error = "error.unknown"
-    ),
+  private val nameType = eventName(2, 30).verifying(
     Constraint[String] { (t: String) =>
       if (t.toLowerCase contains "lidraughts") validation.Invalid(validation.ValidationError("mustNotContainLidraughts"))
       else validation.Valid

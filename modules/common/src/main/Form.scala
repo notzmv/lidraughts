@@ -3,7 +3,7 @@ package lidraughts.common
 import org.joda.time.{ DateTime, DateTimeZone }
 import play.api.data.format.Formats._
 import play.api.data.format.Formatter
-import play.api.data.validation.Constraint
+import play.api.data.validation.{ Constraint, Constraints }
 import play.api.data.Forms._
 import play.api.data.{ Mapping, FormError, Field, Form => PlayForm }
 import scala.util.Try
@@ -50,6 +50,16 @@ object Form {
   def clean(m: Mapping[String]) =
     trim(m)
       .verifying("This text contains invalid chars", s => !String.hasZeroWidthChars(s))
+
+  def eventName(minLength: Int, maxLength: Int) =
+    clean(text).verifying(
+      Constraints minLength minLength,
+      Constraints maxLength maxLength,
+      Constraints.pattern(
+        regex = """[\p{L}\p{N}-\s:,;'\+]+""".r,
+        error = "Invalid characters"
+      )
+    )
 
   def stringIn(choices: Options[String]) =
     text.verifying(hasKey(choices, _))
