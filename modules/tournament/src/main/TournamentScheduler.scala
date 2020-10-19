@@ -176,7 +176,7 @@ Thank you all, you rock!"""
               month.firstWeek.withDayOfWeek(SATURDAY) -> Antidraughts,
               month.firstWeek.withDayOfWeek(SUNDAY) -> Frisian
             ).flatMap {
-                case (day, variant) => at(day, (if (variant.russian) 17 else 18) - offsetCET(day)) map { date =>
+                case (day, variant) => at(day, (if (variant.russian || variant.brazilian) 17 else 18) - offsetCET(day)) map { date =>
                   Schedule(Monthly, Blitz, variant, std, date).plan
                 }
               },
@@ -251,9 +251,9 @@ Thank you all, you rock!"""
         ).flatten,
 
         List( // daily variant tournaments!
+          at(today, 15 - todayCET, 30) map { date => Schedule(Daily, SuperBlitz, Frysk, std, date |> orTomorrow).plan },
           at(today, 17 - todayCET) map { date => Schedule(Daily, SuperBlitz, Russian, std, date |> orTomorrow).plan },
           at(today, 18 - todayCET, 30) map { date => Schedule(Daily, SuperBlitz, Brazilian, std, date |> orTomorrow).plan },
-          at(today, 19 - todayCET) map { date => Schedule(Daily, SuperBlitz, Frysk, std, date |> orTomorrow).plan },
           at(today, 20 - todayCET) map { date => Schedule(Daily, Blitz, Frisian, std, date |> orTomorrow).plan },
           at(today, 21 - todayCET, 30) map { date => Schedule(Daily, SuperBlitz, Antidraughts, std, date |> orTomorrow).plan }
         ).flatten,
@@ -276,39 +276,51 @@ Thank you all, you rock!"""
           ).flatten
         },
 
-        // hourly variant tournaments (russian / frisian)!
+        // hourly variant tournaments
         (0 to 6).toList.flatMap { hourDelta =>
           val date = rightNow plusHours hourDelta
           val hour = date.getHourOfDay
           val hourCET = hour + todayCET
-          if (hourCET == 17 || hourCET == 18 || hourCET == 19) {
-            // no tournaments during daily russian / brazilian
-            List()
-          } else if (hour % 3 == 1) {
-            // hour #1: russian bullet, alternating a frisian bullet and with/without increment
-            // no frisian bullet during daily frisian
-            val bulletVariant = if (hour % 6 == 1 && hourCET != 20 && hourCET != 21) Frisian else Russian
+          if (hourCET == 20 || hourCET == 21 || hourCET == 22) {
+            // no tournaments during daily frisian / antidraughts
+            Nil
+          } else if (hour % 3 == 0) {
+            // alternating frysk / breakthrough every third hour
+            val variant = if (hour % 6 == 0) Frysk else Breakthrough
             List(
-              at(date, hour) map { date => Schedule(Hourly, Bullet, bulletVariant, std, date).plan },
-              at(date, hour, 30) map { date => Schedule(Hourly, Bullet, Russian, std, date).plan }
-            ).flatten
-          } else if (hour % 3 == 2) {
-            // hour #2: russian blitz
-            List(
-              at(date, hour) map { date => Schedule(Hourly, SuperBlitz, Russian, std, date).plan }
-            ).flatten
-          } else if (hourCET == 20 || hourCET == 21) {
-            // russian blitz during daily frisian
-            List(
-              at(date, hour) map { date => Schedule(Hourly, Blitz, Russian, std, date).plan }
+              at(date, hour) map { date => Schedule(Hourly, SuperBlitz, variant, std, date).plan }
             ).flatten
           } else {
-            // hour #3: frisian
+            // alternating blitz / superblitz
+            val variant = if (hour % 3 == 1) Frisian else Antidraughts
+            val blitzType = if (hour % 6 == 1 || hour % 6 == 2) SuperBlitz else Blitz
             List(
-              at(date, hour) map { date => Schedule(Hourly, SuperBlitz, Frisian, std, date).plan }
+              at(date, hour) map { date => Schedule(Hourly, blitzType, variant, std, date).plan }
+            ).flatten
+          }
+        },
+
+        // hourly 64 tournaments (russian / brazilian)
+        (0 to 6).toList.flatMap { hourDelta =>
+          val date = rightNow plusHours hourDelta
+          val hour = date.getHourOfDay
+          val hourCET = hour + todayCET
+          if (hour % 3 == 2) {
+            // bullet every third hour
+            List(
+              at(date, hour) map { date => Schedule(Hourly, Bullet, Brazilian, std, date).plan },
+              at(date, hour, 30) map { date => Schedule(Hourly, Bullet, Russian, std, date).plan }
+            ).flatten
+          } else {
+            // alternating blitz / superblitz
+            val variant = if (hour % 3 == 0) Brazilian else Russian
+            val blitzType = if (hour % 6 == 0 || hour % 6 == 1) SuperBlitz else Blitz
+            List(
+              at(date, hour) map { date => Schedule(Hourly, blitzType, variant, std, date).plan }
             ).flatten
           }
         }
+
       ).flatten
 
       nextPlans.map { plan =>
@@ -334,8 +346,8 @@ Thank you all, you rock!"""
     case s2 if s.freq.isUnique != s2.freq.isUnique => false
     // prevent daily && weekly on the same day
     case s2 if s.freq.isDailyOrBetter && s2.freq.isDailyOrBetter && s.sameVariantAndSpeed(s2) => s sameDay s2
-    // overlapping same variant
-    case s2 if s.variant.exotic && s.sameVariant(s2) => interval(s) overlaps interval(s2)
+    // overlapping same variant, or similar 64 variant
+    case s2 if s.variant.exotic && (s.sameVariant(s2) || s.similar64Variant(s2)) => interval(s) overlaps interval(s2)
     // overlapping same rating limit
     case s2 if s2.hasMaxRating && s.sameMaxRating(s2) => interval(s) overlaps interval(s2)
     // overlapping similar

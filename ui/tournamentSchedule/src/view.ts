@@ -29,14 +29,11 @@ function leftPos(time) {
 
 function laneGrouper(t) {
   if (t.schedule && t.schedule.freq === 'unique') {
-    return -1;
-  } else if (t.variant.key === 'russian' || t.variant.key === 'brazilian' || (t.variant.key === 'frisian' && t.schedule.freq === 'hourly')) {
-    return 2;   // variant lane below blitz: russian / frisian / brazilian
+    return -1; // unique tournaments always on top
+  } else if (t.variant.key === 'russian' || t.variant.key === 'brazilian') {
+    return 2;  // 64 lane below blitz: russian / brazilian
   } else if (t.variant.key !== 'standard') {
-    if (t.schedule.freq === 'daily')
-      return 3; // daily variant tournaments below variant lane
-    else
-      return 4; // below that come variant weeklies and up 
+    return 3;  // variant lane below 64
   } else if (t.perf.key === 'ultraBullet' || t.perf.key === 'rapid' || t.perf.key === 'classical') {
     return 70 + t.perf.position;  // rare tournaments, always on bottom
   //} else if (t.variant.key !== 'standard' || (t.perf.key === 'rapid' && t.schedule.freq === 'hourly')) {
@@ -96,6 +93,8 @@ function splitOverlaping(lanes) {
 function tournamentClass(tour) {
   const finished = tour.status === 30,
     userCreated = tour.createdBy !== 'lidraughts',
+    draughts64 = tour.variant.key === 'russian' || tour.variant.key === 'brazilian',
+    hourly = tour.schedule && tour.schedule.freq === 'hourly',
     classes = {
       'tsht-rated': tour.rated,
       'tsht-casual': !tour.rated,
@@ -105,6 +104,7 @@ function tournamentClass(tour) {
       'tsht-major': tour.major,
       'tsht-thematic': (!!tour.position || !!tour.openingTable),
       'tsht-battle': !!tour.battle,
+      'tsht-draughts64': draughts64 && hourly,
       'tsht-short': tour.minutes <= 30,
       'tsht-max-rating': !userCreated && tour.hasMaxRating
     };

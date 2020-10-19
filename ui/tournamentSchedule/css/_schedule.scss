@@ -10,6 +10,7 @@ $c-tour-marathon: #66558C;
 $c-tour-unique: $c-brag;
 $c-tour-max-rating: #8572ff;
 $c-tour-battle: hsl(49, 74%, 37%);
+$c-tour-draughts64: #7142b4;
 
 .tour-chart {
   min-height: 140px;
@@ -122,6 +123,9 @@ $c-tour-battle: hsl(49, 74%, 37%);
   }
   &-battle {
     background-color: $c-tour-battle;
+  }
+  &-draughts64 {
+    background-color: $c-tour-draughts64;
   }
   &-short.tsht-thematic {
     letter-spacing: -1px;
