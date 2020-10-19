@@ -148,7 +148,7 @@ Thank you all, you rock!"""
           secondWeekOf(OCTOBER).withDayOfWeek(SUNDAY) -> Frisian
         ).flatMap {
             case (day, variant) =>
-              at(day, 18) filter farFuture.isAfter map { date =>
+              at(day, 18 - offsetCET(day)) filter farFuture.isAfter map { date =>
                 Schedule(Yearly, Blitz, variant, std, date).plan
               }
           },
