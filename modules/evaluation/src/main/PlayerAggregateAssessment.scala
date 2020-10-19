@@ -57,18 +57,23 @@ case class PlayerAggregateAssessment(
     def sigDif(dif: Int)(a: Option[(Int, Int, Int)], b: Option[(Int, Int, Int)]): Option[Boolean] =
       (a |@| b) apply { case (a, b) => b._1 - a._1 > dif }
 
-    val difs = List(
+    val sfDifs = List(
       (sfAvgBlurs, sfAvgNoBlurs),
       (sfAvgLowVar, sfAvgHighVar),
       (sfAvgHold, sfAvgNoHold)
     )
+    val bmDifs = List(
+      (bmPctBlurs, bmPctNoBlurs),
+      (bmPctLowVar, bmPctHighVar),
+      (bmPctHold, bmPctNoHold)
+    )
 
     val actionable: Boolean = {
-      val difFlags = difs map (sigDif(10)_).tupled
+      val difFlags = sfDifs map (sigDif(10)_).tupled
       difFlags.forall(_.isEmpty) || difFlags.exists(~_) || assessmentsCount < 50
     }
 
-    def exceptionalDif: Boolean = difs map (sigDif(30)_).tupled exists (~_)
+    def exceptionalDif: Boolean = sfDifs map (sigDif(30)_).tupled exists (~_)
 
     if (actionable) {
       if (markable && bannable) EngineAndBan
@@ -108,17 +113,36 @@ case class PlayerAggregateAssessment(
     }
   }
 
-  // Average SF Avg and CI given blur rate
+  def bmPctGiven(predicate: PlayerAssessment => Boolean): Option[(Int, Int, Int)] = {
+    val filteredAssessments = playerAssessments.filter(predicate).filter(_.bestMoves.isDefined)
+    val n = filteredAssessments.size
+    if (n < 2) none
+    else {
+      val filteredBmPct = filteredAssessments.map(_.bestMoves.getOrElse(0))
+      val avg = listAverage(filteredBmPct)
+      // listDeviation does not apply Bessel's correction, so we do it here by using sqrt(n - 1) instead of sqrt(n)
+      val width = listDeviation(filteredBmPct) / sqrt(n - 1) * 1.96
+      Some((avg.toInt, (avg - width).toInt, (avg + width).toInt))
+    }
+  }
+
+  // Average SF Avg and BM Pct given blur rate
   val sfAvgBlurs = sfAvgGiven(_.blurs > 70)
   val sfAvgNoBlurs = sfAvgGiven(_.blurs <= 70)
+  val bmPctBlurs = bmPctGiven(_.blurs > 70)
+  val bmPctNoBlurs = bmPctGiven(_.blurs <= 70)
 
-  // Average SF Avg and CI given move time coef of variance
+  // Average SF Avg and BM Pct given move time coef of variance
   val sfAvgLowVar = sfAvgGiven(a => a.mtSd.toDouble / a.mtAvg < 0.5)
   val sfAvgHighVar = sfAvgGiven(a => a.mtSd.toDouble / a.mtAvg >= 0.5)
+  val bmPctLowVar = bmPctGiven(a => a.mtSd.toDouble / a.mtAvg < 0.5)
+  val bmPctHighVar = bmPctGiven(a => a.mtSd.toDouble / a.mtAvg >= 0.5)
 
-  // Average SF Avg and CI given bot
+  // Average SF Avg and CM Pct given bot
   val sfAvgHold = sfAvgGiven(_.hold)
   val sfAvgNoHold = sfAvgGiven(!_.hold)
+  val bmPctHold = bmPctGiven(_.hold)
+  val bmPctNoHold = bmPctGiven(!_.hold)
 
   def isGreatUser = user.perfs.bestRating > 2200 && user.count.rated >= 100
 

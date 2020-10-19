@@ -221,6 +221,30 @@ object mod {
           }
         )
       },
+      pag.pag.bmPctBlurs.map { blursYes =>
+        p(cls := "text", dataIcon := "j")(
+          "Scan moves in games with blurs is ", strong(blursYes._1), "% [", blursYes._2, " , ", blursYes._3, "]",
+          pag.pag.bmPctNoBlurs ?? { blursNo =>
+            frag(" against ", strong(blursNo._1), "% [", blursNo._2, ", ", blursNo._3, "] in games without blurs.")
+          }
+        )
+      },
+      pag.pag.bmPctLowVar.map { lowVar =>
+        p(cls := "text", dataIcon := "j")(
+          "Scan moves in games with consistent move times is ", strong(lowVar._1), "% [", lowVar._2, ", ", lowVar._3, "]",
+          pag.pag.bmPctHighVar ?? { highVar =>
+            frag(" against ", strong(highVar._1), "% [", highVar._2, ", ", highVar._3, "] in games with random move times.")
+          }
+        )
+      },
+      pag.pag.bmPctHold.map { holdYes =>
+        p(cls := "text", dataIcon := "j")(
+          "Scan moves in games with bot signature ", strong(holdYes._1), "% [", holdYes._2, ", ", holdYes._3, "]",
+          pag.pag.bmPctNoHold ?? { holdNo =>
+            frag(" against ", strong(holdNo._1), "% [", holdNo._2, ", ", holdNo._3, "]  in games without bot signature.")
+          }
+        )
+      },
       table(cls := "slist")(
         thead(
           tr(
@@ -228,7 +252,7 @@ object mod {
             th("Game"),
             th("Centi-Piece", br, "(Avg ± SD)"),
             th("Move Times", br, "(Avg ± SD)"),
-            th(span(title := "The percentage of best moves by Scan.")("Best moves")),
+            th(span(title := "The percentage of best moves by Scan.")("Scan moves")),
             th(span(title := "The frequency of which the user leaves the game page.")("Blurs")),
             th(span(title := "Bot detection using grid click analysis.")("Bot")),
             th(span(title := "Aggregate match")(raw("&Sigma;")))
