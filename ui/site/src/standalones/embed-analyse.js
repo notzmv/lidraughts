@@ -68,7 +68,10 @@ $(function() {
     var $iframe = $('<iframe>').addClass('analyse ' + a.type).attr('src', a.src);
     $(a.element).replaceWith($('<div class="embed"></div>').html($iframe));
     return $iframe.on('load', function() {
-      if (this.contentDocument.title.startsWith("404")) this.style.height = '100px';
+      if (this.contentDocument.title.startsWith("404")) {
+        if (a.type === 'game') $iframe.parent().replaceWith(a.element);
+        else this.style.height = '100px';
+      }
     }).on('mouseenter', function() {
       $(this).focus();
     });
