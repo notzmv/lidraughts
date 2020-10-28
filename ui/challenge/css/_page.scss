@@ -69,10 +69,39 @@ $c-challenge: $c-secondary;
   }
 }
 
-.challenge-theirs {
+.challenge-theirs,
+.challenge-external {
   .button-fat {
     display: block;
     width: 100%;
     margin-top: 2em;
+  }
+}
+
+.challenge-external {
+  .player-accepted {
+    @extend %roboto;
+    margin-top: 2em;
+    font-size: 2em;
+    text-align: center;
+  }
+  .accepting {
+    display: flex;
+    justify-content: center;
+    .players {
+      @extend %flex-column;
+      width: 55%;
+      font-size: 2em;
+      > div {
+        @extend %flex-between, %roboto;
+        line-height: 1.4;
+      }
+      .status {
+        font-size: 0.8em;
+        span {
+          color: $c-challenge;
+        }
+      }
+    }
   }
 }

@@ -25,7 +25,7 @@ object mine {
         val challengeLink = s"$netBaseUrl${routes.Round.watcher(c.id, "white")}"
         main(cls := "page-small challenge-page box box-pad")(
           c.status match {
-            case Status.Created | Status.Offline => div(id := "ping-challenge")(
+            case Status.Created | Status.External | Status.Offline => div(id := "ping-challenge")(
               h1(trans.challengeToPlay()),
               bits.details(c),
               c.destUserId.map { destId =>

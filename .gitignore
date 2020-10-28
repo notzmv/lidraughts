@@ -12,7 +12,7 @@ logs
 data/*
 database
 project/target
-project/metals.sbt
+metals.sbt
 public/compiled/
 public/css/
 target

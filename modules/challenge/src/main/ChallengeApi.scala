@@ -26,15 +26,17 @@ final class ChallengeApi(
     createdByDestId(userId) zip createdByChallengerId(userId) map (AllChallenges.apply _).tupled
 
   // returns boolean success
-  def create(c: Challenge): Fu[Boolean] = isLimitedByMaxPlaying(c) flatMap {
-    case true => fuFalse
-    case false => {
-      repo like c flatMap { _ ?? repo.cancel }
-    } >> (repo insert c) >>- {
-      uncacheAndNotify(c)
-      lidraughtsBus.publish(Event.Create(c), 'challenge)
-    } inject true
-  }
+  def create(c: Challenge): Fu[Boolean] =
+    if (c.isExternal) (repo insert c) inject true
+    else isLimitedByMaxPlaying(c) flatMap {
+      case true => fuFalse
+      case false => {
+        repo like c flatMap { _ ?? repo.cancel }
+      } >> (repo insert c) >>- {
+        uncacheAndNotify(c)
+        lidraughtsBus.publish(Event.Create(c), 'challenge)
+      } inject true
+    }
 
   def byId = repo byId _
 
@@ -65,12 +67,33 @@ final class ChallengeApi(
   def decline(c: Challenge) = (repo decline c) >>- uncacheAndNotify(c)
 
   def accept(c: Challenge, user: Option[User]): Fu[Option[Pov]] =
-    joiner(c, user).flatMap {
+    if (c.isExternal) acceptExternal(c, user)
+    else joiner(c, user).flatMap {
       case None => fuccess(None)
       case Some(pov) => (repo accept c) >>- {
         uncacheAndNotify(c)
         lidraughtsBus.publish(Event.Accept(c, user.map(_.id)), 'challenge)
       } inject pov.some
+    }
+
+  private def acceptExternal(challenge: Challenge, user: Option[User]): Fu[Option[Pov]] =
+    user match {
+      case Some(u) =>
+        val c = challenge.acceptExternal(u)
+        (c.external ?? { _.bothAccepted }) ?? {
+          c.destUserId.??(UserRepo.byId) flatMap { destUser => joiner(c, destUser) }
+        } flatMap {
+          case None =>
+            (repo update c) >>- {
+              socketReload(c.id)
+            } inject None
+          case Some(pov) =>
+            val c2 = c.copy(status = Status.Accepted, expiresAt = DateTime.now.plusHours(3))
+            (repo update c2) >>- {
+              socketReload(c2.id)
+            } inject pov.some
+        }
+      case _ => fuccess(None)
     }
 
   def sendRematchOf(game: Game, user: User): Fu[Boolean] =

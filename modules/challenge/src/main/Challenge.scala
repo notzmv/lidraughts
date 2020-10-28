@@ -24,7 +24,8 @@ case class Challenge(
     rematchOf: Option[String],
     createdAt: DateTime,
     seenAt: DateTime,
-    expiresAt: DateTime
+    expiresAt: DateTime,
+    external: Option[Challenge.ExternalChallenge]
 ) {
 
   import Challenge._
@@ -68,6 +69,27 @@ case class Challenge(
     case _ => none
   }
 
+  def isExternal = external.isDefined
+
+  def acceptExternal(u: User) = external match {
+    case Some(e) if challengerUserId.contains(u.id) => copy(
+      external = e.copy(challengerAccepted = true).some
+    )
+    case Some(e) if destUserId.contains(u.id) => copy(
+      external = e.copy(destUserAccepted = true).some
+    )
+    case _ => this
+  }
+
+  def hasAcceptedExternal(u: Option[User]) = u match {
+    case Some(user) => external match {
+      case Some(e) if challengerUserId.contains(user.id) => e.challengerAccepted
+      case Some(e) if destUserId.contains(user.id) => e.destUserAccepted
+      case _ => false
+    }
+    case _ => false
+  }
+
   lazy val perfType = perfTypeOf(variant, timeControl)
 }
 
@@ -84,7 +106,8 @@ object Challenge {
     case object Canceled extends Status(20)
     case object Declined extends Status(30)
     case object Accepted extends Status(40)
-    val all = List(Created, Offline, Canceled, Declined, Accepted)
+    case object External extends Status(50)
+    val all = List(Created, Offline, Canceled, Declined, Accepted, External)
     def apply(id: Int): Option[Status] = all.find(_.id == id)
   }
 
@@ -117,6 +140,14 @@ object Challenge {
     case object Black extends ColorChoice
   }
 
+  case class ExternalChallenge(
+      challengerAccepted: Boolean = false,
+      destUserAccepted: Boolean = false
+  ) {
+
+    def bothAccepted = challengerAccepted && destUserAccepted
+  }
+
   private def speedOf(timeControl: TimeControl) = timeControl match {
     case TimeControl.Clock(config) => Speed(config)
     case _ => Speed.Correspondence
@@ -145,7 +176,8 @@ object Challenge {
     color: String,
     challenger: Either[String, User],
     destUser: Option[User],
-    rematchOf: Option[String]
+    rematchOf: Option[String],
+    external: Boolean = false
   ): Challenge = {
     val (colorChoice, finalColor) = color match {
       case "white" => ColorChoice.White -> draughts.White
@@ -158,7 +190,7 @@ object Challenge {
     }
     new Challenge(
       _id = randomId,
-      status = Status.Created,
+      status = if (external) Status.External else Status.Created,
       variant = variant,
       initialFen =
         if (variant == FromPosition) initialFen.flatMap(fen => Forsyth << fen.value).map(sit => FEN(Forsyth >> sit.withoutGhosts))
@@ -175,7 +207,8 @@ object Challenge {
       rematchOf = rematchOf,
       createdAt = DateTime.now,
       seenAt = DateTime.now,
-      expiresAt = inTwoWeeks
+      expiresAt = inTwoWeeks,
+      external = external option ExternalChallenge()
     )
   }
 }

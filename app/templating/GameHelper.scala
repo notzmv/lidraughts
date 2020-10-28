@@ -278,9 +278,11 @@ trait GameHelper { self: I18nHelper with UserHelper with AiHelper with StringHel
       reg => s"${usernameOrId(reg.id)} (${reg.rating.show})"
     )
     val players = c.destUser.fold(s"Challenge from $challenger") { dest =>
-      s"$challenger challenges ${usernameOrId(dest.id)} (${dest.rating.show})"
+      val destUser = s"${usernameOrId(dest.id)} (${dest.rating.show})"
+      if (c.isExternal) c.finalColor.fold(s"$challenger vs $destUser", s"$destUser vs $challenger")
+      else s"$challenger challenges $destUser"
     }
-    s"$speed$variant ${c.mode.name} Draughts • $players"
+    s"$speed$variant ${c.mode.name} • $players"
   }
 
   def challengeOpenGraph(c: lidraughts.challenge.Challenge)(implicit ctx: UserContext) =

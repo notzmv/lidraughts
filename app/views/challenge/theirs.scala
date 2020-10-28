@@ -22,8 +22,8 @@ object theirs {
     ) {
         main(cls := "page-small challenge-page challenge-theirs box box-pad")(
           c.status match {
-            case Status.Created | Status.Offline => frag(
-              h1(user.fold[Frag]("Anonymous")(u =>
+            case Status.Created | Status.External | Status.Offline => frag(
+              h1(user.fold[Frag](trans.anonymous())(u =>
                 frag(
                   userLink(u),
                   " (", u.perfs(c.perfType).glicko.display, ")"

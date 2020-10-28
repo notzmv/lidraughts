@@ -106,7 +106,8 @@ private[setup] final class FormFactory(
       "days" -> optional(days),
       "rated" -> boolean,
       "color" -> optional(color),
-      "fen" -> fen
+      "fen" -> fen,
+      "opponent" -> optional(nonEmptyText)
     )(ApiConfig.<<)(_.>>).verifying("invalidFen", _.validFen)
   )
 

@@ -121,7 +121,7 @@ object side {
             game.playerByUserId(sim.hostId).map { p =>
               frag(
                 playerLink(p, withOnline = false, withRating = false, withDiff = false),
-                " vs. ",
+                " vs ",
                 trans.nbOpponents(sim.pairings.length)
               )
             },
