@@ -37,7 +37,7 @@ object external {
                   if (!c.mode.rated || ctx.isAuth) frag(
                     (c.mode.rated && c.unlimited) option
                       badTag(trans.bewareTheGameIsRatedButHasNoClock()),
-                    if (c.hasAcceptedExternal(ctx.me)) p(cls := "player-accepted")("Challenge accepted. Waiting for opponent...")
+                    if (c.hasAcceptedExternal(ctx.me)) p(cls := "player-accepted")(trans.challengeAcceptedAndWaiting())
                     else postForm(cls := "accept", action := routes.Challenge.accept(c.id))(
                       submitButton(cls := "text button button-fat", dataIcon := "G")(trans.joinTheGame())
                     )
@@ -54,28 +54,30 @@ object external {
                     )
                   )
                 } else c.external map { e =>
+                  val accepted = div(cls := "status")(span(dataIcon := "E"), trans.challengeAccepted())
+                  val waiting = div(cls := "status")(trans.waitingForPlayer())
                   div(cls := "accepting")(
                     div(cls := "players")(
                       div(
                         div(cls := "player color-icon is white")(userIdLink(c.finalColor.fold(c.challengerUserId, c.destUserId), withOnline = false)),
-                        if (c.finalColor.fold(e.challengerAccepted, e.destUserAccepted)) div(cls := "status")(span(dataIcon := "E"), "Accepted")
-                        else div(cls := "status")("Awaiting...")
+                        if (c.finalColor.fold(e.challengerAccepted, e.destUserAccepted)) accepted
+                        else waiting
                       ),
                       div(
                         div(cls := "player color-icon is black")(userIdLink(c.finalColor.fold(c.destUserId, c.challengerUserId), withOnline = false)),
-                        if (c.finalColor.fold(e.destUserAccepted, e.challengerAccepted)) div(cls := "status")(span(dataIcon := "E"), "Accepted")
-                        else div(cls := "status")("Awaiting...")
+                        if (c.finalColor.fold(e.destUserAccepted, e.challengerAccepted)) accepted
+                        else waiting
                       )
                     )
                   )
                 }
               )
             case Status.Declined => div(cls := "follow-up")(
-              h1("Challenge declined"),
+              h1(trans.challengeDeclined()),
               bits.details(c)
             )
             case Status.Accepted => div(cls := "follow-up")(
-              h1("Challenge accepted!"),
+              h1(trans.challengeAccepted()),
               bits.details(c),
               a(id := "challenge-redirect", href := routes.Round.watcher(c.id, "white"), cls := "button button-fat")(
                 if (player) trans.joinTheGame()
@@ -83,7 +85,7 @@ object external {
               )
             )
             case Status.Canceled => div(cls := "follow-up")(
-              h1("Challenge canceled."),
+              h1(trans.challengeCanceled()),
               bits.details(c)
             )
           }

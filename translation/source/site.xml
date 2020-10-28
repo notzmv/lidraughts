@@ -6,6 +6,7 @@
   <string name="toInviteSomeoneToPlayGiveThisUrl">To invite someone to play, give this URL</string>
   <string name="gameOver">Game Over</string>
   <string name="waitingForOpponent">Waiting for opponent</string>
+  <string name="waitingForPlayer">Waiting for player</string>
   <string name="waiting">Waiting</string>
   <string name="yourTurn">Your turn</string>
   <string name="aiNameLevelAiLevel">%1$s level %2$s</string>
@@ -924,6 +925,10 @@ One URL per line</string>
   <string name="custom">Custom</string>
   <string name="notifications">Notifications</string>
   <string name="challenges">Challenges</string>
+  <string name="challengeDeclined">Challenge declined</string>
+  <string name="challengeAccepted">Challenge accepted!</string>
+  <string name="challengeCanceled">Challenge cancelled</string>
+  <string name="challengeAcceptedAndWaiting">Challenge accepted! Waiting for your opponent...</string>
   <string name="perfRatingX">Rating: %s</string>
   <plurals name="nbSecondsToPlayTheFirstMove">
     <item quantity="one">%s second to play the first move</item>

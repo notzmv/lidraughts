@@ -7,6 +7,7 @@
   <string name="toInviteSomeoneToPlayGiveThisUrl">Deel deze link als je iemand wil uitnodigen om te spelen</string>
   <string name="gameOver">Partij afgelopen</string>
   <string name="waitingForOpponent">Wachten op een tegenstander</string>
+  <string name="waitingForPlayer">Wachten op speler</string>
   <string name="waiting">Even geduld a.u.b.</string>
   <string name="yourTurn">Je bent aan zet</string>
   <string name="aiNameLevelAiLevel">%1$s niveau %2$s</string>
@@ -905,6 +906,10 @@ Een URL per regel</string>
   <string name="custom">Aangepast</string>
   <string name="notifications">Meldingen</string>
   <string name="challenges">Uitdagingen</string>
+  <string name="challengeDeclined">Uitdaging geweigerd</string>
+  <string name="challengeAccepted">Uitdaging geaccepteerd!</string>
+  <string name="challengeCanceled">Uitdaging geannuleerd</string>
+  <string name="challengeAcceptedAndWaiting">Uitdaging geaccepteerd! Wachten op je tegenstander...</string>
   <plurals name="nbSecondsToPlayTheFirstMove">
     <item quantity="one">%s seconde om de eerste zet te spelen</item>
     <item quantity="other">%s seconden om de eerste zet te spelen</item>

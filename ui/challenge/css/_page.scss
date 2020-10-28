@@ -90,7 +90,7 @@ $c-challenge: $c-secondary;
     justify-content: center;
     .players {
       @extend %flex-column;
-      width: 55%;
+      width: 60%;
       font-size: 2em;
       > div {
         @extend %flex-between, %roboto;
