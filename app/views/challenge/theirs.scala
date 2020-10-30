@@ -22,8 +22,8 @@ object theirs {
     ) {
         main(cls := "page-small challenge-page challenge-theirs box box-pad")(
           c.status match {
-            case Status.Created | Status.Offline => frag(
-              h1(user.fold[Frag]("Anonymous")(u =>
+            case Status.Created | Status.External | Status.Offline => frag(
+              h1(user.fold[Frag](trans.anonymous())(u =>
                 frag(
                   userLink(u),
                   " (", u.perfs(c.perfType).glicko.display, ")"
@@ -52,19 +52,19 @@ object theirs {
               )
             )
             case Status.Declined => div(cls := "follow-up")(
-              h1("Challenge declined"),
+              h1(trans.challengeDeclined()),
               bits.details(c),
               a(cls := "button button-fat", href := routes.Lobby.home())(trans.newOpponent())
             )
             case Status.Accepted => div(cls := "follow-up")(
-              h1("Challenge accepted!"),
+              h1(trans.challengeAccepted()),
               bits.details(c),
               a(id := "challenge-redirect", href := routes.Round.watcher(c.id, "white"), cls := "button button-fat")(
                 trans.joinTheGame()
               )
             )
             case Status.Canceled => div(cls := "follow-up")(
-              h1("Challenge canceled."),
+              h1(trans.challengeCanceled()),
               bits.details(c),
               a(cls := "button button-fat", href := routes.Lobby.home())(trans.newOpponent())
             )

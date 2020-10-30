@@ -25,7 +25,7 @@ object mine {
         val challengeLink = s"$netBaseUrl${routes.Round.watcher(c.id, "white")}"
         main(cls := "page-small challenge-page box box-pad")(
           c.status match {
-            case Status.Created | Status.Offline => div(id := "ping-challenge")(
+            case Status.Created | Status.External | Status.Offline => div(id := "ping-challenge")(
               h1(trans.challengeToPlay()),
               bits.details(c),
               c.destUserId.map { destId =>
@@ -67,19 +67,19 @@ object mine {
               cancelForm
             )
             case Status.Declined => div(cls := "follow-up")(
-              h1("Challenge declined"),
+              h1(trans.challengeDeclined()),
               bits.details(c),
               a(cls := "button button-fat", href := routes.Lobby.home())(trans.newOpponent())
             )
             case Status.Accepted => div(cls := "follow-up")(
-              h1("Challenge accepted!"),
+              h1(trans.challengeAccepted()),
               bits.details(c),
               a(id := "challenge-redirect", href := routes.Round.watcher(c.id, "white"), cls := "button-fat")(
                 trans.joinTheGame()
               )
             )
             case Status.Canceled => div(cls := "follow-up")(
-              h1("Challenge canceled."),
+              h1(trans.challengeCanceled()),
               bits.details(c),
               a(cls := "button button-fat", href := routes.Lobby.home())(trans.newOpponent())
             )

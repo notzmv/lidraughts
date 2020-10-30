@@ -12,17 +12,19 @@ window.onload = function() {
         name: "challenge"
       },
       events: {
-        reload: function() {
-          $.ajax({
-            url: opts.xhrUrl,
-            success: function(html) {
-              $(selector).replaceWith($(html).find(selector));
-              init();
-            }
-          });
-        }
+        reload: xhrReload
       }
     });
+
+  function xhrReload() {
+    $.ajax({
+      url: opts.xhrUrl,
+      success: function(html) {
+        $(selector).replaceWith($(html).find(selector));
+        init();
+      }
+    });
+  }
 
   function init() {
     if (!accepting) $('#challenge-redirect').each(function() {
@@ -48,6 +50,44 @@ window.onload = function() {
         }
       });
     });
+    if (challenge.external && challenge.startsAt) {
+      $('.challenge-external .countdown').each(function() {
+
+        var trans = window.lidraughts.trans(opts.i18n);
+        var $el = $(this);
+        var target = new Date(challenge.startsAt);
+
+        var second = 1000,
+          minute = second * 60,
+          hour = minute * 60,
+          day = hour * 24;
+
+        var redraw = function() {
+
+          var distance = target - new Date().getTime();
+
+          if (distance > 0) {
+            var days = Math.floor(distance / day),
+              hours = Math.floor((distance % day) / hour),
+              minutes = Math.floor((distance % hour) / minute),
+              seconds = Math.floor((distance % minute) / second);
+            if (days) $el.find('.days').html(trans.plural('nbDays', days).replace(days, '<span>' + days + '</span>'));
+            else $el.find('.days').hide();
+            if (days || hours) $el.find('.hours').html(trans.plural('nbHours', hours).replace(hours, '<span>' + hours + '</span>'));
+            else $el.find('.hours').hide();
+            $el.find('.minutes').html(trans.plural('nbMinutes', minutes).replace(minutes, '<span>' + minutes + '</span>'));
+            $el.find('.seconds').html(trans('nbSeconds', seconds).replace(seconds, '<span>' + seconds + '</span>'));
+          } else {
+            clearInterval(interval);
+            xhrReload();
+          }
+
+        };
+        var interval = setInterval(redraw, second);
+
+        redraw();
+      });
+    }
   }
 
   init();

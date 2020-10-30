@@ -34,10 +34,11 @@ object Challenge extends LidraughtsController {
   protected[controllers] def showChallenge(c: ChallengeModel, error: Option[String] = None)(implicit ctx: Context): Fu[Result] =
     env version c.id flatMap { version =>
       val mine = isMine(c)
+      val forMe = isForMe(c)
       import lidraughts.challenge.Direction
       val direction: Option[Direction] =
         if (mine) Direction.Out.some
-        else if (isForMe(c)) Direction.In.some
+        else if (forMe) Direction.In.some
         else none
       val json = env.jsonView.show(c, version, direction)
       negotiate(
@@ -48,6 +49,9 @@ object Challenge extends LidraughtsController {
               case None => Ok(html.challenge.mine(c, json, none))
             }
           }
+          else if (c.isExternal) fuccess {
+            Ok(html.challenge.external(c, json, forMe))
+          }
           else (c.challengerUserId ?? UserRepo.named) map { user =>
             Ok(html.challenge.theirs(c, json, user))
           },
@@ -55,13 +59,16 @@ object Challenge extends LidraughtsController {
       ) flatMap withChallengeAnonCookie(mine && c.challengerIsAnon, c, true)
     }
 
-  private def isMine(challenge: ChallengeModel)(implicit ctx: Context) = challenge.challenger match {
-    case Left(anon) => HTTPRequest sid ctx.req contains anon.secret
-    case Right(user) => ctx.userId contains user.id
+  private def isMine(challenge: ChallengeModel)(implicit ctx: Context) = !challenge.isExternal ?? {
+    challenge.challenger match {
+      case Left(anon) => HTTPRequest sid ctx.req contains anon.secret
+      case Right(user) => ctx.userId contains user.id
+    }
   }
 
   private def isForMe(challenge: ChallengeModel)(implicit ctx: Context) =
-    challenge.destUserId.fold(true)(ctx.userId.contains)
+    if (challenge.isExternal) challenge.challengerUserId == ctx.userId || challenge.destUserId == ctx.userId
+    else challenge.destUserId.fold(true)(ctx.userId.contains)
 
   def accept(id: String) = Open { implicit ctx =>
     OptionFuResult(env.api byId id) { c =>
@@ -180,6 +187,50 @@ object Challenge extends LidraughtsController {
                 case false =>
                   BadRequest(jsonError("Challenge not created"))
               }
+          } map (_ as JSON)
+        }
+      )
+    }
+  }
+
+  def apiCreateExternal(userId: String) = OpenBody { implicit ctx =>
+    implicit val req = ctx.body
+    Setup.PostExternalRateLimit(HTTPRequest lastRemoteAddress req) {
+      Env.setup.forms.api.bindFromRequest.fold(
+        jsonFormErrorDefaultLang,
+        config => UserRepo enabledById userId.toLowerCase flatMap { challengerOption =>
+          challengerOption ?? { challengerUser =>
+            config.opponent.fold(BadRequest(jsonError("Opponent not specified")).fuccess) { opponentId =>
+              UserRepo enabledById opponentId.toLowerCase flatMap {
+                case Some(opponentUser) =>
+                  import lidraughts.challenge.Challenge._
+                  val challenge = lidraughts.challenge.Challenge.make(
+                    variant = config.variant,
+                    initialFen = config.position,
+                    timeControl = config.clock map { c =>
+                      TimeControl.Clock(c)
+                    } orElse config.days.map {
+                      TimeControl.Correspondence.apply
+                    } getOrElse TimeControl.Unlimited,
+                    mode = config.mode,
+                    color = config.color.name,
+                    challenger = Right(challengerUser),
+                    destUser = opponentUser.some,
+                    rematchOf = none,
+                    external = true,
+                    startsAt = config.startsAt
+                  )
+                  (Env.challenge.api create challenge) map {
+                    case true =>
+                      lidraughts.log("external challenge").info(s"${ctx.req.remoteAddress} $challenge")
+                      JsonOk(env.jsonView.show(challenge, SocketVersion(0), lidraughts.challenge.Direction.Out.some))
+                    case false =>
+                      BadRequest(jsonError("Challenge not created"))
+                  }
+                case _ =>
+                  BadRequest(jsonError("Invalid opponent")).fuccess
+              }
+            }
           } map (_ as JSON)
         }
       )
