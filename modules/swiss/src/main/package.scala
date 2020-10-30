@@ -1,6 +1,6 @@
-package lila
+package lidraughts
 
 package object swiss extends PackageObject {
 
-  private[swiss] val logger = lila.log("swiss")
+  private[swiss] val logger = lidraughts.log("swiss")
 }

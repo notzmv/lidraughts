@@ -1,24 +1,24 @@
-package lila.swiss
+package lidraughts.swiss
 
 import org.joda.time.DateTime
-import chess.Clock.{ Config => ClockConfig }
-import lila.hub.LightTeam.TeamID
+import draughts.Clock.{ Config => ClockConfig }
+import lidraughts.hub.lightTeam.TeamId
 
-import lila.user.User
-import lila.game.Game
+import lidraughts.user.User
+import lidraughts.game.Game
 
 case class Swiss(
     _id: Swiss.Id,
     name: String,
     status: Status,
     clock: ClockConfig,
-    variant: chess.variant.Variant,
+    variant: draughts.variant.Variant,
     rated: Boolean,
     nbRounds: Int,
     nbPlayers: Int,
     createdAt: DateTime,
     createdBy: User.ID,
-    teamId: TeamID,
+    teamId: TeamId,
     startsAt: DateTime,
     winnerId: Option[User.ID] = None,
     description: Option[String] = None,
@@ -59,7 +59,7 @@ object SwissPlayer {
 case class SwissRound(
     id: SwissRound.Id,
     pairings: List[SwissPairing]
-    // byes: List[SwissPlayer.Number]
+// byes: List[SwissPlayer.Number]
 ) {
   def number = id.number
   val pairingsMap: Map[SwissPlayer.Number, SwissPairing] = pairings.view.flatMap { p =>
@@ -85,7 +85,7 @@ case class SwissPairing(
     black: SwissPlayer.Number,
     winner: Option[SwissPlayer.Number]
 ) {
-  def colorOf(number: SwissPlayer.Number)    = chess.Color(white == number)
+  def colorOf(number: SwissPlayer.Number) = draughts.Color(white == number)
   def opponentOf(number: SwissPlayer.Number) = if (white == number) black else white
 }
 

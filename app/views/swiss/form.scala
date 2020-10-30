@@ -3,40 +3,40 @@ package views.html.swiss
 import play.api.data.Form
 
 import controllers.routes
-import lila.api.Context
-import lila.app.templating.Environment._
-import lila.tournament.{ DataForm => TourForm }
-import lila.swiss.SwissForm
-import lila.app.ui.ScalatagsTemplate._
-import lila.hub.LightTeam.TeamID
+import lidraughts.api.Context
+import lidraughts.app.templating.Environment._
+import lidraughts.tournament.{ DataForm => TourForm }
+import lidraughts.swiss.SwissForm
+import lidraughts.app.ui.ScalatagsTemplate._
+import lidraughts.hub.lightTeam.TeamId
 
 object form {
 
-  def create(form: Form[_], teamId: TeamID)(implicit ctx: Context) =
+  def create(form: Form[_], teamId: TeamId)(implicit ctx: Context) =
     views.html.base.layout(
       title = "New Swiss tournament",
       moreCss = cssTag("clas"),
       moreJs = jsAt("compiled/clas.js")
     ) {
-      val fields = new SwissFields(form)
-      main(cls := "page-small")(
-        div(cls := "swiss__form box box-pad")(
-          h1("New Swiss tournament"),
-          postForm(cls := "form3", action := routes.Swiss.create(teamId))(
-            fields.name,
-            form3.split(fields.rated, fields.variant),
-            fields.clock,
-            fields.description,
-            form3.globalError(form),
-            fields.startsAt,
-            form3.actions(
-              a(href := routes.Team.show(teamId))(trans.cancel()),
-              form3.submit(trans.createANewTournament(), icon = "g".some)
+        val fields = new SwissFields(form)
+        main(cls := "page-small")(
+          div(cls := "swiss__form box box-pad")(
+            h1("New Swiss tournament"),
+            postForm(cls := "form3", action := routes.Swiss.create(teamId))(
+              fields.name,
+              form3.split(fields.rated, fields.variant),
+              fields.clock,
+              fields.description,
+              form3.globalError(form),
+              fields.startsAt,
+              form3.actions(
+                a(href := routes.Team.show(teamId))(trans.cancel()),
+                form3.submit(trans.createANewTournament(), icon = "g".some)
+              )
             )
           )
         )
-      )
-    }
+      }
 }
 
 final private class SwissFields(form: Form[_])(implicit ctx: Context) {
@@ -70,7 +70,7 @@ final private class SwissFields(form: Form[_])(implicit ctx: Context) {
       form3.group(form("clock.limit"), trans.clockInitialTime(), half = true)(
         form3.select(_, TourForm.clockTimeChoices)
       ),
-      form3.group(form("clock.increment"), trans.clockIncrement(), half = true)(
+      form3.group(form("clock.increment"), trans.increment(), half = true)(
         form3.select(_, TourForm.clockIncrementChoices)
       )
     )

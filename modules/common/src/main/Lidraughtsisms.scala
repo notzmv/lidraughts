@@ -37,7 +37,6 @@ trait Lidraughtsisms
   with scalaz.syntax.ToValidationOps {
 
   type StringValue = lidraughts.base.LidraughtsTypes.StringValue
-  type IntValue = lidraughts.base.LidraughtsTypes.IntValue
 
   @inline implicit def toPimpedFuture[A](f: Fu[A]) = new PimpedFuture(f)
   @inline implicit def toPimpedFutureBoolean(f: Fu[Boolean]) = new PimpedFutureBoolean(f)

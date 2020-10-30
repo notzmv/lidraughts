@@ -1,22 +1,33 @@
-package lila.swiss
+package lidraughts.swiss
 
-import com.softwaremill.macwire._
+import com.typesafe.config.Config
 
-import lila.common.config._
-
-@Module
 final class Env(
-    db: lila.db.Db
-)(implicit ec: scala.concurrent.ExecutionContext) {
+    config: Config,
+    db: lidraughts.db.Env
+) {
 
-  private val colls = wire[SwissColls]
+  private val settings = new {
+    val CollectionSwiss = config getString "collection.swiss"
+    val CollectionRound = config getString "collection.round"
+  }
+  import settings._
 
-  val api = wire[SwissApi]
+  lazy val api = new SwissApi(
+    swissColl = swissColl,
+    roundColl = roundColl
+  )
 
-  lazy val forms = wire[SwissForm]
+  lazy val forms = new SwissForm
+
+  private[swiss] lazy val swissColl = db(CollectionSwiss)
+  private[swiss] lazy val roundColl = db(CollectionRound)
 }
 
-private class SwissColls(db: lila.db.Db) {
-  val swiss = db(CollName("swiss"))
-  val round = db(CollName("swiss_round"))
+object Env {
+
+  lazy val current = "swiss" boot new Env(
+    config = lidraughts.common.PlayApp loadConfig "swiss",
+    db = lidraughts.db.Env.current
+  )
 }

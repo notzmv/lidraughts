@@ -1,16 +1,16 @@
-package lila.swiss
+package lidraughts.swiss
 
-import chess.Clock.{ Config => ClockConfig }
-import chess.variant.Variant
+import draughts.Clock.{ Config => ClockConfig }
+import draughts.variant.Variant
 import org.joda.time.DateTime
 import play.api.data._
 import play.api.data.Forms._
 import play.api.data.validation.Constraints
 
-import lila.user.User
-import lila.common.Form._
+import lidraughts.user.User
+import lidraughts.common.Form._
 
-final class SwissForm(implicit ec: scala.concurrent.ExecutionContext) {
+final class SwissForm {
 
   import SwissForm._
 
@@ -25,16 +25,16 @@ final class SwissForm(implicit ec: scala.concurrent.ExecutionContext) {
         )
       ),
       "clock" -> mapping(
-        "limit"     -> number.verifying(clockLimits.contains _),
+        "limit" -> number.verifying(clockLimits.contains _),
         "increment" -> number(min = 0, max = 180)
       )(ClockConfig.apply)(ClockConfig.unapply)
         .verifying("Invalid clock", _.estimateTotalSeconds > 0),
-      "startsAt"    -> inTheFuture(ISODateTimeOrTimestamp.isoDateTimeOrTimestamp),
-      "variant"     -> nonEmptyText.verifying(v => Variant(v).isDefined),
-      "rated"       -> boolean,
-      "nbRounds"    -> number(min = 3, max = 50),
+      "startsAt" -> inTheFuture(ISODateTimeOrTimestamp.isoDateTimeOrTimestamp),
+      "variant" -> nonEmptyText.verifying(v => Variant(v).isDefined),
+      "rated" -> boolean,
+      "nbRounds" -> number(min = 3, max = 50),
       "description" -> optional(nonEmptyText),
-      "hasChat"     -> optional(boolean)
+      "hasChat" -> optional(boolean)
     )(SwissData.apply)(SwissData.unapply)
   )
 

@@ -1,17 +1,20 @@
-package lila.swiss
+package lidraughts.swiss
 
 import org.joda.time.DateTime
 
-import lila.hub.LightTeam.TeamID
-import lila.user.User
+import lidraughts.hub.lightTeam.TeamId
+import lidraughts.user.User
+
+import lidraughts.db.dsl._
 
 final class SwissApi(
-    colls: SwissColls
-)(implicit ec: scala.concurrent.ExecutionContext) {
+    swissColl: Coll,
+    roundColl: Coll
+) {
 
   import BsonHandlers._
 
-  def create(data: SwissForm.SwissData, me: User, teamId: TeamID): Fu[Swiss] = {
+  def create(data: SwissForm.SwissData, me: User, teamId: TeamId): Fu[Swiss] = {
     val swiss = Swiss(
       _id = Swiss.makeId,
       name = data.name,
@@ -29,6 +32,6 @@ final class SwissApi(
       description = data.description,
       hasChat = data.hasChat | true
     )
-    colls.swiss.insert.one(swiss) inject swiss
+    swissColl.insert(swiss) inject swiss
   }
 }
