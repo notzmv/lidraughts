@@ -54,6 +54,8 @@ final class JsonView(
     )
   ).add("direction" -> direction.map(_.name))
     .add("initialFen" -> c.initialFen)
+    .add("external" -> c.isExternal.option(true))
+    .add("startsAt" -> c.external.flatMap(_.startsAt))
 
   private def iconChar(c: Challenge) =
     if (c.variant == draughts.variant.FromPosition) '*'

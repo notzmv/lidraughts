@@ -96,6 +96,8 @@ private[setup] final class FormFactory(
 
   def hookConfig(implicit ctx: UserContext): Fu[HookConfig] = savedConfig map (_.hook)
 
+  import lidraughts.common.Form.UTCDate._
+
   lazy val api = Form(
     mapping(
       "variant" -> optional(text.verifying(Variant.byKey.contains _)),
@@ -107,7 +109,8 @@ private[setup] final class FormFactory(
       "rated" -> boolean,
       "color" -> optional(color),
       "fen" -> fen,
-      "opponent" -> optional(nonEmptyText)
+      "opponent" -> optional(nonEmptyText),
+      "startsAt" -> optional(utcDate)
     )(ApiConfig.<<)(_.>>).verifying("invalidFen", _.validFen)
   )
 

@@ -29,6 +29,14 @@ object Setup extends LidraughtsController with TheftPrevention {
     enforce = Env.api.Net.RateLimit
   )
 
+  private[controllers] val PostExternalRateLimit = new lidraughts.memo.RateLimit[IpAddress](
+    credits = 30,
+    duration = 1 minute,
+    name = "setup post external",
+    key = "setup_post_external",
+    enforce = Env.api.Net.RateLimit
+  )
+
   def aiForm = Open { implicit ctx =>
     if (HTTPRequest isXhr ctx.req) {
       env.forms aiFilled get("fen").map(FEN) map { form =>

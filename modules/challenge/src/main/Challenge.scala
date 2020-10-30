@@ -142,7 +142,8 @@ object Challenge {
 
   case class ExternalChallenge(
       challengerAccepted: Boolean = false,
-      destUserAccepted: Boolean = false
+      destUserAccepted: Boolean = false,
+      startsAt: Option[DateTime] = None
   ) {
 
     def bothAccepted = challengerAccepted && destUserAccepted
@@ -177,7 +178,8 @@ object Challenge {
     challenger: Either[String, User],
     destUser: Option[User],
     rematchOf: Option[String],
-    external: Boolean = false
+    external: Boolean = false,
+    startsAt: Option[DateTime] = None
   ): Challenge = {
     val (colorChoice, finalColor) = color match {
       case "white" => ColorChoice.White -> draughts.White
@@ -208,7 +210,7 @@ object Challenge {
       createdAt = DateTime.now,
       seenAt = DateTime.now,
       expiresAt = inTwoWeeks,
-      external = external option ExternalChallenge()
+      external = external option ExternalChallenge(startsAt = startsAt)
     )
   }
 }

@@ -78,7 +78,7 @@ final class ChallengeApi(
 
   private def acceptExternal(challenge: Challenge, user: Option[User]): Fu[Option[Pov]] =
     user match {
-      case Some(u) =>
+      case Some(u) if challenge.external.flatMap(_.startsAt).fold(true)(_.isBeforeNow) =>
         val c = challenge.acceptExternal(u)
         (c.external ?? { _.bothAccepted }) ?? {
           c.destUserId.??(UserRepo.byId) flatMap { destUser => joiner(c, destUser) }

@@ -20,6 +20,7 @@ object external {
       moreJs = bits.js(c, json, false),
       moreCss = cssTag("challenge.page")
     ) {
+        val startsAt = c.external.flatMap(_.startsAt).filter(_.isAfterNow)
         main(cls := "page-small challenge-page challenge-external box box-pad")(
           c.status match {
             case Status.Created | Status.External | Status.Offline =>
@@ -33,11 +34,24 @@ object external {
                 c.notableInitialFen.map { fen =>
                   div(cls := "board-preview", views.html.game.bits.miniBoard(fen, color = !c.finalColor, boardSize = c.variant.boardSize))
                 },
-                if (player) {
+                if (startsAt.isDefined) startsAt.map { dt =>
+                  div(cls := "starts-at")(
+                    trans.startsAtX(absClientDateTime(dt)),
+                    ul(cls := "countdown")(
+                      List("Days", "Hours", "Minutes", "Seconds") map { t =>
+                        li(cls := t.toLowerCase)(span, t)
+                      }
+                    )
+                  )
+                }
+                else if (player) {
                   if (!c.mode.rated || ctx.isAuth) frag(
                     (c.mode.rated && c.unlimited) option
                       badTag(trans.bewareTheGameIsRatedButHasNoClock()),
-                    if (c.hasAcceptedExternal(ctx.me)) p(cls := "player-accepted")(trans.challengeAcceptedAndWaiting())
+                    if (c.hasAcceptedExternal(ctx.me)) frag(
+                      p(cls := "player-accepted")(trans.challengeAcceptedAndWaiting()),
+                      p(cls := "accepting-message")(trans.youWillBeRedirectedToTheGame())
+                    )
                     else postForm(cls := "accept", action := routes.Challenge.accept(c.id))(
                       submitButton(cls := "text button button-fat", dataIcon := "G")(trans.joinTheGame())
                     )
@@ -56,18 +70,23 @@ object external {
                 } else c.external map { e =>
                   val accepted = div(cls := "status")(span(dataIcon := "E"), trans.challengeAccepted())
                   val waiting = div(cls := "status")(trans.waitingForPlayer())
-                  div(cls := "accepting")(
-                    div(cls := "players")(
-                      div(
-                        div(cls := "player color-icon is white")(userIdLink(c.finalColor.fold(c.challengerUserId, c.destUserId), withOnline = false)),
-                        if (c.finalColor.fold(e.challengerAccepted, e.destUserAccepted)) accepted
-                        else waiting
-                      ),
-                      div(
-                        div(cls := "player color-icon is black")(userIdLink(c.finalColor.fold(c.destUserId, c.challengerUserId), withOnline = false)),
-                        if (c.finalColor.fold(e.destUserAccepted, e.challengerAccepted)) accepted
-                        else waiting
+                  frag(
+                    div(cls := "accepting")(
+                      div(cls := "players")(
+                        div(
+                          div(cls := "player color-icon is white")(userIdLink(c.finalColor.fold(c.challengerUserId, c.destUserId), withOnline = false)),
+                          if (c.finalColor.fold(e.challengerAccepted, e.destUserAccepted)) accepted
+                          else waiting
+                        ),
+                        div(
+                          div(cls := "player color-icon is black")(userIdLink(c.finalColor.fold(c.destUserId, c.challengerUserId), withOnline = false)),
+                          if (c.finalColor.fold(e.destUserAccepted, e.challengerAccepted)) accepted
+                          else waiting
+                        )
                       )
+                    ),
+                    p(cls := "accepting-message")(
+                      trans.youWillBeRedirectedToTheGame()
                     )
                   )
                 }

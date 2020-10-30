@@ -195,7 +195,7 @@ object Challenge extends LidraughtsController {
 
   def apiCreateExternal(userId: String) = OpenBody { implicit ctx =>
     implicit val req = ctx.body
-    Setup.PostRateLimit(HTTPRequest lastRemoteAddress req) {
+    Setup.PostExternalRateLimit(HTTPRequest lastRemoteAddress req) {
       Env.setup.forms.api.bindFromRequest.fold(
         jsonFormErrorDefaultLang,
         config => UserRepo enabledById userId.toLowerCase flatMap { challengerOption =>
@@ -217,10 +217,12 @@ object Challenge extends LidraughtsController {
                     challenger = Right(challengerUser),
                     destUser = opponentUser.some,
                     rematchOf = none,
-                    external = true
+                    external = true,
+                    startsAt = config.startsAt
                   )
                   (Env.challenge.api create challenge) map {
                     case true =>
+                      lidraughts.log("external challenge").info(s"${ctx.req.remoteAddress} $challenge")
                       JsonOk(env.jsonView.show(challenge, SocketVersion(0), lidraughts.challenge.Direction.Out.some))
                     case false =>
                       BadRequest(jsonError("Challenge not created"))

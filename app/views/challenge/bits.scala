@@ -16,12 +16,14 @@ object bits {
     frag(
       jsTag("challenge.js", defer = true),
       embedJsUnsafe(s"""lidraughts=window.lidraughts||{};customWs=true;lidraughts_challenge = ${
-        safeJsonValue(Json.obj(
-          "socketUrl" -> routes.Challenge.websocket(c.id, apiVersion.value).url,
-          "xhrUrl" -> routes.Challenge.show(c.id).url,
-          "owner" -> owner,
-          "data" -> json
-        ))
+        safeJsonValue(
+          Json.obj(
+            "socketUrl" -> routes.Challenge.websocket(c.id, apiVersion.value).url,
+            "xhrUrl" -> routes.Challenge.show(c.id).url,
+            "owner" -> owner,
+            "data" -> json
+          ).add("i18n" -> c.isExternal.option(jsI18n()))
+        )
       }""")
     )
 
@@ -42,5 +44,13 @@ object bits {
       )
     ),
     div(cls := "mode")(modeName(c.mode))
+  )
+
+  private def jsI18n()(implicit ctx: Context) = i18nJsObject(translations)
+  private val translations = List(
+    trans.nbDays,
+    trans.nbHours,
+    trans.nbMinutes,
+    trans.nbSeconds
   )
 }

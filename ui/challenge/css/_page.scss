@@ -79,7 +79,9 @@ $c-challenge: $c-secondary;
 }
 
 .challenge-external {
-  .player-accepted {
+  .player-accepted,
+  .accepting-message,
+  .starts-at {
     @extend %roboto;
     margin-top: 2em;
     font-size: 2em;
@@ -103,6 +105,18 @@ $c-challenge: $c-secondary;
           color: $c-challenge;
         }
       }
+    }
+  }
+  .countdown {
+    li {
+      display: inline-block;
+      list-style-type: none;
+      padding: 1.2em;
+      text-transform: uppercase;
+    }
+    li span {
+      font-size: 1.4em;
+      display: block;
     }
   }
 }
