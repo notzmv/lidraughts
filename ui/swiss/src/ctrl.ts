@@ -19,7 +19,6 @@ export default class SwissController {
   searching: boolean = false;
   redraw: () => void;
 
-  private watchingGameId: string;
   private lastStorage = window.lidraughts.storage.make('last-redirect');
 
   constructor(opts: SwissOpts, redraw: () => void) {
