@@ -338,6 +338,7 @@ lidraughts.redirect = function(obj) {
 lidraughts.reload = function() {
   if (lidraughts.redirectInProgress) return;
   lidraughts.hasToReload = true;
+  lidraughts.socket.disconnect();
   if (location.hash) location.reload();
   else location.href = location.href;
 };
