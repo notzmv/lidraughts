@@ -17,7 +17,7 @@ export function start(opts: SwissOpts) {
   const li = window.lidraughts;
   const element = document.querySelector('main.swiss') as HTMLElement;
   li.socket = li.StrongSocket(
-    '/swiss/' + opts.data.id, opts.data.socketVersion, {
+    '/swiss/' + opts.data.id + '/socket/v3', opts.data.socketVersion, {
       receive: (t, d) => ctrl.socket.receive(t, d)
     });
   opts.classes = element.getAttribute('class');

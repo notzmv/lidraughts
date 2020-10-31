@@ -1,5 +1,6 @@
 package controllers
 
+import play.api.libs.json._
 import play.api.mvc._
 
 import lidraughts.api.Context
@@ -52,6 +53,12 @@ object Swiss extends LidraughtsController {
             }
           }
       )
+  }
+
+  def websocket(id: String, apiVersion: Int) = SocketOption[JsValue] { implicit ctx =>
+    getSocketUid("sri") ?? { uid =>
+      env.socketHandler.join(id, uid, ctx.me, getSocketVersion, apiVersion)
+    }
   }
 
   private def canHaveChat(swiss: SwissModel)(implicit ctx: Context): Fu[Boolean] =

@@ -12,6 +12,8 @@ final class Env(
     config: Config,
     system: ActorSystem,
     db: lidraughts.db.Env,
+    flood: lidraughts.security.Flood,
+    hub: lidraughts.hub.Env,
     asyncCache: lidraughts.memo.AsyncCache.Builder,
     lightUserApi: lidraughts.user.LightUserApi
 ) {
@@ -51,6 +53,14 @@ final class Env(
   def version(swissId: Swiss.Id): Fu[SocketVersion] =
     socketMap.askIfPresentOrZero[SocketVersion](swissId.value)(GetVersion)
 
+  lazy val socketHandler = new SocketHandler(
+    swissColl = swissColl,
+    hub = hub,
+    socketMap = socketMap,
+    chat = hub.chat,
+    flood = flood
+  )
+
   private lazy val standingApi = new SwissStandingApi(
     swissColl = swissColl,
     playerColl = playerColl,
@@ -86,6 +96,8 @@ object Env {
     config = lidraughts.common.PlayApp loadConfig "swiss",
     system = lidraughts.common.PlayApp.system,
     db = lidraughts.db.Env.current,
+    flood = lidraughts.security.Env.current.flood,
+    hub = lidraughts.hub.Env.current,
     asyncCache = lidraughts.memo.Env.current.asyncCache,
     lightUserApi = lidraughts.user.Env.current.lightUserApi
   )
