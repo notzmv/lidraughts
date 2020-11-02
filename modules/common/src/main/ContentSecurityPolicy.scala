@@ -38,7 +38,6 @@ case class ContentSecurityPolicy(
     fontSrc = Nil,
     frameSrc = Nil,
     workerSrc = Nil,
-    imgSrc = Nil,
     scriptSrc = Nil
   )
 
