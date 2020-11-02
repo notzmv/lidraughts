@@ -3,17 +3,21 @@ package format
 
 class MoveGenPerfTest extends DraughtsTest {
 
-  args(skipAll = true)
+  args(skipAll = false)
 
   val captureFen = "W:WK23:B28,17,10,20,29,39,40,38,31,8,9"
-  val extremeFrisianFen = "W:WK50:B3,7,10,12,13,14,17,20,21,23,25,30,32,36,38,39,41,43,K47"
-  val extremeFrisianFen2 = "W:WK5:BK2,K4,K7,K8,K9,K10,K11,K13,K15,K16,K18,K19,K20,K21,K22,K24,K27,K29,K30,K31,K32,K33,K35,K36,K38,K40,K41,K42,K43,K44,K47,K49"
+  val extremeCaptureMan = "W:W23:B7,8,9,10,17,18,19,20,27,28,29,30,37,38,39,40"
+  val extremeCaptureKing = "W:WK23:B8,9,10,11,17,18,19,20,27,28,29,30,31,38,39,42,44"
+  val extremeFrisianKing = "W:WK50:B3,7,10,12,13,14,17,20,21,23,25,30,32,36,38,39,41,43,K47"
+  val extremeFrisianKing2 = "W:WK5:BK2,K4,K7,K8,K9,K10,K11,K13,K15,K16,K18,K19,K20,K21,K22,K24,K27,K29,K30,K31,K32,K33,K35,K36,K38,K40,K41,K42,K43,K44,K47,K49"
+  val extremeFrisianMan = "W:W50:B18,22,23,24,27,29,32,33,34,38,40,42,43,44,K49"
+  val extremeFrisianMan2 = "W:W50:B7,9,11,12,13,14,16,18,20,21,22,23,24,27,29,31,32,33,34,36,38,40,41,42,43,44,K47,K49"
 
   "generate frisian moves" should {
     "once" in {
       val nb = 50
       val iterations = 100
-      def runOne = Forsyth.<<@(draughts.variant.Frisian, extremeFrisianFen2).get.validMoves
+      def runOne = Forsyth.<<@(draughts.variant.Frisian, extremeFrisianKing2).get.validMoves
       def run(its: Int) { for (i ← 1 to its) runOne }
       println("warming up")
       if (nb * iterations > 1) {
