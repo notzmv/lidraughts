@@ -199,7 +199,7 @@ abstract class Variant private[variant] (
     }
 
     if (extraCaptsCache.exists(_.size > maxCache)) {
-      logger.warn(s"shortRangeCaptures aborted with ${extraCaptsCache.get.size} entries for ${actor.piece} at ${actor.pos.shortKey} on ${draughts.format.Forsyth.exportBoard(actor.board)}")
+      logger.warn(s"shortRangeCaptures($finalSquare) aborted with ${extraCaptsCache.get.size} entries for ${actor.piece} at ${actor.pos.shortKey} on ${draughts.format.Forsyth.exportBoard(actor.board)}")
     }
 
     buf.flatMap { m =>
@@ -288,7 +288,7 @@ abstract class Variant private[variant] (
     }
 
     if (extraCaptsCache.exists(_.size > maxCache)) {
-      logger.warn(s"longRangeCaptures aborted with ${extraCaptsCache.get.size} entries for ${actor.piece} at ${actor.pos.shortKey} on ${draughts.format.Forsyth.exportBoard(actor.board)}")
+      logger.warn(s"longRangeCaptures($finalSquare) aborted with ${extraCaptsCache.get.size} entries for ${actor.piece} at ${actor.pos.shortKey} on ${draughts.format.Forsyth.exportBoard(actor.board)}")
     }
 
     buf.toList
