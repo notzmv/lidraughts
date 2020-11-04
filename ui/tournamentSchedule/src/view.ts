@@ -118,7 +118,7 @@ function iconOf(tour, perfIcon) {
 
 let mousedownAt: number[] | undefined;
 
-function renderTournament(ctrl, tour) {
+function renderTournament(ctrl, tour, large) {
   let width = tour.minutes * scale;
   const left = leftPos(tour.startsAt);
   // moves content into viewport, for long tourneys and marathons
@@ -127,7 +127,16 @@ function renderTournament(ctrl, tour) {
       leftPos(now) - left - 380)); // distance from Now
   // cut right overflow to fit viewport and not widen it, for marathons
   width = Math.min(width, leftPos(stopTime) - left);
-
+  
+  const nbPlayers = tour.nbPlayers ? h('span.nb-players', {
+    attrs: { 'data-icon': 'r' }
+  }, tour.nbPlayers) : null;
+  const infos = [
+    displayClock(tour.clock) + ' ',
+    tour.variant.key === 'standard' ? null : tour.variant.name + ' ',
+    (tour.position || tour.openingTable) ? ctrl.trans('thematic') + ' ' : null,
+    tour.rated ? ctrl.trans('ratedTournament') : ctrl.trans('casualTournament')
+  ];
   return h('a.tsht', {
     class: tournamentClass(tour),
     attrs: {
@@ -143,17 +152,11 @@ function renderTournament(ctrl, tour) {
     } : {}),
     h('span.body', [
       h('span.name', tour.fullName),
-      h('span.infos', [
-        h('span.text', [
-          displayClock(tour.clock) + ' ',
-          tour.variant.key === 'standard' ? null : tour.variant.name + ' ',
-          (tour.position || tour.openingTable) ? ctrl.trans('thematic') + ' ' : null,
-          tour.rated ? ctrl.trans('ratedTournament') : ctrl.trans('casualTournament')
-        ]),
-        tour.nbPlayers ? h('span.nb-players', {
-          attrs: { 'data-icon': 'r' }
-        }, tour.nbPlayers) : null
-      ])
+      large ? h('span.infos', [
+        h('span.text', infos),
+        nbPlayers
+      ]) : h('span.infos', infos),
+      !large ? nbPlayers : null
     ])
   ]);
 }
@@ -245,7 +248,7 @@ export default function(ctrl) {
       ...tourLanes.map(lane => {
         const large = lane.find(t => isSystemTournament(t) || t.major || t.battle);
         return h('div.tournamentline' + (large ? '.large' : ''), lane.map(tour =>
-          renderTournament(ctrl, tour)))
+          renderTournament(ctrl, tour, large)))
       })
     ])
   ]);
