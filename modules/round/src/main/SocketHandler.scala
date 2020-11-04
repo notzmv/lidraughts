@@ -168,7 +168,9 @@ private[round] final class SocketHandler(
         )
         // non-game chat, for tournament or simul games; only for players
         val chatSetup = playerId.isDefined ?? {
-          pov.game.tournamentId.map(Chat.tournamentSetup) orElse pov.game.simulId.map(Chat.simulSetup)
+          pov.game.tournamentId.map(Chat.tournamentSetup) orElse
+            pov.game.swissId.map(Chat.swissSetup) orElse
+            pov.game.simulId.map(Chat.simulSetup)
         }
         val onPing: Handler.OnPing =
           if (member.owner) (_, _, _, _) => {
