@@ -127,8 +127,13 @@ $c-tour-draughts64: #3f6265;
   &-draughts64 {
     background-color: $c-tour-draughts64;
   }
-  &-short.tsht-thematic {
-    letter-spacing: -1px;
+  &-short {
+    &.tsht-thematic {
+      letter-spacing: -1px;
+    }
+    .name {
+      margin-right: 4px;
+    }
   }
   span {
     margin-right: 4px;
@@ -141,38 +146,42 @@ $c-tour-draughts64: #3f6265;
       vertical-align: middle;
     }
   }
-  .name, .body {
+  .name, .body, .infos {
     @extend %nowrap-ellipsis;
   }
   .name {
     display: inline-block;
     vertical-align: top;
     max-width: 66%;
+    padding-right: 6px;
   }
   .body {
     flex: 1 0;
     margin-right: 0;
-  }
-  .infos {
     display: inline-flex;
   }
   .infos .text {
     @extend %ellipsis;
     flex: 1 1;
   }
-  .infos .nb-players {
+  .nb-players {
     flex: 0 0 auto;
+    margin-right: 2px;
   }
 
+  .large & .body {
+    display: block;
+  }
   .large & .icon {
     font-size: 2.4em;
     margin: 0 .2em 0 .2em;
   }
   .large & .name {
-    display: block;
+    display: flex;
     max-width: none;
   }
-  .large & .name {
-    display: flex;
+  .large & .infos {
+    display: inline-flex;
+    max-width: 100%;
   }
 }
