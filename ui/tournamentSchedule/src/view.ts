@@ -123,7 +123,7 @@ function renderTournament(ctrl, tour, large) {
   const left = leftPos(tour.startsAt);
   // moves content into viewport, for long tourneys and marathons
   const paddingLeft = tour.minutes < 90 ? 0 : Math.max(0,
-    Math.min(width - 250, // max padding, reserved text space
+    Math.min(width - (large ? 300 : 370), // max padding, reserved text space
       leftPos(now) - left - 380)); // distance from Now
   // cut right overflow to fit viewport and not widen it, for marathons
   width = Math.min(width, leftPos(stopTime) - left);
