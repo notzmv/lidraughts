@@ -18,6 +18,7 @@ final class Env(
     system: ActorSystem,
     asyncCache: lidraughts.memo.AsyncCache.Builder,
     db: lidraughts.db.Env,
+    flood: lidraughts.security.Flood,
     lightUserApi: lidraughts.user.LightUserApi
 ) {
 
@@ -81,6 +82,13 @@ final class Env(
   def version(teamId: Team.ID): Fu[SocketVersion] =
     socketMap.askIfPresentOrZero[SocketVersion](teamId)(GetVersion)
 
+  lazy val socketHandler = new SocketHandler(
+    hub = hub,
+    socketMap = socketMap,
+    chat = hub.chat,
+    flood = flood
+  )
+
   private lazy val notifier = new Notifier(notifyApi = notifyApi)
 
   system.lidraughtsBus.subscribeFun('shadowban) {
@@ -98,6 +106,7 @@ object Env {
     system = lidraughts.common.PlayApp.system,
     asyncCache = lidraughts.memo.Env.current.asyncCache,
     db = lidraughts.db.Env.current,
+    flood = lidraughts.security.Env.current.flood,
     lightUserApi = lidraughts.user.Env.current.lightUserApi
   )
 }

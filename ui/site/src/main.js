@@ -911,6 +911,7 @@
 
   function startTeam(cfg) {
     lidraughts.socket = lidraughts.StrongSocket('/team/' + cfg.id + '/socket/v3', cfg.socketVersion);
+    cfg.chat && lidraughts.makeChat(cfg.chat);
   }
 
   ////////////////

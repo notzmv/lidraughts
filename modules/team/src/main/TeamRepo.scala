@@ -16,6 +16,8 @@ object TeamRepo {
 
   def byOrderedIds(ids: Seq[Team.ID]) = coll.byOrderedIds[Team, Team.ID](ids)(_.id)
 
+  def exists(id: String) = coll exists $id(id)
+
   def cursor(
     selector: Bdoc,
     readPreference: ReadPreference = ReadPreference.secondaryPreferred

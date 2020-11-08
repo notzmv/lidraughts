@@ -54,6 +54,12 @@ object Team extends LidraughtsController {
   private def canHaveChat(info: lidraughts.app.mashup.TeamInfo)(implicit ctx: Context): Boolean =
     info.mine && !ctx.kid // no chats for kids
 
+  def websocket(id: String, apiVersion: Int) = SocketOption[JsValue] { implicit ctx =>
+    getSocketUid("sri") ?? { uid =>
+      Env.team.socketHandler.join(id, uid, ctx.me, getSocketVersion, apiVersion)
+    }
+  }
+
   def users(teamId: String) = Action.async { req =>
     import Api.limitedDefault
     Env.team.api.team(teamId) flatMap {
