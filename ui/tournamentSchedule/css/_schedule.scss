@@ -40,6 +40,9 @@ $c-tour-draughts64: #3f6265;
     &.large {
       height: 4em;
     }
+    &:not(.large) .tsht-short{
+      letter-spacing: -1px;
+    }
   }
   .timeheader {
     position: absolute;
@@ -127,13 +130,8 @@ $c-tour-draughts64: #3f6265;
   &-draughts64 {
     background-color: $c-tour-draughts64;
   }
-  &-short {
-    &.tsht-thematic {
-      letter-spacing: -1px;
-    }
-    .name {
-      padding-right: 0;
-    }
+  &-short.tsht-thematic {
+    letter-spacing: -1px;
   }
   span {
     margin-right: 4px;
@@ -154,6 +152,9 @@ $c-tour-draughts64: #3f6265;
     vertical-align: top;
     max-width: 66%;
     padding-right: 6px;
+  }
+  &.tsht-short .name {
+    padding-right: 0;
   }
   .body {
     flex: 1 0;
