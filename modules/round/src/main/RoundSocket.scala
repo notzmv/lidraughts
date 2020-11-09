@@ -144,7 +144,7 @@ private[round] final class RoundSocket(
       whitePlayer.userId = game.player(White).userId
       blackPlayer.userId = game.player(Black).userId
       mightBeSimul = game.isSimul
-      game.tournamentId orElse game.simulId map Chat.Id.apply foreach { chatId =>
+      game.tournamentId orElse game.swissId orElse game.simulId map Chat.Id.apply foreach { chatId =>
         chatIds = chatIds.copy(priv = chatId)
         buscriptions.chat
       }
