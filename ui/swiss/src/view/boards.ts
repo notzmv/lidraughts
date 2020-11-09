@@ -3,20 +3,20 @@ import { VNode } from 'snabbdom/vnode';
 import { player as renderPlayer } from './util';
 import { Board, BoardPlayer } from '../interfaces';
 
-export function many(boards: Board[]): VNode {
-  return h('div.swiss__boards.now-playing', boards.map(renderBoard));
+export function many(boards: Board[], boardSize: BoardData): VNode {
+  return h('div.swiss__boards.now-playing', boards.map(board => renderBoard(board, boardSize)));
 }
 
-export function top(boards: Board[]): VNode {
+export function top(boards: Board[], boardSize: BoardData): VNode {
   return h('div.swiss__board__top.swiss__table',
-    boards.slice(0, 1).map(renderBoard)
+    boards.slice(0, 1).map(board => renderBoard(board, boardSize))
   );
 }
 
-const renderBoard = (board: Board): VNode =>
+const renderBoard = (board: Board, boardSize: BoardData): VNode =>
     h('div.swiss__board', [
       boardPlayer(board.black),
-      miniBoard(board),
+      miniBoard(board, boardSize),
       boardPlayer(board.white),
     ])
 
@@ -26,15 +26,16 @@ const boardPlayer = (player: BoardPlayer) =>
     renderPlayer(player, true, true)
   ]);
 
-function miniBoard(board: Board) {
-  return h('a.mini-board.live.is2d.mini-board-' + board.id, {
+function miniBoard(board: Board, boardSize: BoardData) {
+  return h('a.mini-board.live.is2d.mini-board-' + board.id + '.is' + boardSize.key, {
     key: board.id,
     attrs: {
       href: '/' + board.id,
       'data-live': board.id,
       'data-color': 'white',
       'data-fen': board.fen,
-      'data-lastmove': board.lastMove
+      'data-lastmove': board.lastMove,
+      'data-board': `${boardSize.size[0]}x${boardSize.size[1]}`,
     },
     hook: {
       insert(vnode) {

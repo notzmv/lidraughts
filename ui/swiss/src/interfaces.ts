@@ -21,7 +21,7 @@ export interface SwissData {
   createdBy: number;
   startsAt: string;
   clock: Clock;
-  variant: string;
+  variant: VariantData;
   me?: MyInfo;
   canJoin: boolean;
   joinTeam?: string;
@@ -48,6 +48,11 @@ export interface SwissData {
   }
   podium?: PodiumPlayer[];
   isRecentlyFinished?: boolean;
+}
+
+export interface VariantData {
+  key: VariantKey
+  board: BoardData
 }
 
 export type Status = 'created' | 'started' | 'finished';

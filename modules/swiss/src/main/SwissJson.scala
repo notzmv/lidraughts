@@ -8,6 +8,7 @@ import scala.concurrent.ExecutionContext
 import lidraughts.common.{ GreatPlayer, LightUser }
 import lidraughts.db.dsl._
 import lidraughts.game.Game
+import lidraughts.game.JsonView.boardSizeWriter
 import lidraughts.hub.lightTeam.TeamId
 import lidraughts.quote.Quote.quoteWriter
 import lidraughts.rating.PerfType
@@ -48,7 +49,7 @@ final class SwissJson(
         "startsAt" -> formatDate(swiss.startsAt),
         "name" -> swiss.name,
         "clock" -> swiss.clock,
-        "variant" -> swiss.variant.key,
+        "variant" -> swiss.variant,
         "round" -> swiss.round,
         "nbRounds" -> swiss.actualNbRounds,
         "nbPlayers" -> swiss.nbPlayers,
@@ -257,6 +258,13 @@ object SwissJson {
       "rating" -> player.rating,
       "user" -> player.user
     )
+
+  implicit val variantWriter: OWrites[draughts.variant.Variant] = OWrites { v =>
+    Json.obj(
+      "key" -> v.key,
+      "board" -> v.boardSize
+    )
+  }
 
   implicit private val roundNumberWriter: Writes[SwissRound.Number] = Writes[SwissRound.Number] { n =>
     JsNumber(n.value)

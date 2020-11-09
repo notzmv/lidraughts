@@ -15,7 +15,7 @@
       color: $c-font-clear;
     }
   }
-  &:not(.editable) a {
+  &:not(.editable) > a {
     padding: .3em;
   }
   &.editable > div {
