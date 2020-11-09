@@ -14,12 +14,12 @@ object index {
     moreCss = cssTag("practice.index"),
     moreJs = embedJsUnsafe(s"""$$('.do-reset').on('click', function() {
 if (confirm('You will lose your practice progress!')) this.parentNode.submit();
-});""")
-  /*openGraph = lidraughts.app.ui.OpenGraph(
+});"""),
+    openGraph = lidraughts.app.ui.OpenGraph(
       title = "Practice your draughts",
       description = "Learn how to master the most common draughts positions",
       url = s"$netBaseUrl${routes.Practice.index}"
-    ).some*/
+    ).some
   ) {
       main(cls := "page-menu")(
         st.aside(cls := "page-menu__menu practice-side")(
@@ -29,17 +29,18 @@ if (confirm('You will lose your practice progress!')) this.parentNode.submit();
           div(cls := "progress")(
             div(cls := "text")("Progress: ", data.progressPercent, "%"),
             div(cls := "bar", style := s"width: ${data.progressPercent}%")
-          )
-        /*postForm(action := routes.Practice.reset)(
+          ),
+          postForm(action := routes.Practice.reset)(
             if (ctx.isAuth) (data.nbDoneChapters > 0) option a(cls := "do-reset")("Reset my progress")
             else a(href := routes.Auth.signup)("Sign up to save your progress")
-          )*/
+          )
         ),
         div(cls := "page-menu__content practice-app")(
           data.structure.sections.map { section =>
             st.section(
               h2(section.name),
-              div(cls := "studies")( /*section.studies.map { stud =>
+              div(cls := "studies")(
+                section.studies.map { stud =>
                   val prog = data.progressOn(stud.id)
                   a(
                     cls := s"study ${if (prog.complete) "done" else "ongoing"}",
@@ -54,7 +55,8 @@ if (confirm('You will lose your practice progress!')) this.parentNode.submit();
                         em(stud.desc)
                       )
                     )
-                }*/ )
+                }
+              )
             )
           }
         )

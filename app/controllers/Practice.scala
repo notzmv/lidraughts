@@ -17,16 +17,19 @@ object Practice extends LidraughtsController {
   private def studyEnv = Env.study
 
   def index = Open { implicit ctx =>
+    pageHit
     env.api.get(ctx.me) flatMap { up =>
       NoCache(Ok(html.practice.index(up))).fuccess
     }
   }
 
   def show(sectionId: String, studySlug: String, studyId: String) = Open { implicit ctx =>
+    pageHit
     OptionFuResult(env.api.getStudyWithFirstOngoingChapter(ctx.me, studyId))(showUserPractice)
   }
 
   def showChapter(sectionId: String, studySlug: String, studyId: String, chapterId: String) = Open { implicit ctx =>
+    pageHit
     OptionFuResult(env.api.getStudyWithChapter(ctx.me, studyId, chapterId))(showUserPractice)
   }
 
@@ -40,8 +43,7 @@ object Practice extends LidraughtsController {
     env.api.structure.get.flatMap { struct =>
       struct.sections.find(_.id == sectionId).fold(notFound) { section =>
         select(section) ?? { study =>
-          //Redirect(routes.Practice.show(section.id, study.slug, study.id.value)).fuccess
-          Redirect(routes.Lobby.home()).fuccess
+          Redirect(routes.Practice.show(section.id, study.slug, study.id.value)).fuccess
         }
       }
     }
@@ -89,8 +91,7 @@ object Practice extends LidraughtsController {
   }
 
   def reset = AuthBody { implicit ctx => me =>
-    //env.api.progress.reset(me) inject Redirect(routes.Practice.index)
-    env.api.progress.reset(me) inject Redirect(routes.Lobby.home())
+    env.api.progress.reset(me) inject Redirect(routes.Practice.index)
   }
 
   def config = Auth { implicit ctx => me =>
@@ -108,7 +109,7 @@ object Practice extends LidraughtsController {
       } { text =>
         ~env.api.config.set(text).right.toOption >>-
           env.api.structure.clear >>
-          Env.mod.logApi.practiceConfig(me.id) inject Redirect(routes.Lobby.home()) //Redirect(routes.Practice.config)
+          Env.mod.logApi.practiceConfig(me.id) inject Redirect(routes.Practice.config)
       }
     }
   }
