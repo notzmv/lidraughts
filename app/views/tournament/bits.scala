@@ -4,6 +4,7 @@ import lidraughts.api.Context
 import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
 import lidraughts.i18n.{ I18nKeys => trans }
+import lidraughts.tournament.Tournament
 
 import controllers.routes
 
@@ -23,7 +24,7 @@ object bits {
         )
       }
 
-  def enterable(tours: List[lidraughts.tournament.Tournament]) =
+  def enterable(tours: List[Tournament]) =
     table(cls := "tournaments")(
       tours map { tour =>
         tr(
@@ -37,38 +38,43 @@ object bits {
       }
     )
 
-  def forTeam(tours: List[lidraughts.tournament.Tournament])(implicit ctx: Context) =
+  def forTeam(tours: List[Tournament])(implicit ctx: Context) =
     table(cls := "slist")(
       tbody(
         tours map { t =>
           tr(
-            td(cls := "icon")(iconTag(tournamentIconChar(t))),
-            td(cls := "header")(
-              a(href := routes.Tournament.show(t.id))(
-                span(cls := "name")(t.fullName),
-                span(cls := "setup")(
-                  t.clock.show,
-                  " • ",
-                  if (t.variant.exotic) t.variant.name else t.perfType.map(_.name),
-                  t.isThematic option frag(" • ", trans.thematic()),
-                  " • ",
-                  t.mode.fold(trans.casualTournament, trans.ratedTournament)(),
-                  " • ",
-                  t.durationString
+            cls := List(
+              "enterable" -> t.isEnterable,
+              "soon" -> t.isNowOrSoon
+            )
+          )(
+              td(cls := "icon")(iconTag(tournamentIconChar(t))),
+              td(cls := "header")(
+                a(href := routes.Tournament.show(t.id))(
+                  span(cls := "name")(t.fullName),
+                  span(cls := "setup")(
+                    t.clock.show,
+                    " • ",
+                    if (t.variant.exotic) t.variant.name else t.perfType.map(_.name),
+                    t.isThematic option frag(" • ", trans.thematic()),
+                    " • ",
+                    t.mode.fold(trans.casualTournament, trans.ratedTournament)(),
+                    " • ",
+                    t.durationString
+                  )
                 )
-              )
-            ),
-            td(cls := "infos")(
-              t.teamBattle map { battle =>
-                frag(battle.teams.size, " teams battle")
-              } getOrElse {
-                "Inner team"
-              },
-              br,
-              momentFromNowOnce(t.startsAt)
-            ),
-            td(cls := "text", dataIcon := "r")(t.nbPlayers.localize)
-          )
+              ),
+              td(cls := "infos")(
+                t.teamBattle map { battle =>
+                  frag(battle.teams.size, " teams battle")
+                } getOrElse {
+                  "Inner team"
+                },
+                br,
+                momentFromNowOnce(t.startsAt)
+              ),
+              td(cls := "text", dataIcon := "r")(t.nbPlayers.localize)
+            )
         }
       )
     )

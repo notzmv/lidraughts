@@ -1,61 +1,86 @@
 package views.html.team
 
+import play.api.libs.json.Json
+
 import lidraughts.api.Context
 import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
 import lidraughts.common.paginator.Paginator
-import lidraughts.common.String.html.richText
+import lidraughts.common.String.html.{ richText, safeJsonValue }
+import lidraughts.team.Team
 
 import controllers.routes
 
 object show {
 
-  def apply(t: lidraughts.team.Team, members: Paginator[lidraughts.team.MemberWithUser], info: lidraughts.app.mashup.TeamInfo)(implicit ctx: Context) =
+  def apply(
+    t: Team,
+    members: Paginator[lidraughts.common.LightUser],
+    info: lidraughts.app.mashup.TeamInfo,
+    chatOption: Option[lidraughts.chat.UserChat.Mine],
+    socketVersion: Option[lidraughts.socket.Socket.SocketVersion]
+  )(implicit ctx: Context) =
     bits.layout(
       title = t.name,
       openGraph = lidraughts.app.ui.OpenGraph(
         title = s"${t.name} team",
         url = s"$netBaseUrl${routes.Team.show(t.id).url}",
         description = shorten(t.description, 152)
-      ).some
-    )(
-        main(cls := "page-menu")(
-          bits.menu(none),
-          div(cls := "team-show page-menu__content box team-show")(
-            div(cls := "box__top")(
-              h1(cls := "text", dataIcon := "f")(t.name, " ", em("TEAM")),
-              div(
-                if (t.disabled) span(cls := "staff")("CLOSED")
-                else trans.nbMembers.plural(t.nbMembers, strong(t.nbMembers.localize))
+      ).some,
+      moreJs =
+        for {
+          v <- socketVersion
+          chat <- chatOption
+        } yield frag(
+          jsAt(s"compiled/lidraughts.chat${isProd ?? (".min")}.js"),
+          embedJsUnsafe(s"""lidraughts.team=${
+            safeJsonValue(
+              Json.obj(
+                "id" -> t.id,
+                "socketVersion" -> v.value,
+                "chat" -> views.html.chat.json(
+                  chat.chat,
+                  name = trans.chatRoom.txt(),
+                  timeout = chat.timeout,
+                  public = true,
+                  resourceId = lidraughts.chat.Chat.ResourceId(s"team/${chat.chat.id}"),
+                  localMod = ctx.userId has t.createdBy
+                )
               )
-            ),
-            (info.mine || t.enabled) option div(cls := "team-show__content")(
+            )
+          }""")
+        )
+    )(
+        main(cls := "team-show box", socketVersion.map { v =>
+          data("socket-version") := v.value
+        })(
+          div(cls := "box__top")(
+            h1(cls := "text", dataIcon := "f")(t.name, " ", em("TEAM")),
+            div(
+              if (t.disabled) span(cls := "staff")("CLOSED")
+              else trans.nbMembers.plural(t.nbMembers, strong(t.nbMembers.localize))
+            )
+          ),
+          (info.mine || t.enabled) option div(cls := "team-show__content")(
+            div(cls := "team-show__content__col1")(
               st.section(cls := "team-show__meta")(
                 p(trans.teamLeader(), ": ", userIdLink(t.createdBy.some))
               ),
-
-              div(cls := "team-show__members")(
-                st.section(cls := "recent-members")(
-                  h2(trans.teamRecentMembers()),
-                  div(cls := "userlist infinitescroll")(
-                    pagerNext(members, np => routes.Team.show(t.id, np).url),
-                    members.currentPageResults.map { member =>
-                      div(cls := "paginated")(userLink(member.user))
-                    }
+              chatOption.isDefined option frag(
+                views.html.chat.frag,
+                div(
+                  cls := "chat__members",
+                  aria.live := "off",
+                  aria.relevant := "additions removals text"
+                )(
+                    span(cls := "number")(nbsp),
+                    " ",
+                    trans.spectators.txt().replace(":", ""),
+                    " ",
+                    span(cls := "list")
                   )
-                )
               ),
-              st.section(cls := "team-show__desc")(
-                richText(t.description),
-                t.location.map { loc =>
-                  frag(br, trans.location(), ": ", richText(loc))
-                },
-                info.hasRequests option div(cls := "requests")(
-                  h2(info.requests.size, " join requests"),
-                  views.html.team.request.list(info.requests, t.some)
-                )
-              ),
-              st.section(cls := "team-show__actions")(
+              div(cls := "team-show__actions")(
                 (t.enabled && !info.mine) option frag(
                   if (info.requestedByMe) strong("Your join request is being reviewed by the team leader")
                   else ctx.me.??(_.canTeam) option
@@ -67,8 +92,6 @@ object show {
                   postForm(cls := "quit", action := routes.Team.quit(t.id))(
                     submitButton(cls := "button button-empty button-red confirm")(trans.quitTeam.txt())
                   ),
-                (info.createdByMe || isGranted(_.Admin)) option
-                  a(href := routes.Team.edit(t.id), cls := "button button-empty text", dataIcon := "%")(trans.settings()),
                 info.createdByMe option frag(
                   a(href := routes.Tournament.teamBattleForm(t.id), cls := "button button-empty text", dataIcon := "g")(
                     span(
@@ -88,46 +111,62 @@ object show {
                       em("Slow and clunky, a boomer's favourite")
                     )
                   )
+                ),
+                (info.createdByMe || isGranted(_.Admin)) option
+                  a(href := routes.Team.edit(t.id), cls := "button button-empty text", dataIcon := "%")(trans.settings())
+              ),
+              div(cls := "team-show__members")(
+                st.section(cls := "recent-members")(
+                  h2(trans.teamRecentMembers()),
+                  div(cls := "userlist infinitescroll")(
+                    pagerNext(members, np => routes.Team.show(t.id, np).url),
+                    members.currentPageResults.map { member =>
+                      div(cls := "paginated")(lightUserLink(member))
+                    }
+                  )
                 )
+              )
+            ),
+            div(cls := "team-show__content__col2")(
+              st.section(cls := "team-show__desc")(
+                richText(t.description),
+                t.location.map { loc =>
+                  frag(br, trans.location(), ": ", richText(loc))
+                }
+              ),
+              info.hasRequests option div(cls := "team-show__requests")(
+                h2(info.requests.size, " join requests"),
+                views.html.team.request.list(info.requests, t.some)
               ),
               div(cls := "team-show__tour-forum")(
                 info.tournaments.nonEmpty option frag(
                   st.section(cls := "team-show__tour team-tournaments")(
-                    h2(dataIcon := "g", cls := "text")(trans.tournaments()),
+                    h2(a(href := routes.Team.tournaments(t.id))(trans.tournaments())),
                     info.tournaments.span(_.isCreated) match {
                       case (created, started) =>
-                        frag(
-                          views.html.tournament.bits.forTeam(created.sortBy(_.startsAt)),
-                          views.html.tournament.bits.forTeam(started)
-                        )
+                        views.html.tournament.bits.forTeam(created.sortBy(_.startsAt) ::: started)
                     }
                   )
                 ),
                 info.swisses.nonEmpty option frag(
                   st.section(cls := "team-show__tour team-swisses")(
-                    h2(dataIcon := "g", "Swiss tournaments"),
+                    h2("Swiss tournaments"),
                     info.swisses.span(_.isCreated) match {
                       case (created, started) =>
-                        frag(
-                          views.html.swiss.bits.forTeam(created.sortBy(_.startsAt)),
-                          views.html.swiss.bits.forTeam(started)
-                        )
+                        views.html.swiss.bits.forTeam(created.sortBy(_.startsAt) ::: started)
                     }
                   )
                 ),
                 NotForKids {
                   st.section(cls := "team-show__forum")(
-                    h2(dataIcon := "d", cls := "text")(
-                      a(href := teamForumUrl(t.id))(trans.forum()),
-                      " (", info.forumNbPosts, ")"
-                    ),
+                    h2(a(href := teamForumUrl(t.id))(trans.forum())),
                     info.forumPosts.take(10).map { post =>
-                      st.article(
-                        p(cls := "meta")(
-                          a(href := routes.ForumPost.redirect(post.postId))(post.topicName),
+                      a(cls := "team-show__forum__post", href := routes.ForumPost.redirect(post.postId))(
+                        div(cls := "meta")(
+                          strong(post.topicName),
                           em(
-                            userIdLink(post.userId, withOnline = false),
-                            " ",
+                            post.userId map usernameOrId,
+                            " • ",
                             momentFromNow(post.createdAt)
                           )
                         ),

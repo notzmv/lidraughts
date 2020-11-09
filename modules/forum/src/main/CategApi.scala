@@ -20,8 +20,6 @@ private[forum] final class CategApi(env: Env) {
     }).sequenceFu
   } yield views
 
-  def teamNbPosts(slug: String): Fu[Int] = CategRepo nbPosts teamSlug(slug)
-
   def makeTeam(slug: String, name: String): Funit =
     CategRepo.nextPosition flatMap { position =>
       val categ = Categ(

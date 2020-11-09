@@ -238,6 +238,7 @@
     else if (lidraughts.puzzle) startPuzzle(lidraughts.puzzle);
     else if (lidraughts.tournament) startTournament(lidraughts.tournament);
     else if (lidraughts.simul) startSimul(lidraughts.simul);
+    else if (lidraughts.team) startTeam(lidraughts.team);
 
     // delay so round starts first (just for perceived perf)
     lidraughts.requestIdleCallback(function() {
@@ -905,6 +906,11 @@
     cfg.socketSend = lidraughts.socket.send;
     cfg.$side = $('.simul__side').clone();
     simul = LidraughtsSimul(cfg);
+  }
+
+  function startTeam(cfg) {
+    lidraughts.socket = lidraughts.StrongSocket('/team/' + cfg.id + '/socket/v3', cfg.socketVersion);
+    cfg.chat && lidraughts.makeChat(cfg.chat);
   }
 
   ////////////////

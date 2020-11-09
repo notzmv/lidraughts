@@ -12,7 +12,6 @@ case class TeamInfo(
     createdByMe: Boolean,
     requestedByMe: Boolean,
     requests: List[RequestWithUser],
-    forumNbPosts: Int,
     forumPosts: List[MiniForumPost],
     tournaments: List[Tournament],
     swisses: List[Swiss]
@@ -26,7 +25,6 @@ case class TeamInfo(
 final class TeamInfoApi(
     api: TeamApi,
     swissApi: SwissApi,
-    getForumNbPosts: String => Fu[Int],
     getForumPosts: String => Fu[List[MiniForumPost]],
     preloadTeams: Set[Team.ID] => Funit
 ) {
@@ -35,9 +33,8 @@ final class TeamInfoApi(
     requests ← (team.enabled && me.??(m => team.isCreator(m.id))) ?? api.requestsWithUsers(team)
     mine <- me.??(m => api.belongsTo(team.id, m.id))
     requestedByMe ← !mine ?? me.??(m => RequestRepo.exists(team.id, m.id))
-    forumNbPosts ← getForumNbPosts(team.id)
     forumPosts ← getForumPosts(team.id)
-    tours <- lidraughts.tournament.TournamentRepo.byTeam(team.id, 10)
+    tours <- lidraughts.tournament.TournamentRepo.byTeam(team.id, 5)
     _ <- tours.nonEmpty ?? {
       preloadTeams(tours.flatMap(_.teamBattle.??(_.teams)).toSet)
     }
@@ -47,7 +44,6 @@ final class TeamInfoApi(
     createdByMe = ~me.map(m => team.isCreator(m.id)),
     requestedByMe = requestedByMe,
     requests = requests,
-    forumNbPosts = forumNbPosts,
     forumPosts = forumPosts,
     tournaments = tours,
     swisses = swisses

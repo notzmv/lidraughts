@@ -36,7 +36,6 @@ final class TeamSearchApi(client: ESClient) extends SearchReadApi[Team, Query] {
       val maxEntries = Int.MaxValue
 
       TeamRepo.cursor(
-        selector = $doc("enabled" -> true),
         readPreference = ReadPreference.secondaryPreferred
       )
         .enumerator(maxEntries) &>

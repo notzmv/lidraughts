@@ -2,10 +2,13 @@ package lidraughts.team
 
 import akka.actor._
 import com.typesafe.config.Config
+import scala.concurrent.duration._
 
 import lidraughts.common.MaxPerPage
 import lidraughts.mod.ModlogApi
 import lidraughts.notify.NotifyApi
+import lidraughts.socket.History
+import lidraughts.socket.Socket.{ GetVersion, SocketVersion }
 
 final class Env(
     config: Config,
@@ -14,13 +17,18 @@ final class Env(
     notifyApi: NotifyApi,
     system: ActorSystem,
     asyncCache: lidraughts.memo.AsyncCache.Builder,
-    db: lidraughts.db.Env
+    db: lidraughts.db.Env,
+    flood: lidraughts.security.Flood,
+    lightUserApi: lidraughts.user.LightUserApi
 ) {
 
   private val settings = new {
     val CollectionTeam = config getString "collection.team"
     val CollectionMember = config getString "collection.member"
     val CollectionRequest = config getString "collection.request"
+    val HistoryMessageTtl = config duration "history.message.ttl"
+    val UidTimeout = config duration "uid.timeout"
+    val SocketTimeout = config duration "socket.timeout"
     val PaginatorMaxPerPage = config getInt "paginator.max_per_page"
     val PaginatorMaxUserPerPage = config getInt "paginator.max_user_per_page"
   }
@@ -49,12 +57,38 @@ final class Env(
   lazy val paginator = new PaginatorBuilder(
     coll = colls,
     maxPerPage = MaxPerPage(PaginatorMaxPerPage),
-    maxUserPerPage = MaxPerPage(PaginatorMaxUserPerPage)
+    maxUserPerPage = MaxPerPage(PaginatorMaxUserPerPage),
+    lightUserApi = lightUserApi
+  )
+
+  private val socketMap: SocketMap = lidraughts.socket.SocketMap[TeamSocket](
+    system = system,
+    mkTrouper = (teamId: String) => new TeamSocket(
+      system = system,
+      teamId = teamId,
+      history = new History(ttl = HistoryMessageTtl),
+      lightUser = lightUserApi.async,
+      uidTtl = UidTimeout,
+      keepMeAlive = () => socketMap touch teamId
+    ),
+    accessTimeout = SocketTimeout,
+    monitoringName = "team.socketMap",
+    broomFrequency = 3853 millis
   )
 
   lazy val cli = new Cli(api, colls)
 
   lazy val cached = new Cached(asyncCache)(system)
+
+  def version(teamId: Team.ID): Fu[SocketVersion] =
+    socketMap.askIfPresentOrZero[SocketVersion](teamId)(GetVersion)
+
+  lazy val socketHandler = new SocketHandler(
+    hub = hub,
+    socketMap = socketMap,
+    chat = hub.chat,
+    flood = flood
+  )
 
   private lazy val notifier = new Notifier(notifyApi = notifyApi)
 
@@ -72,6 +106,8 @@ object Env {
     notifyApi = lidraughts.notify.Env.current.api,
     system = lidraughts.common.PlayApp.system,
     asyncCache = lidraughts.memo.Env.current.asyncCache,
-    db = lidraughts.db.Env.current
+    db = lidraughts.db.Env.current,
+    flood = lidraughts.security.Env.current.flood,
+    lightUserApi = lidraughts.user.Env.current.lightUserApi
   )
 }

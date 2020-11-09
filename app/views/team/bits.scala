@@ -9,6 +9,12 @@ import controllers.routes
 
 object bits {
 
+  def link(teamId: lidraughts.team.Team.ID): Frag =
+    a(href := routes.Team.show(teamId))(teamIdToName(teamId))
+
+  def link(team: lidraughts.team.Team): Frag =
+    a(href := routes.Team.show(team.id))(team.name)
+
   def menu(currentTab: Option[String])(implicit ctx: Context) = ~currentTab |> { tab =>
     st.nav(cls := "page-menu__menu subnav")(
       (ctx.teamNbRequests > 0) option
@@ -29,6 +35,22 @@ object bits {
     )
   }
 
+  def tournaments(t: lidraughts.team.Team, tours: List[lidraughts.tournament.Tournament])(implicit ctx: Context) =
+    bits.layout(title = s"${t.name} • ${trans.tournaments.txt()}") {
+      main(cls := "page-small")(
+        div(cls := "box box-pad")(
+          h1(
+            link(t),
+            " • ",
+            trans.tournaments()
+          ),
+          div(cls := "team-tournaments")(
+            views.html.tournament.bits.forTeam(tours)
+          )
+        )
+      )
+    }
+
   private[team] def teamTr(t: lidraughts.team.Team)(implicit ctx: Context) = tr(cls := "paginated")(
     td(cls := "subject")(
       a(dataIcon := "f", cls := List(
@@ -42,11 +64,17 @@ object bits {
     )
   )
 
-  private[team] def layout(title: String, openGraph: Option[lidraughts.app.ui.OpenGraph] = None)(body: Frag)(implicit ctx: Context) =
+  private[team] def layout(
+    title: String,
+    openGraph: Option[lidraughts.app.ui.OpenGraph] = None,
+    moreJs: Frag = emptyFrag
+  )(
+    body: Frag
+  )(implicit ctx: Context) =
     views.html.base.layout(
       title = title,
       moreCss = cssTag("team"),
-      moreJs = infiniteScrollTag,
+      moreJs = frag(infiniteScrollTag, moreJs),
       openGraph = openGraph
     )(body)
 }

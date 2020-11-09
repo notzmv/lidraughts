@@ -26,7 +26,7 @@ object Spotlight {
     -(t.schedule.??(_.freq.importance))
   }
 
-  private def select(tour: Tournament, user: User): Boolean = !tour.isFinished &&
+  private def select(tour: Tournament, user: User): Boolean = tour.isEnterable &&
     tour.spotlight.fold(automatically(tour, user)) { manually(tour, _) }
 
   private def manually(tour: Tournament, spotlight: Spotlight): Boolean =

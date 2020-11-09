@@ -55,7 +55,8 @@ final class TeamApi(
     team.copy(
       location = e.location,
       description = e.description,
-      open = e.isOpen
+      open = e.isOpen,
+      chat = e.chat
     ) |> { team =>
       coll.team.update($id(team.id), team).void >>
         !team.isCreator(me.id) ?? {

@@ -10,18 +10,24 @@ import controllers.routes
 object inquiry {
 
   // simul game study relay tournament
-  private val commFlagRegex = """^\[FLAG\] (\w+)/(\w{8}) (.+)$""".r
+  private val commFlagRegex = """\[FLAG\] (\w+)/(\w{8})(?:/w)? (.+)(?:\n|$)""".r
 
-  def renderAtomText(atom: lidraughts.report.Report.Atom) = richText(atom.simplifiedText match {
-    case commFlagRegex(resType, resId, text) =>
-      val path = resType match {
-        case "game" => routes.Round.watcher(resId, "white")
-        case "relay" => routes.Relay.show("-", resId)
-        case _ => s"/$resType/$resId"
-      }
-      s"$netBaseUrl$path $text"
-    case other => other
-  })
+  def renderAtomText(atom: lidraughts.report.Report.Atom) =
+    richText(
+      commFlagRegex.replaceAllIn(
+        atom.simplifiedText,
+        m => {
+          val id = m.group(2)
+          val path = m.group(1) match {
+            case "game" => routes.Round.watcher(id, "white")
+            case "relay" => routes.Relay.show("-", id)
+            case "tournament" => routes.Tournament.show(id)
+            case _ => s"/${m.group(1)}/$id"
+          }
+          s"$netBaseUrl$path ${m.group(3)}"
+        }
+      )
+    )
 
   def apply(in: lidraughts.mod.Inquiry)(implicit ctx: Context) = {
 

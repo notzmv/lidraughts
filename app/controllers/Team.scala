@@ -38,15 +38,34 @@ object Team extends LidraughtsController {
     else Env.teamSearch(text, page) map { html.team.list.search(text, _) }
   }
 
-  private def renderTeam(team: TeamModel, page: Int = 1)(implicit ctx: Context) = for {
-    info <- Env.current.teamInfo(team, ctx.me)
-    members <- paginator.teamMembers(team, page)
-    _ <- Env.user.lightUserApi preloadMany info.userIds
-  } yield html.team.show(team, members, info)
+  private def renderTeam(team: TeamModel, page: Int = 1)(implicit ctx: Context) =
+    for {
+      info <- Env.current.teamInfo(team, ctx.me)
+      members <- paginator.teamMembers(team, page)
+      hasChat = canHaveChat(team, info)
+      chat <- hasChat ?? Env.chat.api.userChat.cached
+        .findMine(lidraughts.chat.Chat.Id(team.id), ctx.me)
+        .map(some)
+      _ <- Env.user.lightUserApi preloadMany {
+        info.userIds ::: chat.??(_.chat.userIds)
+      }
+      version <- hasChat ?? Env.team.version(team.id).dmap(some)
+    } yield html.team.show(team, members, info, chat, version)
+
+  private def canHaveChat(team: TeamModel, info: lidraughts.app.mashup.TeamInfo)(implicit ctx: Context): Boolean =
+    team.chat && {
+      (info.mine && !ctx.kid) || isGranted(_.ChatTimeout)
+    }
+
+  def websocket(id: String, apiVersion: Int) = SocketOption[JsValue] { implicit ctx =>
+    getSocketUid("sri") ?? { uid =>
+      Env.team.socketHandler.join(id, uid, ctx.me, getSocketVersion, apiVersion)
+    }
+  }
 
   def users(teamId: String) = Action.async { req =>
     import Api.limitedDefault
-    Env.team.api.team(teamId) flatMap {
+    api.team(teamId) flatMap {
       _ ?? { team =>
         Api.GlobalLinearLimitPerIP(HTTPRequest lastRemoteAddress req) {
           import play.api.libs.iteratee._
@@ -54,6 +73,16 @@ object Team extends LidraughtsController {
             Env.team.memberStream(team, MaxPerSecond(20)) &>
               Enumeratee.map(Env.api.userApi.one)
           } |> fuccess
+        }
+      }
+    }
+  }
+
+  def tournaments(teamId: String) = Open { implicit ctx =>
+    TeamRepo.enabled(teamId) flatMap {
+      _ ?? { team =>
+        lidraughts.tournament.TournamentRepo.byTeam(team.id, 50) map { tours =>
+          Ok(html.team.bits.tournaments(team, tours))
         }
       }
     }

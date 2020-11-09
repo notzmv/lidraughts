@@ -16,11 +16,14 @@ object TeamRepo {
 
   def byOrderedIds(ids: Seq[Team.ID]) = coll.byOrderedIds[Team, Team.ID](ids)(_.id)
 
+  def exists(id: String) = coll exists $id(id)
+
   def cursor(
-    selector: Bdoc,
     readPreference: ReadPreference = ReadPreference.secondaryPreferred
   )(implicit cp: CursorProducer[Team]) =
-    coll.find(selector).cursor[Team](readPreference)
+    coll.find(enabledSelect).cursor[Team](readPreference)
+
+  def enabled(id: Team.ID) = coll.uno[Team]($id(id) ++ enabledSelect)
 
   def owned(id: Team.ID, createdBy: User.ID): Fu[Option[Team]] =
     coll.uno[Team]($id(id) ++ $doc("createdBy" -> createdBy))
@@ -30,6 +33,9 @@ object TeamRepo {
 
   def creatorOf(teamId: Team.ID): Fu[Option[User.ID]] =
     coll.primitiveOne[User.ID]($id(teamId), "_id")
+
+  def isCreator(teamId: Team.ID, userId: User.ID): Fu[Boolean] =
+    coll.exists($id(teamId) ++ $doc("createdBy" -> userId))
 
   def name(id: String): Fu[Option[String]] =
     coll.primitiveOne[String]($id(id), "name")
@@ -59,7 +65,7 @@ object TeamRepo {
   def changeOwner(teamId: String, newOwner: User.ID) =
     coll.updateField($id(teamId), "createdBy", newOwner)
 
-  val enabledQuery = $doc("enabled" -> true)
+  private[team] val enabledSelect = $doc("enabled" -> true)
 
-  val sortPopular = $sort desc "nbMembers"
+  private[team] val sortPopular = $sort desc "nbMembers"
 }

@@ -38,10 +38,10 @@ object show {
             c.chat,
             name = trans.chatRoom.txt(),
             timeout = c.timeout,
-            writeable = ctx.userId.??(s.canChat),
+            writeable = ctx.userId exists s.canChat,
             public = false,
             resourceId = lidraughts.chat.Chat.ResourceId(s"relay/${c.chat.id}"),
-            localMod = ctx.userId.??(s.canContribute)
+            localMod = ctx.userId exists s.canContribute
           )),
           "explorer" -> Json.obj(
             "endpoint" -> explorerEndpoint,
