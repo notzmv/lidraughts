@@ -376,7 +376,7 @@ final class SwissApi(
       lidraughts.mon.swiss.games("ongoing")(ongoing.size)
       lidraughts.mon.swiss.games("flagged")(flagged.size)
       if (flagged.nonEmpty)
-        bus.publish(lidraughts.hub.actorApi.map.TellMany(flagged.map(_.id), QuietFlag), 'roundSocket)
+        bus.publish(lidraughts.hub.actorApi.map.TellMany(flagged.map(_.id), QuietFlag), 'roundMapTell)
       finished.foreach(finishGame)
       funit
     }

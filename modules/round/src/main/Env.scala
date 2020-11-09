@@ -9,7 +9,7 @@ import com.github.blemale.scaffeine.Cache
 import actorApi.{ GetSocketStatus, SocketStatus }
 
 import lidraughts.game.{ Game, GameRepo, Pov, PlayerRef }
-import lidraughts.hub.actorApi.map.Tell
+import lidraughts.hub.actorApi.map.{ Tell, TellMany }
 import lidraughts.hub.actorApi.round.{ Abort, Resign, AnalysisComplete }
 import lidraughts.hub.actorApi.socket.HasUserId
 import lidraughts.hub.actorApi.{ Announce, DeployPost }
@@ -89,7 +89,8 @@ final class Env(
 
   bus.subscribeFuns(
     'roundMapTell -> {
-      case Tell(id, msg) => roundMap.tell(id, msg)
+      case Tell(gameId, msg) => roundMap.tell(gameId, msg)
+      case TellMany(gameIds, msg) => roundMap.tellIds(gameIds, msg)
     },
     'deploy -> {
       case DeployPost => roundMap tellAll DeployPost
