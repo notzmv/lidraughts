@@ -32,7 +32,7 @@ object topnav {
         ctx.noBot option frag(
           //a(href := routes.Learn.index)(trans.draughtsBasics()),
           a(href := routes.Puzzle.home)(trans.training()),
-          a(href := routes.Practice.index)("Practice"),
+          a(href := routes.Practice.index)(trans.learn.practice()),
           a(href := routes.Coordinate.home)(trans.coordinates.coordinates())
         ),
         a(href := routes.Study.allDefault(1))(trans.studyMenu()),

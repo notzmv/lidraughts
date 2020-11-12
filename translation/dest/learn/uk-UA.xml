@@ -37,6 +37,7 @@
   <string name="youreGoodAtThis">Ви молодець!</string>
   <string name="nailedIt">Успіх.</string>
   <string name="rightOn">Правильно!</string>
+  <string name="success">Успіх!</string>
   <string name="stageXComplete">Етап %s завершено</string>
   <string name="yourScore">Ваш результат</string>
   <string name="next">Далі</string>

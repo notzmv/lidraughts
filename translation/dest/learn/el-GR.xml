@@ -54,6 +54,7 @@
   <string name="youreGoodAtThis">Είσαι καλός σε αυτό!</string>
   <string name="nailedIt">To βρήκες.</string>
   <string name="rightOn">Μπράβο!</string>
+  <string name="success">Επιτυχία!</string>
   <string name="stageXComplete">Στάδιο %s ολοκληρώθηκε</string>
   <string name="yourScore">Οι βαθμοί σας</string>
   <string name="next">Επόμενο</string>

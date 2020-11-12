@@ -22,19 +22,19 @@ export class DescriptionCtrl {
   }
 }
 
-export function descTitle(chapter: boolean) {
-  return `${chapter ? 'Chapter' : 'Study'} pinned comment`;
+export function descTitle(trans: Trans, chapter: boolean) {
+  return trans.noarg(chapter ? 'pinnedChapterComment' : 'pinnedStudyComment');
 }
 
 export function view(study: StudyCtrl, chapter: boolean): VNode | undefined {
   const desc = chapter ? study.chapterDesc : study.studyDesc,
     contrib = study.members.canContribute() && !study.gamebookPlay();
-  if (desc.edit) return edit(desc, chapter ? study.data.chapter.id : study.data.id, chapter);
+  if (desc.edit) return edit(desc, chapter ? study.data.chapter.id : study.data.id, chapter, study.trans);
   const isEmpty = desc.text === '-';
   if (!desc.text || (isEmpty && !contrib)) return;
   return h(`div.study-desc${chapter ? '.chapter-desc' : ''}${isEmpty ? '.empty' : ''}`, [
     contrib && !isEmpty ? h('div.contrib', [
-      h('span', descTitle(chapter)),
+      h('span', descTitle(study.trans, chapter)),
       isEmpty ? null : h('a', {
         attrs: {
           'data-icon': 'm',
@@ -54,14 +54,14 @@ export function view(study: StudyCtrl, chapter: boolean): VNode | undefined {
     ]) : null,
     isEmpty ? h('a.text.button', {
       hook: bind('click', _ => { desc.edit = true; }, desc.redraw)
-    }, descTitle(chapter)) : h('div.text', { hook: richHTML(desc.text) })
+    }, descTitle(study.trans, chapter)) : h('div.text', { hook: richHTML(desc.text) })
   ]);
 }
 
-function edit(ctrl: DescriptionCtrl, id: string, chapter: boolean): VNode {
+function edit(ctrl: DescriptionCtrl, id: string, chapter: boolean, trans: Trans): VNode {
   return h('div.study-desc-form', [
     h('div.title', [
-      descTitle(chapter),
+      descTitle(trans, chapter),
       h('button.button.button-empty.button-red', {
         attrs: {
           'data-icon': 'L',

@@ -50,6 +50,7 @@
   <string name="youreGoodAtThis">Jesteś w tym dobry!</string>
   <string name="nailedIt">Brawo.</string>
   <string name="rightOn">Tak jest!</string>
+  <string name="success">Sukces!</string>
   <string name="stageXComplete">Etap %s kompletny</string>
   <string name="yourScore">Twój wynik</string>
   <string name="next">Następne</string>

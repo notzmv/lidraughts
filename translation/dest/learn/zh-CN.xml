@@ -65,6 +65,7 @@
   <string name="youreGoodAtThis">您很擅长下棋！</string>
   <string name="nailedIt">正确！</string>
   <string name="rightOn">不错！</string>
+  <string name="success">解题成功！</string>
   <string name="stageXComplete">级别%s完成</string>
   <string name="yourScore">您的得分</string>
   <string name="next">下一个</string>

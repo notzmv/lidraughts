@@ -52,6 +52,7 @@
   <string name="youreGoodAtThis">Jste výborný!</string>
   <string name="nailedIt">Zdolal.</string>
   <string name="rightOn">Přesně tak!</string>
+  <string name="success">Úspěch!</string>
   <string name="stageXComplete">Úroveň %s dokončena</string>
   <string name="yourScore">Vaše skóre</string>
   <string name="next">Další</string>

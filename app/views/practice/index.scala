@@ -13,7 +13,7 @@ object index {
     title = "Practice draughts positions",
     moreCss = cssTag("practice.index"),
     moreJs = embedJsUnsafe(s"""$$('.do-reset').on('click', function() {
-if (confirm('You will lose your practice progress!')) this.parentNode.submit();
+if (confirm('${trans.learn.youWillLoseAllYourProgress.txt()}')) this.parentNode.submit();
 });"""),
     openGraph = lidraughts.app.ui.OpenGraph(
       title = "Practice your draughts",
@@ -24,15 +24,15 @@ if (confirm('You will lose your practice progress!')) this.parentNode.submit();
       main(cls := "page-menu")(
         st.aside(cls := "page-menu__menu practice-side")(
           i(cls := "fat"),
-          h1("Practice"),
-          h2("makes your draughts perfect"),
+          h1(trans.learn.practice()),
+          h2(trans.learn.makesYourDraughtsPerfect()),
           div(cls := "progress")(
-            div(cls := "text")("Progress: ", data.progressPercent, "%"),
+            div(cls := "text")(trans.learn.progressX(s"${data.progressPercent}%")),
             div(cls := "bar", style := s"width: ${data.progressPercent}%")
           ),
           postForm(action := routes.Practice.reset)(
-            if (ctx.isAuth) (data.nbDoneChapters > 0) option a(cls := "do-reset")("Reset my progress")
-            else a(href := routes.Auth.signup)("Sign up to save your progress")
+            if (ctx.isAuth) (data.nbDoneChapters > 0) option a(cls := "do-reset")(trans.learn.resetMyProgress())
+            else a(href := routes.Auth.signup)(trans.learn.signUpToSaveYourProgress())
           )
         ),
         div(cls := "page-menu__content practice-app")(

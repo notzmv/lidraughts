@@ -55,6 +55,7 @@ nessun pezzo!</string>
   <string name="youreGoodAtThis">Sei bravo!</string>
   <string name="nailedIt">Azzeccato.</string>
   <string name="rightOn">Giusto!</string>
+  <string name="success">Completato!</string>
   <string name="stageXComplete">Fase %s completata</string>
   <string name="yourScore">Il tuo punteggio</string>
   <string name="next">Successivo</string>
