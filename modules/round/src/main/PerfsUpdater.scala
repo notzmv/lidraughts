@@ -6,14 +6,13 @@ import org.joda.time.DateTime
 
 import lidraughts.game.{ GameRepo, Game, PerfPicker, RatingDiffs }
 import lidraughts.history.HistoryApi
-import lidraughts.rating.{ Glicko, Perf, RatingFactors, RatingRegulator, PerfType => PT }
+import lidraughts.rating.{ Glicko, Perf, PerfType => PT }
 import lidraughts.user.{ UserRepo, User, Perfs, RankingApi }
 
 final class PerfsUpdater(
     historyApi: HistoryApi,
     rankingApi: RankingApi,
-    botFarming: BotFarming,
-    ratingFactors: () => RatingFactors
+    botFarming: BotFarming
 ) {
 
   // returns rating diffs
@@ -148,21 +147,6 @@ final class PerfsUpdater(
         classical = addRatingIf(isStd && speed == Speed.Classical, perfs.classical, ratings.classical),
         correspondence = addRatingIf(isStd && speed == Speed.Correspondence, perfs.correspondence, ratings.correspondence)
       )
-      val r = RatingRegulator(ratingFactors()) _
-      val perfs2 = perfs1.copy(
-        frisian = r(PT.Frisian, perfs.frisian, perfs1.frisian),
-        frysk = r(PT.Frysk, perfs.frysk, perfs1.frysk),
-        antidraughts = r(PT.Antidraughts, perfs.antidraughts, perfs1.antidraughts),
-        breakthrough = r(PT.Breakthrough, perfs.breakthrough, perfs1.breakthrough),
-        russian = r(PT.Russian, perfs.russian, perfs1.russian),
-        brazilian = r(PT.Brazilian, perfs.brazilian, perfs1.brazilian),
-        ultraBullet = r(PT.UltraBullet, perfs.ultraBullet, perfs1.ultraBullet),
-        bullet = r(PT.Bullet, perfs.bullet, perfs1.bullet),
-        blitz = r(PT.Blitz, perfs.blitz, perfs1.blitz),
-        rapid = r(PT.Rapid, perfs.rapid, perfs1.rapid),
-        classical = r(PT.Classical, perfs.classical, perfs1.classical),
-        correspondence = r(PT.Correspondence, perfs.correspondence, perfs1.correspondence)
-      )
-      if (isStd) perfs2.updateStandard else perfs2
+      if (isStd) perfs1.updateStandard else perfs1
   }
 }

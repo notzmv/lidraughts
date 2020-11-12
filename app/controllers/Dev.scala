@@ -22,7 +22,6 @@ object Dev extends LidraughtsController {
     Env.streamer.twitchCredentialsSetting,
     Env.study.rateLimitDisabledSetting,
     Env.lobby.whitelistIPSetting,
-    Env.rating.ratingFactorsSetting,
     Env.socket.socketDebugSetting,
     Env.plan.donationGoalSetting
   )
