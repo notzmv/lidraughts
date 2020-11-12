@@ -18,10 +18,10 @@ private[forum] final class Recent(
   def apply(user: Option[User], getTeams: GetTeamIds): Fu[List[MiniForumPost]] =
     userCacheKey(user, getTeams) flatMap cache.get
 
-  def team(teamId: String): Fu[List[MiniForumPost]] = {
+  def team(teamId: String, nb: Int): Fu[List[MiniForumPost]] = {
     // prepend empty language list
     val key = ";" + teamSlug(teamId)
-    cache get key
+    cache get key map { _.take(nb) }
   }
 
   def invalidate: Unit = cache.invalidateAll

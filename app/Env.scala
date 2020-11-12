@@ -61,7 +61,7 @@ final class Env(
 
   lazy val teamInfo = new mashup.TeamInfoApi(
     api = Env.team.api,
-    getForumPosts = Env.forum.recent.team _,
+    getForumPosts = Env.forum.recent.team(_, 6),
     preloadTeams = Env.team.cached.preloadSet
   )
 
