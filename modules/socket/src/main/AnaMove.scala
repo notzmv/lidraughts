@@ -26,13 +26,12 @@ case class AnaMove(
     fullCapture: Option[Boolean] = None
 ) extends AnaAny {
 
-  lazy val captures = uci.flatMap(Uci.Move.apply).flatMap(_.capture)
-  lazy val oldGame = draughts.DraughtsGame(variant.some, fen.some)
-  lazy val newGame = oldGame(
+  private lazy val fullCaptureFields = uci.flatMap(Uci.Move.apply).flatMap(_.capture)
+  private lazy val newGame = draughts.DraughtsGame(variant.some, fen.some).apply(
     orig = orig,
     dest = dest,
-    finalSquare = captures.isDefined,
-    captures = captures,
+    finalSquare = fullCaptureFields.isDefined,
+    captures = fullCaptureFields,
     partialCaptures = ~fullCapture
   )
 
@@ -40,7 +39,7 @@ case class AnaMove(
     newGame flatMap {
       case (game, move) => {
         game.pdnMoves.lastOption toValid "Moved but no last move!" map { san =>
-          val uci = Uci(move, captures.isDefined)
+          val uci = Uci(move, fullCaptureFields.isDefined)
           val movable = game.situation playable false
           val fen = draughts.format.Forsyth >> game
           val sit = game.situation
