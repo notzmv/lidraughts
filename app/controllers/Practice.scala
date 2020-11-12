@@ -16,19 +16,19 @@ object Practice extends LidraughtsController {
   private def env = Env.practice
   private def studyEnv = Env.study
 
-  def index = Open { implicit ctx =>
+  def index = Secure(_.Beta) { implicit ctx => _ =>
     pageHit
     env.api.get(ctx.me) flatMap { up =>
       NoCache(Ok(html.practice.index(up))).fuccess
     }
   }
 
-  def show(sectionId: String, studySlug: String, studyId: String) = Open { implicit ctx =>
+  def show(sectionId: String, studySlug: String, studyId: String) = Secure(_.Beta) { implicit ctx => _ =>
     pageHit
     OptionFuResult(env.api.getStudyWithFirstOngoingChapter(ctx.me, studyId))(showUserPractice)
   }
 
-  def showChapter(sectionId: String, studySlug: String, studyId: String, chapterId: String) = Open { implicit ctx =>
+  def showChapter(sectionId: String, studySlug: String, studyId: String, chapterId: String) = Secure(_.Beta) { implicit ctx => _ =>
     pageHit
     OptionFuResult(env.api.getStudyWithChapter(ctx.me, studyId, chapterId))(showUserPractice)
   }
@@ -39,7 +39,7 @@ object Practice extends LidraughtsController {
   def showStudySlug(sectionId: String, studySlug: String) =
     redirectTo(sectionId)(_.studies.find(_.slug == studySlug))
 
-  private def redirectTo(sectionId: String)(select: PracticeSection => Option[PracticeStudy]) = Open { implicit ctx =>
+  private def redirectTo(sectionId: String)(select: PracticeSection => Option[PracticeStudy]) = Secure(_.Beta) { implicit ctx => _ =>
     env.api.structure.get.flatMap { struct =>
       struct.sections.find(_.id == sectionId).fold(notFound) { section =>
         select(section) ?? { study =>
@@ -59,7 +59,7 @@ object Practice extends LidraughtsController {
     ))
   }
 
-  def chapter(studyId: String, chapterId: String) = Open { implicit ctx =>
+  def chapter(studyId: String, chapterId: String) = Secure(_.Beta) { implicit ctx => _ =>
     OptionFuResult(env.api.getStudyWithChapter(ctx.me, studyId, chapterId)) { us =>
       analysisJson(us) map {
         case (analysisJson, studyJson) => Ok(Json.obj(
@@ -86,15 +86,15 @@ object Practice extends LidraughtsController {
       }
   }
 
-  def complete(chapterId: String, nbMoves: Int) = Auth { implicit ctx => me =>
+  def complete(chapterId: String, nbMoves: Int) = Secure(_.Beta) { implicit ctx => me =>
     env.api.progress.setNbMoves(me, chapterId, lidraughts.practice.PracticeProgress.NbMoves(nbMoves))
   }
 
-  def reset = AuthBody { implicit ctx => me =>
+  def reset = SecureBody(_.Beta) { implicit ctx => me =>
     env.api.progress.reset(me) inject Redirect(routes.Practice.index)
   }
 
-  def config = Auth { implicit ctx => me =>
+  def config = Secure(_.Beta) { implicit ctx => me =>
     for {
       struct <- env.api.structure.get
       form <- env.api.config.form
