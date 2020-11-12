@@ -116,6 +116,7 @@ export function copyNode(node: Tree.Node, copyChildren: boolean = false, coordSy
     san: node.san,
     alg: coordSystem === 1 ? san2alg(node.san) : undefined,
     threefold: node.threefold,
+    draw: node.draw,
     fail: node.fail,
     puzzle: node.puzzle
   } as Tree.Node;

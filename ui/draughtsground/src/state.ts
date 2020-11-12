@@ -23,7 +23,6 @@ export interface State {
   pieceKey: boolean; // add a data-key attribute to piece elements
   highlight: {
     lastMove: boolean; // add last-move class to squares
-    check: boolean; // add check class to squares
     kingMoves?: boolean; // show amount of king moves for frisian variants
   };
   animation: {
@@ -119,7 +118,7 @@ export function defaults(): Partial<State> {
     pieceKey: false,
     highlight: {
       lastMove: true,
-      check: true
+      kingMoves: true
     },
     animation: {
       enabled: true,

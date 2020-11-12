@@ -6,14 +6,6 @@ import { opposite } from 'draughtsground/util';
 import { Redraw, EncodedDests, DecodedDests } from './interfaces';
 import { decomposeUci } from 'draughts'
 
-/*const pieceScores = {
-  pawn: 1,
-  knight: 3,
-  bishop: 3,
-  rook: 5,
-  queen: 9,
-  king: 0
-};*/
 const pieceScores = {
   man: 1,
   king: 2,

@@ -26,16 +26,18 @@ case class AnaMove(
     fullCapture: Option[Boolean] = None
 ) extends AnaAny {
 
+  lazy val captures = uci.flatMap(Uci.Move.apply).flatMap(_.capture)
+  lazy val oldGame = draughts.DraughtsGame(variant.some, fen.some)
+  lazy val newGame = oldGame(
+    orig = orig,
+    dest = dest,
+    finalSquare = captures.isDefined,
+    captures = captures,
+    partialCaptures = ~fullCapture
+  )
+
   def branch: Valid[Branch] = {
-    val oldGame = draughts.DraughtsGame(variant.some, fen.some)
-    val captures = uci.flatMap(Uci.Move.apply).flatMap(_.capture)
-    oldGame(
-      orig = orig,
-      dest = dest,
-      finalSquare = captures.isDefined,
-      captures = captures,
-      partialCaptures = ~fullCapture
-    ) flatMap {
+    newGame flatMap {
       case (game, move) => {
         game.pdnMoves.lastOption toValid "Moved but no last move!" map { san =>
           val uci = Uci(move, captures.isDefined)
@@ -75,10 +77,21 @@ case class AnaMove(
     }
   }
 
-  def json(b: Branch, applyAmbiguity: Int = 0): JsObject = Json.obj(
-    "node" -> Node.fullUciNodeJsonWriter.writes((if (applyAmbiguity != 0) b.copy(id = UciCharPair(b.id.a, applyAmbiguity)) else b)),
-    "path" -> path
-  ).add("ch" -> chapterId)
+  def draw = newGame.toOption flatMap {
+    case (game, _) => game.situation.autoDraw.some
+  }
+
+  def json(b: Branch, applyAmbiguity: Int = 0): JsObject = {
+    val node = Node.fullUciNodeJsonWriter.writes(if (applyAmbiguity != 0) b.copy(id = UciCharPair(b.id.a, applyAmbiguity)) else b)
+    val withDraw = node.asOpt[JsObject] match {
+      case Some(obj) => obj.add("draw" -> draw)
+      case _ => node
+    }
+    Json.obj(
+      "node" -> withDraw,
+      "path" -> path
+    ).add("ch" -> chapterId)
+  }
 }
 
 object AnaMove {

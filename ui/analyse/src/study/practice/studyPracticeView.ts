@@ -44,8 +44,6 @@ function renderGoal(practice: StudyPracticeCtrl, inMoves: number) {
       if (practice.isWhite() === (goal.cp! >= 0))
         return 'Get a winning position in ' + plural('move', inMoves);
       return 'Defend for ' + plural('move', inMoves);
-    case 'promotion':
-      return 'Safely promote your pawn';
   }
 }
 

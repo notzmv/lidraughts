@@ -221,7 +221,7 @@ function controls(ctrl: AnalyseCtrl) {
             'data-act': 'multiboard-menu',
             'data-icon': ''
           }
-        }) : null
+        }) : null,
           /*h('button.fbt', {
             attrs: {
               title: noarg('openingExplorerAndTablebase'),
@@ -233,7 +233,7 @@ function controls(ctrl: AnalyseCtrl) {
               active: ctrl.explorer.enabled()
             }
           }), null*/
-          /*ctrl.ceval.possible && ctrl.ceval.allowed() && !ctrl.isGamebook() ? h('button.fbt', {
+          ctrl.ceval.possible && ctrl.ceval.allowed() && !ctrl.isGamebook() ? h('button.fbt', {
             attrs: {
               title: noarg('practiceWithComputer'),
               'data-act': 'practice',
@@ -243,7 +243,7 @@ function controls(ctrl: AnalyseCtrl) {
               hidden: menuIsOpen || !!ctrl.retro,
               active: !!ctrl.practice
             }
-          }) : null*/
+          }) : null
         ]),
       h('div.jumps', [
         jumpButton('W', 'first', canJumpPrev),

@@ -252,7 +252,6 @@ declare namespace Tree {
     alternatives?: Alternative[];
     missingAlts?: Alternative[]; // only used internally
     destreq?: number; // used internally
-    check?: boolean;
     threat?: ClientEval;
     ceval?: ClientEval;
     eval?: ServerEval;
@@ -266,6 +265,7 @@ declare namespace Tree {
     san?: string;
     alg?: string; // added at runtime with correct settings & variant
     threefold?: boolean;
+    draw?: boolean;
     fail?: boolean;
     puzzle?: string;
     crazy?: NodeCrazy;

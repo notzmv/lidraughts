@@ -14,12 +14,20 @@ export function isEvalBetter(a: Tree.ClientEval, b?: Tree.ClientEval): boolean {
 export function scan2uci(san: string): string {
   if (!san)
     return san;
-  else if (san.indexOf('x') !== -1)
+  else if (san.includes('x'))
     return san.split('x').map(m => (m.length == 1 ? "0" + m : m)).join('');
-  else if (san.indexOf('-') !== -1)
+  else if (san.includes('-'))
     return san.split('-').map(m => (m.length == 1 ? "0" + m : m)).join('');
   else
     return san;
+}
+
+export function scan2san(san: string): string {
+  if (!san) return san;
+  const sep = san.includes('x') ? 'x' : '-',
+    parts = san.split(sep);
+  if (parts.length < 2) return san;
+  return parts[0] + sep + parts.slice(-1);
 }
 
 // stop when another tab starts. Listen only once here,

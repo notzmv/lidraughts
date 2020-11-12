@@ -58,7 +58,6 @@ function makeConfig(ctrl): CgConfig {
     },
     highlight: {
       lastMove: ctrl.pref.highlight,
-      check: ctrl.pref.highlight,
       kingMoves: ctrl.pref.showKingMoves && (variant === 'frisian' || variant === 'frysk')
     },
     animation: {

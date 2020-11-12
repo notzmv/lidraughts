@@ -406,7 +406,7 @@ export default function (opts, redraw: () => void): Controller {
 
   function gameOver() {
     if (vm.node.dests !== '') return false;
-    return vm.node.check ? 'checkmate' : 'draw';
+    return vm.node.draw ? 'draw' : 'checkmate';
   };
 
   const playedLastMoveMyself = () =>
