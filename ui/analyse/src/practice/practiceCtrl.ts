@@ -68,11 +68,11 @@ export function make(root: AnalyseCtrl, playableDepth: () => number): PracticeCt
     return ceval ? ((ceval.depth + bonus) >= depth || (ceval.depth >= minDepth && ceval.millis > 3000)) : false;
   }
 
-  function playable(node: Tree.Node): boolean {
+  function playable(node: Tree.Node, v: VariantKey): boolean {
     const ceval = node.ceval;
     return ceval ? (
       ceval.depth >= Math.min(ceval.maxDepth || 99, playableDepth()) ||
-      (ceval.depth >= 15 && (ceval.cloud || ceval.millis > 5000))
+      (ceval.depth >= (v === 'antidraughts' ? 7 : 15) && (ceval.cloud || ceval.millis > 5000))
     ) : false;
   };
 
@@ -161,7 +161,7 @@ export function make(root: AnalyseCtrl, playableDepth: () => number): PracticeCt
           if (commentable(olderNode, v, +1)) comment(makeComment(olderNode, node, root.path));
         }
       }
-      if (!played() && playable(node)) {
+      if (!played() && playable(node, v)) {
         root.playUci(nodeBestUci(node)!);
         played(true);
       } else root.redraw();

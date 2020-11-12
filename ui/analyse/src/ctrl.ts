@@ -822,7 +822,6 @@ export default class AnalyseCtrl {
           node.threat = ev;
       } else if (isEvalBetter(ev, node.ceval)) node.ceval = ev;
       else if (node.ceval && ev.maxDepth > node.ceval.maxDepth) node.ceval.maxDepth = ev.maxDepth;
-
       if (path === this.path) {
         this.setAutoShapes();
         if (!isThreat) {
@@ -892,7 +891,8 @@ export default class AnalyseCtrl {
         const ghostEnd = (this.nodeList.length > 0 && this.node.displayPly && this.node.displayPly !== this.node.ply);
         const path = ghostEnd ? this.path.slice(2) : this.path;
         const nodeList = ghostEnd ? this.nodeList.slice(1) : this.nodeList;
-        this.ceval.start(path, nodeList, this.threatMode(), false);
+        const maxDepth = (this.practice && this.studyPractice) ? this.practiceDepth() : undefined;
+        this.ceval.start(path, nodeList, this.threatMode(), false, maxDepth);
         this.evalCache.fetch(path, parseInt(this.ceval.multiPv()));
       } else this.ceval.stop();
     }
@@ -1088,16 +1088,17 @@ export default class AnalyseCtrl {
     this.explorer.toggle();
   }
 
+  private practiceDepth = () => this.data.game.variant.key === 'antidraughts' ? 10 : 20;
+
   togglePractice = () => {
     if (this.practice || !this.ceval.possible) this.practice = undefined;
     else {
       if (this.retro) this.toggleRetro();
       if (this.explorer.enabled()) this.toggleExplorer();
       this.practice = makePractice(this, () => {
-        const playableDepth = this.data.game.variant.key === 'antidraughts' ? 10 : 20;
         // push to 20 to store AI moves in the cloud
         // lower to 18 after task completion (or failure)
-        return this.studyPractice && this.studyPractice.success() === null ? playableDepth : (playableDepth - 2);
+        return this.studyPractice && this.studyPractice.success() === null ? this.practiceDepth() : (this.practiceDepth() - 2);
       });
     }
     this.setAutoShapes();
