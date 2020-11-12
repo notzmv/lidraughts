@@ -160,7 +160,10 @@ object layout {
           ctx.pageData.inquiry map { views.html.mod.inquiry(_) },
           ctx.me ifTrue ctx.userContext.impersonatedBy.isDefined map { views.html.mod.impersonate(_) },
           isStage option views.html.base.bits.stage,
-          lidraughts.security.EmailConfirm.cookie.get(ctx.req).map(views.html.auth.bits.checkYourEmailBanner(_)),
+          lidraughts.security.EmailConfirm.cookie
+            .get(ctx.req)
+            .ifTrue(ctx.isAnon)
+            .map(views.html.auth.bits.checkYourEmailBanner(_)),
           playing option zenToggle,
           siteHeader(playing),
           div(id := "main-wrap", cls := List(
