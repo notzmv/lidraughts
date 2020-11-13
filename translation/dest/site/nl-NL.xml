@@ -299,6 +299,7 @@
   <string name="tournaments">Toernooien</string>
   <string name="xTournaments">%s toernooien</string>
   <string name="myTournaments">Mijn toernooien</string>
+  <string name="createdTournaments">Zelf aangemaakt</string>
   <string name="recentlyPlayed">Onlangs gespeeld</string>
   <string name="bestResults">Beste resultaten</string>
   <string name="tournamentPoints">Toernooipunten</string>
