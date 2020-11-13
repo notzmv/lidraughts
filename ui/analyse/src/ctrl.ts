@@ -891,7 +891,8 @@ export default class AnalyseCtrl {
         const ghostEnd = (this.nodeList.length > 0 && this.node.displayPly && this.node.displayPly !== this.node.ply);
         const path = ghostEnd ? this.path.slice(2) : this.path;
         const nodeList = ghostEnd ? this.nodeList.slice(1) : this.nodeList;
-        const maxDepth = (this.practice && this.studyPractice) ? this.practiceDepth() : undefined;
+        const maxDepth = !(this.practice && this.studyPractice) ? undefined :
+          (this.ceval.isDeeper() || this.ceval.infinite()) ? 99 : this.practiceDepth();
         this.ceval.start(path, nodeList, this.threatMode(), false, maxDepth);
         this.evalCache.fetch(path, parseInt(this.ceval.multiPv()));
       } else this.ceval.stop();
