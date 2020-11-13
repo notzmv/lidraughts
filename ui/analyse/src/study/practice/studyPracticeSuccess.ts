@@ -5,7 +5,8 @@ import { Comment } from '../../practice/practiceCtrl';
 // returns null if not deep enough to know
 function isDrawish(node: Tree.Node, v: VariantKey): boolean | null {
   if (!hasSolidEval(node, v)) return null;
-  return !node.ceval!.win && Math.abs(node.ceval!.cp!) < 150;
+  console.log(node.ceval!.cp!);
+  return !node.ceval!.win && Math.abs(node.ceval!.cp!) < 85;
 }
 // returns null if not deep enough to know
 function isWinning(node: Tree.Node, goalCp: number, color: Color, v: VariantKey): boolean | null {
@@ -20,12 +21,23 @@ function myWinIn(node: Tree.Node, color: Color, v: VariantKey): number | boolean
   var winIn = node.ceval!.win! * (color === 'white' ? 1 : -1);
   return winIn > 0 ? winIn : false;
 }
+// returns null if not deep enough to know
+function theirWinIn(node: Tree.Node, color: Color, v: VariantKey): number | boolean | null {
+  if (!hasSolidEval(node, v)) return null;
+  if (!node.ceval!.win) return false;
+  var winIn = node.ceval!.win! * (color === 'white' ? -1 : 1);
+  return winIn > 0 ? winIn : false;
+}
 
 function hasSolidEval(node: Tree.Node, v: VariantKey) {
   return node.ceval && node.ceval.depth >= (v === 'antidraughts' ? 7 : 17);
 }
 
-function isWin(root: AnalyseCtrl) {
+function isDraw(root: AnalyseCtrl, node: Tree.Node) {
+  return node.threefold || root.gameOver() === 'draw';
+}
+
+function isWin(root: AnalyseCtrl,) {
   return root.gameOver() === 'checkmate';
 }
 
@@ -50,6 +62,12 @@ export default function(root: AnalyseCtrl, goal: Goal, nbMoves: number): boolean
   if (hasBlundered(root.practice!.comment())) return false;
   const v = root.data.game.variant.key;
   switch (goal.result) {
+    case 'autoDrawIn':
+      if (isDraw(root, node)) return true;
+      const loseIn = theirWinIn(node, root.bottomColor(), v);
+      if (loseIn && (loseIn as number) + nbMoves <= goal.moves!) return false
+      if (nbMoves >= goal.moves! && root.turnColor() === root.bottomColor()) return isDrawish(node, v);
+      break;
     case 'drawIn':
     case 'equalIn':
       if (node.threefold) return true;
@@ -68,6 +86,8 @@ export default function(root: AnalyseCtrl, goal: Goal, nbMoves: number): boolean
       if (!winIn || (winIn as number) + nbMoves > goal.moves!) return false;
       break;
     case 'win':
+      if (isDraw(root, node)) return false;
+      break;
   }
   return null;
 };

@@ -85,19 +85,19 @@ Doe een willekeurige zet om door te gaan.</string>
     <item quantity="other">Win de partij in %s zetten</item>
   </plurals>
   <plurals name="holdTheDrawForX">
-    <item quantity="one">Hou nog %s zet de remise</item>
-    <item quantity="other">Hou nog %s zetten de remise</item>
+    <item quantity="one">Houd nog %s zet de remise</item>
+    <item quantity="other">Houd nog %s zetten de remise</item>
   </plurals>
   <plurals name="equalizeInX">
-    <item quantity="one">Krijg een gelijke stand in %s zet</item>
-    <item quantity="other">Krijg een gelijke stand in %s zetten</item>
+    <item quantity="one">Bereik een gelijke stand in %s zet</item>
+    <item quantity="other">Bereik een gelijke stand in %s zetten</item>
   </plurals>
   <plurals name="defendForX">
     <item quantity="one">Verdedig %s zet</item>
     <item quantity="other">Verdedig %s zetten</item>
   </plurals>
   <plurals name="getAWinningPositionInX">
-    <item quantity="one">Krijg een winnende stand in %s zet</item>
-    <item quantity="other">Krijg een winnende stand in %s zetten</item>
+    <item quantity="one">Bereik een winnende stand in %s zet</item>
+    <item quantity="other">Bereik een winnende stand in %s zetten</item>
   </plurals>
 </resources>

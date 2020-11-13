@@ -37,6 +37,7 @@ function renderGoal(practice: StudyPracticeCtrl, trans: Trans, inMoves: number) 
     case 'winIn':
       return trans.plural('winTheGameInX', inMoves);
     case 'drawIn':
+    case 'autoDrawIn':
       return trans.plural('holdTheDrawForX', inMoves);
     case 'equalIn':
       return trans.plural('equalizeInX', inMoves);
