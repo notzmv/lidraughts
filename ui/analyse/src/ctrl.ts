@@ -371,9 +371,8 @@ export default class AnalyseCtrl {
           },
         lastMove: this.uciToLastMove(node.uci),
       };
-    if (!dests && !node.check) {
+    if (!dests) {
       // premove while dests are loading from server
-      // can't use when in check because it highlights the wrong king
       config.turnColor = opposite(color);
       config.movable!.color = color;
     }
@@ -693,7 +692,15 @@ export default class AnalyseCtrl {
     const node = this.tree.addDests(dests, path, opening, alternatives, destsUci);
     if (path === this.path) {
       this.showGround();
-      if (this.gameOver()) this.ceval.stop();
+      if (this.gameOver()) {
+        this.ceval.stop();
+        if (this.retro) this.retro.onCeval();
+        if (this.practice || this.studyPractice) {
+          if (this.practice) this.practice.onCeval();
+          if (this.studyPractice) this.studyPractice.onCeval();
+          this.redraw();
+        }
+      }
     }
     if (this.data.puzzleEditor && node && node.alternatives && node.alternatives.length > 1 && node.children.length > 0) {
       node.children.forEach(child => this.setAlternatives(child, node));
@@ -815,7 +822,6 @@ export default class AnalyseCtrl {
           node.threat = ev;
       } else if (isEvalBetter(ev, node.ceval)) node.ceval = ev;
       else if (node.ceval && ev.maxDepth > node.ceval.maxDepth) node.ceval.maxDepth = ev.maxDepth;
-
       if (path === this.path) {
         this.setAutoShapes();
         if (!isThreat) {
@@ -871,8 +877,7 @@ export default class AnalyseCtrl {
   gameOver(node?: Tree.Node): 'draw' | 'checkmate' | false {
     const n = node || this.node;
     if (n.dests !== '' || n.drops) return false;
-    if (n.check) return 'checkmate';
-    return 'draw';
+    return n.draw ? 'draw' : 'checkmate';
   }
 
   canUseCeval(): boolean {
@@ -886,7 +891,9 @@ export default class AnalyseCtrl {
         const ghostEnd = (this.nodeList.length > 0 && this.node.displayPly && this.node.displayPly !== this.node.ply);
         const path = ghostEnd ? this.path.slice(2) : this.path;
         const nodeList = ghostEnd ? this.nodeList.slice(1) : this.nodeList;
-        this.ceval.start(path, nodeList, this.threatMode(), false);
+        const maxDepth = !(this.practice && this.studyPractice) ? undefined :
+          (this.ceval.isDeeper() || this.ceval.infinite()) ? 99 : this.practiceDepth();
+        this.ceval.start(path, nodeList, this.threatMode(), false, maxDepth);
         this.evalCache.fetch(path, parseInt(this.ceval.multiPv()));
       } else this.ceval.stop();
     }
@@ -1082,6 +1089,8 @@ export default class AnalyseCtrl {
     this.explorer.toggle();
   }
 
+  private practiceDepth = () => this.data.game.variant.key === 'antidraughts' ? 10 : 20;
+
   togglePractice = () => {
     if (this.practice || !this.ceval.possible) this.practice = undefined;
     else {
@@ -1090,7 +1099,7 @@ export default class AnalyseCtrl {
       this.practice = makePractice(this, () => {
         // push to 20 to store AI moves in the cloud
         // lower to 18 after task completion (or failure)
-        return this.studyPractice && this.studyPractice.success() === null ? 20 : 18;
+        return this.studyPractice && this.studyPractice.success() === null ? this.practiceDepth() : (this.practiceDepth() - 2);
       });
     }
     this.setAutoShapes();

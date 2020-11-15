@@ -12,7 +12,7 @@ import AnalyseCtrl from '../ctrl';
 
 export const modeChoices = [
   ['normal', 'normalAnalysis'],
-  //['practice', 'practiceWithComputer'],
+  ['practice', 'practiceWithComputer'],
   ['conceal', 'hideNextMoves'],
   ['gamebook', 'interactiveLesson']
 ];

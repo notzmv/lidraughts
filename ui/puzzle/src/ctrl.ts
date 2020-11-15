@@ -232,18 +232,19 @@ export default function (opts, redraw: () => void): Controller {
     });
   };
 
-  var revertUserMove = function () {
+  var revertUserMove = function (moveDuration) {
     setTimeout(function () {
       withGround(function (g) { g.cancelPremove(); });
       userJump(treePath.init(vm.path));
       redraw();
-    }, 500);
+    }, Math.max(moveDuration, 500));
   };
 
   var applyProgress = function (progress, contd) {
     if (progress === 'fail') {
       vm.lastFeedback = 'fail';
-      revertUserMove();
+      const g = ground();
+      revertUserMove(g ? animationDuration(g.state) + 100 : 0);
       if (vm.mode === 'play') {
         vm.canViewSolution = true;
         vm.mode = 'try';
@@ -251,7 +252,8 @@ export default function (opts, redraw: () => void): Controller {
       }
     } else if (progress === 'retry') {
       vm.lastFeedback = 'retry';
-      revertUserMove();
+      const g = ground();
+      revertUserMove(g ? animationDuration(g.state) + 100 : 0);
     } else if (progress === 'win') {
       if (vm.mode !== 'view') {
         if (vm.mode === 'play') sendResult(true);
@@ -406,7 +408,7 @@ export default function (opts, redraw: () => void): Controller {
 
   function gameOver() {
     if (vm.node.dests !== '') return false;
-    return vm.node.check ? 'checkmate' : 'draw';
+    return vm.node.draw ? 'draw' : 'checkmate';
   };
 
   const playedLastMoveMyself = () =>

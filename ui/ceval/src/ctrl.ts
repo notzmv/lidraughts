@@ -101,12 +101,12 @@ export default function(opts: CevalOpts): CevalCtrl {
       return povChances(color, b) - povChances(color, a);
     });
 
-  const start = (path: Tree.Path, steps: Step[], threatMode: boolean, deeper: boolean) => {
+  const start = (path: Tree.Path, steps: Step[], threatMode: boolean, deeper: boolean, depth?: number) => {
 
     if (!enabled() || !opts.possible) return;
 
     isDeeper(deeper);
-    const maxD = effectiveMaxDepth();
+    const maxD = depth ? depth : effectiveMaxDepth();
 
     const step = steps[steps.length - 1];
 

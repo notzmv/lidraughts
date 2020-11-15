@@ -69,7 +69,7 @@ export interface CevalCtrl {
   variant: Variant;
   setHovering: (fen: string, uci?: string) => void;
   multiPv: StoredProp<number>;
-  start: (path: string, steps: Step[], threatMode: boolean, deeper: boolean) => void;
+  start: (path: string, steps: Step[], threatMode: boolean, deeper: boolean, depth?: number) => void;
   stop(): void;
   threads: StoredProp<number>;
   hashSize: StoredProp<number>;

@@ -21,7 +21,6 @@ export interface Config {
   // pieceKey: boolean; // add a data-key attribute to piece elements
   highlight?: {
     lastMove?: boolean; // add last-move class to squares
-    check?: boolean; // add check class to squares
     kingMoves?: boolean; // amount of moves a king made for frisian variants
   };
   animation?: {

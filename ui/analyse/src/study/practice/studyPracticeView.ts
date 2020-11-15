@@ -1,13 +1,13 @@
 import { h, thunk } from 'snabbdom'
 import { VNode } from 'snabbdom/vnode'
-import { plural, bind, spinner, richHTML, option } from '../../util';
+import { bind, spinner, richHTML, option } from '../../util';
 import { StudyCtrl } from '../interfaces';
 import { MaybeVNodes } from '../../interfaces';
 import { StudyPracticeData, StudyPracticeCtrl } from './interfaces';
 import { boolSetting } from '../../boolSetting';
 import { view as descView } from '../description';
 
-function selector(data: StudyPracticeData) {
+function selector(data: StudyPracticeData, trans: Trans) {
   return h('select.selector', {
     hook: bind('change', e => {
       location.href = '/practice/' + (e.target as HTMLInputElement).value;
@@ -15,7 +15,7 @@ function selector(data: StudyPracticeData) {
   }, [
     h('option', {
       attrs: { disabled: true, selected: true }
-    }, 'Practice list'),
+    }, trans.noarg('practiceList')),
     ...data.structure.map(function(section) {
       return h('optgroup', {
         attrs: { label: section.name }
@@ -29,23 +29,22 @@ function selector(data: StudyPracticeData) {
   ]);
 }
 
-function renderGoal(practice: StudyPracticeCtrl, inMoves: number) {
+function renderGoal(practice: StudyPracticeCtrl, trans: Trans, inMoves: number) {
   const goal = practice.goal();
   switch (goal.result) {
     case 'win':
-      return 'Win the game';
+      return trans.noarg('winTheGame');
     case 'winIn':
-      return 'Win the game in ' + plural('move', inMoves);
+      return trans.plural('winTheGameInX', inMoves);
     case 'drawIn':
-      return 'Hold the draw for ' + plural('more move', inMoves);
+    case 'autoDrawIn':
+      return trans.plural('holdTheDrawForX', inMoves);
     case 'equalIn':
-      return 'Equalize in ' + plural('move', inMoves);
+      return trans.plural('equalizeInX', inMoves);
     case 'evalIn':
       if (practice.isWhite() === (goal.cp! >= 0))
-        return 'Get a winning position in ' + plural('move', inMoves);
-      return 'Defend for ' + plural('move', inMoves);
-    case 'promotion':
-      return 'Safely promote your pawn';
+        return trans.plural('getAWinningPositionInX', inMoves);;
+      return trans.plural('defendForX', inMoves);;
   }
 }
 
@@ -53,7 +52,8 @@ export function underboard(ctrl: StudyCtrl): MaybeVNodes {
   if (ctrl.vm.loading) return [h('div.feedback', spinner())];
   const p = ctrl.practice!,
     gb = ctrl.gamebookPlay(),
-    pinned = ctrl.data.chapter.description;
+    pinned = ctrl.data.chapter.description,
+    noarg = ctrl.trans.noarg;
   if (gb) return pinned ? [h('div.feedback.ongoing', [
     h('div.comment', { hook: richHTML(pinned) })
   ])] : [];
@@ -67,8 +67,8 @@ export function underboard(ctrl: StudyCtrl): MaybeVNodes {
         } : {
           attrs: { href: '/practice' }
         }, [
-          h('span', 'Success!'),
-          ctrl.nextChapter() ? 'Go to next exercise' : 'Back to practice menu'
+          h('span', noarg('success')),
+          ctrl.nextChapter() ? noarg('goToNextExercise') : noarg('backToPracticeMenu')
         ])
       ];
     case false:
@@ -76,18 +76,18 @@ export function underboard(ctrl: StudyCtrl): MaybeVNodes {
         h('a.feedback.fail', {
           hook: bind('click', p.reset, ctrl.redraw)
         }, [
-          h('span', [renderGoal(p, p.goal().moves!)]),
-          h('strong', 'Click to retry')
+          h('span', [renderGoal(p, ctrl.trans, p.goal().moves!)]),
+          h('strong', noarg('clickToRetry'))
         ])
       ];
     default:
       return [
         h('div.feedback.ongoing', [
-          h('div.goal', [renderGoal(p, p.goal().moves! - p.nbMoves())]),
+          h('div.goal', [renderGoal(p, ctrl.trans, p.goal().moves! - p.nbMoves())]),
           pinned ? h('div.comment', { hook: richHTML(pinned) }) : null
         ]),
         boolSetting({
-          name: 'Load next exercise immediately',
+          name: 'loadNextExerciseImmediately',
           id: 'autoNext',
           checked: p.autoNext(),
           change: p.autoNext
@@ -144,10 +144,10 @@ export function side(ctrl: StudyCtrl): VNode {
         attrs: {
           'data-icon': 'I',
           href: '/practice',
-          title: 'More practice'
+          title: ctrl.trans.noarg('backToPracticeMenu')
         }
       }),
-      thunk('select.selector', selector, [data])
+      thunk('select.selector', selector, [data, ctrl.trans])
     ])
   ]);
 }

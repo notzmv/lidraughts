@@ -306,6 +306,7 @@
   <string name="tournaments">Tournaments</string>
   <string name="xTournaments">%s tournaments</string>
   <string name="myTournaments">My tournaments</string>
+  <string name="createdTournaments">Created</string>
   <string name="recentlyPlayed">Recently played</string>
   <string name="bestResults">Best results</string>
   <string name="tournamentPoints">Tournament points</string>

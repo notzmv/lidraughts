@@ -28,7 +28,6 @@ export function makeConfig(ctrl: RoundController): Config {
     addPieceZIndex: ctrl.data.pref.is3d,
     highlight: {
       lastMove: data.pref.highlight,
-      check: data.pref.highlight,
       kingMoves: !noAssistance && data.pref.showKingMoves && (data.game.variant.key === 'frisian' || data.game.variant.key === 'frysk')
     },
     events: {

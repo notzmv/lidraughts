@@ -1,4 +1,4 @@
-import { winningChances, pv2san, scan2uci } from 'ceval';
+import { winningChances, scan2uci, scan2san } from 'ceval';
 import { Eval } from 'ceval';
 import { path as treePath } from 'tree';
 import { detectThreefold } from '../nodeFinder';
@@ -60,25 +60,20 @@ export function make(root: AnalyseCtrl, playableDepth: () => number): PracticeCt
     if (root.threatMode()) root.toggleThreatMode();
   }
 
-  function commentable(node: Tree.Node, bonus: number = 0): boolean {
+  function commentable(node: Tree.Node, v: VariantKey, bonus: number = 0): boolean {
     if (root.gameOver(node) || node.tbhit) return true;
-    const ceval = node.ceval;
-    return ceval ? ((ceval.depth + bonus) >= 15 || (ceval.depth >= 13 && ceval.millis > 3000)) : false;
+    const ceval = node.ceval,
+      depth = v === 'antidraughts' ? 7 : 15,
+      minDepth = v === 'antidraughts' ? 6 : 13;
+    return ceval ? ((ceval.depth + bonus) >= depth || (ceval.depth >= minDepth && ceval.millis > 3000)) : false;
   }
 
-  function playable(node: Tree.Node): boolean {
+  function playable(node: Tree.Node, v: VariantKey): boolean {
     const ceval = node.ceval;
     return ceval ? (
       ceval.depth >= Math.min(ceval.maxDepth || 99, playableDepth()) ||
-      (ceval.depth >= 15 && (ceval.cloud || ceval.millis > 5000))
+      (ceval.depth >= (v === 'antidraughts' ? 7 : 15) && (ceval.cloud || ceval.millis > 5000))
     ) : false;
-  };
-
-  const altCastles = {
-    e1a1: 'e1c1',
-    e1h1: 'e1g1',
-    e8a8: 'e8c8',
-    e8h8: 'e8g8'
   };
 
   function tbhitToEval(hit: Tree.TablebaseHit | undefined | null) {
@@ -90,6 +85,10 @@ export function make(root: AnalyseCtrl, playableDepth: () => number): PracticeCt
   }
   function nodeBestUci(node: Tree.Node): Uci | undefined {
     return (node.tbhit && node.tbhit.best) || (node.ceval && scan2uci(node.ceval.pvs[0].moves[0]));
+  }
+
+  function nodeBestSan(node: Tree.Node): San | undefined {
+    return (node.tbhit && node.tbhit.best) || (node.ceval && scan2san(node.ceval.pvs[0].moves[0]));
   }
 
   function makeComment(prev: Tree.Node, node: Tree.Node, path: Tree.Path): Comment {
@@ -105,7 +104,7 @@ export function make(root: AnalyseCtrl, playableDepth: () => number): PracticeCt
       const shift = -winningChances.povDiff(root.bottomColor(), nodeEval, prevEval);
 
       best = nodeBestUci(prev)!;
-      if (best === node.uci || best === altCastles[node.uci!]) best = null;
+      if (best === node.uci) best = null;
 
       if (!best) verdict = 'goodMove';
       else if (shift < 0.025) verdict = 'goodMove';
@@ -113,7 +112,7 @@ export function make(root: AnalyseCtrl, playableDepth: () => number): PracticeCt
       else if (shift < 0.14) verdict = 'mistake';
       else verdict = 'blunder';
     }
-
+    
     return {
       prev,
       node,
@@ -121,7 +120,7 @@ export function make(root: AnalyseCtrl, playableDepth: () => number): PracticeCt
       verdict,
       best: best ? {
         uci: best,
-        san: pv2san(prev.fen, false, [best])
+        san: nodeBestSan(prev)!
       } : undefined
     };
   }
@@ -145,10 +144,11 @@ export function make(root: AnalyseCtrl, playableDepth: () => number): PracticeCt
         root.setAutoShapes();
       }
     } else {
+      const v = root.data.game.variant.key;
       comment(null);
-      if (node.san && commentable(node)) {
+      if (node.san && commentable(node, v)) {
         const parentNode = root.tree.parentNode(root.path);
-        if (commentable(parentNode, +1)) comment(makeComment(parentNode, node, root.path));
+        if (commentable(parentNode, v, +1)) comment(makeComment(parentNode, node, root.path));
         else {
           /*
            * Looks like the parent node didn't get enough analysis time
@@ -158,10 +158,10 @@ export function make(root: AnalyseCtrl, playableDepth: () => number): PracticeCt
            * Since computer moves are supposed to preserve eval anyway.
            */
           const olderNode = root.tree.parentNode(treePath.init(root.path));
-          if (commentable(olderNode, +1)) comment(makeComment(olderNode, node, root.path));
+          if (commentable(olderNode, v, +1)) comment(makeComment(olderNode, node, root.path));
         }
       }
-      if (!played() && playable(node)) {
+      if (!played() && playable(node, v)) {
         root.playUci(nodeBestUci(node)!);
         played(true);
       } else root.redraw();

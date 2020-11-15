@@ -52,7 +52,7 @@ case object Russian extends Variant(
                 case Some(landingPos) if curBoard(landingPos).isEmpty =>
                   val takingBoard = curBoard.takingUnsafe(curPos, landingPos, actor.piece, nextPos, captPiece)
                   val promotion = promotablePos(landingPos, color)
-                  val boardAfter = promotion.fold(takingBoard promote landingPos, none) getOrElse takingBoard
+                  val boardAfter = if (promotion) takingBoard.promote(landingPos).getOrElse(takingBoard) else takingBoard
                   val promoted = if (promotion) Some(King) else None
                   val newSquares = landingPos :: allSquares
                   val newTaken = nextPos :: allTaken
@@ -97,6 +97,10 @@ case object Russian extends Variant(
   }
 
   private def innerLongRangeCaptures(buf: ArrayBuffer[Move], actor: Actor, initBoard: Board, initPos: PosMotion, initDir: Direction, finalSquare: Boolean, initFirstSquare: Option[PosMotion], initFirstBoard: Option[Board], initAllSquares: List[PosMotion], initAllTaken: List[PosMotion], promoted: Option[PromotableRole]): Int = {
+    val newPiece = promoted match {
+      case Some(promotedRole) => actor.piece.copy(role = promotedRole)
+      case _ => actor.piece
+    }
 
     @tailrec
     def walkUntilCapture(walkDir: Direction, curBoard: Board, curPos: PosMotion, firstSquare: Option[PosMotion], firstBoard: Option[Board], allSquares: List[Pos], allTaken: List[Pos]): Int =
@@ -104,11 +108,11 @@ case object Russian extends Variant(
         case Some(nextPos) =>
           curBoard(nextPos) match {
             case None =>
-              walkUntilCapture(walkDir, curBoard.moveUnsafe(curPos, nextPos, actor.piece), nextPos, firstSquare, firstBoard, allSquares, allTaken)
+              walkUntilCapture(walkDir, curBoard.moveUnsafe(curPos, nextPos, newPiece), nextPos, firstSquare, firstBoard, allSquares, allTaken)
             case Some(captPiece) if captPiece.isNot(actor.color) && !captPiece.isGhost =>
               walkDir._2(nextPos) match {
                 case Some(landingPos) if curBoard(landingPos).isEmpty =>
-                  val boardAfter = curBoard.takingUnsafe(curPos, landingPos, actor.piece, nextPos, captPiece)
+                  val boardAfter = curBoard.takingUnsafe(curPos, landingPos, newPiece, nextPos, captPiece)
                   walkAfterCapture(walkDir, boardAfter, landingPos, firstSquare, firstBoard, allSquares, nextPos :: allTaken, true, 0)
                 case _ => 0
               }
@@ -129,7 +133,7 @@ case object Russian extends Variant(
       }
       val moreExtraCaptures = walkDir._2(curPos) match {
         case Some(nextPos) if curBoard(nextPos).isEmpty =>
-          walkAfterCapture(walkDir, curBoard.moveUnsafe(curPos, nextPos, actor.piece), nextPos, firstSquare, firstBoard, allSquares, newTaken, false, currentCaptures + extraCaptures)
+          walkAfterCapture(walkDir, curBoard.moveUnsafe(curPos, nextPos, newPiece), nextPos, firstSquare, firstBoard, allSquares, newTaken, false, currentCaptures + extraCaptures)
         case _ => 0
       }
       val totalCaptures = currentCaptures + extraCaptures + moreExtraCaptures

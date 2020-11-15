@@ -26,7 +26,7 @@ object show {
           "practice" -> data.practice,
           "study" -> data.study,
           "data" -> data.analysis,
-          "i18n" -> board.userAnalysisI18n(),
+          "i18n" -> (board.userAnalysisI18n() ++ translations),
           "explorer" -> Json.obj(
             "endpoint" -> explorerEndpoint,
             "tablebaseEndpoint" -> tablebaseEndpoint
@@ -39,4 +39,19 @@ object show {
   ) {
       main(cls := "analyse")
     }
+
+  private def translations()(implicit lang: lidraughts.common.Lang) = lidraughts.i18n.JsDump.keysToObject(List(
+    trans.learn.goToNextExercise,
+    trans.learn.loadNextExerciseImmediately,
+    trans.learn.practiceList,
+    trans.learn.backToPracticeMenu,
+    trans.learn.clickToRetry,
+    trans.learn.success,
+    trans.learn.winTheGame,
+    trans.learn.winTheGameInX,
+    trans.learn.holdTheDrawForX,
+    trans.learn.equalizeInX,
+    trans.learn.getAWinningPositionInX,
+    trans.learn.defendForX
+  ), lidraughts.i18n.I18nDb.Learn, lang)
 }

@@ -62,7 +62,7 @@ final class Env(
   lazy val teamInfo = new mashup.TeamInfoApi(
     api = Env.team.api,
     swissApi = Env.swiss.api,
-    getForumPosts = Env.forum.recent.team _,
+    getForumPosts = Env.forum.recent.team(_, 6),
     preloadTeams = Env.team.cached.preloadSet
   )
 
@@ -234,6 +234,5 @@ object Env {
   def oAuth = lidraughts.oauth.Env.current
   def bot = lidraughts.bot.Env.current
   def evalCache = lidraughts.evalCache.Env.current
-  def rating = lidraughts.rating.Env.current
   def swiss = lidraughts.swiss.Env.current
 }
