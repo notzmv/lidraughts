@@ -96,7 +96,7 @@ object Store {
   def setFingerPrint(id: String, fp: FingerPrint): Fu[FingerHash] =
     FingerHash(fp) match {
       case None => fufail(s"Can't hash $id's fingerprint $fp")
-      case Some(hash) => coll.updateField($doc("_id" -> id), "fp", hash) inject hash
+      case Some(hash) => coll.updateField($id(id), "fp", hash) inject hash
     }
 
   case class Info(ip: IpAddress, ua: String, fp: Option[FingerHash], date: DateTime) {
