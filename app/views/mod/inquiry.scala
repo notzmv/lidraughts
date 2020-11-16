@@ -26,7 +26,7 @@ object inquiry {
             case "tournament" => routes.Tournament.show(id)
             case _ => s"/${m.group(1)}/$id"
           }
-          s"$netBaseUrl$path ${m.group(3)}"
+          Regex.quoteReplacement(s"$netBaseUrl$path ${m.group(3)}")
         }
       )
     )
