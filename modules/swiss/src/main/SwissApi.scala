@@ -24,8 +24,6 @@ final class SwissApi(
     playerColl: Coll,
     pairingColl: Coll,
     cache: SwissCache,
-    system: ActorSystem,
-    sequencers: DuctMap[_],
     socketMap: SocketMap,
     director: SwissDirector,
     scoring: SwissScoring,
@@ -36,7 +34,15 @@ final class SwissApi(
     lightUserApi: lidraughts.user.LightUserApi,
     proxyGames: List[Game.ID] => Fu[List[Game]],
     bus: Bus
-) {
+)(implicit system: ActorSystem) {
+
+  private val sequencer =
+    new lidraughts.hub.DuctSequencers(
+      maxSize = 256,
+      expiration = 1 minute,
+      timeout = 10 seconds,
+      name = "swiss.api"
+    )
 
   import BsonHandlers._
 
@@ -73,31 +79,31 @@ final class SwissApi(
       cache.featuredInTeam.invalidate(swiss.teamId) inject swiss
   }
 
-  def update(old: Swiss, data: SwissForm.SwissData): Funit = {
-    val swiss = old.copy(
-      name = data.name | old.name,
-      clock = data.clock,
-      variant = data.realVariant,
-      startsAt = data.startsAt.ifTrue(old.isCreated) | old.startsAt,
-      nextRoundAt = if (old.isCreated) Some(data.startsAt | old.startsAt) else old.nextRoundAt,
-      settings = old.settings.copy(
-        nbRounds = data.nbRounds,
-        rated = data.rated | old.settings.rated,
-        description = data.description,
-        hasChat = data.hasChat | old.settings.hasChat,
-        roundInterval = data.roundInterval.fold(old.settings.roundInterval)(_.seconds)
-      )
-    )
-    swissColl.update($id(swiss.id), swiss).void
-  }
+  def update(swiss: Swiss, data: SwissForm.SwissData): Funit =
+    Sequencing(swiss.id)(byId) { old =>
+      swissColl
+        .update(
+          $id(old.id),
+          old.copy(
+            name = data.name | old.name,
+            clock = data.clock,
+            variant = data.realVariant,
+            startsAt = data.startsAt.ifTrue(old.isCreated) | old.startsAt,
+            nextRoundAt = if (old.isCreated) Some(data.startsAt | old.startsAt) else old.nextRoundAt,
+            settings = old.settings.copy(
+              nbRounds = data.nbRounds,
+              rated = data.rated | old.settings.rated,
+              description = data.description,
+              hasChat = data.hasChat | old.settings.hasChat,
+              roundInterval = data.roundInterval.fold(old.settings.roundInterval)(_.seconds)
+            )
+          )
+        )
+        .void
+    }
 
-  def join(
-    id: Swiss.Id,
-    me: User,
-    isInTeam: TeamId => Boolean,
-    promise: Option[Promise[Boolean]]
-  ): Unit = Sequencing(id)(notFinishedById) { swiss =>
-    val fuJoined =
+  def join(id: Swiss.Id, me: User, isInTeam: TeamId => Boolean): Fu[Boolean] =
+    Sequencing(id)(notFinishedById) { swiss =>
       playerColl // try a rejoin first
         .updateField($id(SwissPlayer.makeId(swiss.id, me.id)), SwissPlayer.Fields.absent, false)
         .flatMap { rejoin =>
@@ -108,25 +114,12 @@ final class SwissApi(
                 swissColl.update($id(swiss.id), $inc("nbPlayers" -> 1)) inject true
             }
           }
-        } flatMap { res =>
-          recomputeAndUpdateAll(swiss.id) inject res
         }
-    fuJoined map {
-      joined => promise.foreach(_ success joined)
+    } flatMap { res =>
+      recomputeAndUpdateAll(id) inject res
     }
-  }
 
-  def joinWithResult(
-    id: Swiss.Id,
-    me: User,
-    isInTeam: TeamId => Boolean
-  ): Fu[Boolean] = {
-    val promise = Promise[Boolean]
-    join(id, me, isInTeam, promise.some)
-    promise.future.withTimeoutDefault(5.seconds, false)(system)
-  }
-
-  def withdraw(id: Swiss.Id, me: User): Unit =
+  def withdraw(id: Swiss.Id, me: User): Funit =
     Sequencing(id)(notFinishedById) { swiss =>
       SwissPlayer.fields { f =>
         if (swiss.isStarted)
@@ -251,8 +244,8 @@ final class SwissApi(
         }
       }
 
-  private[swiss] def finishGame(game: Game): Unit =
-    game.swissId.map(Swiss.Id) foreach { swissId =>
+  private[swiss] def finishGame(game: Game): Funit =
+    game.swissId.map(Swiss.Id) ?? { swissId =>
       Sequencing(swissId)(byId) { swiss =>
         if (!swiss.isStarted) {
           logger.info(s"Removing pairing ${game.id} finished after swiss ${swiss.id}")
@@ -269,7 +262,9 @@ final class SwissApi(
                 swissColl.update($id(swiss.id), $inc("nbOngoing" -> -1)) >>
                 game.playerWhoDidNotMove.flatMap(_.userId).?? { absent =>
                   SwissPlayer.fields { f =>
-                    playerColl.updateField($doc(f.swissId -> swiss.id, f.userId -> absent), f.absent, true).void
+                    playerColl
+                      .updateField($doc(f.swissId -> swiss.id, f.userId -> absent), f.absent, true)
+                      .void
                   }
                 } >> {
                   (swiss.nbOngoing == 1) ?? {
@@ -285,20 +280,20 @@ final class SwissApi(
                         systemChat(swiss.id, s"Round ${swiss.round.value + 1} will start soon.")
                   }
                 } >>- socketReload(swiss.id)
-            } >> recomputeAndUpdateAll(swissId)
+            }
           }
-      }
+      } >> recomputeAndUpdateAll(swissId)
     }
 
   private[swiss] def destroy(swiss: Swiss): Funit =
     swissColl.remove($id(swiss.id)) >>
       pairingColl.remove($doc(SwissPairing.Fields.swissId -> swiss.id)) >>
       playerColl.remove($doc(SwissPairing.Fields.swissId -> swiss.id)).void >>- {
-        socketReload(swiss.id)
         cache.featuredInTeam.invalidate(swiss.teamId)
+        socketReload(swiss.id)
       }
 
-  private[swiss] def finish(oldSwiss: Swiss): Unit =
+  private[swiss] def finish(oldSwiss: Swiss): Funit =
     Sequencing(oldSwiss.id)(startedById) { swiss =>
       pairingColl.countSel($doc(SwissPairing.Fields.swissId -> swiss.id)) flatMap {
         case 0 => destroy(swiss)
@@ -327,10 +322,10 @@ final class SwissApi(
         socketReload(swiss.id)
       }
 
-  def kill(swiss: Swiss): Unit = {
+  def kill(swiss: Swiss): Funit =
     if (swiss.isStarted) finish(swiss)
     else if (swiss.isCreated) destroy(swiss)
-  }
+    else funit
 
   private def recomputeAndUpdateAll(id: Swiss.Id): Funit =
     scoring(id).flatMap { res =>
@@ -346,38 +341,33 @@ final class SwissApi(
       .map(_.flatMap(_.getAs[Swiss.Id]("_id")))
       .flatMap { ids =>
         lidraughts.common.Future.applySequentially(ids) { id =>
-          val promise = Promise[Boolean]
           Sequencing(id)(notFinishedById) { swiss =>
-            val fu =
-              if (swiss.nbPlayers >= 4)
-                director.startRound(swiss).flatMap {
-                  _.fold {
-                    systemChat(swiss.id, "All possible pairings were played.")
-                    doFinish(swiss)
-                  } {
-                    case (s, pairings) if s.nextRoundAt.isEmpty =>
-                      systemChat(swiss.id, s"Round ${swiss.round.value + 1} started.")
-                      funit
-                    case (s, _) =>
-                      systemChat(swiss.id, s"Round ${swiss.round.value + 1} failed.", true)
-                      swissColl
-                        .update($id(swiss.id), $set("nextRoundAt" -> DateTime.now.plusSeconds(61)))
-                        .void
-                  }
-                }
-              else {
-                if (swiss.startsAt isBefore DateTime.now.minusMinutes(60)) destroy(swiss)
-                else {
-                  systemChat(swiss.id, "Not enough players for first round; delaying start.", true)
-                  swissColl
-                    .update($id(swiss.id), $set("nextRoundAt" -> DateTime.now.plusSeconds(121)))
-                    .void
+            if (swiss.nbPlayers >= 4)
+              director.startRound(swiss).flatMap {
+                _.fold {
+                  systemChat(swiss.id, "All possible pairings were played.")
+                  doFinish(swiss)
+                } {
+                  case (s, pairings) if s.nextRoundAt.isEmpty =>
+                    systemChat(swiss.id, s"Round ${swiss.round.value + 1} started.")
+                    funit
+                  case (s, _) =>
+                    systemChat(swiss.id, s"Round ${swiss.round.value + 1} failed.", true)
+                    swissColl
+                      .update($id(swiss.id), $set("nextRoundAt" -> DateTime.now.plusSeconds(61)))
+                      .void
                 }
               }
-            val fuCompleted = fu >>- recomputeAndUpdateAll(id) inject true
-            fuCompleted map promise.success
-          }
-          promise.future.withTimeoutDefault(15.seconds, false)(system).void
+            else {
+              if (swiss.startsAt isBefore DateTime.now.minusMinutes(60)) destroy(swiss)
+              else {
+                systemChat(swiss.id, "Not enough players for first round; delaying start.", true)
+                swissColl
+                  .update($id(swiss.id), $set("nextRoundAt" -> DateTime.now.plusSeconds(121)))
+                  .void
+              }
+            }
+          } >> recomputeAndUpdateAll(id)
         }
       }
 
@@ -403,16 +393,14 @@ final class SwissApi(
       volatile
     )
 
-  private def Sequencing(swissId: Swiss.Id)(fetch: Swiss.Id => Fu[Option[Swiss]])(run: Swiss => Funit): Unit =
-    doSequence(swissId) {
-      fetch(swissId) flatMap {
-        case Some(t) => run(t)
-        case None => fufail(s"Can't run sequenced operation on missing swiss $swissId")
+  private def Sequencing[A: Zero](
+    id: Swiss.Id
+  )(fetch: Swiss.Id => Fu[Option[Swiss]])(run: Swiss => Fu[A]): Fu[A] =
+    sequencer(id.value) {
+      fetch(id) flatMap {
+        _ ?? run
       }
     }
-
-  private def doSequence(swissId: Swiss.Id)(fu: => Funit): Unit =
-    sequencers.tell(swissId.value, Duct.extra.LazyFu(() => fu))
 
   private def socketReload(swissId: Swiss.Id): Unit =
     socketMap.tell(swissId.value, Reload)

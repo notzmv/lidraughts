@@ -6,10 +6,8 @@ import scala.concurrent.duration._
 
 import lidraughts.common.{ AtMost, Every, ResilientScheduler }
 import lidraughts.game.Game
-import lidraughts.hub.{ Duct, DuctMap }
 import lidraughts.socket.History
 import lidraughts.socket.Socket.{ GetVersion, SocketVersion }
-import lidraughts.user.LightUserApi
 
 final class Env(
     config: Config,
@@ -89,8 +87,6 @@ final class Env(
     playerColl = playerColl,
     pairingColl = pairingColl,
     cache = cache,
-    system = system,
-    sequencers = sequencerMap,
     socketMap = socketMap,
     director = director,
     scoring = scoring,
@@ -101,7 +97,7 @@ final class Env(
     lightUserApi = lightUserApi,
     proxyGames = proxyGames,
     bus = system.lidraughtsBus
-  )
+  )(system)
 
   private val socketMap: SocketMap = lidraughts.socket.SocketMap[SwissSocket](
     system = system,
@@ -116,11 +112,6 @@ final class Env(
     accessTimeout = SocketTimeout,
     monitoringName = "swiss.socketMap",
     broomFrequency = 3701 millis
-  )
-
-  private val sequencerMap = new DuctMap(
-    mkDuct = _ => Duct.extra.lazyFu(5.seconds)(system),
-    accessTimeout = SequencerTimeout
   )
 
   def version(swissId: Swiss.Id): Fu[SocketVersion] =

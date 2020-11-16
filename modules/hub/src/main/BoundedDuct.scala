@@ -28,7 +28,7 @@ final class BoundedDuct(maxSize: Int, name: String, logging: Boolean = true)(pro
         case Some(q) =>
           val success = q.size < maxSize
           if (!success) {
-            //lidraughts.mon.duct.overflow(name).increment()
+            lidraughts.mon.duct.overflow(name)
             if (logging) lidraughts.log("duct").warn(s"[$name] queue is full ($maxSize)")
           }
           success

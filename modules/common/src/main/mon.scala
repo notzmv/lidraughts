@@ -289,6 +289,9 @@ object mon {
     val daemon = rec("jvm.daemon")
     val uptime = rec("jvm.uptime")
   }
+  object duct {
+    def overflow(name: String) = inc(s"duct.overflow.$name")
+  }
   object user {
     val online = rec("user.online")
     object register {

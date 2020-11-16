@@ -22,7 +22,7 @@ trait Duct {
   def !(msg: Any): Unit =
     if (stateRef.getAndUpdate(
       new UnaryOperator[State] {
-        override def apply(state: State): State = Some(state.fold(emptyQueue)(_ enqueue msg))
+        override def apply(state: State): State = Some(state.fold(Queue.empty[Any])(_ enqueue msg))
       }
     ).isEmpty) run(msg)
 
@@ -46,18 +46,13 @@ object Duct {
 
   type ReceiveAsync = PartialFunction[Any, Fu[Any]]
 
-  case class SizedQueue(queue: Queue[Any], size: Int) {
-    def enqueue(a: Any) = SizedQueue(queue enqueue a, size + 1)
-    def isEmpty = size == 0
-    def tailOption = !isEmpty option SizedQueue(queue.tail, size - 1)
-    def headOption = queue.headOption
-  }
-  val emptyQueue = SizedQueue(Queue.empty, 0)
-
-  private type State = Option[SizedQueue]
+  private type State = Option[Queue[Any]]
 
   private val postRunUpdate = new UnaryOperator[State] {
-    override def apply(state: State): State = state.flatMap(_.tailOption)
+    override def apply(state: State): State =
+      state flatMap { q =>
+        if (q.isEmpty) None else Some(q.tail)
+      }
   }
 
   private val fallback = { msg: Any =>

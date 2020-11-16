@@ -115,7 +115,7 @@ object Swiss extends LidraughtsController {
   def join(id: String) = SecureBody(_.Beta) { implicit ctx => me =>
     NoLameOrBot {
       Env.team.cached.teamIds(me.id) flatMap { teamIds =>
-        env.api.joinWithResult(SwissId(id), me, teamIds.contains) flatMap { result =>
+        env.api.join(SwissId(id), me, teamIds.contains) flatMap { result =>
           negotiate(
             html = Redirect(routes.Swiss.show(id)).fuccess,
             api = _ =>
@@ -131,10 +131,11 @@ object Swiss extends LidraughtsController {
 
   def withdraw(id: String) =
     Auth { implicit ctx => me =>
-      WithSwiss(id) { swiss =>
-        env.api.withdraw(SwissId(id), me)
-        if (lidraughts.common.HTTPRequest.isXhr(ctx.req)) fuccess(jsonOkResult)
-        else Redirect(routes.Swiss.show(id)).fuccess
+      env.api.withdraw(SwissId(id), me) flatMap { result =>
+        negotiate(
+          html = Redirect(routes.Swiss.show(id)).fuccess,
+          api = _ => fuccess(jsonOkResult)
+        )
       }
     }
 
@@ -158,8 +159,7 @@ object Swiss extends LidraughtsController {
   }
   def terminate(id: String) = Auth { implicit ctx => me =>
     WithEditableSwiss(id, me) { swiss =>
-      env.api kill swiss
-      Redirect(routes.Team.show(swiss.teamId)).fuccess
+      env.api kill swiss inject Redirect(routes.Team.show(swiss.teamId))
     }
   }
 
