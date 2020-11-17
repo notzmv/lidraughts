@@ -37,7 +37,7 @@ $('button.clear').on('click', function() {
             ),
             form3.actions(
               button(cls := "button button-red clear", tpe := "button")("Clear"),
-              submitButton(cls := "button")("Save")
+              submitButton(cls := "button")(trans.save())
             )
           )
         )

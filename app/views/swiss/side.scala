@@ -36,7 +36,7 @@ object side {
             a(href := routes.Swiss.home)("Swiss [BETA]"),
             (isGranted(_.ManageTournament) || (ctx.userId.has(s.createdBy) && s.isCreated)) option frag(
               " ",
-              a(href := routes.Swiss.edit(s.id.value), title := "Edit tournament")(iconTag("%"))
+              a(href := routes.Swiss.edit(s.id.value), title := trans.ratedTournament.txt())(iconTag("%"))
             )
           ),
           bits.showInterval(s)

@@ -43,7 +43,7 @@ object create {
             }
           ),
           form3.actions(
-            a(href := routes.OAuthToken.index)("Cancel"),
+            a(href := routes.OAuthToken.index)(trans.cancel()),
             form3.submit(trans.apply())
           )
         )

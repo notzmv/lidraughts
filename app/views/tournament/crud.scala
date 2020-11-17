@@ -32,12 +32,12 @@ object crud {
       }
 
   def create(form: Form[_])(implicit ctx: Context) = layout(
-    title = "New tournament",
+    title = trans.newTournament.txt(),
     css = "mod.form",
     evenMoreJs = jsTag("tournamentForm.js")
   ) {
       div(cls := "crud page-menu__content box box-pad")(
-        h1("New tournament"),
+        h1(trans.newTournament()),
         postForm(cls := "form3", action := routes.TournamentCrud.create)(inForm(form))
       )
     }

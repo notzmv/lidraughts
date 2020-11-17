@@ -58,7 +58,7 @@ object form {
       form3.group(form("redirectUri"), raw("Callback URL"), half = true, help = frag("It must match the URL in your code").some)(form3.input(_, typ = "url"))
     ),
     form3.actions(
-      a(href := routes.OAuthApp.index)("Cancel"),
+      a(href := routes.OAuthApp.index)(trans.cancel()),
       form3.submit(trans.apply())
     )
   )
