@@ -21,7 +21,7 @@ object I18nDb {
   val activity: Messages = lidraughts.i18n.db.activity.Registry.load
   val coordinates: Messages = lidraughts.i18n.db.coordinates.Registry.load
   val study: Messages = lidraughts.i18n.db.study.Registry.load
-  val swiss: Messages = lidraughts.i18n.db.study.Registry.load
+  val swiss: Messages = lidraughts.i18n.db.swiss.Registry.load
 
   def apply(ref: Ref): Messages = ref match {
     case Site => site
