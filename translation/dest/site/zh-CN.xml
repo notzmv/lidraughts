@@ -449,6 +449,7 @@
   <string name="recommendNotTouching">我们建议您不要修改这些设置。</string>
   <string name="fewerPlayers">如果您设置参赛条件，参加您的锦标赛的棋手将会更少。</string>
   <string name="showAdvancedSettings">显示高级设置</string>
+  <string name="makePrivateTournament">设置比赛私有，并用密码限制访问</string>
   <string name="join">参加锦标赛</string>
   <string name="withdraw">离开锦标赛</string>
   <string name="points">分数</string>

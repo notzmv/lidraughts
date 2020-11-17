@@ -394,6 +394,7 @@ consultar uma análise de computador, utilizar o chat e compartilhar um link.</s
   <string name="recommendNotTouching">Recomendamos não mexer nisso.</string>
   <string name="fewerPlayers">Se você definir as condições de participação, haverá menos jogadores no torneio.</string>
   <string name="showAdvancedSettings">Exibir configurações avançadas</string>
+  <string name="makePrivateTournament">Faça o torneio privado e restrinja o acesso com uma senha</string>
   <string name="join">Entrar</string>
   <string name="withdraw">Sair</string>
   <string name="points">Pontos</string>

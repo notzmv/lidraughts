@@ -425,6 +425,7 @@ poproszenia o analizę komputerową, omówienia jej z innymi oraz udostępnienia
   <string name="recommendNotTouching">Zalecamy nie zmieniać tych ustawień.</string>
   <string name="fewerPlayers">Ustawienie warunków wstępu sprawi, że do turnieju przystąpi mniej osób.</string>
   <string name="showAdvancedSettings">Pokaż ustawienia zaawansowane</string>
+  <string name="makePrivateTournament">Uczyń turniej prywatnym ograniczając dostęp za pomocą hasła</string>
   <string name="join">Dołącz</string>
   <string name="withdraw">Wycofaj się</string>
   <string name="points">Punkty</string>

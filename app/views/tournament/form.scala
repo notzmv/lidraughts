@@ -229,7 +229,7 @@ final private class TourFields(me: User, form: Form[_])(implicit ctx: Context) {
       form3.textarea(_)(rows := 3)
     )
   def password =
-    form3.group(form("password"), trans.password(), help = raw("Make the tournament private, and restrict access with a password").some)(
+    form3.group(form("password"), trans.password(), help = trans.makePrivateTournament().some)(
       form3.input(_)(autocomplete := "off")
     )
   def berserkableHack =

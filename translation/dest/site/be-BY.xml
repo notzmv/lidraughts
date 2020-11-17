@@ -416,6 +416,7 @@
   <string name="recommendNotTouching">Лепей тут нічога не чапаць.</string>
   <string name="fewerPlayers">Калі вы задасце ўмовы ўваходу, то не ўсе гульцы змогуць далучыцца да вашага турніру.</string>
   <string name="showAdvancedSettings">Паказаць дадатковыя налады</string>
+  <string name="makePrivateTournament">Зрабіць турнір прыватным і абмяжаваць доступ паролем</string>
   <string name="join">Далучыцца</string>
   <string name="withdraw">Адмовіцца ад удзелу</string>
   <string name="points">Балы</string>
@@ -511,7 +512,7 @@
   <string name="description">Апісанне</string>
   <string name="no">Не</string>
   <string name="yes">Так</string>
-  <string name="help">Дапамога:</string>
+  <string name="help">Дапамога</string>
   <string name="createANewTopic">Стварыць новую тэму</string>
   <string name="topics">Тэмы</string>
   <string name="posts">Допісы</string>

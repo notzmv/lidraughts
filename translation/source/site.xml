@@ -451,6 +451,7 @@ computer analysis, game chat and shareable URL.</string>
   <string name="recommendNotTouching">We recommend not touching these.</string> 
   <string name="fewerPlayers">If you set conditions of entry, your tournament will have fewer players.</string> 
   <string name="showAdvancedSettings">Show advanced settings</string>
+  <string name="makePrivateTournament">Make the tournament private, and restrict access with a password</string>
   <string name="join">Join</string>
   <string name="withdraw">Withdraw</string>
   <string name="points">Points</string>

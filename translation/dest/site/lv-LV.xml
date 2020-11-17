@@ -464,6 +464,7 @@ spēles tērzētavu un URL saiti, kas dos pieeju citiem.</string>
   <string name="recommendNotTouching">Mēs neiesakām šeit patvaļīgi kaut ko manīt.</string>
   <string name="fewerPlayers">Ja uzstādīsi dalības nosacījumus, tavā turnīrā piedalīsies mazāk spēlētāju.</string>
   <string name="showAdvancedSettings">Parādīt lietpratēju uzstādījumus</string>
+  <string name="makePrivateTournament">Padarīt turnīru privātu, un ierobežot piekļuvi ar paroli</string>
   <string name="join">Pievienoties</string>
   <string name="withdraw">Izstāties</string>
   <string name="points">Punkti</string>

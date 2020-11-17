@@ -374,6 +374,7 @@ análise de computador, sala de conversação e link de partilha.</string>
   <string name="recommendNotTouching">Nós recomendamos que não toque nestas opções.</string>
   <string name="fewerPlayers">Se definires condições de participação, o teu torneio terá menos participantes.</string>
   <string name="showAdvancedSettings">Mostrar configurações avançadas</string>
+  <string name="makePrivateTournament">Torna o torneio privado e restrinje o acesso com uma palavra-passe</string>
   <string name="join">Entrar</string>
   <string name="withdraw">Sair</string>
   <string name="points">Pontos</string>
