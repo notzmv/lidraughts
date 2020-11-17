@@ -15,6 +15,7 @@ final private class PairingSystem(
         invoke(swiss, _) |> reader(ranking.map(_.swap))
       }
     }
+
   private def invoke(swiss: Swiss, input: List[String]): List[String] =
     withTempFile(swiss, input) { file =>
       import scala.sys.process._

@@ -41,7 +41,7 @@ final class SwissTrf(
       3 -> "001",
       8 -> ranking.getOrElse(p.userId, 0).toString,
       47 -> p.userId,
-      84 -> f"${sheet.points.value}%1.1f"
+      84 -> "%1.1f".formatLocal(java.util.Locale.US, sheet.points.value)
     ) ::: {
         swiss.allRounds.zip(sheet.outcomes).flatMap {
           case (rn, outcome) =>
