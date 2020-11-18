@@ -46,7 +46,7 @@ final class RecaptchaGoogle(
             success
           }
           case JsError(err) =>
-            fufail(s"$err ${~res.body.lines.toList.headOption}")
+            fufail(s"$err ${res.json}")
         }
       case res => fufail(s"${res.status} ${res.body}")
     } recover {

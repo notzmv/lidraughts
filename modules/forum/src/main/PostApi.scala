@@ -182,7 +182,7 @@ final class PostApi(
     _ ← optionT(for {
       first ← PostRepo.isFirstPost(view.topic.id, view.post.id)
       _ ← if (first) env.topicApi.delete(view.categ, view.topic)
-      else env.postColl.remove(view.post) >>
+      else env.postColl.remove($id(view.post.id)) >>
         (env.topicApi denormalize view.topic) >>
         (env.categApi denormalize view.categ) >>-
         env.recent.invalidate >>-
