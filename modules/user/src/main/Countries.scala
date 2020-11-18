@@ -11,7 +11,7 @@ final class Country(
 
 object Countries {
 
-  @inline private def C(code: String, name: String)                    = new Country(code, name, name)
+  @inline private def C(code: String, name: String) = new Country(code, name, name)
   @inline private def C(code: String, name: String, shortName: String) = new Country(code, name, shortName)
 
   val all = List(
@@ -270,15 +270,15 @@ object Countries {
     C("ZM", "Zambia"),
     C("ZW", "Zimbabwe")
   ).sortBy(_.name) ::: List(
-    // whatever
-    C("_adygea", "Adygea"),
-    C("_belarus-wrw", "Belarus White-red-white"),
-    C("_east-turkestan", "East Turkestan"),
-    C("EU", "European Union"),
-    C("_united-nations", "United Nations"),
-    C("_rainbow", "Rainbow"),
-    C("_pirate", "Pirate")
-  )
+      // whatever
+      C("_adygea", "Adygea"),
+      C("_belarus-wrw", "Belarus White-red-white"),
+      C("_east-turkestan", "East Turkestan"),
+      C("EU", "European Union"),
+      C("_united-nations", "United Nations"),
+      C("_rainbow", "Rainbow"),
+      C("_pirate", "Pirate")
+    )
 
   val allPairs = all map { c => c.code -> c.name }
 
