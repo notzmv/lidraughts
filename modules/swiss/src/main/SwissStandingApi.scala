@@ -17,7 +17,6 @@ final class SwissStandingApi(
     swissColl: Coll,
     playerColl: Coll,
     pairingColl: Coll,
-    rankingApi: SwissRankingApi,
     asyncCache: lidraughts.memo.AsyncCache.Builder,
     lightUserApi: lidraughts.user.LightUserApi
 ) {

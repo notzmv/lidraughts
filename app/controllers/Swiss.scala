@@ -163,9 +163,7 @@ object Swiss extends LidraughtsController {
     AuthBody { implicit ctx => me =>
       WithEditableSwiss(id, me) { swiss =>
         implicit val req = ctx.body
-        env.forms
-          .nextRound(swiss)
-          .bindFromRequest
+        env.forms.nextRound.bindFromRequest
           .fold(
             err => Redirect(routes.Swiss.show(id)).fuccess,
             date => env.api.scheduleNextRound(swiss, date) inject Redirect(routes.Swiss.show(id))

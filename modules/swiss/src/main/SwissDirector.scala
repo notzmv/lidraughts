@@ -17,7 +17,7 @@ final private class SwissDirector(
   import BsonHandlers._
 
   // sequenced by SwissApi
-  private[swiss] def startRound(from: Swiss): Fu[Option[(Swiss, List[SwissPairing])]] =
+  private[swiss] def startRound(from: Swiss): Fu[Option[Swiss]] =
     pairingSystem(from)
       .flatMap { pendings =>
         val pendingPairings = pendings.collect { case Right(p) => p }
@@ -65,14 +65,14 @@ final private class SwissDirector(
             _ <- lidraughts.common.Future.applySequentially(games) { game =>
               GameRepo.insertDenormalized(game) >>- onStart(game.id)
             }
-          } yield Some(swiss -> pairings)
+          } yield swiss.some
         }
       }
       .recover {
         case PairingSystem.BBPairingException(msg, input) =>
           logger.warn(s"BBPairing ${from.id} $msg")
           logger.info(s"BBPairing ${from.id} $input")
-          Some(from -> List.empty[SwissPairing])
+          from.some
       }
 
   private def makeGame(swiss: Swiss, players: Map[User.ID, SwissPlayer])(

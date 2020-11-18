@@ -19,7 +19,6 @@ private object SwissBoard {
 
 final private class SwissBoardApi(
     rankingApi: SwissRankingApi,
-    asyncCache: lidraughts.memo.AsyncCache.Builder,
     lightUserApi: lidraughts.user.LightUserApi,
     proxyGame: Game.ID => Fu[Option[Game]]
 ) {

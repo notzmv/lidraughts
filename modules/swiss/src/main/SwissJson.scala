@@ -123,7 +123,6 @@ final class SwissJson(
             JsArray {
               top3.map { player =>
                 playerJsonBase(
-                  swiss,
                   player,
                   lightUserApi.sync(player.userId) | LightUser.fallback(player.userId),
                   performance = true
@@ -167,7 +166,7 @@ object SwissJson {
       })
 
   private[swiss] def playerJson(swiss: Swiss, view: SwissPlayer.View): JsObject =
-    playerJsonBase(swiss, view, false) ++ Json
+    playerJsonBase(view, false) ++ Json
       .obj(
         "sheetMin" -> swiss.allRounds
           .map(view.pairings.get)
@@ -179,7 +178,7 @@ object SwissJson {
       )
 
   def playerJsonExt(swiss: Swiss, view: SwissPlayer.ViewExt): JsObject =
-    playerJsonBase(swiss, view, true) ++ Json.obj(
+    playerJsonBase(view, true) ++ Json.obj(
       "sheet" -> swiss.allRounds
         .zip(view.sheet.outcomes)
         .reverse
@@ -196,15 +195,13 @@ object SwissJson {
     )
 
   private def playerJsonBase(
-    swiss: Swiss,
     view: SwissPlayer.Viewish,
     performance: Boolean
   ): JsObject =
-    playerJsonBase(swiss, view.player, view.user, performance) ++
+    playerJsonBase(view.player, view.user, performance) ++
       Json.obj("rank" -> view.rank)
 
   private def playerJsonBase(
-    swiss: Swiss,
     p: SwissPlayer,
     user: LightUser,
     performance: Boolean
