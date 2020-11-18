@@ -4,10 +4,7 @@ import SwissCtrl from './ctrl';
 import { isOutcome } from './util';
 
 // when the tournament no longer exists
-function onFail(err) {
-  throw err;
-  // window.lidraughts.reload();
-}
+const onFail = () => window.lidraughts.reload();
 
 const join = (ctrl: SwissCtrl) =>
   json(`/swiss/${ctrl.data.id}/join`, { method: 'post' }).catch(onFail);
