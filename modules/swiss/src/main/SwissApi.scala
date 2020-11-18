@@ -105,7 +105,7 @@ final class SwissApi(
           ) |> { s =>
               if (s.isStarted && s.nbOngoing == 0 && (s.nextRoundAt.isEmpty || old.settings.manualRounds) && !s.settings.manualRounds)
                 s.copy(nextRoundAt = DateTime.now.plusSeconds(s.settings.roundInterval.toSeconds.toInt).some)
-              else if (s.settings.manualRounds && !old.settings.manualRounds)
+              else if (s.isStarted && s.settings.manualRounds && !old.settings.manualRounds)
                 s.copy(nextRoundAt = none)
               else s
             } |> addFeaturable
@@ -116,7 +116,9 @@ final class SwissApi(
   def scheduleNextRound(swiss: Swiss, date: DateTime): Funit =
     Sequencing(swiss.id)(notFinishedById) { old =>
       old.settings.manualRounds ?? {
-        if (old.isCreated) swissColl.updateField($id(old.id), "startsAt", date).void
+        if (old.isCreated)
+          swissColl.updateField($id(old.id), "startsAt", date) >>
+            swissColl.updateField($id(old.id), "nextRoundAt", date).void.void
         else if (old.isStarted && old.nbOngoing == 0)
           swissColl.updateField($id(old.id), "nextRoundAt", date).void >>- {
             val show = org.joda.time.format.DateTimeFormat.forStyle("MS") print date
