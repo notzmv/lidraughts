@@ -37,8 +37,8 @@ export default function(ctrl: SwissCtrl): VNode | undefined {
         renderPlayer(data, true, false)
       ]),
       h('table', [
-          numberRow('Points', data.points, 'raw'),
-          numberRow('Tie break', data.tieBreak, 'raw'),
+          numberRow(noarg('points'), data.points, 'raw'),
+          numberRow(noarg('tieBreak'), data.tieBreak, 'raw'),
           ...(games ? [
             data.performance ? numberRow(
               noarg('performance'),
@@ -61,7 +61,7 @@ export default function(ctrl: SwissCtrl): VNode | undefined {
           key: round
         }, [
           h('th', '' + round),
-          h('td.outcome', { attrs: { colspan: 3} }, p),
+          h('td.outcome', { attrs: { colspan: 3} }, noarg(p)),
           h('td', p == 'absent' ? '-' : (p == 'bye' ? '1' : '½'))
         ]);
         const res = result(p);

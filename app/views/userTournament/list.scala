@@ -20,10 +20,10 @@ object list {
           thead(
             tr(
               th(cls := "count")(count),
-              th(h1(userLink(u, withOnline = true), " tournaments")),
-              th("Games"),
-              th("Points"),
-              th("Rank")
+              th(h1(trans.xTournaments(userLink(u, withOnline = true)))),
+              th(trans.games()),
+              th(trans.points()),
+              th(trans.rank())
             )
           ),
           tbody(cls := "infinitescroll")(

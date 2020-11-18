@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="swissTournaments">Zwitserse toernooien</string>
+  <string name="bye">Bye</string>
   <string name="byes">Byes</string>
+  <string name="absent">Afwezig</string>
   <string name="absences">Aantal afwezig</string>
+  <string name="late">Te laat</string>
+  <string name="tieBreak">Weerstandspunten</string>
+  <plurals name="nbRounds">
+    <item quantity="one">%s ronde</item>
+    <item quantity="other">%s rondes</item>
+  </plurals>
+  <string name="nextRound">Volgende ronde</string>
+  <string name="numberOfRounds">Aantal rondes</string>
+  <string name="scheduleTheNextRound">Plan de volgende ronde</string>
 </resources>

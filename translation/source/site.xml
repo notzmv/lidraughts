@@ -122,6 +122,7 @@
     <item quantity="one">%s opponent</item>
     <item quantity="other">%s opponents</item>
   </plurals>
+  <string name="ongoingGames">Ongoing games</string>
   <string name="currentGames">Current games</string>
   <string name="gamesInTimeout">Games in timeout</string>
   <string name="yourTurnInX">Your turn in %s</string>
@@ -214,6 +215,7 @@
   <string name="yourOpponentOffersADraw">Your opponent offers a draw</string>
   <string name="accept">Accept</string>
   <string name="decline">Decline</string>
+  <string name="startingIn">Starting in</string>
   <string name="startingSoon"> - Starting soon - </string>
   <string name="playingRightNow">Playing right now</string>
   <string name="eventInProgress">Playing right now</string>
@@ -226,6 +228,7 @@
   <string name="mode">Mode</string>
   <string name="casual">Casual</string>
   <string name="rated">Rated</string>
+  <string name="gamesWillImpactThePlayersRating">Games will impact the players rating</string>
   <string name="casualTournament">Casual</string>
   <string name="ratedTournament">Rated</string>
   <string name="thisGameIsRated">This game is rated</string>

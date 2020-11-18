@@ -7,8 +7,8 @@ import { userName } from './util';
 function podiumStats(p: PodiumPlayer, trans: Trans): VNode {
   const noarg = trans.noarg;
   return h('table.stats', [
-    h('tr', [h('th', 'Points'), h('td', '' + p.points)]),
-    h('tr', [h('th', 'Tie Break'), h('td', '' + p.tieBreak)]),
+    h('tr', [h('th', noarg('points')), h('td', '' + p.points)]),
+    h('tr', [h('th', noarg('tieBreak')), h('td', '' + p.tieBreak)]),
     p.performance ? h('tr', [h('th', noarg('performance')), h('td', '' + p.performance)]) : null
   ]);
 }

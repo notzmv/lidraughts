@@ -203,7 +203,7 @@ final private class TourFields(me: User, form: Form[_])(implicit ctx: Context) {
     form3.checkbox(
       form("rated"),
       trans.rated(),
-      help = raw("Games are rated<br>and impact players ratings").some
+      help = trans.gamesWillImpactThePlayersRating().some
     ),
     st.input(tpe := "hidden", st.name := form("rated").name, value := "false") // hack allow disabling rated
   )

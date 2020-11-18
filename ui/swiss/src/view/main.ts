@@ -101,7 +101,7 @@ function nextRound(ctrl: SwissCtrl): VNode | undefined {
     h('input', {
       attrs: {
         name: 'date',
-        placeholder: 'Schedule the next round',
+        placeholder: ctrl.trans.noarg('scheduleTheNextRound'),
         value: ctrl.data.nextRound?.at || ''
       },
       hook: onInsert((el: HTMLInputElement) =>
@@ -134,7 +134,7 @@ function joinButton(ctrl: SwissCtrl): VNode | undefined {
       href: `/team/${d.joinTeam}`,
       'data-icon': 'f'
     }
-  }, 'Join the team');
+  }, ctrl.trans.noarg('joinTeam'));
 
   if (d.canJoin) return ctrl.joinSpinner ? spinner() :
     h('button.fbt.text.highlight', {

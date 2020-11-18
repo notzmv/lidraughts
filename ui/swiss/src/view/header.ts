@@ -29,7 +29,7 @@ function clock(ctrl: SwissCtrl): VNode | undefined {
   return h(`div.clock.clock-created.time-cache-${next.at}`, {
     hook: startClock(next.in + 1)
   }, [
-    h('span.shy', ctrl.data.status == 'created' ? 'Starting in' : 'Next round'),
+    h('span.shy', ctrl.trans.noarg(ctrl.data.status == 'created' ? 'startingIn' : 'nextRound')),
     h('span.time.text')
   ]);
 }
@@ -38,7 +38,7 @@ function ongoing(ctrl: SwissCtrl): VNode | undefined {
   const nb = ctrl.data.nbOngoing;
   return nb ? h('div.ongoing', [
     h('span.nb', [nb]),
-    h('span.shy', 'Ongoing games')
+    h('span.shy', ctrl.trans.noarg('ongoingGames'))
   ]) : undefined;
 }
 
@@ -54,7 +54,7 @@ export default function(ctrl: SwissCtrl): VNode {
             target: '_blank'
           }
         }, greatPlayer.name),
-        ' Tournament'
+        ' ' + ctrl.trans.noarg('tournament')
       ] : [ctrl.data.name])
     ),
     ctrl.data.status == 'finished' ? undefined : (

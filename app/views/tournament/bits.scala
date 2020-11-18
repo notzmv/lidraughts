@@ -67,6 +67,7 @@ object bits {
     trans.ratedTournament,
     trans.casualTournament,
     trans.password,
-    trans.thematic
+    trans.thematic,
+    trans.startingIn
   )
 }

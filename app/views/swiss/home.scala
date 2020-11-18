@@ -11,11 +11,11 @@ object home {
 
   def apply(now: List[Swiss], soon: List[Swiss])(implicit ctx: Context) =
     views.html.base.layout(
-      title = "Swiss tournaments",
+      title = trans.swiss.swissTournaments.txt(),
       moreCss = cssTag("swiss.home")
     ) {
         main(cls := "page-small box box-pad page swiss-home")(
-          h1("Swiss tournaments [BETA]"),
+          h1(trans.swiss.swissTournaments.txt() + " [BETA]"),
           renderList("Now playing")(now),
           renderList("Starting soon")(soon),
           div(cls := "swiss-home__infos")(
@@ -59,7 +59,7 @@ object home {
               span(cls := "rounds")(
                 s.isStarted option frag(s.round.value, " / "),
                 s.settings.nbRounds,
-                " rounds Swiss"
+                " rounds swiss"
               ),
               span(cls := "setup")(
                 s.clock.show,

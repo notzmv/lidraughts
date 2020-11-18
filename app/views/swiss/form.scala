@@ -99,7 +99,7 @@ final private class SwissFields(form: Form[_])(implicit ctx: Context) {
       )
     }
   def nbRounds =
-    form3.group(form("nbRounds"), "Number of rounds", half = true)(
+    form3.group(form("nbRounds"), trans.swiss.numberOfRounds(), half = true)(
       form3.input(_, typ = "number")
     )
 
@@ -108,7 +108,7 @@ final private class SwissFields(form: Form[_])(implicit ctx: Context) {
       form3.checkbox(
         form("rated"),
         trans.rated(),
-        help = raw("Games are rated<br>and impact players ratings").some
+        help = trans.gamesWillImpactThePlayersRating().some
       ),
       st.input(tpe := "hidden", st.name := form("rated").name, value := "false") // hack allow disabling rated
     )

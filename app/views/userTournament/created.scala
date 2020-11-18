@@ -28,7 +28,7 @@ object created {
             thead(
               tr(
                 th(cls := "count")(pager.nbResults),
-                th(colspan := 2)(h1(userLink(u, withOnline = true), trans.xTournaments(""))),
+                th(colspan := 2)(h1(trans.xTournaments(userLink(u, withOnline = true)))),
                 th(trans.winner()),
                 th(trans.players())
               )

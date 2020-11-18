@@ -6,7 +6,8 @@ import { MaybeVNodes, Player, Pager } from '../interfaces';
 
 
 function playerTr(ctrl: SwissCtrl, player: Player) {
-  const userId = player.user.id;
+  const userId = player.user.id,
+    noarg = ctrl.trans.noarg;
   return h('tr', {
     key: userId,
     class: {
@@ -18,16 +19,16 @@ function playerTr(ctrl: SwissCtrl, player: Player) {
     h('td.rank', player.absent && ctrl.data.status != 'finished' ? h('i', {
       attrs: {
         'data-icon': 'Z',
-        'title': 'Absent'
+        'title': noarg('absent')
       }
     }) : [player.rank]),
     h('td.player', renderPlayer(player, false, true)),
     h('td.pairings',
       h('div',
           player.sheet.map(p =>
-            p == 'absent' ? h(p, title('Absent'), '-') : (
-              p == 'bye' ? h(p, title('Bye'), '1') : (
-              p == 'late' ? h(p, title('Late'), '½') :
+            p == 'absent' ? h(p, title(noarg('absent')), '-') : (
+              p == 'bye' ? h(p, title(noarg('byte')), '1') : (
+              p == 'late' ? h(p, title(noarg('late')), '½') :
           h('a.glpt.' + (p.o ? 'ongoing' : (p.w === true ? 'win' : (p.w === false ? 'loss' : 'draw'))), {
             attrs: {
               key: p.g,
@@ -39,8 +40,8 @@ function playerTr(ctrl: SwissCtrl, player: Player) {
           [...Array(ctrl.data.nbRounds - player.sheet.length)].map(_ => h('r'))
         )
       )),
-    h('td.points', title('Points'), '' + player.points),
-    h('td.tieBreak', title('Tie Break'), '' + player.tieBreak)
+    h('td.points', title(noarg('points')), '' + player.points),
+    h('td.tieBreak', title(noarg('tieBreak')), '' + player.tieBreak)
   ]);
 }
 

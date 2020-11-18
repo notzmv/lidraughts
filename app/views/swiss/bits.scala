@@ -94,18 +94,29 @@ object bits {
     trans.signIn,
     trans.averageElo,
     trans.gamesPlayed,
+    trans.ongoingGames,
     trans.whiteWins,
     trans.blackWins,
     trans.draws,
     trans.winRate,
     trans.performance,
+    trans.points,
     trans.standByX,
     trans.averageOpponent,
-    trans.tournamentComplete
+    trans.startingIn,
+    trans.tournament,
+    trans.tournamentComplete,
+    trans.joinTeam
   )
 
   private val i18nSwissKeys = List(
+    trans.swiss.bye,
     trans.swiss.byes,
-    trans.swiss.absences
+    trans.swiss.absent,
+    trans.swiss.absences,
+    trans.swiss.late,
+    trans.swiss.tieBreak,
+    trans.swiss.nextRound,
+    trans.swiss.scheduleTheNextRound
   )
 }

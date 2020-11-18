@@ -15,7 +15,8 @@ function hasFreq(freq, d) {
   return d.schedule && d.schedule.freq === freq;
 }
 
-function clock(d): VNode | undefined {
+function clock(ctrl: TournamentController): VNode | undefined {
+  const d = ctrl.data;
   if (d.isFinished) return;
   if (d.secondsToFinish) return h('div.clock', {
     hook: startClock(d.secondsToFinish)
@@ -39,7 +40,7 @@ function clock(d): VNode | undefined {
     return h('div.clock.clock-created', {
       hook: startClock(d.secondsToStart)
     }, [
-      h('span.shy', 'Starting in'),
+      h('span.shy', ctrl.trans.noarg('startingIn')),
       h('span.time.text')
     ]);
   }
@@ -90,6 +91,6 @@ export default function(ctrl: TournamentController): VNode {
   return h('div.tour__main__header', [
     image(ctrl.data),
     title(ctrl),
-    clock(ctrl.data)
+    clock(ctrl)
   ]);
 }

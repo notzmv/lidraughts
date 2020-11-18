@@ -118,6 +118,7 @@
     <item quantity="one">%s tegenstander</item>
     <item quantity="other">%s tegenstanders</item>
   </plurals>
+  <string name="ongoingGames">Lopende partijen</string>
   <string name="currentGames">Lopende partijen</string>
   <string name="gamesInTimeout">Partijen met timeout</string>
   <string name="yourTurnInX">Je bent aan zet in %s</string>
@@ -207,6 +208,7 @@
   <string name="yourOpponentOffersADraw">Je tegenstander biedt remise aan</string>
   <string name="accept">Accepteren</string>
   <string name="decline">Afwijzen</string>
+  <string name="startingIn">Begint over</string>
   <string name="startingSoon"> - Binnenkort van start - </string>
   <string name="playingRightNow">Nu aan het spelen</string>
   <string name="eventInProgress">Nu aan het spelen</string>
@@ -219,6 +221,7 @@
   <string name="mode">Instelling</string>
   <string name="casual">Vrijblijvend</string>
   <string name="rated">Met rating</string>
+  <string name="gamesWillImpactThePlayersRating">Partijen zullen de rating van de spelers beinvloeden</string>
   <string name="casualTournament">Vrijblijvend</string>
   <string name="ratedTournament">Met rating</string>
   <string name="thisGameIsRated">Deze partij telt mee voor rating</string>
