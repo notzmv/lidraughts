@@ -86,7 +86,7 @@ final private class SwissSheetApi(
           .sort(sort)
       }
       .cursor[SwissPlayer](readPreference)
-      .gather[List](4) flatMap {
+      .gather[List]() flatMap {
         _.map { player =>
           SwissPairing.fields { f =>
             pairingColl.list[SwissPairing](
