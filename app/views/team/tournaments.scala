@@ -78,7 +78,7 @@ object tournaments {
                     ),
                   s =>
                     frag(
-                      s.settings.nbRounds,
+                      s.actualNbRounds,
                       " rounds swiss",
                       br,
                       momentFromNowOnce(s.startsAt)

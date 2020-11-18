@@ -58,7 +58,7 @@ object home {
             td(cls := "infos")(
               span(cls := "rounds")(
                 s.isStarted option frag(s.round.value, " / "),
-                s.settings.nbRounds,
+                s.actualNbRounds,
                 " rounds swiss"
               ),
               span(cls := "setup")(
