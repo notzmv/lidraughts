@@ -106,10 +106,6 @@
   <string name="activeToday">Hjoed aktyf</string>
   <string name="activePlayers">Aktive spilers</string>
   <string name="bewareTheGameIsRatedButHasNoClock">Tink derom, dizze partij is wol om rating, mar is sûnder klok!</string>
-  <string name="newTeam">Nij team</string>
-  <string name="noTeamFound">Gjin team fûn</string>
-  <string name="joinTeam">Mei team meidwaan</string>
-  <string name="quitTeam">Team ferlette</string>
   <string name="tournamentNotFound">Toernoai net fûn</string>
   <string name="tournamentDoesNotExist">Dizze toernoai bestiet net.</string>
   <string name="kidMode">Bern mode</string>

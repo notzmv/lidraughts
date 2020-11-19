@@ -1256,8 +1256,12 @@ val `changeOwner` = new Translated("changeOwner", Team)
 val `willBeReviewed` = new Translated("willBeReviewed", Team)
 val `beingReviewed` = new Translated("beingReviewed", Team)
 val `teamBattle` = new Translated("teamBattle", Team)
+val `teamBattleOverview` = new Translated("teamBattleOverview", Team)
+val `teamTournament` = new Translated("teamTournament", Team)
+val `teamTournamentOverview` = new Translated("teamTournamentOverview", Team)
 val `nbMembers` = new Translated("nbMembers", Team)
 val `xJoinRequests` = new Translated("xJoinRequests", Team)
+val `enableMembersChat` = new Translated("enableMembersChat", Team)
 }
 
 }

@@ -353,24 +353,6 @@
   <string name="youAreNotInTeam">Tu neesi komandas %s dalībnieks</string>
   <string name="backToGame">Atpakaļ uz spēli</string>
   <string name="siteDescription">Tiešsaistes dambretes serveris priekš brīvas spēles. Spēlējiet dambreti uz tīras saskarnes. Nav nepieciešama reģistrācija vai īpašs spraudnis; bez reklāmas. Spēlē  dambreti turnīros, ar draugiem vai nejauši izvēlētiem pretiniekiem.</string>
-  <string name="teams">Komandas</string>
-  <plurals name="nbMembers">
-    <item quantity="zero">%s biedru</item>
-    <item quantity="one">%s biedrs</item>
-    <item quantity="other">%s biedri</item>
-  </plurals>
-  <string name="allTeams">Visas komandas</string>
-  <string name="newTeam">Jauna komanda</string>
-  <string name="myTeams">Manas komandas</string>
-  <string name="noTeamFound">Neviena komanda nav atrasta</string>
-  <string name="joinTeam">Pievienoties komandai</string>
-  <string name="quitTeam">Pamest komandu</string>
-  <string name="anyoneCanJoin">Jebkurš var pievienoties</string>
-  <string name="aConfirmationIsRequiredToJoin">Lai pievienotos, nepieciešams apstiprinājums</string>
-  <string name="joiningPolicy">Pievienošanās noteikumi</string>
-  <string name="teamLeader">Komandas kapteinis</string>
-  <string name="teamBestPlayers">Komandas labākais spēlētājs</string>
-  <string name="teamRecentMembers">Komandas bijušie dalībnieki</string>
   <string name="xJoinedTeamY">%1$s pievienojušies komandai %2$s</string>
   <string name="xCreatedTeamY">%1$s izveidoja komandu %2$s</string>
   <string name="averageElo">Vidējais reitings</string>

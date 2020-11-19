@@ -98,13 +98,13 @@ object show {
                   a(href := routes.Tournament.teamBattleForm(t.id), cls := "button button-empty text", dataIcon := "g")(
                     span(
                       strong(teamBattle()),
-                      em("A battle of multiple teams, each players scores points for their team")
+                      em(teamBattleOverview())
                     )
                   ),
                   a(href := s"${routes.Tournament.form()}?team=${t.id}", cls := "button button-empty text", dataIcon := "g")(
                     span(
-                      strong("Team tournament"),
-                      em("An arena tournament that only members of your team can join")
+                      strong(teamTournament()),
+                      em(teamTournamentOverview())
                     )
                   )
                 ),

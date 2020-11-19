@@ -336,22 +336,6 @@
   <string name="youAreNotInTeam">Je bent geen lid van team %s</string>
   <string name="backToGame">Terug naar partij</string>
   <string name="siteDescription">Gratis online dammen. Dammen met een heldere vormgeving. Geen registratie nodig, geen advertenties, geen plugins vereist. Speel in toernooien, tegen vrienden of tegen willekeurige tegenstanders.</string>
-  <plurals name="nbMembers">
-    <item quantity="one">%s lid</item>
-    <item quantity="other">%s leden</item>
-  </plurals>
-  <string name="allTeams">Alle teams</string>
-  <string name="newTeam">Nieuw team</string>
-  <string name="myTeams">Mijn teams</string>
-  <string name="noTeamFound">Geen team gevonden</string>
-  <string name="joinTeam">Word lid van het team</string>
-  <string name="quitTeam">Verlaat het team</string>
-  <string name="anyoneCanJoin">Iedereen kan lid worden</string>
-  <string name="aConfirmationIsRequiredToJoin">Een bevestiging is nodig om lid te worden</string>
-  <string name="joiningPolicy">Deelnamebeleid</string>
-  <string name="teamLeader">Teamleider</string>
-  <string name="teamBestPlayers">Beste spelers</string>
-  <string name="teamRecentMembers">Recente teamleden</string>
   <string name="xJoinedTeamY">%1$s sloot zich bij team %2$s aan</string>
   <string name="xCreatedTeamY">%1$s heeft team %2$s opgericht</string>
   <string name="averageElo">Gemiddelde rating</string>
