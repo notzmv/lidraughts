@@ -465,6 +465,7 @@ poproszenia o analizę komputerową, omówienia jej z innymi oraz udostępnienia
   <string name="lastName">Nazwisko</string>
   <string name="biography">O mnie</string>
   <string name="country">Kraj</string>
+  <string name="socialMediaLinks">Linki do mediów społecznościowych</string>
   <string name="preferences">Ustawienia</string>
   <string name="inlineNotation">Notacja inline</string>
   <string name="watchLidraughtsTV">Oglądaj Lidraughts TV</string>

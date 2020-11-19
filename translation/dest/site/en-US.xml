@@ -164,7 +164,6 @@
   <string name="haveAnAccount">Have an account?</string>
   <string name="changePassword">Change password</string>
   <string name="changeEmail">Change email</string>
-  <string name="twoFactorAuth">Two-factor authentication</string>
   <string name="email">Email</string>
   <string name="passwordReset">Password reset</string>
   <string name="forgotPassword">Forgot password?</string>
@@ -438,6 +437,7 @@ a computer analysis, a game chat and a shareable URL.</string>
   <string name="lastName">Last name</string>
   <string name="biography">Biography</string>
   <string name="country">Country</string>
+  <string name="socialMediaLinks">Social media links</string>
   <string name="linkSuggestions">Such as Twitter, Facebook, GitHub, Lichess, ...
   One URL per line</string>
   <string name="preferences">Preferences</string>

@@ -179,7 +179,6 @@
   <string name="password">密码</string>
   <string name="changePassword">修改密码</string>
   <string name="changeEmail">更改电子邮件地址</string>
-  <string name="twoFactorAuth">两步认证</string>
   <string name="email">电子邮箱</string>
   <string name="passwordReset">密码重置</string>
   <string name="forgotPassword">忘记密码？</string>
@@ -498,6 +497,7 @@
   <string name="lastName">姓</string>
   <string name="biography">个人简介</string>
   <string name="country">国家</string>
+  <string name="socialMediaLinks">社交媒体链接</string>
   <string name="linkSuggestions">比如Twitter, Facebook, GitHub, Lichess, Wechat...
 一行一个地址</string>
   <string name="preferences">偏好设置</string>

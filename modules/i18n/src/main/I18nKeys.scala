@@ -1245,6 +1245,7 @@ val `enableTwoFactor` = new Translated("enableTwoFactor", Tfa)
 val `disableTwoFactor` = new Translated("disableTwoFactor", Tfa)
 val `twoFactorEnabled` = new Translated("twoFactorEnabled", Tfa)
 val `twoFactorDisable` = new Translated("twoFactorDisable", Tfa)
+val `openTheAppOnYourDevice` = new Translated("openTheAppOnYourDevice", Tfa)
 }
 
 }

@@ -398,6 +398,7 @@ analizzarla con il computer, commentarla in chat, e condividerla tramire indiriz
   <string name="lastName">Cognome</string>
   <string name="biography">Biografia</string>
   <string name="country">Paese</string>
+  <string name="socialMediaLinks">Collegamenti ai social media</string>
   <string name="preferences">Preferenze</string>
   <string name="inlineNotation">Notazione in linea</string>
   <string name="watchLidraughtsTV">Guarda la TV di Lidraughts</string>

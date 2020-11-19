@@ -506,6 +506,7 @@ spēles tērzētavu un URL saiti, kas dos pieeju citiem.</string>
   <string name="lastName">Uzvārds</string>
   <string name="biography">Biogrāfija</string>
   <string name="country">Valsts</string>
+  <string name="socialMediaLinks">Sociālo mediju saites</string>
   <string name="linkSuggestions">Ievieto norādi uz savu profilu citās vietnēs, piem., Twitter, Facebook, GitHub, Lichess, …
 Vienā līnijā  - tikai vienu norādi.</string>
   <string name="preferences">Uzstādījumi</string>

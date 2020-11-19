@@ -61,7 +61,7 @@ object twoFactor {
         p(twoFactorDisable()),
         form3.passwordModified(form("passwd"), trans.password())(autocomplete := "current-password"),
         form3.group(form("token"), authenticationCode())(form3.input(_)(pattern := "[0-9]{6}", autocomplete := "one-time-code", required)),
-        form3.action(form3.submit(disableTwoFactor(), icon = None))
+        form3.action(form3.submit(disableTwoFactor()))
       )
     )
   }

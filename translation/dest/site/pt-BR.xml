@@ -436,6 +436,7 @@ consultar uma análise de computador, utilizar o chat e compartilhar um link.</s
   <string name="lastName">Sobrenome</string>
   <string name="biography">Biografia</string>
   <string name="country">País</string>
+  <string name="socialMediaLinks">Links de mídia social</string>
   <string name="preferences">Preferências</string>
   <string name="linkSuggestions">Tais como Twitter, Facebook, GitHub, Lichess, ...
 Uma URL por linha</string>

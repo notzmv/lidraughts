@@ -344,6 +344,7 @@
   <string name="lastName">Прізвище</string>
   <string name="biography">Біографія</string>
   <string name="country">Країна</string>
+  <string name="socialMediaLinks">Посилання на соціальні мережі</string>
   <string name="preferences">Налаштування</string>
   <string name="inlineNotation">Вбудована нотація</string>
   <string name="watchLidraughtsTV">Дивитися Lidraughts ТБ</string>

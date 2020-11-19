@@ -405,6 +405,7 @@ consulter l\'analyse de l\'ordinateur, utiliser le tchat et partager le lien.</s
   <string name="lastName">Nom</string>
   <string name="biography">Biographie</string>
   <string name="country">Pays</string>
+  <string name="socialMediaLinks">Liens des réseaux sociaux</string>
   <string name="preferences">Préférences</string>
   <string name="inlineNotation">Notation en ligne</string>
   <string name="watchLidraughtsTV">Regarder Lidraughts TV</string>

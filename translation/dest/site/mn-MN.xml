@@ -372,6 +372,7 @@
   <string name="lastName">Эцгийн нэр</string>
   <string name="biography">Намтар</string>
   <string name="country">Улс</string>
+  <string name="socialMediaLinks">Сошиал холбоосууд</string>
   <string name="preferences">Тохиргоо</string>
   <string name="inlineNotation">Мөрийн тэмдэглэгээ</string>
   <string name="onlinePlayers">Сүлжээнд байгаа гишүүд</string>

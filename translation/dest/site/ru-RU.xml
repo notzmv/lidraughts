@@ -461,6 +461,7 @@
   <string name="lastName">Фамилия</string>
   <string name="biography">О себе</string>
   <string name="country">Страна</string>
+  <string name="socialMediaLinks">Ссылки на соцсети</string>
   <string name="preferences">Настройки</string>
   <string name="inlineNotation">Строчная нотация</string>
   <string name="watchLidraughtsTV">Смотреть Lidraughts TV</string>

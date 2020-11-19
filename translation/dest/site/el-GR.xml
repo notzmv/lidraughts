@@ -398,6 +398,7 @@
   <string name="lastName">Επώνυμο</string>
   <string name="biography">Βιογραφικό</string>
   <string name="country">Χώρα</string>
+  <string name="socialMediaLinks">Σύνδεσμοι κοινωνικών μέσων</string>
   <string name="preferences">Προτιμήσεις</string>
   <string name="inlineNotation">Ενσωματωμένη σημειογραφία</string>
   <string name="watchLidraughtsTV">Παρακολουθήστε Lidraughts TV</string>
