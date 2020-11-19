@@ -75,7 +75,7 @@ object form {
               submitButton(
                 dataIcon := "q",
                 cls := "text button button-empty button-red confirm",
-                st.title := "Deletes the team and its memberships. Cannot be reverted!"
+                st.title := deleteTeamWarning.txt()
               )(trans.delete())
             )
           )

@@ -24,6 +24,7 @@
   <string name="teamRecentMembers">Recente teamleden</string>
   <string name="kickSomeone">Verwijder iemand uit het team</string>
   <string name="whoToKick">Wie wil je uit het team zetten?</string>
+  <string name="deleteTeamWarning">Verwijdert het team en de hele ledenlijst. Dit kan niet ongedaan gemaakt worden!</string>
   <string name="appointOwner">Maak iemand anders teamleider</string>
   <string name="changeOwner">Wie wil je leider van dit team maken?</string>
   <plurals name="xJoinRequests">
@@ -36,6 +37,7 @@
   <string name="teamBattleOverview">Een wedstrijd met meerdere teams, iedere speler scoort punten voor het eigen team</string>
   <string name="teamTournament">Team toernooi</string>
   <string name="teamTournamentOverview">Een Arena toernooi waaraan alleen leden van je team mee kunnen doen</string>
+  <string name="subscribeToTeamMessages">Inschrijven voor team berichten</string>
   <string name="messageAllMembers">Stuur bericht aan alle leden</string>
   <string name="messageAllMembersOverview">Stuur een privébericht aan alle leden van het team</string>
   <string name="messageAllMembersLongDescription">Stuur een privébericht naar alle leden van het team.

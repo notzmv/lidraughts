@@ -24,6 +24,7 @@
   <string name="teamRecentMembers">Recent members</string>
   <string name="kickSomeone">Kick someone out of the team</string>
   <string name="whoToKick">Who do you want to kick out of the team?</string>
+  <string name="deleteTeamWarning">Deletes the team and its memberships. Cannot be reverted!</string>
   <string name="appointOwner">Appoint another team owner</string>
   <string name="changeOwner">Who do you want to make owner of this team?</string>
   <plurals name="xJoinRequests">
@@ -36,6 +37,7 @@
   <string name="teamBattleOverview">A battle of multiple teams, each player scores points for their team</string>
   <string name="teamTournament">Team tournament</string>
   <string name="teamTournamentOverview">An Arena tournament that only members of your team can join</string>
+  <string name="subscribeToTeamMessages">Subscribe to team messages</string>
   <string name="messageAllMembers">Message all members</string>
   <string name="messageAllMembersOverview">Send a private message to every member of the team</string>
   <string name="messageAllMembersLongDescription">Send a private message to ALL members of the team.
