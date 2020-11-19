@@ -285,7 +285,7 @@ object Team extends LidraughtsController {
 ---
 You received this message because you are part of the team lidraughts.org${routes.Team.show(team.id)}."""
             MemberRepo.userIdsByTeam(team.id) flatMap {
-              Env.message.api.multiPost(me, _, "Team message", full)
+              Env.message.api.multiPost(me, _, team.name, full)
             } inject Redirect(routes.Team.show(team.id))
           }
       )
