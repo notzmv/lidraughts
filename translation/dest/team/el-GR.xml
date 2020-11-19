@@ -39,7 +39,7 @@
 Μπορείτε να χρησιμοποιήσετε αυτή τη δυνατότητα για να καλέσετε τους παίκτες να συμμετέχουν σε ένα τουρνουά ή σε μια ομαδική μάχη.
 Οι παίκτες που πιθανόν δεν θέλουν να λαμβάνουν τα μηνύματά σας μπορεί να αποχωρήσουν από την ομάδα.</string>
   <string name="teamsIlead">Ομάδες που είμαι αρχηγός</string>
-  <string name="youWayWantToLinkOneOfTheseTournaments">Μήπως θα θέλατε να στείλετε τον σύνδεσμο του επερχόμενου τουρνουά;</string>
+  <string name="youMayWantToLinkOneOfTheseTournaments">Μήπως θα θέλατε να στείλετε τον σύνδεσμο του επερχόμενου τουρνουά;</string>
   <string name="usersWhoCanManageThisTeam">Χρήστες που μπορούν να διαχειριστούν αυτή την ομάδα</string>
   <string name="leadersChat">Chat αρχηγών</string>
 </resources>

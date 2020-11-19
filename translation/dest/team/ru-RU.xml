@@ -46,7 +46,7 @@
 Можно использовать для вызова игроков на турнир или в командный бой.
 Игроки, которым не нравится получать ваши сообщения, могут покинуть клуб.</string>
   <string name="teamsIlead">Клубы под моим руководством</string>
-  <string name="youWayWantToLinkOneOfTheseTournaments">Не хотите ли присоединить один из предстоящих турниров?</string>
+  <string name="youMayWantToLinkOneOfTheseTournaments">Не хотите ли присоединить один из предстоящих турниров?</string>
   <string name="usersWhoCanManageThisTeam">Пользователи, которые могут управлять этим клубом</string>
   <string name="leadersChat">Чат руководителей</string>
 </resources>

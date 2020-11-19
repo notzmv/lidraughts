@@ -40,7 +40,7 @@
 Puedes usar esto para llamar a jugadores para unirse a un torneo o a una batalla de equipo.
 Los jugadores a los que no les guste recibir tus mensajes pueden abandonar el equipo.</string>
   <string name="teamsIlead">Equipos que lidero</string>
-  <string name="youWayWantToLinkOneOfTheseTournaments">¿Tal vez quieras vincular uno de estos próximos torneos?</string>
+  <string name="youMayWantToLinkOneOfTheseTournaments">¿Tal vez quieras vincular uno de estos próximos torneos?</string>
   <string name="usersWhoCanManageThisTeam">Usuarios que pueden administrar este equipo</string>
   <string name="leadersChat">Chat de líderes</string>
 </resources>

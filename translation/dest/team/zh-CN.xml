@@ -38,7 +38,7 @@
 你可以用此功能来呼叫玩家参加锦标赛或团队战。
 玩家如果不喜欢接收您的消息将会离开团队。</string>
   <string name="teamsIlead">我领导的团队</string>
-  <string name="youWayWantToLinkOneOfTheseTournaments">您可能想要链接这些即将到来的锦标赛中的一个？</string>
+  <string name="youMayWantToLinkOneOfTheseTournaments">您可能想要链接这些即将到来的锦标赛中的一个？</string>
   <string name="usersWhoCanManageThisTeam">可以管理此团队的用户</string>
   <string name="leadersChat">领队聊天</string>
 </resources>
