@@ -119,16 +119,16 @@ object show {
                       em(teamTournamentOverview())
                     )
                   ),
+                  isGranted(_.Beta) option a(href := s"${routes.Swiss.form(t.id)}", cls := "button button-empty text", dataIcon := "g")(
+                    span(
+                      strong(swissTournament()),
+                      em(swissTournamentOverview())
+                    )
+                  ),
                   a(href := routes.Team.pmAll(t.id), cls := "button button-empty text", dataIcon := "e")(
                     span(
                       strong(messageAllMembers()),
                       em(messageAllMembersOverview())
-                    )
-                  ),
-                  isGranted(_.Beta) option a(href := s"${routes.Swiss.form(t.id)}", cls := "button button-empty text", dataIcon := "g")(
-                    span(
-                      strong("Swiss tournament"),
-                      em("A Swiss tournament that only members of your team can join")
                     )
                   )
                 ),

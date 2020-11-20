@@ -30,7 +30,7 @@
   </plurals>
   <string name="willBeReviewed">O teu pedido de adesão será revisto pelo líder da equipa.</string>
   <string name="beingReviewed">O teu pedido de adesão está a ser revisto pelo líder da equipa.</string>
-  <string name="teamBattle">Batalha de Equipas</string>
+  <string name="teamBattle">Batalha de equipas</string>
   <string name="teamBattleOverview">Uma batalha de várias equipas, cada jogador ganha pontos para a sua equipa</string>
   <string name="teamTournament">Torneio de equipa</string>
   <string name="teamTournamentOverview">Um torneio em arena em que só podem entrar membros da tua equipa</string>
