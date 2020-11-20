@@ -117,7 +117,7 @@ final class Env(
     ),
     accessTimeout = SocketTimeout,
     monitoringName = "swiss.socketMap",
-    broomFrequency = 3701 millis
+    broomFrequency = 3945 millis
   )
 
   def version(swissId: Swiss.Id): Fu[SocketVersion] =
