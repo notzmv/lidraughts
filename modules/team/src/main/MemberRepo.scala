@@ -13,34 +13,47 @@ object MemberRepo {
 
   import BSONHandlers._
 
-  type ID = String
-
   // expensive with thousands of members!
-  def userIdsByTeam(teamId: ID): Fu[Set[ID]] =
+  def userIdsByTeam(teamId: Team.ID): Fu[Set[User.ID]] =
     coll.distinct[String, Set]("user", $doc("team" -> teamId).some)
 
-  def teamIdsByUser(userId: User.ID): Fu[Set[ID]] =
-    coll.distinct[ID, Set]("team", $doc("user" -> userId).some)
+  def subscribedUserIds(teamId: Team.ID): Fu[Set[User.ID]] =
+    coll.distinct[String, Set]("user", Some($doc("team" -> teamId) ++ $doc("unsub" $ne true)))
 
-  def removeByteam(teamId: ID): Funit =
+  def teamIdsByUser(userId: User.ID): Fu[Set[Team.ID]] =
+    coll.distinct[String, Set]("team", $doc("user" -> userId).some)
+
+  def removeByteam(teamId: Team.ID): Funit =
     coll.remove(teamQuery(teamId)).void
 
   def removeByUser(userId: User.ID): Funit =
     coll.remove(userQuery(userId)).void
 
-  def exists(teamId: ID, userId: User.ID): Fu[Boolean] =
+  def exists(teamId: Team.ID, userId: User.ID): Fu[Boolean] =
     coll.exists(selectId(teamId, userId))
 
-  def add(teamId: ID, userId: User.ID): Funit =
+  def add(teamId: Team.ID, userId: User.ID): Funit =
     coll.insert(Member.make(team = teamId, user = userId)).void
 
-  def remove(teamId: ID, userId: User.ID): Fu[WriteResult] =
+  def remove(teamId: Team.ID, userId: User.ID): Fu[WriteResult] =
     coll.remove(selectId(teamId, userId))
 
-  def countByTeam(teamId: ID): Fu[Int] =
+  def countByTeam(teamId: Team.ID): Fu[Int] =
     coll.countSel(teamQuery(teamId))
 
-  def selectId(teamId: ID, userId: ID) = $id(Member.makeId(teamId, userId))
-  def teamQuery(teamId: ID) = $doc("team" -> teamId)
-  def userQuery(userId: ID) = $doc("user" -> userId)
+  def isSubscribed(team: Team, user: User): Fu[Boolean] =
+    !coll.exists(selectId(team.id, user.id) ++ $doc("unsub" -> true))
+
+  def subscribe(teamId: Team.ID, userId: User.ID, v: Boolean): Funit =
+    coll
+      .update(
+        selectId(teamId, userId),
+        if (v) $unset("unsub")
+        else $set("unsub" -> true)
+      )
+      .void
+
+  def teamQuery(teamId: Team.ID) = $doc("team" -> teamId)
+  def selectId(teamId: Team.ID, userId: User.ID) = $id(Member.makeId(teamId, userId))
+  def userQuery(userId: Team.ID) = $doc("user" -> userId)
 }

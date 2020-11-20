@@ -17,7 +17,7 @@ object close {
       h1(dataIcon := "j", cls := "text")(trans.closeAccount()),
       postForm(cls := "form3", action := routes.Account.closeConfirm)(
         div(cls := "form-group")(trans.closeAccountExplanation()),
-        div(cls := "form-group")(trans.noNewAccountWithSameName()),
+        div(cls := "form-group")(trans.cantOpenSimilarAccount()),
         form3.passwordModified(form("passwd"), trans.password())(autocomplete := "off"),
         form3.actions(frag(
           a(href := routes.User.show(u.username))(trans.changedMindDoNotCloseAccount()),

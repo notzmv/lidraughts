@@ -11,6 +11,7 @@ case class TeamInfo(
     mine: Boolean,
     createdByMe: Boolean,
     requestedByMe: Boolean,
+    subscribed: Boolean,
     requests: List[RequestWithUser],
     forumPosts: List[MiniForumPost],
     tours: List[TeamInfo.AnyTour]
@@ -54,6 +55,7 @@ final class TeamInfoApi(
     requests ← (team.enabled && me.??(m => team.isCreator(m.id))) ?? api.requestsWithUsers(team)
     mine <- me.??(m => api.belongsTo(team.id, m.id))
     requestedByMe ← !mine ?? me.??(m => RequestRepo.exists(team.id, m.id))
+    subscribed <- me.ifTrue(mine) ?? { api.isSubscribed(team, _) }
     forumPosts ← getForumPosts(team.id)
     tours <- lidraughts.tournament.TournamentRepo.byTeam(team.id, 5)
     _ <- tours.nonEmpty ?? {
@@ -64,6 +66,7 @@ final class TeamInfoApi(
     mine = mine,
     createdByMe = ~me.map(m => team.isCreator(m.id)),
     requestedByMe = requestedByMe,
+    subscribed = subscribed,
     requests = requests,
     forumPosts = forumPosts,
     tours = tours.map(anyTour) ::: swisses.map(anyTour)

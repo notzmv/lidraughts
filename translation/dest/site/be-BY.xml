@@ -322,25 +322,6 @@
   <string name="mustBeInTeam">Вы павінны быць удзельнікам каманды %s</string>
   <string name="youAreNotInTeam">Вы не ўдзельнік каманды %s</string>
   <string name="backToGame">Вярнуцца да гульні</string>
-  <string name="teams">Каманды</string>
-  <plurals name="nbMembers">
-    <item quantity="one">%s удзельнік</item>
-    <item quantity="few">%s удзельнікі</item>
-    <item quantity="many">%s удзельнікаў</item>
-    <item quantity="other">%s удзельнікаў</item>
-  </plurals>
-  <string name="allTeams">Усе каманды</string>
-  <string name="newTeam">Новая каманда</string>
-  <string name="myTeams">Мае каманды</string>
-  <string name="noTeamFound">Каманда не знойдзена</string>
-  <string name="joinTeam">Далучыцца да каманды</string>
-  <string name="quitTeam">Выйсці з каманды</string>
-  <string name="anyoneCanJoin">Адкрыта для ўсіх</string>
-  <string name="aConfirmationIsRequiredToJoin">Па пацверджанні</string>
-  <string name="joiningPolicy">Умовы далучэння</string>
-  <string name="teamLeader">Лідар каманды</string>
-  <string name="teamBestPlayers">Лепшыя гульцы каманды</string>
-  <string name="teamRecentMembers">Нядаўна далучыліся</string>
   <string name="xJoinedTeamY">%1$s далучыўся да каманды %2$s</string>
   <string name="xCreatedTeamY">%1$s стварыў каманду %2$s</string>
   <string name="averageElo">Сярэдні рэйтынг</string>
@@ -458,6 +439,7 @@
   <string name="lastName">Прозвішча</string>
   <string name="biography">Пра сябе</string>
   <string name="country">Краіна</string>
+  <string name="socialMediaLinks">Спасылкі на сацсеткі</string>
   <string name="preferences">Налады</string>
   <string name="inlineNotation">Убудаваная натацыя</string>
   <string name="watchLidraughtsTV">Глядзець Lidraughts TV</string>

@@ -3,7 +3,7 @@ package views.html.swiss
 import lidraughts.api.Context
 import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
-import lidraughts.i18n.{ I18nKeys => trans }
+import lidraughts.i18n.{ I18nKeys => trans, I18nDb, JsDump }
 import lidraughts.swiss.Swiss
 
 import controllers.routes
@@ -84,7 +84,8 @@ object bits {
     }
 
   def jsI18n(implicit ctx: Context) = i18nJsObject(i18nKeys) ++
-    lidraughts.i18n.JsDump.keysToObject(i18nSwissKeys, lidraughts.i18n.I18nDb.Swiss, ctx.lang)
+    JsDump.keysToObject(i18nSwissKeys, I18nDb.Swiss, ctx.lang) ++
+    JsDump.keysToObject(i18nTeamKeys, I18nDb.Team, ctx.lang)
 
   private val i18nKeys = List(
     trans.join,
@@ -105,8 +106,7 @@ object bits {
     trans.averageOpponent,
     trans.startingIn,
     trans.tournament,
-    trans.tournamentComplete,
-    trans.joinTeam
+    trans.tournamentComplete
   )
 
   private val i18nSwissKeys = List(
@@ -118,5 +118,9 @@ object bits {
     trans.swiss.tieBreak,
     trans.swiss.nextRound,
     trans.swiss.scheduleTheNextRound
+  )
+
+  private val i18nTeamKeys = List(
+    trans.team.joinTeam
   )
 }

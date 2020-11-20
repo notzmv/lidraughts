@@ -901,6 +901,12 @@
   function startTeam(cfg) {
     lidraughts.socket = lidraughts.StrongSocket('/team/' + cfg.id + '/socket/v3', cfg.socketVersion);
     cfg.chat && lidraughts.makeChat(cfg.chat);
+    $('#team-subscribe').on('change', function() {
+      const v = this.checked;
+      $(this).parents('form').each(function() {
+        $.post($(this).attr('action'), { v: v });
+      });
+    });
   }
 
   ////////////////

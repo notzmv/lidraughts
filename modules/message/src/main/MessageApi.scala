@@ -105,6 +105,23 @@ final class MessageApi(
     }
   }
 
+  def multiPost(orig: User, dests: Iterable[User.ID], subject: String, text: String): Funit =
+    lidraughts.common.Future.applySequentially(dests.toList) { userId =>
+      UserRepo named userId flatMap {
+        _ ?? { user =>
+          makeThread(
+            DataForm.ThreadData(
+              user = user,
+              subject = subject,
+              text = text,
+              asMod = false
+            ),
+            orig
+          ).void.nevermind
+        }
+      }
+    }
+
   def deleteThread(id: String, me: User): Funit =
     thread(id, me) flatMap {
       _ ?? { thread =>

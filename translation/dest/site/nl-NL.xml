@@ -175,7 +175,6 @@
   <string name="haveAnAccount">Heb je al een account?</string>
   <string name="changePassword">Wijzig wachtwoord</string>
   <string name="changeEmail">Verander email</string>
-  <string name="twoFactorAuth">Tweestapsverificatie</string>
   <string name="passwordReset">Nieuw wachtwoord</string>
   <string name="forgotPassword">Wachtwoord vergeten?</string>
   <string name="rank">Positie</string>
@@ -340,22 +339,6 @@
   <string name="youAreNotInTeam">Je bent geen lid van team %s</string>
   <string name="backToGame">Terug naar partij</string>
   <string name="siteDescription">Gratis online dammen. Dammen met een heldere vormgeving. Geen registratie nodig, geen advertenties, geen plugins vereist. Speel in toernooien, tegen vrienden of tegen willekeurige tegenstanders.</string>
-  <plurals name="nbMembers">
-    <item quantity="one">%s lid</item>
-    <item quantity="other">%s leden</item>
-  </plurals>
-  <string name="allTeams">Alle teams</string>
-  <string name="newTeam">Nieuw team</string>
-  <string name="myTeams">Mijn teams</string>
-  <string name="noTeamFound">Geen team gevonden</string>
-  <string name="joinTeam">Word lid van het team</string>
-  <string name="quitTeam">Verlaat het team</string>
-  <string name="anyoneCanJoin">Iedereen kan lid worden</string>
-  <string name="aConfirmationIsRequiredToJoin">Een bevestiging is nodig om lid te worden</string>
-  <string name="joiningPolicy">Deelnamebeleid</string>
-  <string name="teamLeader">Teamleider</string>
-  <string name="teamBestPlayers">Beste spelers</string>
-  <string name="teamRecentMembers">Recente teamleden</string>
   <string name="xJoinedTeamY">%1$s sloot zich bij team %2$s aan</string>
   <string name="xCreatedTeamY">%1$s heeft team %2$s opgericht</string>
   <string name="averageElo">Gemiddelde rating</string>
@@ -495,7 +478,8 @@ een computeranalyse, een chatbox bij de partij en een deelbare URL.</string>
   <string name="lastName">Achternaam</string>
   <string name="biography">Biografie</string>
   <string name="country">Land</string>
-  <string name="countryOrRegion">Land / regio</string>
+  <string name="countryOrRegion">Land / Regio</string>
+  <string name="socialMediaLinks">Links naar sociale media</string>
   <string name="linkSuggestions">Zoals Twitter, Facebook, GitHub, Lichess, ...
 Een URL per regel</string>
   <string name="preferences">Voorkeuren</string>
@@ -598,7 +582,7 @@ Een URL per regel</string>
   <string name="closeAccount">Sluit account</string>
   <string name="changedMindDoNotCloseAccount">Ik ben van gedachten veranderd; sluit mijn account niet</string>
   <string name="closeAccountExplanation">Weet je zeker dat je je account wilt sluiten? Het sluiten van je account is een permanente keuze. Je kunt dan niet langer inloggen en je profielpagina zal dan niet langer toegankelijk zijn.</string>
-  <string name="noNewAccountWithSameName">Je zult geen nieuwe account kunnen openen met dezelfde naam, ook niet met andere hoofdletters of kleine letters.</string>
+  <string name="cantOpenSimilarAccount">Je zult geen nieuwe account kunnen openen met dezelfde naam, ook niet met andere hoofdletters of kleine letters.</string>
   <string name="closingIsDefinitive">Je account sluiten is definitief, er is geen weg terug. Weet je het zeker?</string>
   <string name="thisAccountIsClosed">Dit account is gesloten.</string>
   <string name="invalidUsernameOrPassword">Ongeldige gebruikersnaam of wachtwoord</string>

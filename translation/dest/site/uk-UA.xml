@@ -247,19 +247,6 @@
   <string name="ratedMoreThanInPerf">Рейтинг ≥ %1$s в %2$s</string>
   <string name="ratedLessThanInPerf">Рейтинг ≤ %1$s в %2$s</string>
   <string name="backToGame">Повернутися до гри</string>
-  <string name="teams">Команди</string>
-  <string name="allTeams">Усі команди</string>
-  <string name="newTeam">Нова команда</string>
-  <string name="myTeams">Мої команди</string>
-  <string name="noTeamFound">Не знайдено команди</string>
-  <string name="joinTeam">Приєднатися до команди</string>
-  <string name="quitTeam">Залишити команду</string>
-  <string name="anyoneCanJoin">Кожен може приєднатися</string>
-  <string name="aConfirmationIsRequiredToJoin">Потрібен дозвіл на приєднання</string>
-  <string name="joiningPolicy">Правила приєднання</string>
-  <string name="teamLeader">Капітан команди</string>
-  <string name="teamBestPlayers">Найліпші гравці команди</string>
-  <string name="teamRecentMembers">Нові гравці команди</string>
   <string name="xJoinedTeamY">%1$s приєдналися до команди %2$s</string>
   <string name="xCreatedTeamY">%1$s створили команду %2$s</string>
   <string name="averageElo">Середній рейтинґ</string>
@@ -353,6 +340,7 @@
   <string name="lastName">Прізвище</string>
   <string name="biography">Біографія</string>
   <string name="country">Країна</string>
+  <string name="socialMediaLinks">Посилання на соціальні мережі</string>
   <string name="preferences">Налаштування</string>
   <string name="inlineNotation">Вбудована нотація</string>
   <string name="watchLidraughtsTV">Дивитися Lidraughts ТБ</string>

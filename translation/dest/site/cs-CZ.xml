@@ -228,19 +228,6 @@
   <string name="ratedMoreThanInPerf">Rating ≥ %1$s v %2$s variantě</string>
   <string name="ratedLessThanInPerf">Rating ≤ %1$s v %2$s variantě</string>
   <string name="backToGame">Zpět do hry</string>
-  <string name="teams">Týmy</string>
-  <string name="allTeams">Všechny týmy</string>
-  <string name="newTeam">Nový tým</string>
-  <string name="myTeams">Můj tým</string>
-  <string name="noTeamFound">Nenalezen žádný tým</string>
-  <string name="joinTeam">Připojte se k týmu</string>
-  <string name="quitTeam">Odejít z týmu</string>
-  <string name="anyoneCanJoin">Kdokoliv se může přidat</string>
-  <string name="aConfirmationIsRequiredToJoin">Pro připojení je požadováno potvrzení</string>
-  <string name="joiningPolicy">Pravidla vstupu</string>
-  <string name="teamLeader">Vedoucí týmu</string>
-  <string name="teamBestPlayers">Nejlepší hráči týmu</string>
-  <string name="teamRecentMembers">Nedávní členové týmu</string>
   <string name="xJoinedTeamY">%1$s se přidal k týmu %2$s</string>
   <string name="xCreatedTeamY">%1$s založil tým %2$s</string>
   <string name="averageElo">Průměrné Elo</string>
@@ -343,6 +330,7 @@ získáte počítačovou analýzu, chat ke hře a URL ke sdílení hry.</string>
   <string name="lastName">Příjmení</string>
   <string name="biography">O mně</string>
   <string name="country">Země</string>
+  <string name="socialMediaLinks">Odkazy na sociální sítě</string>
   <string name="preferences">Předvolby</string>
   <string name="inlineNotation">Notace v řádcích</string>
   <string name="watchLidraughtsTV">Sledujte Lidraughts TV</string>

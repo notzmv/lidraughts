@@ -69,6 +69,10 @@ final class TeamApi(
   def mine(me: User): Fu[List[Team]] =
     cached teamIds me.id flatMap { ids => coll.team.byIds[Team](ids.toArray) }
 
+  def isSubscribed = MemberRepo.isSubscribed _
+
+  def subscribe = MemberRepo.subscribe _
+
   def hasTeams(me: User): Fu[Boolean] = cached.teamIds(me.id).map(_.value.nonEmpty)
 
   def hasCreatedRecently(me: User): Fu[Boolean] =
@@ -147,7 +151,7 @@ final class TeamApi(
           timeline ! Propagate(TeamJoin(user.id, team.id)).toFollowersOf(user.id)
           bus.publish(JoinTeam(id = team.id, userId = user.id), 'team)
         }
-    } recover lidraughts.db.recoverDuplicateKey(_ => ())
+    } recover lidraughts.db.ignoreDuplicateKey
   }
 
   def quit(teamId: Team.ID, me: User): Fu[Option[Team]] =
@@ -157,7 +161,7 @@ final class TeamApi(
       }
     }
 
-  def doQuit(team: Team, userId: User.ID): Funit = belongsTo(team.id, userId) flatMap {
+  private def doQuit(team: Team, userId: User.ID): Funit = belongsTo(team.id, userId) flatMap {
     _ ?? {
       MemberRepo.remove(team.id, userId) map { res =>
         if (res.n == 1) TeamRepo.incMembers(team.id, -1)
@@ -199,10 +203,10 @@ final class TeamApi(
     cached.syncTeamIds(userId) contains teamId
 
   def belongsTo(teamId: Team.ID, userId: User.ID): Fu[Boolean] =
-    cached.teamIds(userId) map (_ contains teamId)
+    cached.teamIds(userId) dmap (_ contains teamId)
 
   def owns(teamId: Team.ID, userId: User.ID): Fu[Boolean] =
-    TeamRepo ownerOf teamId map (_ has userId)
+    TeamRepo ownerOf teamId dmap (_ has userId)
 
   def teamName(teamId: Team.ID): Option[String] = cached.name(teamId)
 
@@ -217,11 +221,16 @@ final class TeamApi(
 
   def nbRequests(teamId: Team.ID) = cached.nbRequests get teamId
 
-  def recomputeNbMembers =
-    coll.team.find($empty).cursor[Team](ReadPreference.secondaryPreferred).foldWhileM({}) { (_, team) =>
-      for {
-        nb <- MemberRepo.countByTeam(team.id)
-        _ <- coll.team.updateField($id(team.id), "nbMembers", nb)
-      } yield Cursor.Cont({})
+  def recomputeNbMembers: Funit =
+    coll.team
+      .find($empty, $id(true))
+      .cursor[Bdoc](ReadPreference.secondaryPreferred)
+      .foldWhileM({}) { (_, doc) =>
+        (doc.getAs[String]("_id") ?? recomputeNbMembers) inject Cursor.Cont({})
+      }
+
+  private[team] def recomputeNbMembers(teamId: Team.ID): Funit =
+    MemberRepo.countByTeam(teamId) flatMap { nb =>
+      coll.team.updateField($id(teamId), "nbMembers", nb).void
     }
 }

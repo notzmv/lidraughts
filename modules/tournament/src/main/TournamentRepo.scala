@@ -129,7 +129,22 @@ object TournamentRepo {
   // and team battles
   // this query is carefully crafted so that it hits both indexes
   def byTeam(teamId: String, nb: Int): Fu[List[Tournament]] =
-    coll.find($or(
+    coll
+      .find(byTeamSelect(teamId))
+      .sort($sort desc "startsAt")
+      .list[Tournament](nb)
+
+  // all team-only tournament
+  // and team battles
+  // this query is carefully crafted so that it hits both indexes
+  def byTeamUpcoming(teamId: String, nb: Int): Fu[List[Tournament]] =
+    coll
+      .find(byTeamSelect(teamId) ++ enterableSelect)
+      .sort($sort asc "startsAt")
+      .list[Tournament](nb)
+
+  private def byTeamSelect(teamId: String) =
+    $or(
       $doc(
         "teamBattle.teams" -> teamId,
         "teamBattle" $exists true
@@ -138,7 +153,7 @@ object TournamentRepo {
         "conditions.teamMember.teamId" -> teamId,
         "conditions.teamMember" $exists true
       )
-    )).sort($sort desc "startsAt").list[Tournament](nb)
+    )
 
   def setStatus(tourId: Tournament.ID, status: Status) =
     coll.update($id(tourId), $set("status" -> status.id)).void

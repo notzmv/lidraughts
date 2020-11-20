@@ -12,6 +12,8 @@ object I18nDb {
   case object Activity extends Ref
   case object Coordinates extends Ref
   case object Study extends Ref
+  case object Tfa extends Ref
+  case object Team extends Ref
   case object Swiss extends Ref
 
   val site: Messages = lidraughts.i18n.db.site.Registry.load
@@ -21,6 +23,8 @@ object I18nDb {
   val activity: Messages = lidraughts.i18n.db.activity.Registry.load
   val coordinates: Messages = lidraughts.i18n.db.coordinates.Registry.load
   val study: Messages = lidraughts.i18n.db.study.Registry.load
+  val tfa: Messages = lidraughts.i18n.db.tfa.Registry.load
+  val team: Messages = lidraughts.i18n.db.team.Registry.load
   val swiss: Messages = lidraughts.i18n.db.swiss.Registry.load
 
   def apply(ref: Ref): Messages = ref match {
@@ -31,6 +35,8 @@ object I18nDb {
     case Activity => activity
     case Coordinates => coordinates
     case Study => study
+    case Tfa => tfa
+    case Team => team
     case Swiss => swiss
   }
 

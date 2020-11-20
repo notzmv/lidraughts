@@ -164,7 +164,6 @@
   <string name="haveAnAccount">Have an account?</string>
   <string name="changePassword">Change password</string>
   <string name="changeEmail">Change email</string>
-  <string name="twoFactorAuth">Two-factor authentication</string>
   <string name="email">Email</string>
   <string name="passwordReset">Password reset</string>
   <string name="forgotPassword">Forgot password?</string>
@@ -306,23 +305,6 @@
   <string name="youAreNotInTeam">You are not in the team %s</string>
   <string name="backToGame">Back to game</string>
   <string name="siteDescription">Free online draughts server. Play draughts in a clean interface. No registration, no ads, no plugins required. Play draughts in tournaments, with friends, or with random opponents.</string>
-  <string name="teams">Teams</string>
-  <plurals name="nbMembers">
-    <item quantity="one">%s member</item>
-    <item quantity="other">%s members</item>
-  </plurals>
-  <string name="allTeams">All teams</string>
-  <string name="newTeam">New team</string>
-  <string name="myTeams">My teams</string>
-  <string name="noTeamFound">No team found</string>
-  <string name="joinTeam">Join team</string>
-  <string name="quitTeam">Leave team</string>
-  <string name="anyoneCanJoin">Free for all</string>
-  <string name="aConfirmationIsRequiredToJoin">A confirmation is required to join</string>
-  <string name="joiningPolicy">Joining policy</string>
-  <string name="teamLeader">Team leader</string>
-  <string name="teamBestPlayers">Best players</string>
-  <string name="teamRecentMembers">Recent members</string>
   <string name="xJoinedTeamY">%1$s joined team %2$s</string>
   <string name="xCreatedTeamY">%1$s created team %2$s</string>
   <string name="averageElo">Average rating</string>
@@ -438,6 +420,7 @@ a computer analysis, a game chat and a shareable URL.</string>
   <string name="lastName">Last name</string>
   <string name="biography">Biography</string>
   <string name="country">Country</string>
+  <string name="socialMediaLinks">Social media links</string>
   <string name="linkSuggestions">Such as Twitter, Facebook, GitHub, Lichess, ...
   One URL per line</string>
   <string name="preferences">Preferences</string>

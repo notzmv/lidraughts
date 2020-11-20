@@ -324,25 +324,6 @@
   <string name="ratedMoreThanInPerf">Ranking ≥ %1$s (%2$s)</string>
   <string name="ratedLessThanInPerf">Ranking ≤ %1$s (%2$s)</string>
   <string name="backToGame">Wróć do partii</string>
-  <string name="teams">Kluby</string>
-  <plurals name="nbMembers">
-    <item quantity="one">%s gracz</item>
-    <item quantity="few">%s graczy</item>
-    <item quantity="many">%s graczy</item>
-    <item quantity="other">%s graczy</item>
-  </plurals>
-  <string name="allTeams">Wszystkie kluby</string>
-  <string name="newTeam">Nowy klub</string>
-  <string name="myTeams">Moje kluby</string>
-  <string name="noTeamFound">Nie należysz do żadnego klubu</string>
-  <string name="joinTeam">Dołącz do klubu</string>
-  <string name="quitTeam">Opuść klub</string>
-  <string name="anyoneCanJoin">Każdy może dołączyć</string>
-  <string name="aConfirmationIsRequiredToJoin">Dołączenie wymaga zatwierdzenia</string>
-  <string name="joiningPolicy">Warunki dołączenia</string>
-  <string name="teamLeader">Kapitan</string>
-  <string name="teamBestPlayers">Najlepsi gracze</string>
-  <string name="teamRecentMembers">Ostatnio dołączyli</string>
   <string name="xJoinedTeamY">%1$s dołączył do klubu %2$s</string>
   <string name="xCreatedTeamY">%1$s stworzył klub %2$s</string>
   <string name="averageElo">Średni ranking</string>
@@ -465,6 +446,7 @@ poproszenia o analizę komputerową, omówienia jej z innymi oraz udostępnienia
   <string name="lastName">Nazwisko</string>
   <string name="biography">O mnie</string>
   <string name="country">Kraj</string>
+  <string name="socialMediaLinks">Linki do mediów społecznościowych</string>
   <string name="preferences">Ustawienia</string>
   <string name="inlineNotation">Notacja inline</string>
   <string name="watchLidraughtsTV">Oglądaj Lidraughts TV</string>

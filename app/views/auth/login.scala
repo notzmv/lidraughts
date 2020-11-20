@@ -11,8 +11,8 @@ import controllers.routes
 
 object login {
 
-  val twoFactorHelp = span(dataIcon := "")(
-    "Open the two-factor authentication app on your device to view your authentication code and verify your identity."
+  def twoFactorHelp(implicit ctx: Context) = span(dataIcon := "")(
+    trans.tfa.openTheAppOnYourDevice()
   )
 
   def apply(form: Form[_], referrer: Option[String])(implicit ctx: Context) = views.html.base.layout(
@@ -32,10 +32,10 @@ object login {
               form3.submit(trans.signIn(), icon = none)
             ),
             div(cls := "two-factor none")(
-              form3.group(form("token"), raw("Authentication code"), help = Some(twoFactorHelp))(
+              form3.group(form("token"), trans.tfa.authenticationCode(), help = Some(twoFactorHelp))(
                 form3.input(_)(autocomplete := "one-time-code", pattern := "[0-9]{6}")
               ),
-              p(cls := "error none")("Invalid code."),
+              p(cls := "error none")(trans.invalidAuthenticationCode()),
               form3.submit(trans.signIn(), icon = none)
             )
           ),
