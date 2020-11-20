@@ -53,7 +53,7 @@ object widgets {
               g.simulId.map { simulId =>
                 frag(separator, views.html.simul.bits.link(simulId))
               } orElse
-              g.swissId.map { swissId =>
+              isGranted(_.Beta) ?? g.swissId.map { swissId =>
                 frag(separator, views.html.swiss.bits.link(lidraughts.swiss.Swiss.Id(swissId)))
               }
           )

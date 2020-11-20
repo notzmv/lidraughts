@@ -18,7 +18,7 @@ object Swiss extends LidraughtsController {
   private def swissNotFound(implicit ctx: Context) = NotFound(html.swiss.bits.notFound())
 
   def home =
-    Open { implicit ctx =>
+    Secure(_.Beta) { implicit ctx => _ =>
       env.api.featurable map {
         case (now, soon) => Ok(html.swiss.home(now, soon))
       }
@@ -96,7 +96,7 @@ object Swiss extends LidraughtsController {
 
   def apiCreate(teamId: String) =
     ScopedBody() { implicit req => me =>
-      if (me.isBot || me.lame) notFoundJson("This account cannot create tournaments")
+      if (me.isBot || me.lame || !isGranted(_.Beta, me)) notFoundJson("This account cannot create tournaments")
       else
         lidraughts.team.TeamRepo.isCreator(teamId, me.id) flatMap {
           case false => notFoundJson("You're not a leader of that team")
@@ -141,7 +141,7 @@ object Swiss extends LidraughtsController {
       }
     }
 
-  def edit(id: String) = Auth { implicit ctx => me =>
+  def edit(id: String) = Secure(_.Beta) { implicit ctx => me =>
     WithEditableSwiss(id, me) { swiss =>
       Ok(html.swiss.form.edit(swiss, env.forms.edit(swiss))).fuccess
     }

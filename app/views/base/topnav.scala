@@ -22,7 +22,7 @@ object topnav {
         else a(href := "/?any#friend")(trans.playWithAFriend()),
         ctx.noBot option frag(
           a(href := routes.Tournament.home())(if (isGranted(_.Beta)) trans.arena.arenaTournaments() else trans.tournaments()),
-          isGranted(_.Beta) option a(href := routes.Swiss.home())(trans.swiss.swissTournaments()),
+          isGranted(_.Beta) option a(href := routes.Swiss.home())(trans.swiss.swissTournaments.txt() + " [BETA]"),
           a(href := routes.Simul.home)(trans.simultaneousExhibitions())
         )
       )
