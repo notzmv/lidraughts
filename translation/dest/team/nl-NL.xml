@@ -28,8 +28,8 @@
   <string name="appointOwner">Maak iemand anders teamleider</string>
   <string name="changeOwner">Wie wil je leider van dit team maken?</string>
   <plurals name="xJoinRequests">
-    <item quantity="one">%s verzoek tot deelname</item>
-    <item quantity="other">%s verzoeken tot deelname</item>
+    <item quantity="one">%s verzoek tot lidmaadschap</item>
+    <item quantity="other">%s verzoeken tot lidmaatschap</item>
   </plurals>
   <string name="willBeReviewed">Je verzoek tot deelname zal worden beoordeeld door de teamleider.</string>
   <string name="beingReviewed">Je verzoek tot deelname wordt beoordeeld door de teamleider.</string>
