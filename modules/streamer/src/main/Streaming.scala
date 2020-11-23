@@ -110,7 +110,7 @@ private final class Streaming(
         else fuccess(allTwitchStreamers.map(_._2))
       futureTwitchStreamers flatMap { twitchStreamers =>
         twitchStreamers.nonEmpty ?? {
-          val twitchUserIds = twitchStreamers.map(_.userId)
+          val twitchUserIds = twitchStreamers.map(_.userId).distinct
           val url = WS.url("https://api.twitch.tv/helix/streams")
             .withQueryString(
               (("first" -> maxIds.toString) :: twitchUserIds.map("user_login" -> _)): _*

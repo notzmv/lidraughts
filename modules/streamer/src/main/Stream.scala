@@ -31,7 +31,7 @@ object Stream {
       def liveStreams = (~data).filter(_.isLive)
       def streams(keyword: Keyword, streamers: List[Streamer], alwaysFeatured: List[User.ID]): List[Stream] = liveStreams.collect {
         case TwitchStream(name, title, _) =>
-          streamers.find { s =>
+          streamers.filter { s =>
             s.twitch.exists(_.userId.toLowerCase == name.toLowerCase) && {
               title.toLowerCase.contains(keyword.toLowerCase) ||
                 alwaysFeatured.contains(s.userId)
