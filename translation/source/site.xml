@@ -633,6 +633,7 @@ One URL per line</string>
   <string name="currentPassword">Current password</string>
   <string name="newPassword">New password</string>
   <string name="newPasswordAgain">New password (again)</string>
+  <string name="newPasswordsDontMatch">The new passwords don't match</string>
   <string name="boardHighlights">Board highlights (last move and captures)</string>
   <string name="pieceDestinations">Piece destinations (valid moves and premoves)</string>
   <string name="boardCoordinates">Board coordinates (1-50, a1-h8)</string>

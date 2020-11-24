@@ -106,7 +106,7 @@ final class DataForm(
     "newPasswd1" -> nonEmptyText(minLength = 2),
     "newPasswd2" -> nonEmptyText(minLength = 2)
   )(PasswordResetConfirm.apply)(PasswordResetConfirm.unapply).verifying(
-      "the new passwords don't match",
+      "newPasswordsDontMatch",
       _.samePasswords
     ))
 
