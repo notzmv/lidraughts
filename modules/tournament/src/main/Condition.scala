@@ -219,11 +219,10 @@ object Condition {
     }
     case class RatingSetup(perf: Option[String], rating: Option[Int]) {
       def actualRating = rating.filter(r => r > 600 && r < 3000)
-      def convert[A](tourPerf: PerfType)(f: (PerfType, Int) => A): Option[A] = {
+      def convert[A](tourPerf: PerfType)(f: (PerfType, Int) => A): Option[A] =
         actualRating map { r =>
           f(tourPerf, r)
         }
-      }
     }
     object RatingSetup {
       def apply(v: (Option[PerfType], Option[Int])): RatingSetup = RatingSetup(v._1.map(_.key), v._2)
