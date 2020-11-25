@@ -15,10 +15,13 @@ lidraughts.movetimeChart = function(data, trans) {
             };
 
             var tree = data.treeParts;
-            var moveCentis = data.game.moveCentis.slice() || 
-              data.game.moveTimes.map(function(i) { return i * 10; });  
             var ply = 0, lastPly = -1;
             var max = 0;
+
+            var moveCentis = data.game.moveCentis && data.game.moveCentis.slice();
+            if (data.game.moveTimes && !(moveCentis && moveCentis.length))
+              moveCentis = data.game.moveTimes.map(function(i) { return i * 10; });
+            if (!moveCentis) moveCentis = [];
 
             var logC = Math.pow(Math.log(3), 2);
 
