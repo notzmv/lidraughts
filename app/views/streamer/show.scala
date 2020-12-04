@@ -57,7 +57,7 @@ method:'post'
             }
           ),
           bits.menu("show", s.withoutStream.some),
-          a(cls := "blocker button button-metal", href := "https://getublockorigin.com")(
+          a(cls := "blocker button button-metal", href := "https://ublockorigin.com")(
             i(dataIcon := ""),
             strong(installBlocker()),
             beSafe()
