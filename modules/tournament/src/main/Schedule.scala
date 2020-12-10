@@ -210,10 +210,8 @@ object Schedule {
   private val timeZoneCET = DateTimeZone.forID("Europe/Amsterdam")
   def offsetCET(day: DateTime) = day.withTime(12, 0, 0, 0).withZone(timeZoneCET).getHourOfDay - 12
 
-  def telethon(s: Schedule) = s.at.getYear == 2020 && s.at.getMonthOfYear == 12 && s.at.getDayOfMonth == 5
-
   private val dailyIncDays = Set(dt.MONDAY, dt.WEDNESDAY, dt.SATURDAY)
-  private def dailyInc(s: Schedule) = dailyIncDays.contains(s.at.getDayOfWeek) && !telethon(s)
+  private def dailyInc(s: Schedule) = dailyIncDays.contains(s.at.getDayOfWeek)
 
   private def standardInc(s: Schedule) = s.at.getHourOfDay % 3 == 1
   private def variantInc(s: Schedule) = s.at.getHourOfDay % 12 == 1 || s.at.getHourOfDay % 12 == 2
