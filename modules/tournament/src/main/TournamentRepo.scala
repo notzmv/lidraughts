@@ -217,7 +217,7 @@ object TournamentRepo {
     scheduledStillWorthEntering zip scheduledCreatedSorted(crud.CrudForm.maxHomepageHours * 60) map {
       case (started, created) => (started ::: created).foldLeft(List.empty[Tournament]) {
         case (acc, tour) if !isPromotable(tour) => acc
-        case (acc, tour) if acc.exists(_ similarTo tour) => acc
+        case (acc, tour) if !tour.isUnique && acc.exists(_ similarTo tour) => acc
         case (acc, tour) => tour :: acc
       }.reverse
     }

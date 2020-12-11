@@ -103,8 +103,10 @@ object home {
             events.map(bits.spotlight),
             relays.map(bits.spotlight),
             !ctx.isBot option frag(
-              lidraughts.tournament.Spotlight.select(tours, ctx.me, 3 - events.size) map { views.html.tournament.homepageSpotlight(_) },
-              simuls.find(_.spotlightable).filter(lidraughts.simul.Env.current.featurable).headOption map views.html.simul.bits.homepageSpotlight
+              lidraughts.tournament.Spotlight.select(tours, ctx.me, (3 - events.size - relays.size) atLeast 1) map {
+                views.html.tournament.homepageSpotlight(_)
+              },
+              simuls.filter(lidraughts.simul.Env.current.featurable).take(2) map views.html.simul.bits.homepageSpotlight
             )
           ),
           ctx.me map { u =>

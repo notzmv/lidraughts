@@ -141,7 +141,8 @@ final class Env(
     expireAfter = _.ExpireAfterWrite(UniqueCacheTtl)
   )
 
-  def featurable(simul: Simul): Boolean = featureLimiter(simul.hostId)(true)
+  def featurable(simul: Simul): Boolean =
+    simul.spotlightable && featureLimiter(simul.hostId)(true)
 
   private val featureLimiter = new lidraughts.memo.RateLimit[lidraughts.user.User.ID](
     credits = FeatureViews,
