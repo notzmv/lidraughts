@@ -64,7 +64,7 @@ final class CrudApi(simulRepo: SimulRepo) {
     collection = simulRepo.coll,
     selector = simulRepo.uniqueSelect,
     projection = $empty,
-    sort = $doc("startsAt" -> -1)
+    sort = $doc("spotlight.startsAt" -> -1)
   ), currentPage = page)
 
   private def empty(host: User) = Simul.make(

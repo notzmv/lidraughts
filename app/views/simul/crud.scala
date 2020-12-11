@@ -37,7 +37,7 @@ object crud {
   ) {
     div(cls := "crud page-menu__content box box-pad")(
       h1("New simul"),
-      st.form(cls := "content_box_content form3", action := routes.SimulCrud.create, method := "POST")(inForm(form, teams, false))
+      postForm(cls := "form3", action := routes.SimulCrud.create)(inForm(form, teams, false))
     )
   }
 
@@ -53,7 +53,7 @@ object crud {
           " ",
           span("Created on ", showDate(simul.createdAt))
         ),
-        st.form(cls := "content_box_content form3", action := routes.SimulCrud.update(simul.id), method := "POST")(inForm(form, teams, limitedEdit)),
+        postForm(cls := "form3", action := routes.SimulCrud.update(simul.id))(inForm(form, teams, limitedEdit)),
         allowedPlayers(simul)
       )
     }
@@ -61,7 +61,7 @@ object crud {
   private def allowedPlayers(simul: Simul)(implicit ctx: Context) = frag(
     div(cls := "crud edit box box-pad")(
       h2("Optionally restrict the simul to the usernames listed below"),
-      st.form(cls := "content_box_content form3", method := "POST")(
+      st.form(cls := "form3", method := "POST")(
         form3.split(
           div(cls := "form-group form-half")(
             label(cls := "form-label", `for` := "player")("Add player"),
@@ -90,7 +90,7 @@ object crud {
     import SimulForm._
     frag(
       form3.split(
-        form3.group(form("date"), raw("Start date <strong>UTC</strong>"), half = true)(form3.flatpickr(_)),
+        form3.group(form("date"), frag("Start date ", strong(utcLink)), half = true)(form3.flatpickr(_)),
         form3.group(form("name"), raw("Name"), help = raw("Keep it VERY short, so it fits on homepage").some, half = true)(form3.input(_))
       ),
       form3.split(
