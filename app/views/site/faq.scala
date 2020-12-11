@@ -36,12 +36,6 @@ object faq {
           p("Lidraughts is powered by donations from patrons and the efforts of a team of volunteers. You can find out more about being a patron ", a(href := routes.Plan.index())("here"), "."),
           p("If you want to help Lidraughts by volunteering your time and skills (translations, piece sets, etc), you can contact us by ", a(href := "mailto:contact@lidraughts.org")("e-mail"), " or in the ", a(href := routes.ForumCateg.index())("forum"), ".")
         ),
-        question(
-          "embed",
-          "How can I embed games/studies and images/videos?",
-          p("In most places on Lidraughts (forum posts, personal messages, studies, etc) content is automatically embedded when you include a relevant link. Links to games or studies are automatically converted to a playable window. It works the same for images (from imgur.com or giphy.com) or videos (from YouTube or Twitch)."),
-          p("To embed content from Lidraughts on external websites you can follow the instructions for ", a(href := routes.Main.webmasters)("webmasters"), ".")
-        ),
         h2("Fair Play"),
         question(
           "marks",
@@ -110,17 +104,16 @@ object faq {
         question(
           "usernames",
           "What can my username be?",
-          p("In general, usernames should not be: offensive, impersonating someone else, or advertising."),
-          p("You can't change your username because it is linked to all games you've played. You can change the case of the letters in your username, but only once.")
+          p("In general, usernames should not be: offensive, impersonating someone else, or advertising.")
         ),
         h2("Lidraughts ratings"),
         question(
           "ratings",
           "What rating system does Lidraughts use?",
-          p("Ratings are calculated using the ", a(href := "http://www.glicko.net/glicko/glicko2.pdf")("Glicko-2"), " rating method developed by Mark Glickman."),
-          p("""Fundamentally, Glicko ratings use "confidence intervals" (or uncertainty of your rating) when calculating and representing your rating. When you first start using the site, your rating starts at 1500 ± 700. The 1500 represents your rating, and the 700 represents the confidence interval."""),
+          p("Ratings are calculated using the Glicko-2 rating method developed by Mark Glickman."),
+          p("""Fundamentally, Glicko ratings use "confidence intervals" when calculating and representing your rating. When you first start using the site, your rating starts at 1500 ± 700. The 1500 represents your rating, and the 700 represents the confidence interval."""),
           p("Basically, the system is 90% sure that your rating is somewhere between 800 and 2200. It is incredibly uncertain. Because of this, when a player is just starting out, their rating will change very dramatically, potentially several hundred points at a time. But after some games against established players the confidence interval will narrow, and the amount of points gained/lost after each game will decrease."),
-          p("Another point to note is that, as time passes without playing, the confidence interval will increase. This allows you to gain/lose points points more rapidly to match any changes in your skill level over that time.")
+          p("Another point to note is that, as time passes, the confidence interval will increase. This allows you to gain/lose points points more rapidly to match any changes in your skill level over that time.")
         ),
         question(
           "provisional",
@@ -148,8 +141,7 @@ object faq {
           "high-ratings",
           "Why are ratings different compared to other sites and organisations such as FMJD and KNDB?",
           p("It is best not to think of ratings as absolute numbers, or compare them against other organisations. Different organisations have different levels of players, different rating systems (Elo, Glicko, Glicko-2, or a modified version of the aforementioned). These factors can drastically affect the absolute numbers (ratings)."),
-          p("""It's best to think of ratings as "relative" figures (as opposed to "absolute" figures): Within a pool of players, their relative differences in ratings will help you estimate who will win/draw/lose, and how often. Saying "I have X rating" means nothing unless there are other players to compare that rating to."""),
-          p("You can get a rough estimate of how your rating compares to a rating of a different system by looking at your ", a(href := "https://lidraughts.org/stat/rating/distribution/blitz")("percentile"), ". Ratings that occupy the same percentile, even in different systems, express the same relative strength compared to the rest of the players.")
+          p("""It's best to think of ratings as "relative" figures (as opposed to "absolute" figures): Within a pool of players, their relative differences in ratings will help you estimate who will win/draw/lose, and how often. Saying "I have X rating" means nothing unless there are other players to compare that rating to.""")
         ),
         question(
           "hide-ratings",
