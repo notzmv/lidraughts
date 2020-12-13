@@ -46,14 +46,9 @@ private[team] final class DataForm(
   )
 
   val request = Form(mapping(
-    "message" -> cleanText(minLength = 30, maxLength = 2000),
-    Fields.gameId,
-    Fields.move
-  )(RequestSetup.apply)(RequestSetup.unapply)
-    .verifying(captchaFailMessage, validateCaptcha _)) fill RequestSetup(
-    message = "Hello, I would like to join the team!",
-    gameId = "",
-    move = ""
+    "message" -> cleanText(minLength = 30, maxLength = 2000)
+  )(RequestSetup.apply)(RequestSetup.unapply)) fill RequestSetup(
+    message = "Hello, I would like to join the team!"
   )
 
   val processRequest = Form(tuple(
@@ -109,7 +104,5 @@ private[team] case class TeamEdit(
 }
 
 private[team] case class RequestSetup(
-    message: String,
-    gameId: String,
-    move: String
+    message: String
 )
