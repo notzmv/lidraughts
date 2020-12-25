@@ -25,8 +25,7 @@ export function input(ctrl: TournamentController): VNode {
               tag: 'span',
               tour: ctrl.data.id,
               focus: true,
-              minLength: 3,
-              onSelect(v) {
+              onSelect(v: any) {
                 ctrl.jumpToPageOf(v.id || v);
                 $(el).typeahead('close');
                 el.value = '';

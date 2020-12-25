@@ -46,8 +46,10 @@ export function ctrl(send: SocketSend, members: Prop<StudyMemberMap>, setTab: ()
       if (open()) send('following_onlines');
     },
     invite(titleName) {
-      send("invite", titleNameToId(titleName));
-      setTab();
+      if (titleName) {
+        send("invite", titleNameToId(titleName));
+        setTab();
+      }
     },
     redraw,
     trans

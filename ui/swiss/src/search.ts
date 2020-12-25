@@ -25,7 +25,6 @@ export function input(ctrl: TournamentController): VNode {
               tag: 'span',
               swiss: ctrl.data.id,
               focus: true,
-              minLength: 3,
               onSelect(v: any) {
                 ctrl.jumpToPageOf(v.id || v);
                 $(el).typeahead('close');

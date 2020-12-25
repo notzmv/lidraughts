@@ -150,12 +150,12 @@
     lidraughts.loadCssPath('autocomplete');
     return lidraughts.loadScript('javascripts/vendor/typeahead.jquery.min.js').done(function() {
       $input.typeahead({
-        minLength: opts.minLength || 3,
+        minLength: opts.minLength || 2,
       }, {
         hint: true,
         highlight: false,
         source: function(query, _, runAsync) {
-          if (query.trim().match(/^[a-z0-9][\w-]{2,29}$/i)) $.ajax({
+          if (query.trim().match(/^[a-z0-9][\w-]{1,29}$/i)) $.ajax({
             url: '/player/autocomplete',
             cache: true,
             data: {

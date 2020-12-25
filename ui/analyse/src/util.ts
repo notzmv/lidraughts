@@ -76,6 +76,7 @@ export function plural(noun: string, nb: number): string {
 }
 
 export function titleNameToId(titleName: string): string {
+  if (!titleName) return '';
   const split = titleName.split(' ');
   return (split.length === 1 ? split[0] : split[1]).toLowerCase();
 }
