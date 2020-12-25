@@ -166,10 +166,7 @@
               object: 1
             },
             success: function(res) {
-              res = res.result;
-              // hack to fix typeahead limit bug
-              if (res.length === 10) res.push(null);
-              runAsync(res);
+              runAsync(res.result);
             }
           });
         },
