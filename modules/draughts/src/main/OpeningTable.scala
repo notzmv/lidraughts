@@ -196,7 +196,7 @@ object OpeningTable {
       StartingPosition("10-XVI", "W:W19,20,21,22,25,27,28,29,30,31,32:B1,2,3,4,5,6,7,8,10,11,13", "1. gh4 hg5 2. ef4 ge3 3. df4 ba5", "gh4 hg5 ef4 ge3 df4 ba5".some)
     )),
     Category("11", List(
-      StartingPosition("11-I", "W:W19,20,21,22,25,27,28,29,30,31,32:B1,2,3,4,5,6,7,8,10,11,12,14", "1. gh4 hg5 2. ef4 ge3 3. df4 bc5", "gh4 hg5 ef4 ge3 df4 bc5".some),
+      StartingPosition("11-I", "W:W19,20,21,22,25,27,28,29,30,31,32:B1,2,3,4,5,6,7,8,10,11,14", "1. gh4 hg5 2. ef4 ge3 3. df4 bc5", "gh4 hg5 ef4 ge3 df4 bc5".some),
       StartingPosition("11-II", "W:W20,21,22,23,24,25,26,27,29,30,31,32:B1,2,3,4,5,6,7,9,10,11,12,16", "1. gh4 hg5 2. hg3 gh6", "gh4 hg5 hg3 gh6".some),
       StartingPosition("11-III", "W:W17,21,23,24,25,26,27,28,29,30,31,32:B1,2,3,4,5,6,7,8,9,11,12,14", "1. cb4 dc5", "cb4 dc5".some),
       StartingPosition("11-IV", "W:W13,21,22,23,24,25,26,27,28,30,31,32:B1,2,3,4,6,7,8,9,10,11,12,20", "", "a1-a5 a7-h4".some),
