@@ -193,6 +193,7 @@ object User {
 
   // what existing usernames are like
   val historicalUsernameRegex = """(?i)[a-z0-9][\w-]{0,28}[a-z0-9]""".r
+  val historicalUsernameStartRegex = """(?i)[a-z0-9][\w-]{1,29}""".r
 
   // what new usernames should be like -- now split into further parts for clearer error messages
   val newUsernameRegex = """(?i)[a-z][\w-]{0,28}[a-z0-9]""".r
@@ -204,6 +205,7 @@ object User {
   val newUsernameChars = """(?i)[\w-]*""".r
 
   def couldBeUsername(str: User.ID) = historicalUsernameRegex.matches(str)
+  def couldBeStartOfUsername(str: User.ID) = historicalUsernameStartRegex.matches(str)
 
   def normalize(username: String) = username.toLowerCase
 

@@ -291,7 +291,7 @@ object UserRepo {
     coll.primitive[String]($inIds(usernames.map(normalize)), F.id)
 
   def userIdsLike(text: String, max: Int = 10): Fu[List[User.ID]] =
-    User.couldBeUsername(text) ?? {
+    User.couldBeStartOfUsername(text) ?? {
       coll.find(
         $doc(F.id $startsWith normalize(text)) ++ enabledSelect,
         $doc(F.id -> true)

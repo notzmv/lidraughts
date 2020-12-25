@@ -429,7 +429,7 @@ object User extends LidraughtsController {
   }
 
   def autocomplete = Open { implicit ctx =>
-    get("term", ctx.req).filter(_.nonEmpty).filter(lidraughts.user.User.couldBeUsername) match {
+    get("term", ctx.req).filter(_.nonEmpty).filter(lidraughts.user.User.couldBeStartOfUsername) match {
       case None => BadRequest("No search term provided").fuccess
       case Some(term) if getBool("exists") => UserRepo nameExists term map { r => Ok(JsBoolean(r)) }
       case Some(term) => {
