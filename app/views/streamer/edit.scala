@@ -1,5 +1,6 @@
 package views.html.streamer
 
+import controllers.routes
 import play.api.data.Form
 
 import lidraughts.api.Context
@@ -7,8 +8,6 @@ import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
 import lidraughts.common.String.html.richText
 import lidraughts.user.User
-
-import controllers.routes
 
 object edit {
 
@@ -118,6 +117,7 @@ object edit {
                     ),
                     form3.action(form3.submit(trans.apply()))
                   ),
+                  form3.globalError(form),
                   form3.split(
                     form3.group(form("twitch"), twitchUsername(), help = optionalOrEmpty().some, half = true)(form3.input(_)),
                     form3.group(form("youTube"), youtubeChannel(), help = optionalOrEmpty().some, half = true)(form3.input(_))

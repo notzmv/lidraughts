@@ -28,7 +28,11 @@ object StreamerForm {
       "ignored" -> boolean,
       "chat" -> boolean
     )(ApprovalData.apply)(ApprovalData.unapply))
-  )(UserData.apply)(UserData.unapply))
+  )(UserData.apply)(UserData.unapply)
+    .verifying(
+      "Must specify a Twitch and/or YouTube channel.",
+      u => u.twitch.isDefined || u.youTube.isDefined
+    ))
 
   def userForm(streamer: Streamer) = emptyUserForm fill UserData(
     name = streamer.name,
