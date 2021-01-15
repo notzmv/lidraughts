@@ -49,7 +49,7 @@ object Form {
   def trim(m: Mapping[String]) = m.transform[String](_.trim, identity)
   def clean(m: Mapping[String]) =
     trim(m)
-      .verifying("error.pattern", s => !String.hasZeroWidthChars(s))
+      .verifying("error.pattern", s => !String.hasGarbageChars(s))
 
   def eventName(minLength: Int, maxLength: Int) =
     clean(text).verifying(
