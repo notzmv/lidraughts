@@ -1,12 +1,12 @@
 package lidraughts.tournament
 
-import lidraughts.hub.lightTeam.LightTeam
+import lidraughts.hub.lightTeam.{ LightTeam, TeamId }
 
 case class TournamentTop(value: List[Player]) extends AnyVal
 
 case class TourMiniView(tour: Tournament, top: Option[TournamentTop])
 
-case class MyInfo(rank: Int, withdraw: Boolean, gameId: Option[lidraughts.game.Game.ID]) {
+case class MyInfo(rank: Int, withdraw: Boolean, gameId: Option[lidraughts.game.Game.ID], teamId: Option[TeamId]) {
   def page = {
     math.floor((rank - 1) / 10) + 1
   }.toInt

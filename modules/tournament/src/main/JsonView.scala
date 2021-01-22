@@ -74,6 +74,7 @@ final class JsonView(
       u <- me; battle <- tour.teamBattle; if full
     } yield getUserTeamIds(u) map { teams => battle.teams intersect teams.toSet })
     teamStanding <- getTeamStanding(tour)
+    myTeam <- myInfo.flatMap(_.teamId) ?? { getMyRankedTeam(tour, _) }
   } yield Json.obj(
     "nbPlayers" -> tour.nbPlayers,
     "duels" -> data.duels,
@@ -92,6 +93,7 @@ final class JsonView(
     .add("stats" -> stats)
     .add("socketVersion" -> socketVersion.map(_.value))
     .add("teamStanding" -> teamStanding)
+    .add("myTeam" -> myTeam)
     .add("duelTeams" -> data.duelTeams) ++
     full.?? {
       Json.obj(
@@ -142,7 +144,7 @@ final class JsonView(
       _ ?? { player =>
         fetchCurrentGameId(tour, me) flatMap { gameId =>
           getOrGuessRank(tour, player) map { rank =>
-            MyInfo(rank + 1, player.withdraw, gameId).some
+            MyInfo(rank + 1, player.withdraw, gameId, player.team).some
           }
         }
       }
@@ -378,6 +380,9 @@ final class JsonView(
     "p" -> Json.arr(u1, u2)
   )
 
+  def getTeamStanding(tour: Tournament): Fu[Option[JsArray]] =
+    tour.isTeamBattle ?? { teamStandingJsonCache get tour.id dmap some }
+
   private val teamStandingJsonCache = asyncCache.clearable[Tournament.ID, JsArray](
     name = "tournament.teamStanding",
     id => cached.battle.teamStanding.get(id) map { ranked =>
@@ -385,9 +390,6 @@ final class JsonView(
     },
     expireAfter = _.ExpireAfterWrite(500 millis)
   )
-
-  private def getTeamStanding(tour: Tournament): Fu[Option[JsArray]] =
-    tour.isTeamBattle ?? { teamStandingJsonCache get tour.id dmap some }
 
   private implicit val teamBattleRankedWrites: Writes[TeamBattle.RankedTeam] = OWrites { rt =>
     Json.obj(
@@ -402,6 +404,12 @@ final class JsonView(
       }
     )
   }
+
+  private def getMyRankedTeam(tour: Tournament, teamId: TeamId): Fu[Option[TeamBattle.RankedTeam]] =
+    tour.teamBattle.exists(_.hasTooManyTeams) ??
+      cached.battle.teamStanding.get(tour.id) map {
+        _.find(_.teamId == teamId)
+      }
 
   private val teamInfoCache = asyncCache.clearable[(Tournament.ID, TeamId), Option[JsObject]](
     name = "tournament.teamInfo",
