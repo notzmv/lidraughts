@@ -378,22 +378,16 @@ final class JsonView(
     "p" -> Json.arr(u1, u2)
   )
 
-  private val teamStandingCache = asyncCache.clearable[Tournament.ID, JsArray](
+  private val teamStandingJsonCache = asyncCache.clearable[Tournament.ID, JsArray](
     name = "tournament.teamStanding",
-    id => TournamentRepo.teamBattleOf(id) flatMap {
-      _.fold(fuccess(JsArray())) { battle =>
-        PlayerRepo.bestTeamIdsByTour(id, battle) map { ranked =>
-          JsArray(ranked take TeamBattle.displayTeams map teamBattleRankedWrites.writes)
-        }
-      }
+    id => cached.battle.teamStanding.get(id) map { ranked =>
+      JsArray(ranked take TeamBattle.displayTeams map teamBattleRankedWrites.writes)
     },
-    expireAfter = _.ExpireAfterWrite(1 second)
+    expireAfter = _.ExpireAfterWrite(500 millis)
   )
 
   private def getTeamStanding(tour: Tournament): Fu[Option[JsArray]] =
-    tour.isTeamBattle ?? {
-      teamStandingCache get tour.id dmap some
-    }
+    tour.isTeamBattle ?? { teamStandingJsonCache get tour.id dmap some }
 
   private implicit val teamBattleRankedWrites: Writes[TeamBattle.RankedTeam] = OWrites { rt =>
     Json.obj(

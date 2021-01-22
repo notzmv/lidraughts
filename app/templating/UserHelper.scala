@@ -93,7 +93,7 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper =>
     withTitle: Boolean = true,
     truncate: Option[Int] = None,
     params: String = ""
-  ): Frag = userIdNameLink(
+  ): Tag = userIdNameLink(
     userId = user.id,
     username = user.name,
     isPatron = user.isPatron,
@@ -134,7 +134,7 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper =>
     title: Option[Title],
     params: String,
     modIcon: Boolean
-  ): Frag = a(
+  ): Tag = a(
     cls := userClass(userId, cssClass, withOnline),
     href := userUrl(username, params = params)
   )(
@@ -153,7 +153,7 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper =>
     withPerfRating: Option[PerfType] = None,
     params: String = "",
     withProfileName: Boolean = false
-  ): Frag = a(
+  ): Tag = a(
     cls := userClass(user.id, cssClass, withOnline, withPowerTip),
     href := userUrl(user.username, params)
   )(

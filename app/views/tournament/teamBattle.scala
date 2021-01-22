@@ -1,15 +1,15 @@
 package views.html
 package tournament
 
+import controllers.routes
 import play.api.data.{ Field, Form }
 
 import lidraughts.api.Context
 import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
+import lidraughts.tournament.TeamBattle
 import lidraughts.tournament.Tournament
 import lidraughts.user.User
-
-import controllers.routes
 
 object teamBattle {
 
@@ -38,4 +38,38 @@ object teamBattle {
       )
     ))
 
+  private val scoreTag = tag("score")
+
+  def standing(
+    tour: Tournament,
+    battle: TeamBattle,
+    standing: List[TeamBattle.RankedTeam]
+  )(implicit ctx: Context) =
+    views.html.base.layout(
+      title = tour.fullName,
+      moreCss = cssTag("tournament.show.team-battle")
+    )(
+        main(cls := "tour__battle-standing box")(
+          h1(a(href := routes.Tournament.show(tour.id))(tour.fullName)),
+          table(cls := "slist slist-pad tour__team-standing")(
+            tbody(
+              standing.map { t =>
+                tr(
+                  td(cls := "rank")(t.rank),
+                  td(cls := "team")(teamIdToName(t.teamId)),
+                  td(cls := "players")(
+                    fragList(
+                      t.leaders.map { l =>
+                        scoreTag(dataHref := routes.User.show(l.userId), cls := "user-link ulpt")(l.score)
+                      },
+                      "+"
+                    )
+                  ),
+                  td(cls := "total")(t.score)
+                )
+              }
+            )
+          )
+        )
+      )
 }

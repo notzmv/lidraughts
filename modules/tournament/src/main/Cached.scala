@@ -46,6 +46,17 @@ private[tournament] final class Cached(
     expireAfter = _.ExpireAfterAccess(rankingTtl)
   )
 
+  object battle {
+
+    val teamStanding = asyncCache.multi[Tournament.ID, List[TeamBattle.RankedTeam]](
+      name = "tournament.teamStanding",
+      id => TournamentRepo.teamBattleOf(id) flatMap {
+        _ ?? { PlayerRepo.bestTeamIdsByTour(id, _) }
+      },
+      expireAfter = _.ExpireAfterWrite(1 second)
+    )
+  }
+
   private[tournament] object sheet {
 
     import arena.ScoringSystem.Sheet
