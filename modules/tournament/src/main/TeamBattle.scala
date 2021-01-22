@@ -16,6 +16,9 @@ case class TeamBattle(
 
 object TeamBattle {
 
+  val maxTeams = 1000
+  val displayTeams = 10
+
   def init(teamId: TeamId) = TeamBattle(Set(teamId), 5)
 
   case class RankedTeam(
@@ -49,7 +52,10 @@ object TeamBattle {
       "nbLeaders" -> number(min = 1, max = 20)
     )(Setup.apply)(Setup.unapply)
       .verifying("We need at least 2 teams", s => s.potentialTeamIds.size > 1)
-      .verifying("In this version of team battles, no more than 10 teams can be allowed", s => s.potentialTeamIds.size <= 10)
+      .verifying(
+        s"In this version of team battles, no more than $maxTeams teams can be allowed",
+        s => s.potentialTeamIds.size <= maxTeams
+      )
 
     def edit(teams: List[String], nbLeaders: Int) = Form(fields) fill
       Setup(s"${teams mkString "\n"}\n", nbLeaders)

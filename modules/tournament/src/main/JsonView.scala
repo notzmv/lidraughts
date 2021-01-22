@@ -383,7 +383,7 @@ final class JsonView(
     id => TournamentRepo.teamBattleOf(id) flatMap {
       _.fold(fuccess(JsArray())) { battle =>
         PlayerRepo.bestTeamIdsByTour(id, battle) map { ranked =>
-          JsArray(ranked map teamBattleRankedWrites.writes)
+          JsArray(ranked take TeamBattle.displayTeams map teamBattleRankedWrites.writes)
         }
       }
     },

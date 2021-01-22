@@ -60,7 +60,7 @@ object PlayerRepo {
           )
         ))
       ),
-      maxDocs = 10
+      maxDocs = TeamBattle.maxTeams
     ).map {
         _.flatMap { doc =>
           for {
