@@ -15,6 +15,7 @@ export interface TournamentOpts extends Untyped {
 export interface TournamentData extends Untyped {
   teamBattle?: TeamBattle;
   teamStanding?: RankedTeam[];
+  myTeam?: RankedTeam;
 }
 
 export interface TeamBattle {
