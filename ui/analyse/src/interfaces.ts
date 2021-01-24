@@ -95,12 +95,19 @@ export interface Analysis {
   partial: boolean;
 }
 
+export interface MoveTimeStats {
+  avg: number;
+  sd: number;
+  cmt?: string;
+}
+
 export interface AnalysisSide {
   acpl: number;
   inaccuracy: number;
   mistake: number;
   blunder: number;
   nbm?: number[];
+  mt?: MoveTimeStats;
 }
 
 export interface AnalyseOpts {

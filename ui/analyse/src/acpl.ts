@@ -55,6 +55,7 @@ const advices = [
 function playerTable(ctrl: AnalyseCtrl, color: Color): VNode {
   const d = ctrl.data, trans = ctrl.trans.noarg;
   const acpl = d.analysis![color].acpl;
+  const mt = d.analysis![color].mt;
   return h('table', {
     hook: {
       insert(vnode) {
@@ -82,7 +83,15 @@ function playerTable(ctrl: AnalyseCtrl, color: Color): VNode {
             h('td', '' + (defined(acpl) ? acpl : '?')),
             h('th', trans('averageCentipieceLoss'))
           ])
-        ))
+        ).concat(
+          (mt ? [mt] : []).map(mt =>
+            h('tr', [
+              h('td', Math.round(mt.avg / 10) + '±' + Math.round(mt.sd / 10)),
+              h('th', 'Move times' + (mt.cmt ? ' (' + mt.cmt + ')' : ''))
+            ])
+          )
+        )
+      )
     ])
 }
 

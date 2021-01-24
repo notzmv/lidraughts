@@ -178,8 +178,8 @@ private[api] final class RoundApi(
     )
     else json
 
-  private def withAnalysis(g: Game, o: Option[Analysis], nbm: Boolean = false)(json: JsObject) =
-    json.add("analysis", o.map { a => analysisJson.bothPlayers(g, a, nbm) })
+  private def withAnalysis(g: Game, o: Option[Analysis], modStats: Boolean = false)(json: JsObject) =
+    json.add("analysis", o.map { a => analysisJson.bothPlayers(g, a, modStats) })
 
   private def withTournament(pov: Pov, tourOption: Option[TourAndRanks])(json: JsObject) =
     json.add("tournament" -> tourOption.map { data =>

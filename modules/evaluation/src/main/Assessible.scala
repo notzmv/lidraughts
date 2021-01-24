@@ -8,7 +8,7 @@ import org.joda.time.DateTime
 case class Analysed(game: Game, analysis: Analysis, holdAlerts: Player.HoldAlert.Map)
 
 case class Assessible(analysed: Analysed, color: Color) {
-  import Statistics._
+  import lidraughts.analyse.Statistics._
   import analysed._
 
   lazy val suspiciousErrorRate: Boolean =
@@ -47,20 +47,12 @@ case class Assessible(analysed: Analysed, color: Color) {
     highestChunkBlurs >= 8
 
   lazy val highlyConsistentMoveTimes: Boolean =
-    if (game.clock.forall(_.estimateTotalSeconds > 60))
-      moveTimeCoefVariation(Pov(game, color)) ?? { cvIndicatesHighlyFlatTimes(_) }
-    else
-      false
+    lidraughts.analyse.Statistics.highlyConsistentMoveTimes(Pov(game, color))
 
   // moderatelyConsistentMoveTimes must stay in Statistics because it's used in classes that do not use Assessible
 
   lazy val highlyConsistentMoveTimeStreaks: Boolean =
-    if (game.clock.forall(_.estimateTotalSeconds > 60))
-      slidingMoveTimesCvs(Pov(game, color)) ?? {
-        _ exists cvIndicatesHighlyFlatTimesForStreaks
-      }
-    else
-      false
+    lidraughts.analyse.Statistics.highlyConsistentMoveTimes(Pov(game, color))
 
   lazy val mkFlags: PlayerFlags = PlayerFlags(
     suspiciousErrorRate,

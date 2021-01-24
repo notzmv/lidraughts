@@ -2,7 +2,7 @@ package lidraughts.analyse
 
 import play.api.libs.json._
 
-import lidraughts.game.Game
+import lidraughts.game.{ Game, Pov }
 import lidraughts.tree.Eval.JsonHandlers._
 
 object JsonView {
@@ -26,17 +26,38 @@ object JsonView {
 
   import Accuracy.povToPovLike
 
-  def player(pov: Accuracy.PovLike, withBestMoves: Boolean = false)(analysis: Analysis) =
-    analysis.summary.find(_._1 == pov.color).map(_._2).map(s =>
+  def player(pov: Accuracy.PovLike, game: Option[Game] = None, withModStats: Boolean = false)(analysis: Analysis) =
+    analysis.summary.find(_._1 == pov.color).map(_._2).map { s =>
+      val moveStats = withModStats.??(analysis.notBestPlies.map(_.filter(draughts.Color.fromPly(_) == pov.color)))
+      def timeStats(g: Game) = withModStats ?? {
+        import Statistics._
+        val mt = ~g.moveTimes(pov.color) map (_.roundTenths)
+        val mtAvg = listAverage(mt).toInt
+        val mtSd = listDeviation(mt).toInt
+        val p = Pov(g, pov.color)
+        val cmt = List(
+          highlyConsistentMoveTimes(p) ?? "high cons.",
+          highlyConsistentMoveTimeStreaks(p) ?? "streak",
+          moderatelyConsistentMoveTimes(p) ?? "mod. cons.",
+          noFastMoves(p) ?? "no fast moves"
+        ).filter(_.nonEmpty).mkString(", ")
+        Json.obj(
+          "avg" -> mtAvg,
+          "sd" -> mtSd,
+          "cmt" -> cmt
+        )
+      }
       JsObject(s map {
         case (nag, nb) => nag.toString.toLowerCase -> JsNumber(nb)
       }).add("acpl" -> lidraughts.analyse.Accuracy.mean(pov, analysis))
-        .add("nbm" -> withBestMoves.??(analysis.notBestPlies.map(_.filter(draughts.Color.fromPly(_) == pov.color)))))
+        .add("nbm" -> moveStats)
+        .add("mt" -> game.map(timeStats))
+    }
 
-  def bothPlayers(game: Game, analysis: Analysis, withBestMoves: Boolean = false) = Json.obj(
+  def bothPlayers(game: Game, analysis: Analysis, withModStats: Boolean = false) = Json.obj(
     "id" -> analysis.id,
-    "white" -> player(game.whitePov, withBestMoves)(analysis),
-    "black" -> player(game.blackPov, withBestMoves)(analysis)
+    "white" -> player(game.whitePov, game.some, withModStats)(analysis),
+    "black" -> player(game.blackPov, game.some, withModStats)(analysis)
   )
 
   def bothPlayers(pov: Accuracy.PovLike, analysis: Analysis) = Json.obj(

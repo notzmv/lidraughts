@@ -1,10 +1,9 @@
 package lidraughts.mod
 
 import akka.actor.ActorSelection
-import lidraughts.analyse.{ Analysis, AnalysisRepo }
+import lidraughts.analyse.{ Analysis, AnalysisRepo, Statistics }
 import lidraughts.db.BSON.BSONJodaDateTimeHandler
 import lidraughts.db.dsl._
-import lidraughts.evaluation.Statistics
 import lidraughts.evaluation.{ AccountAction, Analysed, PlayerAssessment, PlayerAggregateAssessment, PlayerFlags, PlayerAssessments, Assessible }
 import lidraughts.game.{ Game, Player, GameRepo, Source, Pov }
 import lidraughts.security.UserSpy

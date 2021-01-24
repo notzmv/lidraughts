@@ -32,7 +32,7 @@ case class PlayerAggregateAssessment(
     user: User,
     playerAssessments: List[PlayerAssessment]
 ) {
-  import Statistics._
+  import lidraughts.analyse.Statistics._
   import AccountAction._
   import GameAssessment.{ Cheating, LikelyCheating }
 

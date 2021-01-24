@@ -155,10 +155,11 @@ export default function(element: HTMLElement, ctrl: AnalyseCtrl) {
   });
   $panels.on('click', '.embed-howto', function(this: HTMLElement) {
     const url = `${baseUrl()}/embed/${data.game.id}?theme=auto&bg=auto${location.hash}`;
-    const iframe = '<iframe src="' + url + '"\nwidth=600 height=397 frameborder=0></iframe>';
+    const iframe = '<iframe allow="camera; microphone; display-capture" src="https://meet.jit.si/firsttestroomname" allowfullscreen="true" style="height: 400px; width: 100%; border: 0px;"></iframe>';
+    //const iframe = '<iframe src="' + url + '"\nwidth=600 height=397 frameborder=0></iframe>';
     $.modal($(
       '<strong style="font-size:1.5em">' + $(this).html() + '</strong><br /><br />' +
-      '<pre>' + li.escapeHtml(iframe) + '</pre><br />' +
+      '<pre>' + li.escapeHtml(iframe + url) + '</pre><br />' +
       iframe + '<br /><br />' +
       '<a class="text" data-icon="" href="/developers#embed-game">Read more about embedding games</a>'
     ));

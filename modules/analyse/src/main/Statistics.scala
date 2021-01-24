@@ -1,4 +1,4 @@
-package lidraughts.evaluation
+package lidraughts.analyse
 
 import draughts.{ Centis, Stats }
 import lidraughts.common.Maths
@@ -48,6 +48,18 @@ object Statistics {
         .flatMap(a => moveTimeCoefVariationNoDrop(a.toList))
         .some
     }
+
+  def highlyConsistentMoveTimes(pov: lidraughts.game.Pov): Boolean =
+    if (pov.game.clock.forall(_.estimateTotalSeconds > 60))
+      moveTimeCoefVariation(pov) ?? { cvIndicatesHighlyFlatTimes(_) }
+    else false
+
+  def highlyConsistentMoveTimeStreaks(pov: lidraughts.game.Pov): Boolean =
+    if (pov.game.clock.forall(_.estimateTotalSeconds > 60))
+      slidingMoveTimesCvs(pov) ?? {
+        _ exists cvIndicatesHighlyFlatTimesForStreaks
+      }
+    else false
 
   def moderatelyConsistentMoveTimes(pov: lidraughts.game.Pov): Boolean =
     moveTimeCoefVariation(pov) ?? { cvIndicatesModeratelyFlatTimes(_) }
