@@ -23,7 +23,10 @@
   <string name="teamBestPlayers">Beste Spieler</string>
   <string name="teamRecentMembers">Neueste Teammitglieder</string>
   <string name="kickSomeone">Entferne jemanden aus dem Team</string>
-  <string name="whoToKick">Wen willst du aus dem Team werfen?</string>
+  <string name="whoToKick">Wen willst du aus dem Team entfernen?</string>
+  <string name="deleteTeamWarning">Lösch das Team und seine Mitgliedschaften. Kann nicht rückgangig gemacht werden!</string>
+  <string name="appointOwner">Ernenne einen anderen Teamleiter</string>
+  <string name="changeOwner">Wen willst du zum Teamleiter ernennen?</string>
   <plurals name="xJoinRequests">
     <item quantity="one">%s Beitrittsanfrage</item>
     <item quantity="other">%s Beitrittsanfragen</item>
@@ -34,11 +37,17 @@
   <string name="teamBattleOverview">Ein Kampf mehrerer Teams, jeder Spieler erzielt Punkte für sein Team</string>
   <string name="teamTournament">Team-Turnier</string>
   <string name="teamTournamentOverview">Ein Arenaturnier, dem nur Mitglieder deines Teams beitreten können</string>
+  <string name="swissTournament">Turnier nach Schweizer System</string>
+  <string name="swissTournamentOverview">Ein Turnier nach Schweizer System, dem nur Mitglieder deines Team beitreten können</string>
+  <string name="subscribeToTeamMessages">Team-Nachrichten abbonieren</string>
   <string name="messageAllMembers">Benachrichtige alle Mitglieder</string>
   <string name="messageAllMembersOverview">Sende eine private Nachricht an alle Mitglieder des Teams</string>
-  <string name="messageAllMembersLongDescription">Sende eine private Nachricht an alle Mitglieder dieses Teams. Du kannst die Funktion benutzen um Spieler zu einem Turnier oder einem Team-Kampf aufzurufen. Spieler, die diese Art von Nachrichten nicht empfangen wollen können dein Team verlassen.</string>
+  <string name="messageAllMembersLongDescription">Sende eine private Nachricht an ALLE Mitglieder dieses Teams. 
+  Du kannst die Funktion benutzen um Spieler zu einem Turnier oder einem Team-Kampf aufzurufen. 
+  Spieler, die diese Art von Nachrichten nicht empfangen wollen könnten dein Team verlassen.</string>
   <string name="teamsIlead">Teams, die ich leite</string>
   <string name="youMayWantToLinkOneOfTheseTournaments">Möchtest du eines der kommenden Turniere verlinken?</string>
   <string name="usersWhoCanManageThisTeam">Benutzer, die dieses Team verwalten können</string>
   <string name="leadersChat">Teamleiter-Chat</string>
+  <string name="enableMembersChat">Chat einschalten (nur für Mitglieder)</string>
 </resources>
