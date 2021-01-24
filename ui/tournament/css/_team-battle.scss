@@ -11,16 +11,17 @@ $team-colors: (
 9: hsl(32, 75%, 47%),
 );
 
-@each $index, $color in $team-colors {
-  team.ttc-#{$index} {
-    color: #{$color};
-  }
-}
-
 team {
   padding: 1px 5px;
   font-size: .8em;
   font-weight: bold;
+  color: $c-brag;
+}
+
+@each $index, $color in $team-colors {
+  team.ttc-#{$index} {
+    color: #{$color};
+  }
 }
 .tour__player-info team {
   margin: 1rem auto 0 auto;
@@ -99,6 +100,11 @@ team {
   &--full {
     td {
       padding: 2rem 1rem;
+
+      &.team {
+        color: $c-brag;
+        font-weight: bold;
+      }
     }
   }
 }
