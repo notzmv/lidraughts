@@ -269,7 +269,7 @@ object Api extends LidraughtsController {
   def tournamentTeams(id: String) = Action.async { req =>
     lidraughts.tournament.TournamentRepo byId id flatMap {
       _ ?? { tour =>
-        Env.tournament.jsonView.getTeamStanding(tour) map { arr =>
+        Env.tournament.jsonView.apiTeamStanding(tour) map { arr =>
           JsonOk(
             Json.obj(
               "id" -> tour.id,
