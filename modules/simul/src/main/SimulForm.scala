@@ -46,7 +46,7 @@ object SimulForm {
     "color" -> stringIn(colorChoices),
     "targetPct" -> text(minLength = 0, maxLength = 3)
       .verifying("invalidTargetPercentage", pct => pct.length == 0 || parseIntOption(pct).fold(false)(p => p >= 50 && p <= 100)),
-    "text" -> clean(text),
+    "text" -> cleanText,
     "team" -> optional(nonEmptyText)
   )(Setup.apply)(Setup.unapply)) fill empty(host)
 

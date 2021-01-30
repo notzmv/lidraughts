@@ -26,7 +26,7 @@ final class SwissForm(isProd: Boolean) {
         "variant" -> optional(nonEmptyText.verifying(v => Variant(v).isDefined)),
         "rated" -> optional(boolean),
         "nbRounds" -> number(min = minRounds, max = 100),
-        "description" -> optional(clean(nonEmptyText)),
+        "description" -> optional(cleanNonEmptyText),
         "hasChat" -> optional(boolean),
         "roundInterval" -> optional(numberIn(roundIntervals))
       )(SwissData.apply)(SwissData.unapply)

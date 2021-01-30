@@ -5,6 +5,7 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.data.validation.Constraints._
 
+import lidraughts.common.Form.{ cleanNonEmptyText, cleanText }
 import lidraughts.user.User
 import lidraughts.security.Granter
 
@@ -15,9 +16,9 @@ object RelayForm {
   val maxHomepageHours = 72
 
   val form = Form(mapping(
-    "name" -> text(minLength = 3, maxLength = 80),
-    "description" -> text(minLength = 3, maxLength = 400),
-    "markup" -> optional(text(maxLength = 20000)),
+    "name" -> cleanText(minLength = 3, maxLength = 80),
+    "description" -> cleanText(minLength = 3, maxLength = 400),
+    "markup" -> optional(cleanText(maxLength = 20000)),
     "official" -> optional(boolean),
     "homepageHours" -> optional(number(min = 0, max = maxHomepageHours)),
     "syncUrl" -> nonEmptyText.verifying("Lidraughts tournaments can't be used as broadcast source", u => !isTournamentApi(u)),
@@ -25,7 +26,7 @@ object RelayForm {
     "gameIds" -> optional(nonEmptyText.verifying("Invalid game IDs", u => isCommaSeparatedGameIds(u))),
     "simulId" -> optional(nonEmptyText),
     "withProfileName" -> optional(boolean),
-    "credit" -> optional(nonEmptyText),
+    "credit" -> optional(cleanNonEmptyText),
     "startsAt" -> optional(utcDate),
     "throttle" -> optional(number(min = 2, max = 60))
   )(Data.apply)(Data.unapply))

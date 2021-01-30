@@ -26,7 +26,7 @@ final class DataForm(
 
   def emptyWithCaptcha = withCaptcha(empty)
 
-  private val anyEmail = LidraughtsForm.clean(text).verifying(Constraints.emailAddress)
+  private val anyEmail = LidraughtsForm.cleanNonEmptyText.verifying(Constraints.emailAddress)
   private val acceptableEmail = anyEmail.verifying(emailValidator.acceptableConstraint)
   private def acceptableUniqueEmail(forUser: Option[User]) =
     acceptableEmail.verifying(emailValidator uniqueConstraint forUser)
@@ -45,8 +45,7 @@ final class DataForm(
 
   object signup {
 
-    private val username = LidraughtsForm
-      .clean(nonEmptyText)
+    private val username = LidraughtsForm.cleanNonEmptyText
       .verifying(
         Constraints minLength 2,
         Constraints maxLength 20,

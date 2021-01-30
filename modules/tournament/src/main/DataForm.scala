@@ -83,12 +83,12 @@ final class DataForm {
     "position_brazilian" -> optional(nonEmptyText),
     "mode" -> optional(number.verifying(Mode.all map (_.id) contains _)), // deprecated, use rated
     "rated" -> optional(boolean),
-    "password" -> optional(nonEmptyText),
+    "password" -> optional(cleanNonEmptyText),
     "conditions" -> Condition.DataForm.all,
     "teamBattleByTeam" -> optional(nonEmptyText),
     "berserkable" -> optional(boolean),
     "streakable" -> optional(boolean),
-    "description" -> optional(clean(nonEmptyText(maxLength = 800)))
+    "description" -> optional(cleanNonEmptyText(maxLength = 800))
   )(TournamentSetup.apply)(TournamentSetup.unapply)
     .verifying("Invalid clock", _.validClock)
     .verifying("15s variant games cannot be rated", _.validRatedUltraBulletVariant)
