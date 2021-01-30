@@ -36,7 +36,7 @@ final class PdnDump(
           },
           moves => moves
         )
-        val moves = flags applyDelay pdnMoves
+        val moves = flags keepDelayIf game.playable applyDelay pdnMoves
         val moves2 =
           if (algebraic) san2alg(moves, boardPos)
           else moves
@@ -195,6 +195,7 @@ final class PdnDump(
 
 object PdnDump {
 
+  private val delayMovesBy = 3
   private val delayKeepsFirstMoves = 5
 
   case class WithFlags(
@@ -207,13 +208,13 @@ object PdnDump {
       draughtsResult: Boolean = true,
       algebraic: Boolean = false,
       profileName: Boolean = false,
-      delayMoves: Int = 0
+      delayMoves: Boolean = false
   ) {
     def applyDelay[M](moves: Seq[M]): Seq[M] =
-      if (delayMoves < 1) moves
-      else moves.take((moves.size - delayMoves) atLeast delayKeepsFirstMoves)
+      if (!delayMoves) moves
+      else moves.take((moves.size - delayMovesBy) atLeast delayKeepsFirstMoves)
 
-    def withDelayIf(cond: Boolean) = copy(delayMoves = cond ?? 3)
+    def keepDelayIf(cond: Boolean) = copy(delayMoves = delayMoves && cond)
   }
 
   def result(game: Game) =
