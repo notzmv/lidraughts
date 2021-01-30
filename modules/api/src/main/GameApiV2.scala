@@ -27,10 +27,9 @@ final class GameApiV2(
 
   def exportOne(game: Game, configInput: OneConfig): Fu[String] = {
     val config = configInput.copy(
-      flags = configInput.flags.copy(
-        delayMoves = (game.playable && !configInput.noDelay) ?? 3,
-        evals = configInput.flags.evals && !game.playable
-      )
+      flags = configInput.flags
+        .copy(evals = configInput.flags.evals && !game.playable)
+        .withDelayIf(game.playable && !configInput.noDelay)
     )
     game.pdnImport ifTrue config.imported match {
       case Some(imported) => fuccess(imported.pdn)

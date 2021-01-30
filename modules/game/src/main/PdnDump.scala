@@ -36,9 +36,7 @@ final class PdnDump(
           },
           moves => moves
         )
-        val moves =
-          if (flags.delayMoves > 0) pdnMoves dropRight flags.delayMoves
-          else pdnMoves
+        val moves = flags applyDelay pdnMoves
         val moves2 =
           if (algebraic) san2alg(moves, boardPos)
           else moves
@@ -197,6 +195,8 @@ final class PdnDump(
 
 object PdnDump {
 
+  private val delayKeepsFirstMoves = 5
+
   case class WithFlags(
       clocks: Boolean = true,
       moves: Boolean = true,
@@ -208,7 +208,13 @@ object PdnDump {
       algebraic: Boolean = false,
       profileName: Boolean = false,
       delayMoves: Int = 0
-  )
+  ) {
+    def applyDelay[M](moves: Seq[M]): Seq[M] =
+      if (delayMoves < 1) moves
+      else moves.take((moves.size - delayMoves) atLeast delayKeepsFirstMoves)
+
+    def withDelayIf(cond: Boolean) = copy(delayMoves = cond ?? 3)
+  }
 
   def result(game: Game) =
     if (game.finished) Color.showResult(game.winnerColor, false /* result 1-1 is also a move */ )
