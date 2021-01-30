@@ -63,8 +63,8 @@ final object RawHtml {
     } else List(text)
   }
 
-  def addLinks(text: String): String = {
-    expandAtUser(text) map { expanded =>
+  def addLinks(text: String, expandImg: Boolean = true): String =
+    expandAtUser(text).map { expanded =>
       val m = urlPattern.matcher(expanded)
 
       if (!m.find) escapeHtmlRaw(expanded) // preserve fast case!
@@ -117,7 +117,7 @@ final object RawHtml {
             val url = (if (isHttp) "http://" else "https://") + allButScheme
             val text = if (isHttp) url else allButScheme
             val imgHtml = {
-              if (end < sArr.length && sArr(end) == '"') None
+              if ((end < sArr.length && sArr(end) == '"') || !expandImg) None
               else imgUrl(url)
             }
             sb.append(
@@ -133,7 +133,6 @@ final object RawHtml {
         sb
       }
     } concat
-  }
 
   private[this] def adjustUrlEnd(sArr: Array[Char], start: Int, end: Int): Int = {
     var last = end - 1
