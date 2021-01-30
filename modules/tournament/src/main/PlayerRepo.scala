@@ -97,7 +97,7 @@ object PlayerRepo {
               "_id" -> BSONNull,
               "nb" -> $doc("$sum" -> 1),
               "rating" -> $doc("$avg" -> "$r"),
-              "perf" -> $doc("$avg" -> "$e"),
+              "perf" -> $doc("$avg" -> $doc("$cond" -> $arr("$e", "$e", "$r"))),
               "score" -> $doc("$avg" -> "$s")
             )
           )),
