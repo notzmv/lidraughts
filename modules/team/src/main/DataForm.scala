@@ -15,7 +15,7 @@ private[team] final class DataForm(
   private object Fields {
     val name = "name" -> cleanText(minLength = 3, maxLength = 60)
     val location = "location" -> optional(cleanText(minLength = 3, maxLength = 80))
-    val description = "description" -> cleanText(minLength = 30, maxLength = 2000)
+    val description = "description" -> cleanText(minLength = 30, maxLength = 4000)
     val open = "open" -> number
     val gameId = "gameId" -> text
     val move = "move" -> text
