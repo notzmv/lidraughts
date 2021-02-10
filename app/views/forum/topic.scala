@@ -118,7 +118,9 @@ object topic {
                 a(href := routes.Team.show(teamId))(trans.teamNamedX(teamIdToName(teamId)))
               )
             )
-          } getOrElse p(trans.youCannotPostYetPlaySomeGames()),
+          } orElse {
+            ctx.isAuth option p(trans.youCannotPostYetPlaySomeGames())
+          },
           div(
             unsub.map { uns =>
               postForm(cls := s"unsub ${if (uns) "on" else "off"}", action := routes.Timeline.unsub(s"forum:${topic.id}"))(
