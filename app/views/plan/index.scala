@@ -77,7 +77,7 @@ object index {
 
                   div(
                     cls := "plan_checkout",
-                    attr("data-email") := email.map(_.value),
+                    attr("data-email") := email.??(_.value),
                     attr("data-lifetime-usd") := lidraughts.plan.Cents.lifetime.usd.toString,
                     attr("data-lifetime-cents") := lidraughts.plan.Cents.lifetime.value
                   )(
