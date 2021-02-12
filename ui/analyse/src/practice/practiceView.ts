@@ -38,7 +38,7 @@ function renderOffTrack(root: AnalyseCtrl, ctrl: PracticeCtrl): VNode {
 
 function renderEnd(root: AnalyseCtrl, end: string): VNode {
   const isWin = end === 'checkmate';
-  const color = isWin ? opposite(root.turnColor()) : root.turnColor();
+  const color = (isWin && root.data.game.variant.key !== 'antidraughts') ? opposite(root.turnColor()) : root.turnColor();
   return h('div.player', [
     color ? h('div.no-square', h('piece.king.' + color)) : h('div.icon.off', '!'),
     h('div.instruction', [
