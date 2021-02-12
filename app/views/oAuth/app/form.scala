@@ -38,11 +38,13 @@ object form {
         ),
         br, br,
         postForm(cls := "form3", action := routes.OAuthApp.update(app.clientId.value))(
-          div(cls := "form-group")( /* "Here's a ",
-            a(href := "https://github.com/lichess-org/api/tree/master/example/oauth-authorization-code")(
+          div(cls := "form-group")(
+            "Here's a ",
+            a(href := "https://github.com/roepstoep/lidraughts-api/tree/master/example/oauth-authorization-code")(
               "lidraughts OAuth app example"
             ),
-            ", and the ", a(href := routes.Api.index)("API documentation"), "."*/ ),
+            ", and the ", a(href := routes.Api.index)("API documentation"), "."
+          ),
           inner(form)
         )
       )

@@ -53,11 +53,11 @@ object layout {
           div(cls := "sep"),
           a(href := routes.Plan.index)("Lidraughts Patron"),
           div(cls := "sep"),
-          /*a(activeCls("oauth.token"), href := routes.OAuthToken.index)(
+          a(activeCls("oauth.token"), href := routes.OAuthToken.index)(
             "API Access tokens"
           ),
           ctx.noBot option a(activeCls("oauth.app"), href := routes.OAuthApp.index)("OAuth Apps"),
-          div(cls := "sep"),*/
+          div(cls := "sep"),
           a(activeCls("close"), href := routes.Account.close())(
             trans.closeAccount()
           )

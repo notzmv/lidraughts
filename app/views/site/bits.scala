@@ -33,7 +33,7 @@ object bits {
     <style>body { margin: 0; padding: 0; }</style>
   </head>
   <body>
-    <redoc spec-url="https://raw.githubusercontent.com/lichess-org/api/master/doc/specs/lichess-api.yaml"></redoc>
+    <redoc spec-url="https://raw.githubusercontent.com/roepstoep/lidraughts-api/master/doc/specs/lidraughts-api.yaml"></redoc>
     <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"></script>
   </body>
 </html>""")

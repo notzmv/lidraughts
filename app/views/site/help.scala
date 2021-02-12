@@ -137,8 +137,8 @@ object help {
         a(activeCls("privacy"), href := routes.Page.privacy)(trans.privacy()),
         sep,
         a(activeCls("webmasters"), href := routes.Main.webmasters)(trans.webmasters()),
-        /*a(activeCls("database"), href := "https://database.lichess.org")(trans.database(), external),
-        a(activeCls("api"), href := routes.Api.index)("API", external),*/
+        /*a(activeCls("database"), href := "https://database.lichess.org")(trans.database(), external),*/
+        a(activeCls("api"), href := routes.Api.index)("API", external),
         a(activeCls("source"), href := "https://github.com/roepstoep/lidraughts")(trans.sourceCode(), external),
         sep,
         a(activeCls("lag"), href := routes.Main.lag)("Is Lidraughts lagging?")

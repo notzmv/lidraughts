@@ -14,15 +14,15 @@ object index {
         div(cls := "box__top")(
           h1("OAuth Apps"),
           st.form(cls := "box__top__actions", action := routes.OAuthApp.create)(
-            submitButton(cls := "button button-fat button-empty", title := "New app", dataIcon := "O")
+            submitButton(cls := "button frameless", title := "New app", dataIcon := "O")
           )
         ),
         p(cls := "box__pad")(
           "Want to build something that integrates with and extends Lidraughts? Register a new OAuth App to get started developing on the Lidraughts API.",
-          br, br
-        /*"Here's a ",
-          a(href := "https://github.com/lichess-org/api/tree/master/example/oauth-authorization-code")("lidraughts OAuth app example"),
-          ", and the ", a(href := routes.Api.index)("API documentation"), "."*/
+          br, br,
+          "Here's a ",
+          a(href := "https://github.com/roepstoep/lidraughts-api/tree/master/example/oauth-authorization-code")("lidraughts OAuth app example"),
+          ", and the ", a(href := routes.Api.index)("API documentation"), "."
         ),
         table(cls := "slist slist-pad")(
           apps.map { t =>
