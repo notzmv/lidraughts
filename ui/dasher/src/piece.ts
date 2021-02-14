@@ -58,7 +58,7 @@ export function view(ctrl: PieceCtrl): VNode {
 
 function pieceView(current: Piece, set: (t: Piece) => void) {
   return (t: Piece) => h('a.no-square', {
-    attrs: { title: t },
+    attrs: { title: t.replace('_', ' ') },
     hook: bind('click', () => set(t)),
     class: { active: current === t }
   }, [
