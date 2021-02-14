@@ -40,18 +40,17 @@ object JsonView {
           highlyConsistentMoveTimeStreaks(p) ?? "streak",
           moderatelyConsistentMoveTimes(p) ?? "mod. cons.",
           noFastMoves(p) ?? "no fast moves"
-        ).filter(_.nonEmpty).mkString(", ")
+        ).filter(_.nonEmpty)
         Json.obj(
           "avg" -> mtAvg,
-          "sd" -> mtSd,
-          "cmt" -> cmt
-        )
+          "sd" -> mtSd
+        ).add("cmt", cmt.nonEmpty.option(cmt.mkString(", "))).some
       }
       JsObject(s map {
         case (nag, nb) => nag.toString.toLowerCase -> JsNumber(nb)
       }).add("acpl" -> lidraughts.analyse.Accuracy.mean(pov, analysis))
         .add("nbm" -> moveStats)
-        .add("mt" -> game.map(timeStats))
+        .add("mt" -> game.flatMap(timeStats))
     }
 
   def bothPlayers(game: Game, analysis: Analysis, withModStats: Boolean = false) = Json.obj(
