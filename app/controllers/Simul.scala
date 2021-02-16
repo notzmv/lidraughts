@@ -13,6 +13,7 @@ import lidraughts.common.HTTPRequest
 import lidraughts.hub.lightTeam._
 import lidraughts.game.GameRepo
 import lidraughts.game.PdnDump.WithFlags
+import lidraughts.pref.Pref.{ default => defaultPref }
 import lidraughts.simul.{ Simul => Sim }
 import lidraughts.simul.SimulForm.{ empty => emptyForm }
 import views._
@@ -242,6 +243,26 @@ object Simul extends LidraughtsController {
           perSecond = lidraughts.common.MaxPerSecond(20)
         )).fuccess
       case _ => fuccess(BadRequest)
+    }
+  }
+
+  def apiExportGames(id: String) = Action.async { req =>
+    env.repo.find(id) flatMap {
+      _ ?? { simul =>
+        Api.GlobalLinearLimitPerIP(HTTPRequest lastRemoteAddress req) {
+          val flags = Game.requestPdnFlags(req, defaultPref.draughtsResult, extended = false, defaultPref.canAlgebraic)
+          val config = GameApiV2.ByIdsConfig(
+            ids = simul.gameIds,
+            format = GameApiV2.Format byRequest req,
+            flags = flags,
+            perSecond = lidraughts.common.MaxPerSecond(20)
+          )
+          Ok.chunked(Env.api.gameApiV2.exportByIds(config)).withHeaders(
+            noProxyBufferHeader,
+            CONTENT_TYPE -> Game.gameContentType(config)
+          ).fuccess
+        }
+      }
     }
   }
 
