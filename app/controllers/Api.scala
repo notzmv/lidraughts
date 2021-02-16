@@ -11,6 +11,7 @@ import lidraughts.api.{ Context, GameApiV2, UserApi }
 import lidraughts.app._
 import lidraughts.common.PimpedJson._
 import lidraughts.common.{ HTTPRequest, IpAddress, MaxPerPage, MaxPerSecond }
+import lidraughts.pref.Pref.{ default => defaultPref }
 import lidraughts.user.UserRepo
 
 object Api extends LidraughtsController {
@@ -235,7 +236,7 @@ object Api extends LidraughtsController {
     lidraughts.tournament.TournamentRepo byId id flatMap {
       _ ?? { tour =>
         GlobalLinearLimitPerIP(HTTPRequest lastRemoteAddress req) {
-          val flags = Game.requestPdnFlags(req, lidraughts.pref.Pref.default.draughtsResult, extended = false, algebraicPref = false)
+          val flags = Game.requestPdnFlags(req, defaultPref.draughtsResult, extended = false, defaultPref.canAlgebraic)
           val config = GameApiV2.ByTournamentConfig(
             tournamentId = tour.id,
             format = GameApiV2.Format byRequest req,
@@ -283,7 +284,7 @@ object Api extends LidraughtsController {
       Env.swiss.api byId lidraughts.swiss.Swiss.Id(id) flatMap {
         _ ?? { swiss =>
           GlobalLinearLimitPerIP(HTTPRequest lastRemoteAddress req) {
-            val flags = Game.requestPdnFlags(req, lidraughts.pref.Pref.default.draughtsResult, extended = false, algebraicPref = false)
+            val flags = Game.requestPdnFlags(req, defaultPref.draughtsResult, extended = false, defaultPref.canAlgebraic)
             val config = GameApiV2.BySwissConfig(
               swissId = swiss.id,
               format = GameApiV2.Format byRequest req,
