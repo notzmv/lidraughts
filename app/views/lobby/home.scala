@@ -56,7 +56,7 @@ object home {
     moreCss = cssTag("lobby"),
     draughtsground = false,
     openGraph = lidraughts.app.ui.OpenGraph(
-      image = staticUrl("images/large_tile.png").some,
+      image = staticUrl("images/lidraughts-tile-wide.png").some,
       title = "The best free, adless draughts server",
       url = netBaseUrl,
       description = trans.siteDescription.txt()
