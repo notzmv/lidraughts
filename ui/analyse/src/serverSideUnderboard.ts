@@ -155,7 +155,7 @@ export default function(element: HTMLElement, ctrl: AnalyseCtrl) {
   });
   $panels.on('click', '.embed-howto', function(this: HTMLElement) {
     const url = `${baseUrl()}/embed/${data.game.id}?theme=auto&bg=auto${location.hash}`;
-    const iframe = '<iframe src="' + url + '"\nwidth=600 height=397 frameborder=0></iframe>';
+    const iframe = '<iframe src="' + url + '"\nwidth="600" height="397" frameborder="0"></iframe>';
     $.modal($(
       '<strong style="font-size:1.5em">' + $(this).html() + '</strong><br /><br />' +
       '<pre>' + li.escapeHtml(iframe) + '</pre><br />' +

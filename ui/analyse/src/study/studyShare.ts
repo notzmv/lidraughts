@@ -104,7 +104,7 @@ export function view(ctrl): VNode {
           attrs: {
             readonly: true,
             disabled: isPrivate,
-            value: !isPrivate ? '<iframe width=600 height=371 src="' + embedUrl + '" frameborder=0></iframe>' : ctrl.trans.noarg('onlyPublicStudiesCanBeEmbedded')
+            value: !isPrivate ? '<iframe width="600" height="371" src="' + embedUrl + '" frameborder="0"></iframe>' : ctrl.trans.noarg('onlyPublicStudiesCanBeEmbedded')
           }
         })
       ].concat(
