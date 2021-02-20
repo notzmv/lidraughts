@@ -240,7 +240,7 @@ Thank you all, you rock!"""
           nextSaturday -> Antidraughts,
           nextSunday -> Frisian
         ).flatMap {
-            case (day, variant) => at(day, (if (variant.frysk) 19 else 20) - offsetCET(day)) map { date =>
+            case (day, variant) => at(day, (if (variant.russian || variant.brazilian) 18 else 19) - offsetCET(day)) map { date =>
               Schedule(Weekly, Blitz, variant, std, date |> orNextWeek).plan
             }
           },
