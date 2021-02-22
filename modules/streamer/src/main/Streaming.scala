@@ -119,7 +119,6 @@ private final class Streaming(
               "Client-ID" -> clientId,
               "Authorization" -> s"Bearer $secret"
             )
-          if (twitchUserIds.size > 1) logger.info(url.uri.toString)
           url.get().flatMap {
             case res if res.status == 200 =>
               res.json.validate[Twitch.Result](twitchResultReads) match {

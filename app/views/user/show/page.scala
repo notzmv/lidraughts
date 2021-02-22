@@ -23,7 +23,7 @@ object page {
   )(implicit ctx: Context) = views.html.base.layout(
     title = s"${u.username} : ${trans.activity.activity.txt()}",
     openGraph = lidraughts.app.ui.OpenGraph(
-      image = staticUrl("images/large_tile.png").some,
+      image = staticUrl("images/lidraughts-tile-wide.png").some,
       title = u.titleUsernameWithBestRating,
       url = s"$netBaseUrl${routes.User.show(u.username).url}",
       description = describeUser(u)

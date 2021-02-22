@@ -71,11 +71,10 @@ private[puzzle] final class Selector(
       else if (perf.nb > 1500) 3 / 2
       else 1
     }
-    val skipMax = if (variant.standard) 100 else 50
     val idStep = if (variant.standard) 50 else 20
     api.puzzle.cachedLastId(variant).get flatMap { maxId =>
       val lastId = headOption match {
-        case Some(PuzzleHead(_, _, l)) if l < maxId - skipMax => l //original - 500
+        case Some(PuzzleHead(_, _, l)) if l < maxId => l
         case _ => puzzleIdMin
       }
       tryRange(

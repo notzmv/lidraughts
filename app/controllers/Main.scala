@@ -127,6 +127,37 @@ Disallow: /games/export
     }
   }
 
+  def manifest = Action { req =>
+    Ok {
+      Json.obj(
+        "name" -> Env.api.Net.Domain,
+        "short_name" -> "Lidraughts",
+        "start_url" -> "/",
+        "display" -> "standalone",
+        "background_color" -> "#161512",
+        "theme_color" -> "#161512",
+        "description" -> "The (really) free, no-ads, open source draughts server.",
+        "icons" -> List(32, 64, 128, 192, 256, 512, 1024).map { size =>
+          Json.obj(
+            "src" -> s"//${Env.api.Net.AssetDomain}/assets/favicon.$size.png",
+            "sizes" -> s"${size}x${size}",
+            "type" -> "image/png"
+          )
+        },
+        "related_applications" -> Json.arr(
+          Json.obj(
+            "platform" -> "play",
+            "url" -> "https://play.google.com/store/apps/details?id=org.lidraughts.mobileapp"
+          ),
+          Json.obj(
+            "platform" -> "itunes",
+            "url" -> "https://itunes.apple.com/us/app/lidraughts-online-draughts/id1485028698"
+          )
+        )
+      )
+    } as JSON withHeaders (CACHE_CONTROL -> "max-age=1209600")
+  }
+
   def renderNotFound(req: RequestHeader): Fu[Result] =
     reqToCtx(req) map renderNotFound
 
