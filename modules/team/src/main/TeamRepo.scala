@@ -16,7 +16,7 @@ object TeamRepo {
 
   def byOrderedIds(ids: Seq[Team.ID]) = coll.byOrderedIds[Team, Team.ID](ids)(_.id)
 
-  def exists(id: String) = coll exists $id(id)
+  def exists(id: Team.ID) = coll exists $id(id)
 
   def cursor(
     readPreference: ReadPreference = ReadPreference.secondaryPreferred
@@ -37,8 +37,11 @@ object TeamRepo {
   def isCreator(teamId: Team.ID, userId: User.ID): Fu[Boolean] =
     coll.exists($id(teamId) ++ $doc("createdBy" -> userId))
 
-  def name(id: String): Fu[Option[String]] =
+  def name(id: Team.ID): Fu[Option[String]] =
     coll.primitiveOne[String]($id(id), "name")
+
+  def mini(id: Team.ID): Fu[Option[Team.Mini]] =
+    name(id) map2 { n: String => Team.Mini(id, n) }
 
   def userHasCreatedSince(userId: String, duration: Period): Fu[Boolean] =
     coll.exists($doc(
@@ -46,23 +49,23 @@ object TeamRepo {
       "createdBy" -> userId
     ))
 
-  def ownerOf(teamId: String): Fu[Option[String]] =
+  def ownerOf(teamId: Team.ID): Fu[Option[String]] =
     coll.primitiveOne[String]($id(teamId), "createdBy")
 
-  def incMembers(teamId: String, by: Int): Funit =
+  def incMembers(teamId: Team.ID, by: Int): Funit =
     coll.update($id(teamId), $inc("nbMembers" -> by)).void
 
   def enable(team: Team) = coll.updateField($id(team.id), "enabled", true)
 
   def disable(team: Team) = coll.updateField($id(team.id), "enabled", false)
 
-  def addRequest(teamId: String, request: Request): Funit =
+  def addRequest(teamId: Team.ID, request: Request): Funit =
     coll.update(
       $id(teamId) ++ $doc("requests.user" $ne request.user),
       $push("requests", request.user)
     ).void
 
-  def changeOwner(teamId: String, newOwner: User.ID) =
+  def changeOwner(teamId: Team.ID, newOwner: User.ID) =
     coll.updateField($id(teamId), "createdBy", newOwner)
 
   private[team] val enabledSelect = $doc("enabled" -> true)

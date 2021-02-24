@@ -31,6 +31,8 @@ case class Team(
 
 object Team {
 
+  case class Mini(id: Team.ID, name: String)
+
   type ID = String
 
   case class IdsStr(value: String) extends AnyVal {

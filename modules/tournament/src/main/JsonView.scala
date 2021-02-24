@@ -427,11 +427,11 @@ final class JsonView(
       }
 
   private val teamInfoCache = asyncCache.clearable[(Tournament.ID, TeamId), Option[JsObject]](
-    name = "tournament.teamInfo",
+    name = "tournament.teamInfo.json",
     f = {
-      case (tourId, teamId) => TournamentRepo.teamBattleOf(tourId) flatMap {
-        _ ?? { battle =>
-          PlayerRepo.teamInfo(tourId, teamId, battle) flatMap { info =>
+      case (tourId, teamId) =>
+        cached.teamInfo.get(tourId -> teamId) flatMap {
+          _ ?? { info =>
             lightUserApi.preloadMany(info.topPlayers.map(_.userId)) inject Json.obj(
               "id" -> teamId,
               "nbPlayers" -> info.nbPlayers,
@@ -451,9 +451,8 @@ final class JsonView(
             ).some
           }
         }
-      }
     },
-    expireAfter = _.ExpireAfterWrite(1 second)
+    expireAfter = _.ExpireAfterWrite(5 seconds)
   )
 
   def teamInfo(tour: Tournament, teamId: TeamId): Fu[Option[JsObject]] =

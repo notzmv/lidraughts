@@ -84,8 +84,9 @@ object PlayerRepo {
         }.reverse
       }
   }
+
   // very expensive
-  private[tournament] def teamInfo(tourId: Tournament.ID, teamId: TeamId, battle: TeamBattle): Fu[TeamBattle.TeamInfo] = {
+  private[tournament] def teamInfo(tourId: Tournament.ID, teamId: TeamId): Fu[TeamBattle.TeamInfo] = {
     import reactivemongo.api.collections.bson.BSONBatchCommands.AggregationFramework._
     coll.aggregateOne(
       Match(selectTour(tourId) ++ $doc("t" -> teamId)),

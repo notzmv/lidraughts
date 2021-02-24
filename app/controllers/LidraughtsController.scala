@@ -3,7 +3,7 @@ package controllers
 import ornicar.scalalib.Zero
 import play.api.data.Form
 import play.api.http._
-import play.api.libs.json.{ Json, JsObject, JsArray, JsString, Writes }
+import play.api.libs.json.{ Json, JsObject, JsArray, JsString, JsValue, Writes }
 import play.api.mvc._
 import play.api.mvc.BodyParsers.parse
 import scalatags.Text.Frag
@@ -283,6 +283,7 @@ private[controllers] trait LidraughtsController
     Ok(Json toJson a) as JSON
   }
   protected def JsonOk[A: Writes](a: A) = Ok(Json toJson a) as JSON
+  protected def JsonOk(body: JsValue): Result = Ok(body) as JSON
 
   protected def JsonOptionOk[A: Writes](fua: Fu[Option[A]])(implicit ctx: Context) = fua flatMap {
     _.fold(notFound(ctx))(a => fuccess(Ok(Json toJson a) as JSON))

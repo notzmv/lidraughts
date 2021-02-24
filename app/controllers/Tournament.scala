@@ -158,7 +158,7 @@ object Tournament extends LidraughtsController {
   }
 
   def player(tourId: String, userId: String) = Action.async {
-    TournamentRepo byId tourId flatMap {
+    repo byId tourId flatMap {
       _ ?? { tour =>
         JsonOk {
           env.api.playerInfo(tour, userId) flatMap {
@@ -170,11 +170,18 @@ object Tournament extends LidraughtsController {
   }
 
   def teamInfo(tourId: String, teamId: String) = Open { implicit ctx =>
-    TournamentRepo byId tourId flatMap {
+    repo byId tourId flatMap {
       _ ?? { tour =>
-        env.jsonView.teamInfo(tour, teamId) map {
-          _ ?? { json =>
-            Ok(json) as JSON
+        lidraughts.team.TeamRepo mini teamId flatMap {
+          _ ?? { team =>
+            if (HTTPRequest isXhr ctx.req)
+              env.jsonView.teamInfo(tour, teamId) map { _ ?? JsonOk }
+            else
+              env.api.teamBattleTeamInfo(tour, teamId) map {
+                _ ?? { info =>
+                  Ok(views.html.tournament.teamBattle.teamInfo(tour, team, info))
+                }
+              }
           }
         }
       }
@@ -410,14 +417,13 @@ object Tournament extends LidraughtsController {
     Open { implicit ctx =>
       repo byId id flatMap {
         _ ?? { tour =>
-          tour.teamBattle ?? { battle =>
+          tour.isTeamBattle ?? {
             Env.tournament.cached.battle.teamStanding.get(tour.id) map { standing =>
-              Ok(views.html.tournament.teamBattle.standing(tour, battle, standing))
+              Ok(views.html.tournament.teamBattle.standing(tour, standing))
             }
           }
         }
       }
-
     }
 
   private def WithEditableTournament(id: String, me: UserModel)(

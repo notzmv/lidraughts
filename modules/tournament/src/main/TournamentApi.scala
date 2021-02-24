@@ -147,6 +147,9 @@ final class TournamentApi(
       }
     }
 
+  def teamBattleTeamInfo(tour: Tournament, teamId: TeamId): Fu[Option[TeamBattle.TeamInfo]] =
+    tour.teamBattle.exists(_ teams teamId) ?? cached.teamInfo.get(tour.id -> teamId)
+
   private[tournament] def makePairings(oldTour: Tournament, users: WaitingUsers, startAt: Long): Unit = {
     Sequencing(oldTour.id)(TournamentRepo.startedById) { tour =>
       cached ranking tour flatMap { ranking =>

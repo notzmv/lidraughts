@@ -2,6 +2,7 @@ package lidraughts.tournament
 
 import scala.concurrent.duration._
 
+import lidraughts.hub.lightTeam.TeamId
 import lidraughts.memo._
 import lidraughts.user.User
 
@@ -31,6 +32,15 @@ private[tournament] final class Cached(
   def ranking(tour: Tournament): Fu[Ranking] =
     if (tour.isFinished) finishedRanking get tour.id
     else ongoingRanking get tour.id
+
+  private[tournament] val teamInfo = asyncCache.multi[(Tournament.ID, TeamId), Option[TeamBattle.TeamInfo]](
+    name = "tournament.teamInfo",
+    f = {
+      case (tourId, teamId) =>
+        PlayerRepo.teamInfo(tourId, teamId) dmap some
+    },
+    expireAfter = _.ExpireAfterWrite(5.seconds)
+  )
 
   // only applies to ongoing tournaments
   private val ongoingRanking = asyncCache.multi[Tournament.ID, Ranking](
