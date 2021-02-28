@@ -16,6 +16,7 @@ themes = [
   ['frisianovsky', 'svg'],
   ['narrow', 'svg'],
   ['narrow_edge', 'svg'],
+  ['phin', 'svg'],
   ['ringed', 'svg'],
   ['wide', 'svg'],
   ['wide_crown', 'svg']
