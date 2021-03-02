@@ -58,6 +58,9 @@ object TournamentRepo {
   def startedOrFinishedById(id: String): Fu[Option[Tournament]] =
     byId(id) map { _ filterNot (_.isCreated) }
 
+  def fetchCreatedBy(id: Tournament.ID): Fu[Option[User.ID]] =
+    coll.primitiveOne[User.ID]($id(id), "createdBy")
+
   def createdByIdAndCreator(id: String, userId: String): Fu[Option[Tournament]] =
     createdById(id) map (_ filter (_.createdBy == userId))
 

@@ -35,7 +35,8 @@ object show {
               name = trans.chatRoom.txt(),
               timeout = c.timeout,
               public = true,
-              resourceId = lidraughts.chat.Chat.ResourceId(s"tournament/${c.chat.id}")
+              resourceId = lidraughts.chat.Chat.ResourceId(s"tournament/${c.chat.id}"),
+              localMod = ctx.userId has tour.createdBy
             )
           }
         ))

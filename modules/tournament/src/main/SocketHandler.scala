@@ -40,6 +40,11 @@ private[tournament] final class SocketHandler(
               chatId = Chat.Id(tourId),
               member = member,
               chat = chat,
+              canTimeout = Some { suspectId =>
+                user.?? { u =>
+                  TournamentRepo.fetchCreatedBy(tourId).map(_ has u.id)
+                }
+              },
               publicSource = lidraughts.hub.actorApi.shutup.PublicSource.Tournament(tourId).some
             ),
             member,
