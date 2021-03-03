@@ -25,7 +25,7 @@ object PieceSet extends PieceSetObject {
   val default = new PieceSet("wide_crown")
 
   val all = List(
-    default.name, "wide", "narrow_edge", "narrow", "fabirovsky", "frisianovsky", "flat", "phin", "ringed", "basic", "eightbit"
+    default.name, "wide", "narrow_edge", "narrow", "fabirovsky", "flat", "phin", "ringed", "basic", "frisianovsky", "eightbit"
   ) map { name => new PieceSet(name) }
 }
 
