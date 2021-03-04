@@ -34,12 +34,18 @@
     <item quantity="many">Prośby o dołączenie od %s</item>
     <item quantity="other">Prośby o dołączenie od %s</item>
   </plurals>
+  <string name="deleteTeamWarning">Usuwa drużynę i jej członkowstwo. Nie można cofnąć!</string>
+  <string name="appointOwner">Ustal kolejnego właściciela zespołu</string>
+  <string name="changeOwner">Kogo chcesz ustalić na właściciela tego zespołu?</string>
   <string name="willBeReviewed">Twoja prośba o dołączenie zostanie sprawdzona przez kapitana klubu.</string>
   <string name="beingReviewed">Twoja prośba o dołączenie jest sprawdzana przez kapitana klubu.</string>
   <string name="teamBattle">Bitwa klubów</string>
   <string name="teamBattleOverview">Bitwa klubów, każdy gracz zdobywa punkty dla swojego klubu</string>
   <string name="teamTournament">Turniej klubowy</string>
   <string name="teamTournamentOverview">Turniej Arena do którego mogą dołączyć tylko członkowie twojego klubu</string>
+  <string name="swissTournament">Szwajcarski turniej</string>
+  <string name="swissTournamentOverview">Szwajcarski turniej, do którego mogą dołączyć tylko członkowie Twojego zespołu</string>
+  <string name="subscribeToTeamMessages">Subskrybuj wiadomości zespołu</string>
   <string name="messageAllMembers">Powiadom wszystkich członków klubu</string>
   <string name="messageAllMembersOverview">Wyślij prywatną wiadomość do każdego członka klubu</string>
   <string name="messageAllMembersLongDescription">Wyślij prywatną wiadomość do WSZYSTKICH członków klubu.
@@ -49,4 +55,5 @@ Gracze, którzy nie chcą otrzymywać Twoich wiadomości, mogą opuścić klub.<
   <string name="youMayWantToLinkOneOfTheseTournaments">A może chcesz połączyć jeden z tych nadchodzących turniejów?</string>
   <string name="usersWhoCanManageThisTeam">Gracze, którzy mogą zarządzać tym klubem</string>
   <string name="leadersChat">Czat liderów</string>
+  <string name="enableMembersChat">Włącz opcje czatu (tylko dla członków)</string>
 </resources>

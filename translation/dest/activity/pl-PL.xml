@@ -14,6 +14,18 @@
     <item quantity="many">Przerobione %1$s ćwiczeń w %2$s</item>
     <item quantity="other">Przerobione %1$s ćwiczeń w %2$s</item>
   </plurals>
+  <plurals name="solvedNbPuzzles">
+    <item quantity="one">Rozwiązano %s zadanie taktyczne</item>
+    <item quantity="few">Rozwiązano %s zadania taktyczne</item>
+    <item quantity="many">Rozwiązano %s zadań taktycznych</item>
+    <item quantity="other">Rozwiązano %s zadań taktycznych</item>
+  </plurals>
+  <plurals name="solvedNbVariantPuzzles">
+    <item quantity="one">Rozwiązano %1$s %2$s zadanie taktyczne</item>
+    <item quantity="few">Rozwiązano %1$s %2$s zadania taktyczne</item>
+    <item quantity="many">Rozwiązano %1$s %2$s zadań taktycznych</item>
+    <item quantity="other">Rozwiązano %1$s %2$s zadań taktycznych</item>
+  </plurals>
   <plurals name="playedNbGames">
     <item quantity="one">Rozegrana %1$s partia %2$s</item>
     <item quantity="few">Rozegrane %1$s partie %2$s</item>

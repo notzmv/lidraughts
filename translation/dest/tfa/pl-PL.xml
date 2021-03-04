@@ -12,4 +12,5 @@
   <string name="twoFactorEnabled">Uwierzytelnianie dwuetapowe włączone</string>
   <string name="twoFactorDisable">Potrzebujesz hasła i kodu uwierzytelniającego z aplikacji uwierzytelniającej, aby wyłączyć uwierzytelnianie dwuetapowe.
 Jeśli utraciłeś dostęp do swoich kodów uwierzytelniających, możesz również zresetować hasło poprzez e-mail.</string>
+  <string name="openTheAppOnYourDevice">Otwórz aplikację dwuetapowej autoryzacji na Twoim urządzeniu w celu sprawdzenia kodu weryfikującego i zweryfikowania twojej tożsamości.</string>
 </resources>
