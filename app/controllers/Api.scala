@@ -67,13 +67,13 @@ object Api extends LidraughtsController {
   )
 
   def usersByIds = Action.async(parse.tolerantText) { req =>
-    val usernames = req.body.split(',').take(300).toList
+    val usernames = req.body.replace("\n", "").split(',').take(300).map(_.trim).toList
     val ip = HTTPRequest lastRemoteAddress req
     val cost = usernames.size / 4
     UsersRateLimitPerIP(ip, cost = cost) {
       UsersRateLimitGlobal("-", cost = cost, msg = ip.value) {
         lidraughts.mon.api.users.cost(cost)
-        UserRepo nameds usernames map {
+        UserRepo enabledNameds usernames map {
           _.map { Env.user.jsonView(_, none) }
         } map toApiResult map toHttp
       }

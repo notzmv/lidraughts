@@ -95,7 +95,11 @@ object UserRepo {
 
   def named(username: String): Fu[Option[User]] = coll.byId[User](normalize(username))
 
-  def nameds(usernames: List[String]): Fu[List[User]] = coll.byIds[User](usernames.map(normalize))
+  def enabledNameds(usernames: List[String]): Fu[List[User]] =
+    coll
+      .find($inIds(usernames map normalize) ++ enabledSelect)
+      .cursor[User](ReadPreference.secondaryPreferred)
+      .list()
 
   // expensive, send to secondary
   def byIdsSortRatingNoBot(ids: Iterable[ID], nb: Int): Fu[List[User]] =
