@@ -30,7 +30,7 @@ private final class CreatedOrganizer(
       TournamentRepo.shouldStartCursor.map { tours =>
         tours foreach { tour =>
           PlayerRepo count tour.id foreach {
-            case 0 if tour.isWipable => api wipe tour
+            case 0 | 1 if tour.isWipable => api wipe tour
             case _ => api start tour
           }
         }
