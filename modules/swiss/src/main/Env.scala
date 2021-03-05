@@ -166,11 +166,13 @@ final class Env(
   private[swiss] lazy val pairingColl = db(CollectionPairing)
 
   system.lidraughtsBus.subscribeFun(
-    'finishGame, 'adjustCheater, 'adjustBooster
+    'finishGame, 'adjustCheater, 'adjustBooster, 'teamKick, 'deploy
   ) {
       case lidraughts.game.actorApi.FinishGame(game, _, _) => api.finishGame(game)
+      case lidraughts.hub.actorApi.team.KickFromTeam(teamId, userId) => api.kickFromTeam(teamId, userId)
       case lidraughts.hub.actorApi.mod.MarkCheater(userId, true) => api.kickLame(userId)
       case lidraughts.hub.actorApi.mod.MarkBooster(userId) => api.kickLame(userId)
+      case m: lidraughts.hub.actorApi.Deploy => socketMap tellAll m
     }
 
   ResilientScheduler(
