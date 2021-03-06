@@ -36,17 +36,17 @@ export default function(ctrl: TournamentController): VNode | undefined {
     h('div.stats', [
       h('h2', [ teamTag ]),
       h('table', [
-        numberRow("Players", data.nbPlayers),
+        numberRow(noarg('players'), data.nbPlayers),
         ...(data.rating ? [
           numberRow(noarg('averageElo'), data.rating, 'raw'),
           ...(data.perf ? [
-            numberRow("Average performance", data.perf, 'raw'),
-            numberRow("Average score", data.score, 'raw')
+            numberRow(noarg('averagePerformance'), data.perf, 'raw'),
+            numberRow(noarg('averageScore'), data.score, 'raw')
           ] : [])
         ] : []),
         h('tr', h('th', h('a', {
           attrs: { href: '/team/' + data.id }
-        }, 'Team page')))
+        }, noarg('teamPage'))))
       ])
     ]),
     h('div', [

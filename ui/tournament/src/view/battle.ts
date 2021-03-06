@@ -9,7 +9,8 @@ export function joinWithTeamSelector(ctrl: TournamentController) {
     ctrl.joinWithTeamSelector = false;
     ctrl.redraw();
   };
-  const tb = ctrl.data.teamBattle!;
+  const tb = ctrl.data.teamBattle!,
+    noarg = ctrl.trans.noarg;
   return h('div#modal-overlay', {
     hook: bind('click', onClose)
   }, [
@@ -23,15 +24,15 @@ export function joinWithTeamSelector(ctrl: TournamentController) {
         hook: bind('click', onClose)
       }),
       h('div.team-picker', [
-        h('h2', "Pick your team"),
+        h('h2', noarg('pickYourTeam')),
         h('br'),
         ...(tb.joinWith.length ? [
-          h('p', "Which team will you represent in this battle?"),
+          h('p', noarg('whichTeamWillYouRepresent')),
           ...tb.joinWith.map(id => h('a.button', {
             hook: bind('click', () => ctrl.join(undefined, id), ctrl.redraw)
           }, tb.teams[id]))
         ] : [
-          h('p', "You must join one of these teams to participate!"),
+          h('p', noarg('youMustJoinOneOfTheseTeams')),
           h('ul', shuffleArray(Object.keys(tb.teams)).map(t =>
             h('li', h('a', {
               attrs: { href: '/team/' + t }
@@ -51,21 +52,21 @@ export function teamStanding(ctrl: TournamentController, klass?: string): VNode 
     h('tbody', [
       ...standing.map(rt => teamTr(ctrl, battle, rt)),
       ...(bigBattle ? [
-        extraTeams(ctrl.data),
+        extraTeams(ctrl.data, ctrl.trans.noarg),
         myTeam(ctrl, battle)
       ] : [])
     ])
   ]) : null;
 }
 
-function extraTeams(tour: TournamentData): VNode {
+function extraTeams(tour: TournamentData, noarg: TransNoArg): VNode {
   return h('tr',
     h('td.more-teams', {
       attrs: { colspan: 4 }
     }, [
       h('a', {
         attrs: { href: `/tournament/${tour.id}/teams` }
-      }, 'View all teams')
+      }, noarg('viewAllTeams'))
     ]
   ));
 }

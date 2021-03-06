@@ -33,8 +33,8 @@
   </plurals>
   <string name="willBeReviewed">Je verzoek tot deelname zal worden beoordeeld door de teamleider.</string>
   <string name="beingReviewed">Je verzoek tot deelname wordt beoordeeld door de teamleider.</string>
-  <string name="teamBattle">Team wedstrijd</string>
-  <string name="teamBattleOverview">Een wedstrijd met meerdere teams, iedere speler scoort punten voor het eigen team</string>
+  <string name="teamBattle">Team battle</string>
+  <string name="teamBattleOverview">Een battle met meerdere teams, iedere speler scoort punten voor het eigen team</string>
   <string name="teamTournament">Team toernooi</string>
   <string name="teamTournamentOverview">Een Arena toernooi waaraan alleen leden van je team kunnen meedoen</string>
   <string name="swissTournament">Zwitsers toernooi</string>
@@ -43,7 +43,7 @@
   <string name="messageAllMembers">Stuur bericht aan alle leden</string>
   <string name="messageAllMembersOverview">Stuur een privébericht aan alle leden van het team</string>
   <string name="messageAllMembersLongDescription">Stuur een privébericht naar alle leden van het team.
-Je kunt dit gebruiken om spelers op te roepen om deel te nemen aan een toernooi of een team wedstrijd.
+Je kunt dit gebruiken om spelers op te roepen om deel te nemen aan een toernooi of een team battle.
 Spelers die je berichten niet willen ontvangen kunnen het team verlaten.</string>
   <string name="teamsIlead">Teams die ik leid</string>
   <string name="youMayWantToLinkOneOfTheseTournaments">Misschien wil je de link van een van deze komende toernooien delen?</string>
