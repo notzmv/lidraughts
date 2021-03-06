@@ -18,7 +18,7 @@ case class TeamBattle(
 
 object TeamBattle {
 
-  val maxTeams = 200
+  val maxTeams = 100
   val displayTeams = 10
 
   def init(teamId: TeamId) = TeamBattle(Set(teamId), 5)
