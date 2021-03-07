@@ -56,7 +56,7 @@ object form {
         form3.hidden(form("official")),
         form3.hidden(form("homepageHours"))
       ),
-      form3.group(form("syncUrl"), sourceUrl(), help = sourceUrlHelp().some)(form3.input(_, typ = "url")),
+      form3.group(form("syncUrl"), sourceUrlOrGameIds(), help = sourceUrlHelp().some)(form3.input(_, typ = "url")),
       if (isGranted(_.Admin)) form3.split(
         form3.group(form("gameIndices"), raw("Game indices"), half = true, help = raw("For broadcasts without index - comma separated game indices").some)(form3.input(_)),
         form3.group(form("simulId"), raw("Simul ID"), half = true, help = raw("Internal use only - overrides source url").some)(form3.input(_))
