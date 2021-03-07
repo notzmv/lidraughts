@@ -12,7 +12,7 @@ import controllers.routes
 object login {
 
   def twoFactorHelp(implicit ctx: Context) = span(dataIcon := "")(
-    trans.tfa.openTheAppOnYourDevice()
+    trans.tfa.openTwoFactorApp()
   )
 
   def apply(form: Form[_], referrer: Option[String])(implicit ctx: Context) = views.html.base.layout(
