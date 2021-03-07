@@ -167,8 +167,8 @@
   <string name="latestForumPosts">Najnowsze posty</string>
   <string name="players">Gracze</string>
   <string name="minutesPerSide">Minuty na gracza</string>
-  <string name="variant">Wariant</string>
-  <string name="variants">Warianty</string>
+  <string name="variant">Odmiana</string>
+  <string name="variants">Odmiany</string>
   <string name="timeControl">Tempo gry</string>
   <string name="realTime">W czasie rzeczywistym</string>
   <string name="correspondence">Korespondencyjne</string>
