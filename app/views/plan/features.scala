@@ -82,7 +82,7 @@ object features {
               "Forum, teams, messaging, friends, challenges"
             ),
             tr(check)(
-              "Available in 18 languages"
+              "Available in 19 languages"
             ),
             tr(check)(
               "Light/dark theme, custom boards, pieces and background"

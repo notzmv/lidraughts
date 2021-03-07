@@ -31,6 +31,7 @@ object LangList {
     Lang("pt", "PT") -> "Português",
     Lang("pt", "BR") -> "Português (BR)",
     Lang("ru", "RU") -> "русский язык",
+    Lang("tr", "TR") -> "Türkçe",
     Lang("uk", "UA") -> "українська",
     Lang("zh", "CN") -> "中文"
   )
