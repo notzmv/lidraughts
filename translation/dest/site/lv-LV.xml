@@ -366,6 +366,7 @@
   <string name="pasteThePdnStringHere">Ielīmēt PDN simbolu virkni šeit</string>
   <string name="fromPosition">No pozīcijas</string>
   <string name="continueFromHere">Turpināt no šejienes</string>
+  <string name="toStudy">Izpētīt</string>
   <string name="importGame">Importēt spēli</string>
   <string name="importGameExplanation">Iekopējot spēles PDN, iegūsi atkārtojumu, datora analīzi,
 spēles tērzētavu un URL saiti, kas dos pieeju citiem.</string>
@@ -504,6 +505,7 @@ Vienā līnijā  - tikai vienu norādi.</string>
   <string name="rulesAndVariants">Noteikumi &amp; Varianti</string>
   <string name="training">Vingrinājumi</string>
   <string name="studyMenu">Studijas</string>
+  <string name="practice">Trenēties</string>
   <string name="yourPuzzleRatingX">Tavs uzdevumu reitings: %s</string>
   <string name="findTheBestMoveForWhite">Atrodi vislabāko gājienu baltajiem</string>
   <string name="findTheBestMoveForBlack">Atrodi vislabāko gājienu melnajiem</string>
@@ -704,6 +706,7 @@ Vienā līnijā  - tikai vienu norādi.</string>
   <string name="tpTimeSpentOnTV">TV laiks: %s</string>
   <string name="watch">Skaties</string>
   <string name="videoLibrary">Videoklipu bibliotēka</string>
+  <string name="streamersMenu">Straumētāji</string>
   <string name="mobileApp">Mobilā aplikācija</string>
   <string name="webmasters">Tīmekļa pārziņi</string>
   <string name="about">Par</string>

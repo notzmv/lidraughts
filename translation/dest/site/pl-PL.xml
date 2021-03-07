@@ -224,8 +224,8 @@
   </plurals>
   <string name="cancel">Anuluj</string>
   <string name="timeOut">Przekroczenie limitu czasu</string>
-  <string name="arbiterDraw">Uznano za remis wg arbitra</string>
-  <string name="arbiterResign">Uznano za zwycięstwo wg arbitra</string>
+  <string name="arbiterDraw">Uznano za remis wg arbitra symultany</string>
+  <string name="arbiterResign">Uznano za zwycięstwo wg arbitra symultany</string>
   <string name="drawOfferSent">Wysłano propozycję remisu</string>
   <string name="drawOfferDeclined">Propozycja remisu została odrzucona</string>
   <string name="drawOfferAccepted">Propozycja remisu została przyjęta</string>
@@ -406,9 +406,11 @@
   <string name="pasteThePdnStringHere">Wklej tutaj tekstową zawartość pliku PDN</string>
   <string name="fromPosition">Z pozycji</string>
   <string name="continueFromHere">Kontynuuj z tej pozycji</string>
+  <string name="toStudy">Opracowanie</string>
   <string name="importGame">Import partii</string>
   <string name="importGameExplanation">Wklejając zapis partii będziesz miał możliwość jej odtworzenia,
 poproszenia o analizę komputerową, omówienia jej z innymi oraz udostępnienia linku do niej innym.</string>
+  <string name="orUploadAPdnFile">Lub załaduj plik PDN z dysku</string>
   <plurals name="nbImportedGames">
     <item quantity="one">%s zaimportowana partia</item>
     <item quantity="few">%s zaimportowana partie</item>
@@ -524,7 +526,7 @@ poproszenia o analizę komputerową, omówienia jej z innymi oraz udostępnienia
   <string name="edit">Edycja</string>
   <string name="save">Zapisz</string>
   <string name="savePosition">Zapisz pozycję</string>
-  <string name="loadPosition">Wczytaj ustawienie</string>
+  <string name="loadPosition">Wczytaj pozycję (FEN)</string>
   <string name="isPrivate">Prywatny</string>
   <string name="noBerserkAllowed">Uzywanie agresji jest niedozwolone</string>
   <string name="editTournament">Edytuj turniej</string>
@@ -567,7 +569,7 @@ jeden adres URL na linię</string>
   <string name="standardFmjdRegulationsWithDrawingRules">Podstawową odmianą warcabów, w które można zagrać na lidraughts.org to warcaby międzynarodowe (polskie), które są oparte na zasadach ustalonych przez Światowy Związek Warcabowy (FMJD - franc. Fédération Mondiale du Jeu de Dames). Organizacja ta nadzoruje rozgrywki o mistrzostwo świata oraz nadaje międzynarodowe tytuły warcabowe. Zasady uwzględniają rozstrzyganie sytuacji remisowych w końcowej fazie gry, kiedy na warcabnicy zostaje zaledwie kilka bierek.</string>
   <string name="exploreDraughtsVariants">Oprócz warcabów międzynarodowych dostępnych jest tu kilka popularnych odmian gier warcabowych, które mimo iż nieznacznie różnią się swoimi zasadami, potrafią całkowicie odmienić charakter rozgrywki. Wytęż swoje szare komórki i odkryj możliwości, które lidraughts ma do zaoferowania!</string>
   <string name="rulesAndVariants">Zasady i Odmiany Gry</string>
-  <string name="training">Zagadki</string>
+  <string name="training">Zadania warcabowe</string>
   <string name="studyMenu">Opracowania</string>
   <string name="yourPuzzleRatingX">Twój ranking treningowy: %s</string>
   <string name="findTheBestMoveForWhite">Znajdź najlepszy ruch dla białych.</string>
@@ -611,7 +613,7 @@ jeden adres URL na linię</string>
   <string name="autoSwitch">Przełącz po ruchu</string>
   <string name="sequentialSwitch">Ustalona kolejność</string>
   <string name="puzzles">Zadania</string>
-  <string name="variantPuzzles">%s zagadek</string>
+  <string name="variantPuzzles">Odmiana | %s</string>
   <string name="latestUpdates">Aktualności</string>
   <string name="tournamentWinners">Zwycięzcy turniejów</string>
   <string name="name">Nazwa</string>
@@ -647,7 +649,7 @@ jeden adres URL na linię</string>
   <string name="questionsAndAnswers">Pomoc</string>
   <string name="notes">Notatki</string>
   <string name="typePrivateNotesHere">Dołącz tutaj prywatną notatkę</string>
-  <string name="gameDisplay">Wygląd interfejsu</string>
+  <string name="gameDisplay">Widok partii</string>
   <string name="pieceAnimation">Animacja ruchu figur</string>
   <string name="materialDifference">Pokaż przewagę materialną</string>
   <string name="showKingMoves">Pokaż ile razy wykonano ruch damką (warcaby fryzyjskie)</string>
@@ -684,7 +686,7 @@ jeden adres URL na linię</string>
   <string name="allAtOnce">Wszystko od razu</string>
   <string name="horizontalGreenProgressBars">Poziomy zielony pasek czasu</string>
   <string name="soundWhenTimeGetsCritical">Powiadom dźwiękiem przy niedoczasie</string>
-  <string name="gameBehavior">Interfejs</string>
+  <string name="gameBehavior">Zachowanie gry</string>
   <string name="howDoYouMovePieces">W jaki sposób przesuwasz bierki?</string>
   <string name="clickTwoSquares">Wskazuję dwa pola</string>
   <string name="dragPiece">Przeciągam bierkę</string>
@@ -791,6 +793,7 @@ jeden adres URL na linię</string>
   <string name="tpTimeSpentOnTV">Czas w TV: %s</string>
   <string name="watch">Oglądaj</string>
   <string name="videoLibrary">Wideoteka</string>
+  <string name="streamersMenu">Streamerzy</string>
   <string name="mobileApp">Aplikacja mobilna</string>
   <string name="webmasters">Webmasterzy</string>
   <string name="about">Informacje o</string>
@@ -837,7 +840,7 @@ jeden adres URL na linię</string>
   <string name="returnToSimulHomepage">Wróć do symultany</string>
   <string name="aboutSimul">Symultana pozwala symultaniście grać z wieloma przeciwnikami równocześnie.</string>
   <string name="aboutSimulImage">Ze 169 gier, Ton SijBrands zwyciężył 115 partii, zremisował 43 i przegrał 11.</string>
-  <string name="aboutSimulRealLife">Pomysł został zaczerpnięty z rzeczywistych rozgrywek. Symultanista przemieszcza się pomiędzy nicami aby wykonać poszczególne posunięcia.</string>
+  <string name="aboutSimulRealLife">Pomysł został zaczerpnięty z rzeczywistych rozgrywek. Symultanista przemieszcza się pomiędzy warcabnicami aby wykonać poszczególne posunięcia.</string>
   <string name="aboutSimulRules">Gdy symultana się rozpocznie, każdy gracz rozgrywa partię przeciwko symultaniście. Symultanista gra zawsze białymi. Symultana kończy się po zakończeniu wszystkich partii.</string>
   <string name="aboutSimulSettings">Symultany są zawsze grami towarzyskimi. Rewanż, cofanie ruchów i dodawanie czasu nie są dostępne.</string>
   <string name="create">Utwórz</string>
@@ -915,7 +918,7 @@ jeden adres URL na linię</string>
   <string name="enableKidMode">Włącz tryb dla dzieci</string>
   <string name="disableKidMode">Wyłącz tryb dla dzieci</string>
   <string name="security">Bezpieczeństwo</string>
-  <string name="entirely">Całkowicie</string>
+  <string name="entirely">Całkowicie oparte na koncepcji</string>
   <string name="thisIsAListOfDevicesThatHaveLoggedIntoYourAccount">To jest lista urządzeń z których logowałeś się do swojego konta. Unieważnij sesje których nie rozpoznajesz.</string>
   <string name="alternativelyYouCanX">Możesz również %s.</string>
   <string name="revokeAllSessions">unieważnić wszystkie sesje</string>
@@ -923,7 +926,7 @@ jeden adres URL na linię</string>
   <string name="enableFullCaptureAtXPreferences">Zagraj bicie wielokrotne na raz na warcabnicy z analizą. Tryb bicia może być skonfigurowany na %s preferencjach</string>
   <string name="playDraughtsEverywhere">Zagraj gdziekolwiek w warcaby</string>
   <string name="asFreeAsLidraughts">Darmowa jak całe lidraughts</string>
-  <string name="builtForTheLoveOfDraughtsNotMoney">Stworzone z miłości do warcabów, nie dla pieniędzy</string>
+  <string name="builtForTheLoveOfDraughtsNotMoney">Stworzona z miłości do warcabów, nie dla pieniędzy</string>
   <string name="everybodyGetsAllFeaturesForFree">Pełna funkcjonalność za darmo dla wszystkich</string>
   <string name="zeroAdvertisement">Brak reklam</string>
   <string name="fullFeatured">Bez ograniczeń</string>

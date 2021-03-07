@@ -318,6 +318,7 @@
   <string name="pasteThePdnStringHere">Paste the PDN text here</string>
   <string name="fromPosition">From position</string>
   <string name="continueFromHere">Continue from here</string>
+  <string name="toStudy">Study</string>
   <string name="importGame">Import game</string>
   <string name="importGameExplanation">When pasting a game PDN you get a browsable replay,
 a computer analysis, a game chat and a shareable URL.</string>

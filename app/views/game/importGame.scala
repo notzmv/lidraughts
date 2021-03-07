@@ -36,7 +36,7 @@ object importGame {
               _ => none
             )
           },
-          form3.group(form("pdnFile"), raw("Or upload a PDN file"), klass = "upload") { f =>
+          form3.group(form("pdnFile"), trans.orUploadAPdnFile(), klass = "upload") { f =>
             frag(" ", form3.file.pdn(f.name))
           },
           form3.checkbox(form("analyse"), trans.requestAComputerAnalysis(), help = Some(analyseHelp), disabled = ctx.isAnon),

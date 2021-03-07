@@ -293,6 +293,7 @@
   <string name="pasteTheFenStringHere">Incolla qui la stringa FEN</string>
   <string name="fromPosition">Da una posizione</string>
   <string name="continueFromHere">Continua da qui</string>
+  <string name="toStudy">Studia</string>
   <string name="importGame">Importa partita</string>
   <string name="importGameExplanation">Quando incolli una partita tramite PDN potrai ripercorrerla,
 analizzarla con il computer, commentarla in chat, e condividerla tramire indirizzo URL.</string>
@@ -400,7 +401,6 @@ analizzarla con il computer, commentarla in chat, e condividerla tramire indiriz
   <string name="activePlayers">Giocatori attivi</string>
   <string name="bewareTheGameIsRatedButHasNoClock">Attenzione, la partita è classificata ma senza limite di tempo!</string>
   <string name="training">Allenamento</string>
-  <string name="studyMenu">Studi</string>
   <string name="yourPuzzleRatingX">Il tuo punteggio in allenamento: %s</string>
   <string name="findTheBestMoveForWhite">Trova la mossa migliore per il Bianco.</string>
   <string name="findTheBestMoveForBlack">Trova la mossa migliore per il Nero.</string>
@@ -546,8 +546,12 @@ analizzarla con il computer, commentarla in chat, e condividerla tramire indiriz
   <string name="playOfflineComputer">Sfida il computer</string>
   <string name="opponent">Avversario</string>
   <string name="learnMenu">Impara</string>
+  <string name="studyMenu">Studi</string>
+  <string name="practice">Allenamento</string>
+  <string name="community">Community</string>
   <string name="tools">Strumenti</string>
   <string name="increment">Incremento</string>
+  <string name="sharePDN">Condividi PDN</string>
   <string name="playOnline">Gioca online</string>
   <string name="playOffline">Gioca offline</string>
   <string name="allowAnalytics">Permetti statistiche anonime</string>
