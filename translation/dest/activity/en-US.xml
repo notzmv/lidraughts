@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
   <string name="activity">Activity</string>
+  <string name="hostedALiveStream">Hosted a live stream</string>
   <plurals name="supportedNbMonths">
     <item quantity="one">Supported lidraughts.org for %1$s month as a %2$s</item>
     <item quantity="other">Supported lidraughts.org for %1$s months as a %2$s</item>
@@ -12,6 +13,10 @@
   <plurals name="solvedNbPuzzles">
     <item quantity="one">Solved %s tactical puzzle</item>
     <item quantity="other">Solved %s tactical puzzles</item>
+  </plurals>
+  <plurals name="solvedNbVariantPuzzles">
+    <item quantity="one">Solved %1$s %2$s tactical puzzle</item>
+    <item quantity="other">Solved %1$s %2$s tactical puzzles</item>
   </plurals>
   <plurals name="playedNbGames">
     <item quantity="one">Played %1$s %2$s game</item>

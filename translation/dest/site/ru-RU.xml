@@ -20,6 +20,9 @@
   <string name="createAGame">Создать игру</string>
   <string name="whiteIsVictorious">Победа белых</string>
   <string name="blackIsVictorious">Победа чёрных</string>
+  <string name="youPlayTheWhitePieces">Вы играете белыми фигурами</string>
+  <string name="youPlayTheBlackPieces">Вы играете чёрными фигурами</string>
+  <string name="itsYourTurn">Ваш ход!</string>
   <string name="variantEnding">Партия окончена</string>
   <string name="newOpponent">Найти другого соперника</string>
   <string name="yourOpponentWantsToPlayANewGameWithYou">Соперник предлагает вам сыграть ещё раз</string>
@@ -74,6 +77,7 @@
   <string name="openingExplorer">База дебютов</string>
   <string name="xOpeningExplorer">База дебютов для %s</string>
   <string name="allSet">Готово!</string>
+  <string name="importPdn">Импортировать в PDN</string>
   <string name="delete">Удалить</string>
   <string name="deleteThisImportedGame">Удалить эту импортированную игру?</string>
   <string name="replayMode">Смотреть в повторе</string>
@@ -160,7 +164,6 @@
   <string name="changeUsernameNotSame">Можно изменить только регистр символов. Например, поменять «Johndoe» на «JohnDoe».</string>
   <string name="changeUsernameDescription">Изменить имя пользователя. Это можно сделать только один раз, при этом можно изменить только регистр символов.</string>
   <string name="password">Пароль</string>
-  <string name="haveAnAccount">Уже есть учётная запись?</string>
   <string name="changePassword">Сменить пароль</string>
   <string name="changeEmail">Сменить адрес электронной почты</string>
   <string name="email">Электронная почта</string>
@@ -326,6 +329,8 @@
   <string name="yourPerfRatingIsTooLow">Ваш рейтинг в %1$s (%2$s) недостаточен для участия</string>
   <string name="ratedMoreThanInPerf">Рейтинг ≥ %1$s в %2$s</string>
   <string name="ratedLessThanInPerf">Рейтинг ≤ %1$s в %2$s</string>
+  <string name="mustBeInTeam">Вы должны быть членом клуба %s</string>
+  <string name="youAreNotInTeam">Вы не член клуба %s</string>
   <string name="backToGame">Вернуться к игре</string>
   <string name="xJoinedTeamY">%1$s вступил в клуб %2$s</string>
   <string name="xCreatedTeamY">%1$s организовал клуб %2$s</string>
@@ -335,6 +340,7 @@
   <string name="filterGames">Фильтр партий</string>
   <string name="reset">Сбросить</string>
   <string name="apply">Сохранить</string>
+  <string name="save">Сохранить</string>
   <string name="leaderboard">Лучшие игроки</string>
   <string name="pasteTheFenStringHere">Вставьте строку в формате FEN</string>
   <string name="fromPosition">С позиции</string>
@@ -461,7 +467,6 @@
   <string name="activePlayers">Активные игроки</string>
   <string name="bewareTheGameIsRatedButHasNoClock">Внимание, это рейтинговая игра, хотя и без ограничения по времени!</string>
   <string name="training">Задачи</string>
-  <string name="studyMenu">Студия</string>
   <string name="yourPuzzleRatingX">Ваш рейтинг в решении задач: %s</string>
   <string name="findTheBestMoveForWhite">Найдите лучший ход за белых.</string>
   <string name="findTheBestMoveForBlack">Найдите лучший ход за чёрных.</string>
@@ -527,6 +532,7 @@
   <string name="troll">Троллинг</string>
   <string name="other">Другое</string>
   <string name="reportDescriptionHelp">Поделитесь с нами ссылками на игры, где, как вам кажется, были нарушены правила, и опишите, в чём дело. Недостаточно просто написать «он мухлюет», пожалуйста, опишите, как вы пришли к такому выводу. Мы сработаем оперативнее, если вы напишете на английском языке.</string>
+  <string name="error.provideOneCheatedGameLink">Пожалуйста, добавьте ссылку хотя бы на одну игру, где по вашему мнению были нарушены правила.</string>
   <string name="by">%s</string>
   <string name="thisTopicIsNowClosed">Эта тема закрыта.</string>
   <string name="theming">Настройка темы</string>
@@ -544,6 +550,7 @@
   <string name="thisAccountIsClosed">Профиль этого игрока удалён.</string>
   <string name="invalidUsernameOrPassword">Неверное имя пользователя или пароль</string>
   <string name="incorrectPassword">Неверный пароль</string>
+  <string name="invalidAuthenticationCode">Неверный код аутентификации</string>
   <string name="emailMeALink">Прислать ссылку мне на почту</string>
   <string name="currentPassword">Текущий пароль</string>
   <string name="newPassword">Новый пароль</string>
@@ -626,9 +633,11 @@
   <string name="playOfflineComputer">С компьютером</string>
   <string name="opponent">Соперник</string>
   <string name="learnMenu">Обучение</string>
+  <string name="studyMenu">Студия</string>
   <string name="community">Сообщество</string>
   <string name="tools">Инструменты</string>
   <string name="increment">Добавка</string>
+  <string name="sharePDN">Поделиться PDN</string>
   <string name="playOnline">Играть онлайн</string>
   <string name="playOffline">Играть офлайн</string>
   <string name="allowAnalytics">Разрешить анонимный сбор статистики</string>
@@ -707,6 +716,9 @@
   <string name="yourPerfTypeRatingIsRating">Ваш рейтинг в %1$s — %2$s.</string>
   <string name="youAreBetterThanPercentOfPerfTypePlayers">Вы сильнее %1$s игроков в %2$s.</string>
   <string name="youDoNotHaveAnEstablishedPerfTypeRating">Ваш рейтинг в %s ещё не определён.</string>
+  <string name="yourRating">Ваш рейтинг</string>
+  <string name="cumulative">Всего</string>
+  <string name="glicko2Rating">Рейтинг Glicko-2</string>
   <string name="checkYourEmail">Проверьте свой почтовый ящик</string>
   <string name="weHaveSentYouAnEmailClickTheLink">Мы отправили вам письмо. Для активации учётной записи нажмите на ссылку в письме.</string>
   <string name="ifYouDoNotSeeTheEmailCheckOtherPlaces">Если письма нет, проверьте папку для спама и другие места, куда оно могло попасть.</string>
@@ -779,6 +791,7 @@
   <string name="usernameUnacceptable">Это имя пользователя уже занято или недопустимо.</string>
   <string name="directlySupportLidraughts">Поддержать Lidraughts</string>
   <string name="coaches">Тренеры</string>
+  <string name="invalidPdn">Некорректный PDN</string>
   <string name="invalidFen">Некорректный FEN</string>
   <string name="error.minLength">Минимальная длина — %s</string>
   <string name="error.maxLength">Максимальная длина — %s</string>
@@ -855,4 +868,19 @@
     <item quantity="many">и сохранить %s последовательностей</item>
     <item quantity="other">и сохранить %s последовательностей</item>
   </plurals>
+  <string name="sorry">Извините :(</string>
+  <string name="weHadToTimeYouOutForAWhile">Мы вынуждены отключить вас на время.</string>
+  <string name="timeoutExpires">Вы можете вернуться через %s.</string>
+  <string name="why">Почему?</string>
+  <string name="goodPractice">Чтобы этого добиться, мы должны сделать так, чтобы все игроки следовали правилам хорошего тона.</string>
+  <string name="potentialProblem">Когда мы обнаруживаем потенциальную проблему, мы показываем это сообщение.</string>
+  <string name="howToAvoidThis">Как избежать этого?</string>
+  <string name="playEveryGame">Доигрывайте все партии, которые начинали.</string>
+  <string name="tryToWin">Попытайтесь выиграть (или хотя бы свести на ничью) каждую свою партию.</string>
+  <string name="resignLostGames">Сдавайтесь в безнадёжной позиции (а не ждите, когда время закончится).</string>
+  <string name="temporaryInconvenience">Приносим извинения за временные неудобства,</string>
+  <string name="wishYouGreatGames">и желаем вам отличной игры на lidraughts.org.</string>
+  <string name="thankYouForReading">Спасибо за внимание!</string>
+  <string name="lifetimeScore">Счёт за всё время</string>
+  <string name="currentMatchScore">Счёт в текущем матче</string>
 </resources>

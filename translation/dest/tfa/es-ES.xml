@@ -12,4 +12,5 @@
   <string name="twoFactorEnabled">Autenticación en dos pasos habilitada</string>
   <string name="twoFactorDisable">Necesitas tu contraseña y un código de autenticación de tu aplicación de autenticación para desactivar la autenticación en dos pasos.
 Si perdiste el acceso a tus códigos de autenticación, también puedes restablecer tu contraseña por correo electrónico.</string>
+  <string name="openTwoFactorApp">Abre la aplicación de autenticación en dos pasos en tu dispositivo para ver el código de autenticación y verificar tu identidad.</string>
 </resources>

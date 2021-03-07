@@ -9,4 +9,5 @@
   <string name="enableTwoFactor">2 要素認証を有効にする</string>
   <string name="disableTwoFactor">2 要素認証を無効にする</string>
   <string name="twoFactorEnabled">2 要素認証を有効にしました。</string>
+  <string name="openTwoFactorApp">デバイスで 2 要素認証アプリを開き、認証コードを表示して確認してださい。</string>
 </resources>

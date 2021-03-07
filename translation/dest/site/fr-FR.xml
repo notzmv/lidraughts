@@ -445,6 +445,7 @@ consulter l\'analyse de l\'ordinateur, utiliser le tchat et partager le lien.</s
   <string name="latestUpdates">Dernières mises à jour</string>
   <string name="tournamentWinners">Vainqueurs de tournois</string>
   <string name="name">Nom</string>
+  <string name="description">Description</string>
   <string name="no">Non</string>
   <string name="yes">Oui</string>
   <string name="help">Aide</string>
@@ -465,6 +466,7 @@ consulter l\'analyse de l\'ordinateur, utiliser le tchat et partager le lien.</s
   <string name="insult">Insulte</string>
   <string name="other">Autre</string>
   <string name="reportDescriptionHelp">Copiez le(s) lien(s) vers les parties et expliquez en quoi le comportement de cet utilisateur est inapproprié.</string>
+  <string name="error.provideOneCheatedGameLink">Merci de fournir au moins un lien vers une partie où il y a eu triche.</string>
   <string name="by">par %s</string>
   <string name="thisTopicIsNowClosed">Ce sujet est maintenant fermé.</string>
   <string name="theming">Thème</string>
@@ -557,9 +559,12 @@ consulter l\'analyse de l\'ordinateur, utiliser le tchat et partager le lien.</s
   <string name="playOfflineComputer">Jouer hors ligne, avec l\'ordinateur</string>
   <string name="opponent">Adversaire</string>
   <string name="learnMenu">Apprendre</string>
+  <string name="studyMenu">Étudier</string>
+  <string name="practice">S\'entraîner</string>
   <string name="community">Communauté</string>
   <string name="tools">Outils</string>
   <string name="increment">Incrément</string>
+  <string name="sharePDN">Partager le PDN</string>
   <string name="playOnline">Jouer en ligne</string>
   <string name="playOffline">Jouer hors ligne</string>
   <string name="allowAnalytics">Autoriser l\'envoi de statistiques anonymes</string>
@@ -588,6 +593,8 @@ consulter l\'analyse de l\'ordinateur, utiliser le tchat et partager le lien.</s
   <string name="mobileApp">L\'application</string>
   <string name="webmasters">Webmestres</string>
   <string name="about">À propos de</string>
+  <string name="aboutX">À propos de %s</string>
+  <string name="really">pour de vrai</string>
   <string name="contribute">Contribuer</string>
   <string name="contact">Nous contacter</string>
   <string name="termsOfService">Conditions d\'utilisation</string>
@@ -705,6 +712,7 @@ consulter l\'analyse de l\'ordinateur, utiliser le tchat et partager le lien.</s
   <string name="usernameUnacceptable">Ce nom d\'utilisateur existe déjà ou est insultant.</string>
   <string name="directlySupportLidraughts">Financer Lidraughts</string>
   <string name="coaches">Entraîneurs</string>
+  <string name="invalidPdn">PDN non valide</string>
   <string name="invalidFen">FEN non valide</string>
   <string name="error.minLength">Vous devez écrire au moins %s caractères</string>
   <string name="error.maxLength">Vous pouvez écrire un maximum de %s caractères</string>
@@ -773,4 +781,19 @@ consulter l\'analyse de l\'ordinateur, utiliser le tchat et partager le lien.</s
     <item quantity="one">et enregistrer %s variantes</item>
     <item quantity="other">et enregistrer %s variantes de précoups</item>
   </plurals>
+  <string name="sorry">Désolé :(</string>
+  <string name="weHadToTimeYouOutForAWhile">Nous avons dû temporairement vous suspendre.</string>
+  <string name="timeoutExpires">Le délai d\'attente expire dans %s.</string>
+  <string name="why">Pourquoi ?</string>
+  <string name="goodPractice">Dans ce but, nous devons veiller à ce que tous les joueurs adoptent les bonnes pratiques.</string>
+  <string name="potentialProblem">Lorsqu\'un potentiel problème est détecté, nous affichons ce message.</string>
+  <string name="howToAvoidThis">Comment éviter cela?</string>
+  <string name="playEveryGame">Jouez chaque partie que vous commencez.</string>
+  <string name="tryToWin">Essayez de gagner (ou du moins d\'annuler) chaque partie que vous jouez.</string>
+  <string name="resignLostGames">Abandonnez les parties perdues sans laisser votre temps s\'écouler.</string>
+  <string name="temporaryInconvenience">Nous nous excusons pour le désagrément occasionné,</string>
+  <string name="wishYouGreatGames">et vous souhaitons d\'excellentes parties sur lidraughts.org.</string>
+  <string name="thankYouForReading">Merci d\'avoir pris le temps de lire !</string>
+  <string name="lifetimeScore">Meilleur résultat</string>
+  <string name="currentMatchScore">Résultat actuel (match)</string>
 </resources>
