@@ -77,6 +77,18 @@ trait GameHelper { self: I18nHelper with UserHelper with AiHelper with StringHel
     case v => v.name
   }
 
+  def variantTitle(variant: draughts.variant.Variant)(implicit ctx: UserContext) = variant match {
+    case draughts.variant.Standard => trans.variantTitleStandard.txt()
+    case draughts.variant.Frisian => trans.variantTitleFrisian.txt()
+    case draughts.variant.Frysk => trans.variantTitleFrysk.txt()
+    case draughts.variant.Antidraughts => trans.variantTitleAntidraughts.txt()
+    case draughts.variant.Breakthrough => trans.variantTitleBreakthrough.txt()
+    case draughts.variant.Russian => trans.variantTitleRussian.txt()
+    case draughts.variant.Brazilian => trans.variantTitleBrazilian.txt()
+    case draughts.variant.FromPosition => trans.customStartingPosition.txt()
+    case v => v.title
+  }
+
   def shortClockName(clock: Option[Clock.Config])(implicit ctx: UserContext): Frag =
     clock.fold[Frag](trans.unlimited())(shortClockName)
 

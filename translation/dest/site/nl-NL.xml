@@ -116,7 +116,7 @@
   <string name="inaccuracies">Imperfecties</string>
   <string name="moveTimes">Tijdsgebruik van zetten</string>
   <string name="flipBoard">Bord draaien</string>
-  <string name="threefoldRepetition">Driemaal dezelfde stelling</string>
+  <string name="threefoldRepetition">Driemaal dezelfde stand</string>
   <string name="claimADraw">Remise opeisen</string>
   <string name="offerDraw">Remise aanbieden</string>
   <string name="drawOffersAfterX">Remise aanbieden is pas toegestaan na zet %s</string>
@@ -228,6 +228,14 @@
   <string name="abortGame">Partij afbreken</string>
   <string name="gameAborted">Partij afgebroken</string>
   <string name="standard">Standaard</string>
+  <string name="variantTitleStandard">Standaard regels van het internationaal dammen (FMJD).</string>
+  <string name="variantTitleFrisian">Stukken kunnen ook horizontaal en verticaal slaan.</string>
+  <string name="variantTitleFrysk">Fries dammen waarbij de spelers met 5 stukken beginnen.</string>
+  <string name="variantTitleAntidraughts">Win door al je stukken te verliezen, of geen geldige zet meer te hebben.</string>
+  <string name="variantTitleBreakthrough">Wie als eerste promoveert naar dam wint.</string>
+  <string name="variantTitleRussian">Meerslag is niet verplicht, kan promoveren tijdens een meerslag.</string>
+  <string name="variantTitleBrazilian">Zelfde regels als internationaal dammen, gespeeld op een 8x8 bord.</string>
+  <string name="customStartingPosition">Aangepaste beginstand</string>
   <string name="unlimited">Onbeperkt</string>
   <string name="mode">Instelling</string>
   <string name="casual">Vrijblijvend</string>
@@ -369,7 +377,7 @@
   <string name="leaderboard">Ranglijst</string>
   <string name="pasteTheFenStringHere">Plak de FEN-code hier</string>
   <string name="pasteThePdnStringHere">Plak de PDN-code hier</string>
-  <string name="fromPosition">Vanuit een stelling</string>
+  <string name="fromPosition">Vanuit een stand</string>
   <string name="continueFromHere">Ga vanaf hier verder</string>
   <string name="toStudy">Studie</string>
   <string name="importGame">Importeer partij</string>
@@ -480,8 +488,8 @@ een computeranalyse, een chatbox bij de partij en een deelbare URL.</string>
   <string name="clearBoard">Maak het bord leeg</string>
   <string name="edit">Bewerken</string>
   <string name="save">Opslaan</string>
-  <string name="savePosition">Sla de stelling op</string>
-  <string name="loadPosition">Laad een stelling</string>
+  <string name="savePosition">Sla de stand op</string>
+  <string name="loadPosition">Laad een stand</string>
   <string name="isPrivate">Privé</string>
   <string name="noBerserkAllowed">Berserk niet toegestaan</string>
   <string name="cancelTheTournament">Toernooi afgelasten</string>
@@ -640,7 +648,7 @@ Een URL per regel</string>
   <string name="bothClicksAndDrag">Zowel klikken als slepen</string>
   <string name="premovesPlayingDuringOpponentTurn">Vooraf-zetten (spelen tijdens beurt tegenstander)</string>
   <string name="takebacksWithOpponentApproval">Terugnames (met goedkeuring van tegenstander)</string>
-  <string name="claimDrawOnThreefoldRepetitionAutomatically">Eis automatisch remise op bij driemaal dezelfde stelling</string>
+  <string name="claimDrawOnThreefoldRepetitionAutomatically">Eis automatisch remise op bij driemaal dezelfde stand</string>
   <string name="letOtherPlayersFollowYou">Andere spelers mogen je volgen</string>
   <string name="letOtherPlayersChallengeYou">Andere spelers mogen je uitdagen</string>
   <string name="letOtherPlayersInviteYouToStudy">Laat andere spelers je uitnodigen voor een Studie</string>

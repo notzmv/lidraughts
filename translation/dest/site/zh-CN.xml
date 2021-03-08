@@ -233,6 +233,11 @@
   <string name="abortGame">中止本局</string>
   <string name="gameAborted">棋局已中止</string>
   <string name="standard">标准国际跳棋</string>
+  <string name="variantTitleStandard">国际跳棋标准规则（FMJD）。</string>
+  <string name="variantTitleFrisian">棋子也可以从水平和垂直方向进行跳吃。</string>
+  <string name="variantTitleFrysk">弗里斯兰跳棋开局每方5枚棋子。</string>
+  <string name="variantTitleAntidraughts">失去你所有的棋子（或无法行棋）将赢得比赛。</string>
+  <string name="variantTitleBreakthrough">优先让兵升变成王的一方获胜。</string>
   <string name="unlimited">无限时间</string>
   <string name="mode">比赛模式</string>
   <string name="casual">无积分</string>

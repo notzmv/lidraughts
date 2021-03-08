@@ -259,6 +259,13 @@
   <string name="abortGame">Przerwij partię</string>
   <string name="gameAborted">Gra została przerwana</string>
   <string name="standard">Standard</string>
+  <string name="variantTitleStandard">Standardowe zasady warcabów międzynarodowych według Światowego Związku Warcabowego (FMJD).</string>
+  <string name="variantTitleFrisian">Bierki mogą dodatkowo bić wzdłuż wierszy lub kolumn.</string>
+  <string name="variantTitleFrysk">Odmiana warcabów fryzyjskich. Każdy z graczy rozpoczyna z 5 pionami.</string>
+  <string name="variantTitleAntidraughts">Strać wszystkie swoje bierki (albo strać możliwość ruchu) aby wygrać grę.</string>
+  <string name="variantTitleBreakthrough">Pierwszy gracz, który dorobi damkę wygrywa.</string>
+  <string name="variantTitleRussian">Możliwość wyboru mniejszego bicia, pion który przechodzi przez ostatnie pole podczas bicia ale nie kończy na nim jest promowany na damkę.</string>
+  <string name="variantTitleBrazilian">Zasady takie jak warcabów międzynarodowych na warcabnicy 8x8.</string>
   <string name="unlimited">Bez limitu</string>
   <string name="mode">Tryb</string>
   <string name="casual">Towarzyska</string>

@@ -7,7 +7,7 @@ case object Brazilian extends Variant(
   key = "brazilian",
   name = "Brazilian",
   shortName = "Brazilian",
-  title = "Same rules as International draughts, played on an 8x8 board.",
+  title = "Same rules as international draughts, played on an 8x8 board.",
   standardInitialPosition = false,
   boardSize = Board.D64
 ) {

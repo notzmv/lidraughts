@@ -19,7 +19,7 @@ object variant {
     klass = "box-pad page variant"
   )(
     h1(cls := "text", dataIcon := perfType.iconChar)(variant.name),
-    h2(cls := "headline")(variant.title),
+    h2(cls := "headline")(variantTitle(variant)),
     div(cls := "body")(raw(~doc.getHtml("variant.content", resolver)))
   )
 
@@ -38,7 +38,7 @@ object variant {
           a(cls := "variant text box__pad", href := routes.Page.variant(pt.key), dataIcon := pt.iconChar)(
             span(
               h2(variant.name),
-              h3(cls := "headline")(variant.title)
+              h3(cls := "headline")(variantTitle(variant))
             )
           )
         }

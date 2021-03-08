@@ -58,7 +58,7 @@ object bits {
     variant: draughts.variant.Variant,
     name: String,
     initialFen: Option[draughts.format.FEN] = None
-  ) = a(
+  )(implicit ctx: Context) = a(
     cls := "variant-link",
     href := (variant match {
       case draughts.variant.FromPosition => s"""${routes.Editor.index}?fen=${initialFen.??(_.value.replace(' ', '_'))}"""
@@ -66,7 +66,7 @@ object bits {
     }),
     rel := "nofollow",
     target := "_blank",
-    title := variant.title
+    title := variantTitle(variant)
   )(name)
 
   private def playerTitle(player: Player) =

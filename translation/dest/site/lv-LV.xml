@@ -237,6 +237,11 @@
   <string name="abortGame">Atcelt spēli</string>
   <string name="gameAborted">Spēle atcelta</string>
   <string name="standard">Standarta</string>
+  <string name="variantTitleStandard">Starptautiskās dambretes noteikumi pēc FMJD.</string>
+  <string name="variantTitleFrisian">Sitot pa diagonāli, horizontāli un vertikāli.</string>
+  <string name="variantTitleFrysk">Frīzu dambrete ar pieciem kauliņiem vienā rindā.</string>
+  <string name="variantTitleAntidraughts">Uzvarētājs ir tas, kurš zaudē visus kauliņus vai paliek iesprostots.</string>
+  <string name="variantTitleBreakthrough">Kas pirmais ieved dāmā, tas uzvar.</string>
   <string name="unlimited">Bezgalīgs</string>
   <string name="mode">Veids</string>
   <string name="casual">Draudzīga</string>
