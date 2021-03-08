@@ -510,12 +510,12 @@ object mon {
     object round {
       val user = inc("puzzle.attempt.user")
       val anon = inc("puzzle.attempt.anon")
-      val mate = inc("puzzle.attempt.mate")
-      val material = inc("puzzle.attempt.material")
+      def variant(v: String) = inc(s"puzzle.attempt.variant.$v")
     }
     object vote {
       val up = inc("puzzle.vote.up")
       val down = inc("puzzle.vote.down")
+      def variant(v: String) = inc(s"puzzle.vote.variant.$v")
     }
     val crazyGlicko = inc("puzzle.crazy_glicko")
   }

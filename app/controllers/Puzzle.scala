@@ -144,8 +144,7 @@ object Puzzle extends LidraughtsController {
     NoBot {
       implicit val req = ctx.body
       OptionFuResult(env.api.puzzle.find(id, variant)) { puzzle =>
-        if (puzzle.mate) lidraughts.mon.puzzle.round.mate()
-        else lidraughts.mon.puzzle.round.material()
+        lidraughts.mon.puzzle.round.variant(variant.key)()
         env.forms.round.bindFromRequest.fold(
           jsonFormError,
           resultInt => ctx.me match {
@@ -192,6 +191,7 @@ object Puzzle extends LidraughtsController {
           case (p, a) =>
             if (vote == 1) lidraughts.mon.puzzle.vote.up()
             else lidraughts.mon.puzzle.vote.down()
+            lidraughts.mon.puzzle.vote.variant(variant.key)()
             Ok(Json.arr(a.value, p.vote.sum))
         }
       ) map (_ as JSON)
