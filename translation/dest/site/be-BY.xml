@@ -20,6 +20,14 @@
   <string name="whiteIsVictorious">Белыя перамаглі</string>
   <string name="blackIsVictorious">Чорныя перамаглі</string>
   <string name="variantEnding">Канчатковы варыянт</string>
+  <string name="important">Важна</string>
+  <string name="yourQuestionMayHaveBeenAnswered">Ваш запыт можа ужо мець адказ %1$s</string>
+  <string name="inTheFAQ">у FAQ</string>
+  <string name="toReportSomeoneForCheatingOrBadBehavior">Каб паведаміць аб падмане ці дрэнных паводзінах карыстальніка, %1$s</string>
+  <string name="useTheReportForm">скарыстайцеся формай справаздачы</string>
+  <string name="youCannotPostYetPlaySomeGames">Вы яшчэ не можаце публікаваць на формах. Згуляйце некалькі партый!</string>
+  <string name="subscribe">Падпісацца</string>
+  <string name="unsubscribe">Адпісацца</string>
   <string name="newOpponent">Новы супернік</string>
   <string name="yourOpponentWantsToPlayANewGameWithYou">Супернік хоча згуляць з вамі ізноў</string>
   <string name="joinTheGame">Далучыцца да гульні</string>
