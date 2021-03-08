@@ -562,6 +562,9 @@ un análisis por ordenador, un chat de juego y una URL para compartir.</string>
   <string name="computer">Ordenador</string>
   <string name="side">Color</string>
   <string name="clock">Reloj</string>
+  <string name="youPlayTheWhitePieces">Juegas con blancas</string>
+  <string name="youPlayTheBlackPieces">Juegas con negras</string>
+  <string name="itsYourTurn">¡Es tu turno!</string>
   <string name="unauthorizedError">Acceso no autorizado.</string>
   <string name="noInternetConnection">No hay conexión a Internet. Puede jugar sin conexión desde el menú.</string>
   <string name="connectedToLidraughts">Estás conectado a lidraughts.org</string>

@@ -515,6 +515,9 @@
   <string name="computer">Компьютер</string>
   <string name="side">Тал</string>
   <string name="clock">Цаг</string>
+  <string name="youPlayTheWhitePieces">Та цагаанаар тоглоно</string>
+  <string name="youPlayTheBlackPieces">Та хараар тоглоно</string>
+  <string name="itsYourTurn">Таны нүүх ээлж!</string>
   <string name="unauthorizedError">Та нэвтрэх эрхгүй байна.</string>
   <string name="noInternetConnection">Та интернэт холболтгүй байна. Хэдий тийм ч та интернетийн орчингүй горимоор тоглох боломжтой.</string>
   <string name="connectedToLidraughts">Та lidraughts.org хуудаст холбогдлоо</string>

@@ -550,6 +550,9 @@ analizzarla con il computer, commentarla in chat, e condividerla tramire indiriz
   <string name="human">Umano</string>
   <string name="side">Lato</string>
   <string name="clock">Orologio</string>
+  <string name="youPlayTheWhitePieces">Sei il Bianco</string>
+  <string name="youPlayTheBlackPieces">Sei il Nero</string>
+  <string name="itsYourTurn">Tocca a te!</string>
   <string name="unauthorizedError">Accesso non autorizzato.</string>
   <string name="noInternetConnection">Nessuna connessione internet. Ma puoi sempre giocare offline dal menù.</string>
   <string name="connectedToLidraughts">Sei ora connesso a lidraughts.org</string>

@@ -555,6 +555,9 @@
   <string name="computer">Υπολογιστής</string>
   <string name="side">Πλευρά</string>
   <string name="clock">Χρόνος</string>
+  <string name="youPlayTheWhitePieces">Παίζετε τα λευκά</string>
+  <string name="youPlayTheBlackPieces">Παίζετε τα μαύρα</string>
+  <string name="itsYourTurn">Είναι η σειρά σας!</string>
   <string name="unauthorizedError">Άρνηση πρόσβασης.</string>
   <string name="noInternetConnection">Χωρίς σύνδεση. Για να παίξετε χωρίς σύνδεση, ανοίξτε το μενού.</string>
   <string name="connectedToLidraughts">Έχετε συνδεθεί στο lidraughts.org</string>

@@ -395,6 +395,9 @@ kompjûteranalyze, partijpetear en dielbere URL te krijen.</string>
   <string name="computer">Kompjûter</string>
   <string name="side">Side</string>
   <string name="clock">Klok</string>
+  <string name="youPlayTheWhitePieces">Do spilest mei wyt</string>
+  <string name="youPlayTheBlackPieces">Do spilest mei swart</string>
+  <string name="itsYourTurn">Do bist oan \'e beurt!</string>
   <string name="unauthorizedError">Tagong wegere.</string>
   <string name="noInternetConnection">Gjin ynternetferbining. Do kinst noch wol \'offline\' spylje fanút it menu.</string>
   <string name="connectedToLidraughts">Do bist no ferbûn mei lidraughts.org</string>

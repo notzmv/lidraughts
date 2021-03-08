@@ -593,6 +593,9 @@ a computer analysis, a game chat and a shareable URL.</string>
   <string name="computer">Computer</string>
   <string name="side">Side</string>
   <string name="clock">Clock</string>
+  <string name="youPlayTheWhitePieces">You play the white pieces</string>
+  <string name="youPlayTheBlackPieces">You play the black pieces</string>
+  <string name="itsYourTurn">It\'s your turn!</string>
   <string name="unauthorizedError">Access is unauthorized.</string>
   <string name="noInternetConnection">No internet connection. You can still play offline from the menu.</string>
   <string name="connectedToLidraughts">You are now connected to lidraughts.org</string>

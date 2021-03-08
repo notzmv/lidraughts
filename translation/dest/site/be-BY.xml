@@ -608,6 +608,9 @@
   <string name="computer">Камп\'ютар</string>
   <string name="side">Бок</string>
   <string name="clock">Гадзіньнік</string>
+  <string name="youPlayTheWhitePieces">Вы гуляеце белымі фігурамі</string>
+  <string name="youPlayTheBlackPieces">Вы гуляеце чорнымі фігурамі</string>
+  <string name="itsYourTurn">Зараз ваш ход!</string>
   <string name="unauthorizedError">Няма доступу.</string>
   <string name="noInternetConnection">Няма злучэньня зь сецівам. Ты ўсё яшчэ можаш згуляць у афлайн мэню.</string>
   <string name="connectedToLidraughts">Ты цяпер падлучаны да lidraughts.org</string>

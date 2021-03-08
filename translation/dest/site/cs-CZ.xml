@@ -481,6 +481,9 @@ získáte počítačovou analýzu, chat ke hře a URL ke sdílení hry.</string>
   <string name="computer">Počítač</string>
   <string name="side">Strana</string>
   <string name="clock">Čas</string>
+  <string name="youPlayTheWhitePieces">Hrajete bílými figurami</string>
+  <string name="youPlayTheBlackPieces">Hrajete černými figurami</string>
+  <string name="itsYourTurn">Jste na tahu!</string>
   <string name="unauthorizedError">Přístup není autorizovaný.</string>
   <string name="noInternetConnection">Bez internetového připojení. Je možné hrát offline z menu.</string>
   <string name="connectedToLidraughts">Nyní jste připojeni do lidraughts.org</string>

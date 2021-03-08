@@ -684,6 +684,9 @@ Vienā līnijā  - tikai vienu norādi.</string>
   <string name="computer">Dators</string>
   <string name="side">Krāsa</string>
   <string name="clock">Pulkstenis</string>
+  <string name="youPlayTheWhitePieces">Jūs spēlējat ar baltajiem</string>
+  <string name="youPlayTheBlackPieces">Jūs spēlējat ar melnajiem</string>
+  <string name="itsYourTurn">Jūsu gājiens!</string>
   <string name="unauthorizedError">Neautorizēta piekļuve.</string>
   <string name="noInternetConnection">Nav interneta pieslēguma. Tu joprojām vari spēlēt bezsaistē.</string>
   <string name="connectedToLidraughts">Tu esi pieslēdzies lidraughts.org</string>
