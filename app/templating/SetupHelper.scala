@@ -10,7 +10,7 @@ import lidraughts.report.Reason
 import lidraughts.setup.TimeMode
 import lidraughts.tournament.System
 
-trait SetupHelper { self: I18nHelper =>
+trait SetupHelper { self: I18nHelper with GameHelper =>
 
   type SelectChoice = (String, String, Option[String])
 
@@ -132,16 +132,16 @@ trait SetupHelper { self: I18nHelper =>
 
   private val encodeId = (v: Variant) => v.id.toString
 
-  private def variantTupleId = variantTuple(encodeId) _
+  private def variantTupleId(v: Variant)(implicit ctx: Context) = variantTuple(encodeId)(v)
 
-  private def variantTuple(encode: Variant => String)(variant: Variant) =
-    (encode(variant), variant.name, variant.title.some)
+  private def variantTuple(encode: Variant => String)(variant: Variant)(implicit ctx: Context) =
+    (encode(variant), variant.name, variantTitle(variant).some)
 
   def translatedVariantChoices(implicit ctx: Context): List[SelectChoice] =
     translatedVariantChoices(encodeId)
 
   def translatedVariantChoices(encode: Variant => String)(implicit ctx: Context): List[SelectChoice] = List(
-    (encode(draughts.variant.Standard), trans.standard.txt(), draughts.variant.Standard.title.some)
+    (encode(draughts.variant.Standard), trans.standard.txt(), trans.variantTitleStandard.txt().some)
   )
 
   def translatedVariantChoicesWithVariants(implicit ctx: Context): List[SelectChoice] =

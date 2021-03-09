@@ -15,7 +15,7 @@ object variant {
     perfType: lidraughts.rating.PerfType
   )(implicit ctx: Context) = layout(
     active = perfType.some,
-    title = s"${variant.name} • ${variant.title}",
+    title = s"${variant.name} • ${variantTitle(variant)}",
     klass = "box-pad page variant"
   )(
     h1(cls := "text", dataIcon := perfType.iconChar)(variant.name),
