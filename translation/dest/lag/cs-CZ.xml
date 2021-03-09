@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="isLidraughtsLagging">Zaostává Lidraughtss?</string>
+  <string name="measurementInProgressThreeDot">Probíhá měření...</string>
+  <string name="noAndYourNetworkIsGood">Ne. Vaše připojení je dostatečné.</string>
+  <string name="noAndYourNetworkIsBad">Ne. Vaše připojení není dostatečné.</string>
+  <string name="yesItWillBeFixedSoon">Ano. Brzy bude opraveno!</string>
+  <string name="andNowTheLongAnswerLagComposedOfTwoValues">A nyní dlouhá odpověď! Zpožďování hry se skládá ze dvou spolu nesouvisejících hodnot (nižší je lepší):</string>
+  <string name="lidraughtsServerLatency">Zpoždění Lidraughts serveru</string>
+  <string name="lidraughtsServerLatencyExplanation">Čas, který trvá zpracovat tah na serveru. Je stejný pro všechny, a závisí pouze na vytížení serveru. Čím více hráčů, tím větší bude, ale Lidraughts vývojáři dělají vše, co je v jejich silách, aby tento čas zůstal nízký. Zřídka přesahuje 10 ms.</string>
+  <string name="networkBetweenLidraughtsAndYou">Připojení mezi Lidraughtsem a vámi</string>
+</resources>

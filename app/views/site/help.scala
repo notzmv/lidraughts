@@ -141,7 +141,7 @@ object help {
         a(activeCls("api"), href := routes.Api.index)("API", external),
         a(activeCls("source"), href := "https://github.com/roepstoep/lidraughts")(trans.sourceCode(), external),
         sep,
-        a(activeCls("lag"), href := routes.Main.lag)("Is Lidraughts lagging?")
+        a(activeCls("lag"), href := routes.Main.lag)(trans.lag.isLidraughtsLagging())
       ),
       div(cls := s"page-menu__content $contentCls")(body)
     )

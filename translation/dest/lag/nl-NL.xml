@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="isLidraughtsLagging">Is Lidraughts traag?</string>
+  <string name="measurementInProgressThreeDot">Meting is bezig...</string>
+  <string name="noAndYourNetworkIsGood">Nee. En je verbinding is goed.</string>
+  <string name="noAndYourNetworkIsBad">Nee. En je verbinding is slecht.</string>
+  <string name="yesItWillBeFixedSoon">Ja. Het zal snel worden opgelost!</string>
+  <string name="andNowTheLongAnswerLagComposedOfTwoValues">En nu het lange antwoord! De spelvertraging bestaat uit twee ongerelateerde waarden (lager is beter):</string>
+  <string name="lidraughtsServerLatency">Vertraging op Lidraughts server</string>
+  <string name="lidraughtsServerLatencyExplanation">De tijd die nodig is om een zet op de server te verwerken. Deze is hetzelfde voor iedereen, en hangt alleen af van de serverbelasting. Hoe meer spelers, hoe groter de serververtraging wordt. De Lidraughts ontwikkelaars doen hun best om deze beperkt te houden. De vertraging is zelden meer dan 10ms.</string>
+  <string name="networkBetweenLidraughtsAndYou">Verbinding tussen Lidraughts en jou</string>
+  <string name="networkBetweenLidraughtsAndYouExplanation">De tijd die het kost om een zet van je computer naar de Lidraughts server te sturen, en een reactie terug te krijgen. Dit is specifiek voor jouw afstand tot Lidraughts (Frankrijk) en de kwaliteit van je internetverbinding. De Lidraughts ontwikkelaars kunnen niet je wifi repareren, of de snelheid van het licht verhogen.</string>
+  <string name="youCanFindTheseValuesAtAnyTimeByClickingOnYourUsername">Beide waarden kun je op elk gewenst moment bekijken door in de bovenste balk op je gebruikersnaam te klikken.</string>
+  <string name="lagCompensation">Vertragingscompensatie</string>
+  <string name="lagCompensationExplanation">Lidraughts compenseert voor de vertraging tussen Lidraughts en jou. Dit geldt zowel voor de normale aanhoudende vertraging, als incidentele pieken in de vertraging. De compensatie hangt samen met het speeltempo en de tot nu toe gecompenseerde vertraging, zodat het resultaat door beide spelers als eerlijk wordt ervaren. Hierdoor is een grotere vertraging dan die van je tegenstander geen handicap!</string>
+</resources>

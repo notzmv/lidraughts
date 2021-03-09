@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="isLidraughtsLagging">Laggt Lidraughts?</string>
+  <string name="measurementInProgressThreeDot">Messungen werden durchgeführt...</string>
+  <string name="noAndYourNetworkIsGood">Nein. Zudem ist deine Netzwerkverbindung gut.</string>
+  <string name="noAndYourNetworkIsBad">Nein. Zudem ist deine Netzwerkverbindung schlecht.</string>
+  <string name="yesItWillBeFixedSoon">Ja. Es wird bald behoben werden!</string>
+  <string name="andNowTheLongAnswerLagComposedOfTwoValues">Und jetzt die lange Antwort! Der Spiel-Lag besteht aus zwei voneinander unabhängigen Werten (niedriger ist besser):</string>
+  <string name="lidraughtsServerLatency">Lidraughts Server-Latenz</string>
+  <string name="lidraughtsServerLatencyExplanation">Die Zeit, die benötigt wird, um einen Zug auf dem Server zu verarbeiten. Sie ist für alle gleich und hängt nur von der Serverlast ab. Je mehr Spieler, desto höher wird sie, aber Lidraughts-Entwickler geben ihr Bestes, um diese niedrig zu halten. Sie übersteigt selten 10ms.</string>
+  <string name="networkBetweenLidraughtsAndYou">Netzwerkverbindung zwischen Lidraughts und dir</string>
+  <string name="networkBetweenLidraughtsAndYouExplanation">Die Zeit, die benötigt wird, um einen Zug von deinem Computer zum Lidraughts-Server zu senden und die Antwort zurück zu erhalten. Sie ist abhängig von deiner Entfernung zu Lidraughts (Frankreich) und der Qualität deiner Internetverbindung. Lidraughts-Entwickler können dein WLAN nicht reparieren oder Licht schneller machen.</string>
+  <string name="youCanFindTheseValuesAtAnyTimeByClickingOnYourUsername">Beide Werte können jederzeit eingesehen werden, indem du auf deinen Benutzernamen in der oberen Leiste klickst.</string>
+  <string name="lagCompensation">Lag-Kompensation</string>
+  <string name="lagCompensationExplanation">Lidraughts kompensiert den Netzwerk-Lag. Dazu gehören anhaltende Verzögerungen und gelegentliche Lag-Spitzen. Es existieren Grenzen und Heuristik auf der Grundlage der Zeitkontrolle und der bisher ausgeglichenen Verzögerung, so dass sich das Ergebnis für beide Spieler vernünftig anfühlen sollte. Infolgedessen ist es kein Handicap, einen höheren Netzwerk-Lag als der Gegner zu haben!</string>
+</resources>

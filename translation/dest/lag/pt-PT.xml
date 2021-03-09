@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="isLidraughtsLagging">O Lidraughts está lento?</string>
+  <string name="measurementInProgressThreeDot">Medições em progresso...</string>
+  <string name="noAndYourNetworkIsGood">Não. E a tua rede está boa.</string>
+  <string name="noAndYourNetworkIsBad">Não. E a tua rede está má.</string>
+  <string name="yesItWillBeFixedSoon">Sim. Será corrigido em breve!</string>
+  <string name="andNowTheLongAnswerLagComposedOfTwoValues">E agora, a resposta longa. O atraso de jogo é composto por dois valores não relacionados (quanto mais baixos melhor):</string>
+  <string name="lidraughtsServerLatency">Latência do servidor do Lidraughts</string>
+  <string name="lidraughtsServerLatencyExplanation">É o tempo que leva para processar um movimento no servidor. É o mesmo para todos, e só depende da carga do servidor. Quanto mais jogadores, mais alto fica, mas os desenvolvedores do Lidraughts dão o seu melhor para o manter baixo. Raramente excede 10 ms.</string>
+  <string name="networkBetweenLidraughtsAndYou">Rede entre ti e o Lidraughts</string>
+  <string name="networkBetweenLidraughtsAndYouExplanation">É o tempo que leva para enviar um movimento do teu computador para o servidor do Lidraughts e obter a resposta de volta. Depende da tua distância ao Lidraughts (França) e da qualidade da tua conexão à Internet. Os desenvolvedores do Lidraughts não podem consertar o teu wi-fi nem fazer a luz andar mais rápido.</string>
+  <string name="youCanFindTheseValuesAtAnyTimeByClickingOnYourUsername">Podes encontrar ambos estes valores a qualquer momento, clicando no teu nome de utilizador na barra superior.</string>
+  <string name="lagCompensation">Compensação do atraso</string>
+  <string name="lagCompensationExplanation">O Lidraughts compensa os atrasos da rede. Isto inclui atrasos constantes e ocasionais. Existem limites baseados nos ritmos de jogo e no atraso compensado até agora, para que o resultado seja razoável para ambos os jogadores. Assim, teres mais atraso de rede do que o teu adversário não é uma desvantagem!</string>
+</resources>

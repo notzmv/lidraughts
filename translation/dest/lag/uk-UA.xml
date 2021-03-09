@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="isLidraughtsLagging">Чи має Lidraughts затримку?</string>
+  <string name="measurementInProgressThreeDot">Виконується вимірювання...</string>
+  <string name="noAndYourNetworkIsGood">Ні. І з Вашою мережею все добре.</string>
+  <string name="noAndYourNetworkIsBad">Ні. А Ваша мережа не в порядку.</string>
+  <string name="yesItWillBeFixedSoon">Так. Це буде виправлено скоро!</string>
+  <string name="andNowTheLongAnswerLagComposedOfTwoValues">А тепер довга відповідь! Затримка гри складається з двох непов\'язаних значень (чим нижче - тим краще):</string>
+  <string name="lidraughtsServerLatency">Затримка сервера Lidraughts</string>
+  <string name="lidraughtsServerLatencyExplanation">Час, необхідний для обробки ходу на сервері. Він однаковий для всіх і залежить лише від завантаженості сервера. Чим більше гравців, тим він більший, але розробники Lidraughts роблять все можливе, щоб втримати його низьким. Він рідко перевищує 10мс.</string>
+  <string name="networkBetweenLidraughtsAndYou">Мережа між Lidraughts і Вами</string>
+  <string name="networkBetweenLidraughtsAndYouExplanation">Час, необхідний щоб надіслати хід із Вашого комп\'ютера до сервера Lidraughts та зворотній відгук. Він залежить від Вашої відстані до Lidraughts (Франція) та якості Вашого інтернет-з\'єднання. Розробники Lidraughts не можуть виправляти Ваш Wi-Fi або прискорити швидкість світла.</string>
+  <string name="youCanFindTheseValuesAtAnyTimeByClickingOnYourUsername">Ви можете знайти обидва ці значення в будь-який час, натиснувши на своє ім\'я користувача на верхній панелі.</string>
+  <string name="lagCompensation">Компенсація затримки</string>
+  <string name="lagCompensationExplanation">Lidraughts компенсує затримку мережі. Сюди входять стійке відставання та випадкові піки. Існують ліміти та евристичний аналіз в залежності від контролю часу та попередніх компенсацій, тому результат повинен відчуватись для обох гравців. Тому висока затримка мережі не є перешкодою!</string>
+</resources>
