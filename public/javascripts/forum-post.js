@@ -93,7 +93,7 @@ $(function() {
         if (res.ok) return res.text();
         else throw res.statusText;
       }).then(html => $rels.replaceWith(html)).catch(() => {
-        lichess.announce({msg: 'Failed to send forum post reaction'});
+        lidraughts.announce({msg: 'Failed to send forum post reaction'});
       }).finally(() => $rels.removeClass('loading'));
     }
   });
