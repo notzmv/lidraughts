@@ -136,10 +136,7 @@ object index {
                             makeExtraDonation()
                           else
                             frag(
-                              "Donating ",
-                              strong("publicly"),
-                              " as ",
-                              userSpan(me)
+                              donatingPubliclyAs(userSpan(me))
                             )
                         )
                       },

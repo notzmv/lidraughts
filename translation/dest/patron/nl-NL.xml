@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="donate">Doneer</string>
+  <string name="lidraughtsPatron">Lidraughts Patroon</string>
+  <string name="freeAccount">Gratis account</string>
+  <string name="becomePatron">Word een Lidraughts Patroon</string>
+  <string name="xBecamePatron">%s is een Lidraughts Patroon geworden</string>
+  <string name="newPatrons">Nieuwe Patronen</string>
+  <string name="freeDraughts">Gratis dammen voor iedereen, voor altijd!</string>
+  <string name="noAdsNoSubs">Geen advertenties, geen abonnementen; maar open-source en passie.</string>
+  <string name="thankYou">Hartelijk dank voor je donatie!</string>
+  <string name="youHaveLifetime">Je hebt een levenslang Patroon-account. Dat is geweldig!</string>
+  <string name="patronUntil">Je hebt een Patroon-account tot %s.</string>
+  <string name="ifNotRenewed">Indien niet vernieuwd, word je naar het standaard account teruggezet.</string>
+  <string name="weAreVolunteers">We zijn een kleine groep vrijwilligers die werken vanuit het idee dat iedereen toegang moet hebben tot een gratis damplatform van wereldklasse.</string>
+  <string name="weRelyOnSupport">We rekenen op de steun van mensen zoals jij om dit mogelijk te maken. Als je plezier uit het gebruik van Lidraughts haalt, overweeg dan om ons te steunen door te doneren en een Patroon te worden!</string>
+  <string name="lifetime">Levenslang</string>
+  <string name="payLifetimeOnce">Betaal %s eenmalig. Wees voor altijd een Lidraughts Patroon!</string>
+  <string name="lifetimePatron">Levenslange Lidraughts Patroon</string>
+  <string name="makeExtraDonation">Een extra donatie maken?</string>
+  <string name="monthly">Maandelijks</string>
+  <string name="recurringBilling">Terugkerende betaling, verlengt je Patroonvleugels elke maand.</string>
+  <string name="onetime">Eenmalig</string>
+  <string name="singleDonation">Een enkele donatie die je de Patroonvleugels geeft voor één maand.</string>
+  <string name="otherAmount">Anders</string>
+  <string name="pleaseEnterAmount">Vul een bedrag in EUR in</string>
+  <string name="withCreditCard">Creditcard</string>
+  <string name="withPaypal">Doneer met PayPal</string>
+  <string name="donatingPubliclyAs">Openbare donatie met %s</string>
+  <string name="weAreSmallTeam">We zijn een klein team, dus je steun maakt een enorm verschil!</string>
+  <string name="celebratedPatrons">Enkele zeer gewaardeerde patronen die Lidraughts mogelijk maken</string>
+  <string name="whereMoneyGoes">Waar wordt het geld aan uitgegeven?</string>
+  <string name="serversAndExpenses">De servers die lidraughts en de Scan engine analyse draaien.
+Andere uitgaven zoals mailgun and hosting.</string>
+  <string name="changeMonthlySupport">Kan ik mijn maandelijkse ondersteuning wijzigen of annuleren?</string>
+  <string name="changeOrContact">Ja, op elk gewenst moment. Log in op je Paypal account, en ga naar automatische betalingen.
+Of je kan %s.</string>
+  <string name="contactSupport">contact opnemen met Lidraughts</string>
+  <string name="otherMethods">Andere vormen van donatie?</string>
+  <string name="bankTransfers">We accepteren ook bankoverschrijvingen. Stuur een e-mail naar %s voor de bankgegevens.</string>
+  <string name="bitcoin">En hier is ons bitcoinadres: %s</string>
+  <string name="patronFeatures">Zijn sommige functies enkel beschikbaar voor Patronen?</string>
+  <string name="noPatronFeatures">Nee, omdat Lidraughts altijd gratis is, en voor iedereen. Dat is een belofte.
+Het enige verschil? Patronen krijgen een cool nieuw profielpictogram als waardering.</string>
+  <string name="featuresComparison">Zie de gedetailleerde functievergelijking</string>
+  <plurals name="patronForMonths">
+    <item quantity="one">Lidraughts Patroon voor één maand</item>
+    <item quantity="other">Lidraughts Patroon voor %s maanden</item>
+  </plurals>
+  <string name="youSupportWith">Je ondersteunt lidraughts.org met %s per maand.</string>
+  <string name="tyvm">Heel erg bedankt voor je hulp. Je bent geweldig!</string>
+  <string name="currentStatus">Huidige status</string>
+  <string name="nextPayment">Volgende betaling</string>
+  <string name="youWillBeChargedXOnY">Er wordt %1$s in rekening gebracht op %2$s.</string>
+  <string name="makeAdditionalDonation">Maak nu een extra donatie</string>
+  <string name="update">Bijwerken</string>
+  <string name="changeMonthlyAmount">Het maandelijkse bedrag wijzigen (%s)</string>
+  <string name="cancelSupport">je steun annuleren</string>
+  <string name="xOrY">%1$s of %2$s</string>
+  <string name="decideHowMuch">Beslis wat Lidraughts voor jou waard is:</string>
+  <string name="stopPayments">Trek je creditcard terug en stop de betalingen:</string>
+  <string name="noLongerSupport">Lidraughts wordt niet langer gesteund</string>
+  <string name="paymentHistory">Betaalgeschiedenis</string>
+  <string name="paid">Betaald</string>
+  <string name="viewOthers">Andere Lidraughts Patronen bekijken</string>
+  <string name="date">Datum</string>
+  <string name="amount">Bedrag</string>
+  <string name="transactionCompleted">Je transactie is voltooid, een ontvangstbewijs voor je donatie is naar je verzonden.</string>
+  <string name="permanentPatron">Je hebt nu een permanente Patroon account.</string>
+  <string name="paypalRenew">Volgende maand zal PayPal je betaling automatisch herhalen.
+Om je maandelijkse betaling stop te zetten, log in op je Paypal account en ga naar automatische betalingen.</string>
+  <string name="checkOutProfile">Bekijk je profielpagina!</string>
+  <string name="nowLifetime">Je bent nu een levenslange Lidraughts Patroon!</string>
+  <string name="nowOneMonth">Je bent nu een Lidraughts Patroon voor een maand!</string>
+  <string name="downgradeNextMonth">Over een maand worden er GEEN extra kosten in rekening gebracht, en wordt je Lidraughts account weer omgezet naar een normale account.</string>
+</resources>
