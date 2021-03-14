@@ -314,6 +314,7 @@
   <string name="siteDescription">Servidor de damas online gratuito. Jogue damas em uma interface limpa. Sem registro, sem anúncios, sem necessidade de plugins. Jogue damas em torneios, com amigos ou com oponentes aleatórios.</string>
   <string name="xJoinedTeamY">%1$s juntou-se à equipe %2$s</string>
   <string name="xCreatedTeamY">%1$s criou a equipe %2$s</string>
+  <string name="xStartedStreaming">%s começou a transmitir</string>
   <string name="averageElo">Média de classificação</string>
   <string name="location">Localização</string>
   <string name="settings">Configurações</string>

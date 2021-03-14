@@ -300,6 +300,7 @@
   <string name="backToGame">Retorne à partida</string>
   <string name="xJoinedTeamY">%1$s juntou-se à equipa %2$s</string>
   <string name="xCreatedTeamY">%1$s criou a equipa %2$s</string>
+  <string name="xStartedStreaming">%s começou uma stream</string>
   <string name="averageElo">Média de rating</string>
   <string name="location">Localização</string>
   <string name="settings">Configurações</string>

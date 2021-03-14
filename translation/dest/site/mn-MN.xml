@@ -256,6 +256,7 @@
   <string name="backToGame">Тоглолт руу буцах</string>
   <string name="xJoinedTeamY">%1$s багт %2$s нэгдлээ</string>
   <string name="xCreatedTeamY">%1$s багийг %2$s үүсгэлээ</string>
+  <string name="xStartedStreaming">%s стриминг эхлүүлсэн</string>
   <string name="averageElo">Дундаж чансаа</string>
   <string name="location">Таны хаяг</string>
   <string name="settings">Тохиргоо</string>

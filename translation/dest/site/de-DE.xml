@@ -294,6 +294,7 @@
   <string name="backToGame">Zurück zum Spiel</string>
   <string name="xJoinedTeamY">%1$s trat der Gruppe %2$s bei</string>
   <string name="xCreatedTeamY">%1$s hat das Team %2$s gegründet</string>
+  <string name="xStartedStreaming">%s hat einen Stream gestartet</string>
   <string name="averageElo">Durchschnittswertung</string>
   <string name="location">Ort</string>
   <string name="settings">Einstellungen</string>

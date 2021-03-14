@@ -340,6 +340,7 @@
   <string name="backToGame">Повернутися до гри</string>
   <string name="xJoinedTeamY">%1$s приєдналися до команди %2$s</string>
   <string name="xCreatedTeamY">%1$s створили команду %2$s</string>
+  <string name="xStartedStreaming">%s почав трансляцію</string>
   <string name="averageElo">Середній рейтинґ</string>
   <string name="location">Місцезнаходження</string>
   <string name="settings">Налаштування</string>

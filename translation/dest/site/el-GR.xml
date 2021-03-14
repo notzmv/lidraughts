@@ -295,6 +295,7 @@
   <string name="backToGame">Επιστρέψτε στο παιχνίδι</string>
   <string name="xJoinedTeamY">Ο %1$s έθεσε συμμετοχή στην ομάδα %2$s</string>
   <string name="xCreatedTeamY">Ο %1$s δημιούργησε την ομάδα %2$s</string>
+  <string name="xStartedStreaming">%s ξεκίνησε να μεταδίδει</string>
   <string name="averageElo">Μέσος όρος βαθμολογίας</string>
   <string name="location">Τοποθεσία</string>
   <string name="settings">Επιλογές</string>

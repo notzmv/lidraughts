@@ -346,6 +346,7 @@
   <string name="backToGame">Вернуться к игре</string>
   <string name="xJoinedTeamY">%1$s вступил в клуб %2$s</string>
   <string name="xCreatedTeamY">%1$s организовал клуб %2$s</string>
+  <string name="xStartedStreaming">%s запустил стрим</string>
   <string name="averageElo">Средний рейтинг участников</string>
   <string name="location">Местоположение</string>
   <string name="settings">Настройки</string>

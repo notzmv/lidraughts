@@ -373,6 +373,7 @@
   <string name="siteDescription">Tiešsaistes dambretes serveris priekš brīvas spēles. Spēlējiet dambreti uz tīras saskarnes. Nav nepieciešama reģistrācija vai īpašs spraudnis; bez reklāmas. Spēlē  dambreti turnīros, ar draugiem vai nejauši izvēlētiem pretiniekiem.</string>
   <string name="xJoinedTeamY">%1$s pievienojušies komandai %2$s</string>
   <string name="xCreatedTeamY">%1$s izveidoja komandu %2$s</string>
+  <string name="xStartedStreaming">%s sāka straumēt</string>
   <string name="averageElo">Vidējais reitings</string>
   <string name="location">Atrašanās vieta</string>
   <string name="settings">Iestatījumi</string>

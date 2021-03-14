@@ -331,6 +331,7 @@
   <string name="backToGame">Вярнуцца да гульні</string>
   <string name="xJoinedTeamY">%1$s далучыўся да каманды %2$s</string>
   <string name="xCreatedTeamY">%1$s стварыў каманду %2$s</string>
+  <string name="xStartedStreaming">%s пачаў трансляцыю</string>
   <string name="averageElo">Сярэдні рэйтынг</string>
   <string name="location">Месцазнаходжанне</string>
   <string name="settings">Налады</string>

@@ -361,6 +361,7 @@
   <string name="siteDescription">界面清新的免费在线国际跳棋平台。不用注册，没有广告，无需插件。快來与电脑、朋友和陌生人一起对战吧！</string>
   <string name="xJoinedTeamY">%1$s加入%2$s队</string>
   <string name="xCreatedTeamY">%1$s组建%2$s队</string>
+  <string name="xStartedStreaming">%s 开始直播</string>
   <string name="averageElo">平均积分</string>
   <string name="location">地址</string>
   <string name="settings">设置</string>

@@ -212,6 +212,7 @@
   <string name="backToGame">Weromgean nei it spul</string>
   <string name="xJoinedTeamY">%1$s is lid wurden fan team %2$s</string>
   <string name="xCreatedTeamY">%1$s hat team %2$s oanmakke</string>
+  <string name="xStartedStreaming">%s is mei streamen úteinsetten</string>
   <string name="averageElo">Gemiddelde rating</string>
   <string name="location">Lokaasje</string>
   <string name="filterGames">Partijen skiftsje</string>

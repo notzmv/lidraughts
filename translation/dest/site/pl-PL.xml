@@ -416,6 +416,7 @@
   <string name="siteDescription">Darmowy serwer warcabowy online. Graj w warcaby w przyjaznych warunkach. Żadnych reklam, żadnych wymaganych wtyczek. Graj w warcaby w turniejach, ze znajomymi lub z losowymi przeciwnikami.</string>
   <string name="xJoinedTeamY">%1$s dołączył do klubu %2$s</string>
   <string name="xCreatedTeamY">%1$s stworzył klub %2$s</string>
+  <string name="xStartedStreaming">%s rozpoczął streaming</string>
   <string name="averageElo">Średni ranking</string>
   <string name="location">Lokalizacja</string>
   <string name="settings">Ustawienia</string>

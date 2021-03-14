@@ -361,6 +361,7 @@
   <string name="siteDescription">Gratis online dammen. Dammen met een heldere vormgeving. Geen registratie nodig, geen advertenties, geen plugins vereist. Speel in toernooien, tegen vrienden of tegen willekeurige tegenstanders.</string>
   <string name="xJoinedTeamY">%1$s sloot zich bij team %2$s aan</string>
   <string name="xCreatedTeamY">%1$s heeft team %2$s opgericht</string>
+  <string name="xStartedStreaming">%s is begonnen met streamen</string>
   <string name="averageElo">Gemiddelde rating</string>
   <string name="averagePerformance">Gemiddelde prestatie</string>
   <string name="averageScore">Gemiddelde score</string>
