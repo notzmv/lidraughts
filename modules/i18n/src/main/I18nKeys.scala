@@ -1,7 +1,7 @@
 // Generated with bin/trans-dump.js
 package lidraughts.i18n
 
-import I18nDb.{ Site, Arena, Broadcast, Emails, Learn, Activity, Coordinates, Streamer, Study, Tfa, Team, Swiss, Lag }
+import I18nDb.{ Site, Arena, Broadcast, Emails, Learn, Activity, Coordinates, Streamer, Study, Tfa, Team, Swiss, Lag, Patron }
 
 // format: OFF
 object I18nKeys {
@@ -481,7 +481,6 @@ val `error.provideOneCheatedGameLink` = new Translated("error.provideOneCheatedG
 val `by` = new Translated("by", Site)
 val `thisTopicIsNowClosed` = new Translated("thisTopicIsNowClosed", Site)
 val `theming` = new Translated("theming", Site)
-val `donate` = new Translated("donate", Site)
 val `blog` = new Translated("blog", Site)
 val `questionsAndAnswers` = new Translated("questionsAndAnswers", Site)
 val `notes` = new Translated("notes", Site)
@@ -1407,6 +1406,12 @@ val `networkBetweenLidraughtsAndYouExplanation` = new Translated("networkBetween
 val `youCanFindTheseValuesAtAnyTimeByClickingOnYourUsername` = new Translated("youCanFindTheseValuesAtAnyTimeByClickingOnYourUsername", Lag)
 val `lagCompensation` = new Translated("lagCompensation", Lag)
 val `lagCompensationExplanation` = new Translated("lagCompensationExplanation", Lag)
+}
+
+object patron {
+val `donate` = new Translated("donate", Patron)
+val `lidraughtsPatron` = new Translated("lidraughtsPatron", Patron)
+val `becomePatron` = new Translated("becomePatron", Patron)
 }
 
 }

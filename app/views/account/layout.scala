@@ -51,7 +51,7 @@ object layout {
             trans.security()
           ),
           div(cls := "sep"),
-          a(href := routes.Plan.index)("Lidraughts Patron"),
+          a(href := routes.Plan.index)(trans.patron.lidraughtsPatron()),
           div(cls := "sep"),
           a(activeCls("oauth.token"), href := routes.OAuthToken.index)(
             "API Access tokens"

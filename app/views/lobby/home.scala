@@ -154,8 +154,8 @@ object home {
           a(href := routes.Plan.index)(
             iconTag(patronIconChar),
             span(cls := "lobby__support__text")(
-              strong("Lidraughts Patron"),
-              span(trans.directlySupportLidraughts())
+              strong(trans.patron.donate()),
+              span(trans.patron.becomePatron())
             )
           )
         /*a(href := routes.Page.swag)(

@@ -79,7 +79,7 @@ object list {
       })
     )
 
-  private def userTopPerf(users: List[User.LightPerf], perfType: PerfType) =
+  private def userTopPerf(users: List[User.LightPerf], perfType: PerfType)(implicit ctx: Context) =
     st.section(cls := "user-top")(
       h2(cls := "text", dataIcon := perfType.iconChar)(
         a(href := routes.User.topNb(200, perfType.key))(perfType.name)

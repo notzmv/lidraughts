@@ -3,6 +3,7 @@ package templating
 
 import lidraughts.api.Context
 import lidraughts.app.ui.ScalatagsTemplate._
+import lidraughts.common.Lang
 import lidraughts.forum.Post
 
 trait ForumHelper { self: UserHelper with StringHelper =>
@@ -22,7 +23,7 @@ trait ForumHelper { self: UserHelper with StringHelper =>
   def isGrantedWrite(categSlug: String)(implicit ctx: Context) =
     Granter isGrantedWrite categSlug
 
-  def authorName(post: Post) = post.userId match {
+  def authorName(post: Post)(implicit lang: Lang) = post.userId match {
     case Some(userId) => userIdSpanMini(userId, withOnline = true)
     case None => frag(lidraughts.user.User.anonymous)
   }
@@ -32,7 +33,7 @@ trait ForumHelper { self: UserHelper with StringHelper =>
     cssClass: Option[String] = None,
     withOnline: Boolean = true,
     modIcon: Boolean = false
-  ): Frag =
+  )(implicit lang: Lang): Frag =
     if (post.erased) span(cls := "author")("<erased>")
     else post.userId.fold(frag(lidraughts.user.User.anonymous)) { userId =>
       userIdLink(userId.some, cssClass = cssClass, withOnline = withOnline, modIcon = modIcon)

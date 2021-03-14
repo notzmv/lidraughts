@@ -5,6 +5,7 @@ import play.api.libs.json.Json
 import lidraughts.api.Context
 import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
+import lidraughts.common.Lang
 
 import controllers.routes
 
@@ -56,7 +57,7 @@ object bits {
       )
     )
 
-  def allCreated(simuls: List[lidraughts.simul.Simul]) =
+  def allCreated(simuls: List[lidraughts.simul.Simul])(implicit lang: Lang) =
     table(
       simuls map { simul =>
         tr(

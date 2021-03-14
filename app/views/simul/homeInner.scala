@@ -101,7 +101,7 @@ object homeInner {
       )
     )
 
-  private def simHost(sim: lidraughts.simul.Simul) =
+  private def simHost(sim: lidraughts.simul.Simul)(implicit ctx: Context) =
     td(cls := "host")(
       userIdLink(sim.hostId.some, withOnline = false),
       br,

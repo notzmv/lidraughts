@@ -5,19 +5,20 @@ import lidraughts.app.templating.Environment._
 import lidraughts.app.ui.ScalatagsTemplate._
 import lidraughts.rating.PerfType
 import lidraughts.tournament.Tournament
+import lidraughts.user.UserContext
 
 import controllers.routes
 
 object leaderboard {
 
-  private def freqWinner(w: lidraughts.tournament.Winner, freq: String) = li(
+  private def freqWinner(w: lidraughts.tournament.Winner, freq: String)(implicit ctx: UserContext) = li(
     userIdLink(w.userId.some),
     a(title := w.tourName, href := routes.Tournament.show(w.tourId))(freq)
   )
 
   private val section = st.section(cls := "tournament-leaderboards__item")
 
-  private def freqWinners(fws: lidraughts.tournament.FreqWinners, perfType: PerfType, name: String) =
+  private def freqWinners(fws: lidraughts.tournament.FreqWinners, perfType: PerfType, name: String)(implicit ctx: UserContext) =
     section(
       h2(cls := "text", dataIcon := perfType.iconChar)(name),
       ul(

@@ -1,7 +1,7 @@
 package lidraughts.app
 package templating
 
-import lidraughts.user.UserContext
+import lidraughts.common.Lang
 import ui.ScalatagsTemplate._
 
 trait StringHelper { self: NumberHelper =>
@@ -28,7 +28,7 @@ trait StringHelper { self: NumberHelper =>
   private val NumberFirstRegex = """(\d++)\s(.+)""".r
   private val NumberLastRegex = """\s(\d++)$""".r.unanchored
 
-  def splitNumber(s: Frag)(implicit ctx: UserContext): Frag = {
+  def splitNumber(s: Frag)(implicit lang: Lang): Frag = {
     val rendered = s.render
     rendered match {
       case NumberFirstRegex(number, html) => frag(
