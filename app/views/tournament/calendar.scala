@@ -12,7 +12,7 @@ import controllers.routes
 object calendar {
 
   def apply(json: play.api.libs.json.JsObject)(implicit ctx: Context) = views.html.base.layout(
-    title = "Tournament calendar",
+    title = trans.tournamentCalendar.txt(),
     moreJs = frag(
       jsAt(s"compiled/lidraughts.tournamentCalendar${isProd ?? (".min")}.js"),
       embedJsUnsafe(s"""LidraughtsTournamentCalendar.app(document.getElementById('tournament-calendar'), ${
@@ -25,7 +25,7 @@ object calendar {
     moreCss = cssTag("tournament.calendar")
   ) {
       main(cls := "box")(
-        h1("Tournament calendar"),
+        h1(trans.tournamentCalendar()),
         div(id := "tournament-calendar")
       )
     }
