@@ -44,8 +44,8 @@ object Export extends LidraughtsController {
         OptionFuResult(Env.puzzle.api.puzzle.find(id, variant)) { puzzle =>
           env.pngExport(
             fen = draughts.format.FEN(puzzle.fenAfterInitialMove | puzzle.fen),
+            variant = variant,
             lastMove = puzzle.initialMove.uci.some,
-            check = none,
             orientation = puzzle.color.some,
             logHint = s"puzzle $id"
           ) map pngStream

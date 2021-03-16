@@ -5,31 +5,32 @@ import play.api.libs.ws.WS
 import play.api.Play.current
 
 import draughts.format.{ Forsyth, FEN, Uci }
+import draughts.variant.Variant
 
 final class PngExport(url: String, size: Int) {
 
   def fromGame(game: Game): Fu[Enumerator[Array[Byte]]] = apply(
     fen = FEN(Forsyth >> game.draughts),
+    variant = game.variant,
     lastMove = game.lastMoveUci,
-    check = None,
     orientation = game.firstColor.some,
     logHint = s"game ${game.id}"
   )
 
   def apply(
     fen: FEN,
+    variant: Variant,
     lastMove: Option[String],
-    check: Option[draughts.Pos],
     orientation: Option[draughts.Color],
     logHint: => String
   ): Fu[Enumerator[Array[Byte]]] = {
 
     val queryString = List(
       "fen" -> fen.value.takeWhile(' ' !=),
+      "boardSize" -> variant.boardSize.width.toString,
       "size" -> size.toString
     ) ::: List(
         lastMove.map { "lastMove" -> _ },
-        check.map { "check" -> _.key },
         orientation.map { "orientation" -> _.name }
       ).flatten
 
