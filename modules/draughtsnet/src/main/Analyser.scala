@@ -113,17 +113,18 @@ final class Analyser(
   private def makeWork(game: Game, sender: Work.Sender): Fu[Work.Analysis] =
     GameRepo.initialFen(game) zip uciMemo.get(game) map {
       case (initialFen, moves) =>
-        val truncated = moves.dropRight(if (game.imported && game.situation.ghosts > 1) 1 else game.situation.ghosts)
-        val dropExtra =
-          if (truncated.length <= maxPlies) 0
-          else {
-            var dropMoves = 0
-            while (dropMoves < maxPlies && truncated(maxPlies - (dropMoves + 1)).slice(2, 4) == truncated(maxPlies - dropMoves).take(2)) {
-              dropMoves += 1
-            }
-            dropMoves
-          }
-        val moveList = truncated.take(maxPlies - dropExtra).toList
+        val truncateMidCapture = moves.dropRight(if (game.imported && game.situation.ghosts > 1) 1 else game.situation.ghosts)
+        val actualMaxPlies = truncateMidCapture.foldLeft((0, 0)) {
+          case ((moveIndex, plies), _) if plies == maxPlies =>
+            (moveIndex, plies)
+          case ((moveIndex, plies), _) if moveIndex + 1 == moves.length =>
+            (moveIndex + 1, plies + 1)
+          case ((moveIndex, plies), move) if move.slice(2, 4) == moves(moveIndex + 1).take(2) =>
+            (moveIndex + 1, plies)
+          case ((moveIndex, plies), _) =>
+            (moveIndex + 1, plies + 1)
+        }
+        val moveList = truncateMidCapture.take(actualMaxPlies._1).toList
         makeWork(
           game = Work.Game(
             id = game.id,
