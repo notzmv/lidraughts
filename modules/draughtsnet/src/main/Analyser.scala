@@ -117,9 +117,7 @@ final class Analyser(
         val actualMaxPlies = truncateMidCapture.foldLeft((0, 0)) {
           case ((moveIndex, plies), _) if plies == maxPlies =>
             (moveIndex, plies)
-          case ((moveIndex, plies), _) if moveIndex + 1 == moves.length =>
-            (moveIndex + 1, plies + 1)
-          case ((moveIndex, plies), move) if move.slice(2, 4) == moves(moveIndex + 1).take(2) =>
+          case ((moveIndex, plies), move) if moveIndex + 1 < moves.length && move.slice(2, 4) == moves(moveIndex + 1).take(2) =>
             (moveIndex + 1, plies)
           case ((moveIndex, plies), _) =>
             (moveIndex + 1, plies + 1)

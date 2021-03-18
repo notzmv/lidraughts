@@ -976,7 +976,7 @@ export default class AnalyseCtrl {
       const skip = i > 0 && nodes[i].ply === nodes[i - 1].ply;
       if (!skip) {
         count++;
-        if (count > 200) return false; // max 200 ply of analysis
+        if (count > 200) return true; // max 200 ply of analysis
         const e = nodes[i].eval;
         if (!e || !Object.keys(e).length)
           return false;
