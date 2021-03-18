@@ -67,7 +67,7 @@ final class PdnDump(
   private def rating(p: Player) = p.rating.fold("?")(_.toString)
 
   def player(p: Player, u: Option[LightUser]) =
-    p.aiLevel.fold(u.fold(p.name | lidraughts.user.User.anonymous)(_.name))("lidraughts AI level " + _)
+    p.aiLevel.fold(u.fold(p.name | lidraughts.user.User.anonymous)(_.name))("Lidraughts AI level " + _)
 
   private val customStartPosition: Set[draughts.variant.Variant] =
     Set(draughts.variant.Russian, draughts.variant.Brazilian, draughts.variant.Frysk, draughts.variant.FromPosition)
@@ -76,6 +76,8 @@ final class PdnDump(
     val perf = game.perfType.fold("Standard")(_.name)
     game.tournamentId.map { id =>
       s"${game.mode} $perf tournament https://lidraughts.org/tournament/$id"
+    } orElse game.swissId.map { id =>
+      s"$perf swiss https://lidraughts.org/swiss/$id"
     } orElse game.simulId.map { id =>
       s"$perf simul https://lidraughts.org/simul/$id"
     } getOrElse {
