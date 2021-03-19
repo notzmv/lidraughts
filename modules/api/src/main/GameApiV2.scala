@@ -20,7 +20,8 @@ import lidraughts.user.User
 final class GameApiV2(
     pdnDump: PdnDump,
     swissApi: lidraughts.swiss.SwissApi,
-    getLightUser: LightUser.Getter
+    getLightUser: LightUser.Getter,
+    upgradeOngoingGame: Game => Fu[Game]
 )(implicit system: akka.actor.ActorSystem) {
 
   import GameApiV2._
@@ -94,7 +95,10 @@ final class GameApiV2(
       }
     }
 
-    games &> Enumeratee.mapM(enrich(config.flags)) &> formatterFor(config)
+    games &>
+      Enumeratee.mapM(upgradeOngoingGame) &>
+      Enumeratee.mapM(enrich(config.flags)) &>
+      formatterFor(config)
   }
 
   def exportByIds(config: ByIdsConfig): Enumerator[String] =
@@ -105,6 +109,7 @@ final class GameApiV2(
     ).bulkEnumerator() &>
       lidraughts.common.Iteratee.delay(1 second) &>
       Enumeratee.mapConcat(_.toSeq) &>
+      Enumeratee.mapM(upgradeOngoingGame) &>
       Enumeratee.mapM(enrich(config.flags)) &>
       formatterFor(config)
 

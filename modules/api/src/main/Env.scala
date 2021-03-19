@@ -15,6 +15,7 @@ final class Env(
     noteApi: lidraughts.round.NoteApi,
     forecastApi: lidraughts.round.ForecastApi,
     urgentGames: lidraughts.user.User => Fu[List[lidraughts.game.Pov]],
+    updateIfPresent: lidraughts.game.Game => Fu[lidraughts.game.Game],
     relationApi: lidraughts.relation.RelationApi,
     bookmarkApi: lidraughts.bookmark.BookmarkApi,
     tournamentApi: lidraughts.tournament.TournamentApi,
@@ -108,7 +109,8 @@ final class Env(
   val gameApiV2 = new GameApiV2(
     pdnDump = pdnDump,
     swissApi = swissEnv.api,
-    getLightUser = userEnv.lightUser
+    getLightUser = userEnv.lightUser,
+    upgradeOngoingGame = updateIfPresent
   )(system)
 
   val userGameApi = new UserGameApi(
@@ -176,6 +178,7 @@ object Env {
     noteApi = lidraughts.round.Env.current.noteApi,
     forecastApi = lidraughts.round.Env.current.forecastApi,
     urgentGames = lidraughts.round.Env.current.proxy.urgentGames,
+    updateIfPresent = lidraughts.round.Env.current.proxy.updateIfPresent,
     relationApi = lidraughts.relation.Env.current.api,
     bookmarkApi = lidraughts.bookmark.Env.current.api,
     tournamentApi = lidraughts.tournament.Env.current.api,
