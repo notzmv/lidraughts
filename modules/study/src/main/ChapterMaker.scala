@@ -111,7 +111,7 @@ private final class ChapterMaker(
     draughtsResult: Boolean
   ): Fu[Chapter] = for {
     root <- game2root(game, initialFen, draughtsResult)
-    tags <- pdnDump.tags(game, initialFen, none, withOpening = true, draughtsResult = draughtsResult, algebraic = false)
+    tags <- pdnDump.tags(game, initialFen, none, withOpening = true, algebraic = false)
     _ = notifyChat(study, game, userId)
   } yield Chapter.make(
     studyId = study.id,
