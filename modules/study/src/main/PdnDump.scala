@@ -2,7 +2,7 @@ package lidraughts.study
 
 import draughts.format.Forsyth
 import draughts.format.pdn.{ Pdn, Tag, Tags, Initial }
-import draughts.format.{ pdn => draughtsPdn }
+import draughts.format.{ pdn => draughtsPdn, FEN }
 import draughts.{ Centis, Color }
 import org.joda.time.format.DateTimeFormat
 
@@ -84,18 +84,28 @@ private[study] object PdnDump {
   private type Variations = Vector[Node]
   private val noVariations: Variations = Vector.empty
 
-  def node2move(node: Node, variations: Variations, turn: Color, whiteClock: Option[Centis], blackClock: Option[Centis]) = draughtsPdn.Move(
-    san = node.move.san,
-    turn = turn,
-    glyphs = node.glyphs,
-    comments = node.comments.list.map(_.text.value) ::: shapeComment(node.shapes).toList,
-    opening = none,
-    result = none,
-    variations = variations.map { child =>
-      toTurns(child.mainline, noVariations)
-    }(scala.collection.breakOut),
-    secondsLeft = (whiteClock.map(_.roundSeconds), blackClock.map(_.roundSeconds))
-  )
+  def node2move(node: Node, variations: Variations, turn: Color, whiteClock: Option[Centis], blackClock: Option[Centis], fenBefore: FEN) = {
+    val uci = node.move.uci
+    val pdnMove =
+      if (node.move.san.indexOf('x') == -1) node.move.san
+      else {
+        val situation = Forsyth << fenBefore.value
+        if (situation.fold(false)(_.ambiguitiesMove(uci.origDest._1, uci.origDest._2) > 1)) uci.toFullSan
+        else node.move.san
+      }
+    draughtsPdn.Move(
+      san = pdnMove,
+      turn = turn,
+      glyphs = node.glyphs,
+      comments = node.comments.list.map(_.text.value) ::: shapeComment(node.shapes).toList,
+      opening = none,
+      result = none,
+      variations = variations.map { child =>
+        toTurns(child.mainline, noVariations, node.fen)
+      }(scala.collection.breakOut),
+      secondsLeft = (whiteClock.map(_.roundSeconds), blackClock.map(_.roundSeconds))
+    )
+  }
 
   // [%csl Gb4,Yd5,Rf6][%cal Ge2e4,Ye2d4,Re2g4]
   private def shapeComment(shapes: Shapes): Option[String] = {
@@ -116,28 +126,30 @@ private[study] object PdnDump {
     s"$circles$arrows".some.filter(_.nonEmpty)
   }
 
-  def toTurn(first: Node, second: Option[Node], variations: Variations) = draughtsPdn.Turn(
+  def toTurn(first: Node, second: Option[Node], variations: Variations, fenBefore: FEN) = draughtsPdn.Turn(
     number = first.fullMoveNumber,
-    white = node2move(first, variations, Color.White, first.clock, second.flatMap(_.clock)).some,
-    black = second map { s => node2move(s, first.children.variations, Color.Black, first.clock, s.clock) }
+    white = node2move(first, variations, Color.White, first.clock, second.flatMap(_.clock), fenBefore).some,
+    black = second map { s => node2move(s, first.children.variations, Color.Black, first.clock, s.clock, first.fen) }
   )
 
-  def toTurns(root: Node.Root): List[draughtsPdn.Turn] = toTurns(root.mainline, root.children.variations)
+  def toTurns(root: Node.Root): List[draughtsPdn.Turn] = toTurns(root.mainline, root.children.variations, root.fen)
 
-  def toTurns(line: List[Node], variations: Variations): List[draughtsPdn.Turn] = (line match {
+  def toTurns(line: List[Node], variations: Variations, fenBefore: FEN): List[draughtsPdn.Turn] = (line match {
     case Nil => Nil
     case first :: rest if first.ply % 2 == 0 => draughtsPdn.Turn(
       number = 1 + (first.ply - 1) / 2,
       white = none,
-      black = node2move(first, variations, Color.Black, rest.headOption.flatMap(_.clock), first.clock).some
-    ) :: toTurnsFromWhite(rest, first.children.variations)
-    case l => toTurnsFromWhite(l, variations)
+      black = node2move(first, variations, Color.Black, rest.headOption.flatMap(_.clock), first.clock, fenBefore).some
+    ) :: toTurnsFromWhite(rest, first.children.variations, first.fen)
+    case l => toTurnsFromWhite(l, variations, fenBefore)
   }) filterNot (_.isEmpty)
 
-  def toTurnsFromWhite(line: List[Node], variations: Variations): List[draughtsPdn.Turn] =
-    (line grouped 2).foldLeft(variations -> List.empty[draughtsPdn.Turn]) {
-      case ((variations, turns), pair) => pair.headOption.fold(variations -> turns) { first =>
-        pair.lift(1).getOrElse(first).children.variations -> (toTurn(first, pair lift 1, variations) :: turns)
+  def toTurnsFromWhite(line: List[Node], variations: Variations, fenBefore: FEN): List[draughtsPdn.Turn] =
+    (line grouped 2).foldLeft((variations, List.empty[draughtsPdn.Turn], fenBefore)) {
+      case ((variations, turns, fen), pair) => pair.headOption.fold((variations, turns, fen)) { first =>
+        val second = pair lift 1
+        val nextFen = second.map(_.fen).getOrElse(first.fen)
+        (pair.lift(1).getOrElse(first).children.variations, toTurn(first, second, variations, fen) :: turns, nextFen)
       }
     }._2.reverse
 }
