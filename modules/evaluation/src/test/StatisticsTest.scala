@@ -3,7 +3,7 @@ package lidraughts.evaluation
 import org.specs2.mutable._
 
 import draughts.Centis
-import Statistics._
+import lidraughts.analyse.Statistics._
 
 class StatisticsTest extends Specification {
   "move times" should {

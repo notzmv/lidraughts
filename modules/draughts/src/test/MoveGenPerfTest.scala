@@ -3,7 +3,7 @@ package format
 
 class MoveGenPerfTest extends DraughtsTest {
 
-  args(skipAll = false)
+  args(skipAll = true)
 
   val captureFen = "W:WK23:B28,17,10,20,29,39,40,38,31,8,9"
   val extremeCaptureMan = "W:W23:B7,8,9,10,17,18,19,20,27,28,29,30,37,38,39,40"

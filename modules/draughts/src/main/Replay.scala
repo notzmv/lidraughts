@@ -98,7 +98,7 @@ object Replay {
   }
 
   def unambiguousPdnMoves(
-    moveStrs: Seq[String],
+    pdnMoves: Seq[String],
     initialFen: Option[String],
     variant: draughts.variant.Variant
   ): Valid[List[String]] = {
@@ -111,8 +111,8 @@ object Replay {
             err => (Nil, err.head.some),
             move => {
               val after = Situation.withColorAfter(move.afterWithLastMove(true), sit.color)
-              val ambiguities = move.situationBefore.ambiguitiesMove(move)
-              if (move.capture.fold(false)(_.length > 1) && ambiguities > ambs.length + 1)
+              val ambiguities = if (move.capture.fold(false)(_.length > 1)) move.situationBefore.ambiguitiesMove(move) else 0
+              if (ambiguities > ambs.length + 1)
                 newAmb = (san -> move.toUci.uci).some
               mk(after, rest, newAmb.fold(ambs)(_ :: ambs)) match {
                 case (next, msg) =>
@@ -128,7 +128,7 @@ object Replay {
     }
 
     val init = initialFenToSituation(initialFen.map(FEN), variant)
-    Parser.moves(moveStrs, variant).fold(
+    Parser.moves(pdnMoves, variant).fold(
       err => Nil -> err.head.some,
       moves => mk(init, moves.value, Nil)
     ) match {

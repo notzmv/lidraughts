@@ -65,17 +65,6 @@ case class Chapter(
     case _ => None
   }
 
-  def countAmbiguities(node: Node, path: Path): Int = root.nodeAtStrict(path) match {
-    case Some(tailNode) => Forsyth << tailNode.fen.value match {
-      case Some(situation) if situation.ghosts > 0 => {
-        val mergedNode = tailNode.mergeCapture(node)
-        root.nodeAtStrict(path.withoutLast).fold(if (path.withoutLast.ids.isEmpty) root.children.nodes else Vector[Node]()) { _.children.nodes } count { n => n.move.san == mergedNode.move.san && n.fen != mergedNode.fen }
-      }
-      case _ => 0
-    }
-    case _ => 0
-  }
-
   def addNode(node: Node, path: Path, newRelay: Option[Chapter.Relay] = None): Option[Chapter] =
     updateRoot {
       _.withChildren(_.addNodeAt(node, path))

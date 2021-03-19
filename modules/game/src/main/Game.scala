@@ -218,17 +218,20 @@ case class Game(
       )
   }
 
-  def pdnMovesConcat(fullCaptures: Boolean = false): PdnMoves = pdnMoves.foldLeft(Vector[String]()) {
-    (cMoves, curMove) =>
-      cMoves.lastOption match {
-        case Some(lastMove) =>
+  def pdnMovesConcat(fullCaptures: Boolean = false): PdnMoves = pdnMoves.foldLeft(Vector.empty[String]) {
+    (moves, curMove) =>
+      if (moves.isEmpty) moves :+ curMove
+      else {
+        val curX = curMove.indexOf('x')
+        if (curX == -1) moves :+ curMove
+        else {
+          val lastMove = moves.last
           val lastX = lastMove.lastIndexOf('x')
-          val curX = curMove.lastIndexOf('x')
-          if (lastX != -1 && curX != -1 && lastMove.takeRight(lastMove.length - lastX - 1) == curMove.take(curX)) {
+          if (lastX != -1 && lastMove.takeRight(lastMove.length - lastX - 1) == curMove.take(curX)) {
             val prefix = if (fullCaptures) lastMove else lastMove.take(lastX)
-            cMoves.dropRight(1) :+ (prefix + curMove.takeRight(curMove.length - curX))
-          } else cMoves :+ curMove
-        case _ => cMoves :+ curMove
+            moves.dropRight(1) :+ (prefix + curMove.takeRight(curMove.length - curX))
+          } else moves :+ curMove
+        }
       }
   }
 
