@@ -34,9 +34,17 @@ final class PdnDump(
           },
           moves => moves
         )
-        val moves = if (fenSituation.exists(_.situation.color.black)) ".." +: pdnMoves else pdnMoves
+        val moves =
+          if (flags.delayMoves > 0) pdnMoves dropRight flags.delayMoves
+          else pdnMoves
+        val moves2 =
+          if (algebraic) san2alg(moves, boardPos)
+          else moves
+        val moves3 =
+          if (fenSituation.exists(_.situation.color.black)) ".." +: moves2
+          else moves2
         makeTurns(
-          if (algebraic) san2alg(moves, boardPos) else moves,
+          moves3,
           fenSituation.map(_.fullMoveNumber) | 1,
           flags.clocks ?? ~game.bothClockStates(true),
           game.startColor
@@ -196,7 +204,8 @@ object PdnDump {
       literate: Boolean = false,
       draughtsResult: Boolean = true,
       algebraic: Boolean = false,
-      profileName: Boolean = false
+      profileName: Boolean = false,
+      delayMoves: Int = 0
   )
 
   def result(game: Game) =
