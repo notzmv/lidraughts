@@ -75,7 +75,7 @@ object Replay {
             move => {
               val newGame = g(move)
               val uci = move.toUci
-              if (iteratedCapts && move.capture.fold(false)(_.lengthCompare(1) > 0) && move.situationBefore.ambiguitiesMove(move) > 0)
+              if (iteratedCapts && move.capture.fold(false)(_.length > 1) && move.situationBefore.ambiguitiesMove(move) > ambs.length + 1)
                 newAmb = (san -> uci.uci).some
               mk(newGame, rest, if (newAmb.isDefined) newAmb.get :: ambs else ambs) match {
                 case (next, msg) => ((newGame, Uci.WithSan(uci, sanStr)) :: next, msg)
@@ -121,7 +121,7 @@ object Replay {
               move => {
                 val newGame = g(move, true)
                 val scanMove = move.toScanMove
-                if (move.capture.fold(false)(_.lengthCompare(1) > 0) && move.situationBefore.ambiguitiesMove(move) > 0)
+                if (iteratedCapts && move.capture.fold(false)(_.length > 1) && move.situationBefore.ambiguitiesMove(move) > ambs.length + 1)
                   newAmb = (uci -> move.toUci.uci).some
                 mk(newGame, rest, if (newAmb.isDefined) newAmb.get :: ambs else ambs) match {
                   case (next, msg) => (scanMove :: next, msg)

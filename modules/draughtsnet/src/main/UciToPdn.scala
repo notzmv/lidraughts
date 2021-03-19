@@ -24,7 +24,7 @@ private object UciToPdn {
           if (ambs.isEmpty) None else ambs.collect({ case (ambFrom, ambUci) if ambFrom == uci => ambUci }).some
         ) match {
             case scalaz.Success(move) =>
-              if (move.capture.fold(false)(_.lengthCompare(1) > 0) && move.situationBefore.ambiguitiesMove(move) > 0)
+              if (move.capture.fold(false)(_.length > 1) && move.situationBefore.ambiguitiesMove(move) > ambs.length + 1)
                 newAmb = (uci -> move.toUci.uci).some
               mk(move.situationAfter, rest, move :: moves, if (newAmb.isDefined) newAmb.get :: ambs else ambs)
             case _ => none

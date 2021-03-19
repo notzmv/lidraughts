@@ -148,7 +148,7 @@ object PdnImport {
             _ =>
               (none, true), // illegal move; stop here unless we can rewind to some notational ambiguity
             move => {
-              if (iteratedCapts && move.capture.fold(false)(_.lengthCompare(1) > 0) && move.situationBefore.ambiguitiesMove(move) > 0)
+              if (iteratedCapts && move.capture.fold(false)(_.length > 1) && move.situationBefore.ambiguitiesMove(move) > ambs.??(_.length) + 1)
                 newAmb = (san -> move.toUci.uci).some
               val game = prev.apply(move)
               val uci = move.toUci
