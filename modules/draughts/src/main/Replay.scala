@@ -77,7 +77,7 @@ object Replay {
               val uci = move.toUci
               if (iteratedCapts && move.capture.fold(false)(_.length > 1) && move.situationBefore.ambiguitiesMove(move) > ambs.length + 1)
                 newAmb = (san -> uci.uci).some
-              mk(newGame, rest, if (newAmb.isDefined) newAmb.get :: ambs else ambs) match {
+              mk(newGame, rest, newAmb.fold(ambs)(_ :: ambs)) match {
                 case (next, msg) => ((newGame, Uci.WithSan(uci, sanStr)) :: next, msg)
               }
             }
@@ -94,6 +94,46 @@ object Replay {
       moves => mk(init, moves.value zip moveStrs, Nil)
     ) match {
         case (games, err) => (init, games, err)
+      }
+  }
+
+  def unambiguousPdnMoves(
+    moveStrs: Seq[String],
+    initialFen: Option[String],
+    variant: draughts.variant.Variant
+  ): Valid[List[String]] = {
+
+    def mk(sit: Situation, moves: List[San], ambs: List[(San, String)]): (List[String], Option[ErrorMessage]) = {
+      var newAmb = none[(San, String)]
+      val res = moves match {
+        case san :: rest =>
+          san(sit, true, if (ambs.isEmpty) None else ambs.collect({ case (ambSan, ambUci) if ambSan == san => ambUci }).some).fold(
+            err => (Nil, err.head.some),
+            move => {
+              val after = Situation.withColorAfter(move.afterWithLastMove(true), sit.color)
+              val ambiguities = move.situationBefore.ambiguitiesMove(move)
+              if (move.capture.fold(false)(_.length > 1) && ambiguities > ambs.length + 1)
+                newAmb = (san -> move.toUci.uci).some
+              mk(after, rest, newAmb.fold(ambs)(_ :: ambs)) match {
+                case (next, msg) =>
+                  val san = if (ambiguities > 1) move.toFullSan else move.toSan
+                  (san :: next, msg)
+              }
+            }
+          )
+        case _ => (Nil, None)
+      }
+      if (res._2.isDefined && newAmb.isDefined) mk(sit, moves, newAmb.get :: ambs)
+      else res
+    }
+
+    val init = initialFenToSituation(initialFen.map(FEN), variant)
+    Parser.moves(moveStrs, variant).fold(
+      err => Nil -> err.head.some,
+      moves => mk(init, moves.value, Nil)
+    ) match {
+        case (_, Some(err)) => failureNel(err)
+        case (moves, _) => success(moves)
       }
   }
 
@@ -123,7 +163,7 @@ object Replay {
                 val scanMove = move.toScanMove
                 if (iteratedCapts && move.capture.fold(false)(_.length > 1) && move.situationBefore.ambiguitiesMove(move) > ambs.length + 1)
                   newAmb = (uci -> move.toUci.uci).some
-                mk(newGame, rest, if (newAmb.isDefined) newAmb.get :: ambs else ambs) match {
+                mk(newGame, rest, newAmb.fold(ambs)(_ :: ambs)) match {
                   case (next, msg) => (scanMove :: next, msg)
                 }
               }
@@ -188,7 +228,7 @@ object Replay {
     }
 
   private def initialFenToSituation(initialFen: Option[FEN], variant: draughts.variant.Variant): Situation = {
-    initialFen.flatMap { fen => Forsyth << fen.value } | Situation(draughts.variant.Standard)
+    initialFen.flatMap { fen => Forsyth << fen.value } | Situation(variant)
   } withVariant variant
 
   def boards(

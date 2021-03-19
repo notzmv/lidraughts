@@ -26,7 +26,7 @@ private object UciToPdn {
             case scalaz.Success(move) =>
               if (move.capture.fold(false)(_.length > 1) && move.situationBefore.ambiguitiesMove(move) > ambs.length + 1)
                 newAmb = (uci -> move.toUci.uci).some
-              mk(move.situationAfter, rest, move :: moves, if (newAmb.isDefined) newAmb.get :: ambs else ambs)
+              mk(move.situationAfter, rest, move :: moves, newAmb.fold(ambs)(_ :: ambs))
             case _ => none
           }
       case _ => (sit, moves).some

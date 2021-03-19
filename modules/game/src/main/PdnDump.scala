@@ -26,9 +26,17 @@ final class PdnDump(
     tagsFuture map { ts =>
       val turns = flags.moves ?? {
         val fenSituation = ts.fen.map(_.value) flatMap Forsyth.<<<
-        val moves2 = if (fenSituation.exists(_.situation.color.black)) ".." +: game.pdnMovesConcat else game.pdnMovesConcat
+        val pdnMovesFull = game.pdnMovesConcat(true)
+        val pdnMoves = draughts.Replay.unambiguousPdnMoves(pdnMovesFull, ts.fen.map(_.value), game.variant).fold(
+          err => {
+            logger.warn(s"Could not unambiguate moves of ${game.id}: $err")
+            shortenMoves(pdnMovesFull)
+          },
+          moves => moves
+        )
+        val moves = if (fenSituation.exists(_.situation.color.black)) ".." +: pdnMoves else pdnMoves
         makeTurns(
-          if (algebraic) san2alg(moves2, boardPos) else moves2,
+          if (algebraic) san2alg(moves, boardPos) else moves,
           fenSituation.map(_.fullMoveNumber) | 1,
           flags.clocks ?? ~game.bothClockStates(true),
           game.startColor
@@ -38,7 +46,17 @@ final class PdnDump(
     }
   }
 
-  private def san2alg(moves: PdnMoves, boardPos: draughts.BoardPos) = moves map { move =>
+  private def shortenMoves(moves: Seq[String]) = moves map { move =>
+    val x1 = move.indexOf("x")
+    if (x1 == -1) move
+    else {
+      val x2 = move.lastIndexOf("x")
+      if (x2 == x1 || x2 == -1) move
+      else move.slice(0, x1) + move.slice(x2, move.length)
+    }
+  }
+
+  private def san2alg(moves: Seq[String], boardPos: draughts.BoardPos) = moves map { move =>
     val capture = move.contains('x')
     val fields = if (capture) move.split("x") else move.split("-")
     val algebraicFields = fields.flatMap { boardPos.algebraic(_) }

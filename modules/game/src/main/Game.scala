@@ -218,14 +218,15 @@ case class Game(
       )
   }
 
-  def pdnMovesConcat: PdnMoves = pdnMoves.foldLeft(Vector[String]()) {
+  def pdnMovesConcat(fullCaptures: Boolean = false): PdnMoves = pdnMoves.foldLeft(Vector[String]()) {
     (cMoves, curMove) =>
       cMoves.lastOption match {
         case Some(lastMove) =>
           val lastX = lastMove.lastIndexOf('x')
           val curX = curMove.lastIndexOf('x')
           if (lastX != -1 && curX != -1 && lastMove.takeRight(lastMove.length - lastX - 1) == curMove.take(curX)) {
-            cMoves.dropRight(1) :+ (lastMove.take(lastX) + curMove.takeRight(curMove.length - curX))
+            val prefix = if (fullCaptures) lastMove else lastMove.take(lastX)
+            cMoves.dropRight(1) :+ (prefix + curMove.takeRight(curMove.length - curX))
           } else cMoves :+ curMove
         case _ => cMoves :+ curMove
       }
@@ -233,7 +234,7 @@ case class Game(
 
   def pdnMoves(color: Color): PdnMoves = {
     val pivot = if (color == startColor) 0 else 1
-    pdnMoves.zipWithIndex.collect {
+    pdnMovesConcat().zipWithIndex.collect {
       case (e, i) if (i % 2) == pivot => e
     }
   }
@@ -316,7 +317,7 @@ case class Game(
 
   private def pdnMovePrefix = if ((turnColor.white && situation.ghosts == 0) || (turnColor.black && situation.ghosts != 0)) "..." else ". "
   def lastMovePdn: Option[String] =
-    pdnMovesConcat.lastOption.map { san =>
+    pdnMovesConcat().lastOption.map { san =>
       (1 + (displayTurns - 1) / 2).toString +
         pdnMovePrefix +
         san
