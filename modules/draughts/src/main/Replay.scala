@@ -109,7 +109,7 @@ object Replay {
       var newAmb = none[(String, String)]
       val res = moves match {
         case uci :: rest => Uci.Move(uci) match {
-          case Some(uciMove) => Std(uciMove.orig, uciMove.dest, uciMove.capture.fold(false)(_.nonEmpty)).move(
+          case Some(uciMove) => Std(List(uciMove.orig, uciMove.dest), uciMove.capture.fold(false)(_.nonEmpty)).move(
             g.situation, true,
             if (ambs.isEmpty) None else ambs.collect({ case (ambFrom, ambUci) if ambFrom == uci => ambUci }).some,
             uciMove.capture
