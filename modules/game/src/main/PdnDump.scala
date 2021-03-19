@@ -26,7 +26,7 @@ final class PdnDump(
     tagsFuture map { ts =>
       val turns = flags.moves ?? {
         val fenSituation = ts.fen.map(_.value) flatMap Forsyth.<<<
-        val pdnMovesFull = game.pdnMovesConcat(true)
+        val pdnMovesFull = game.pdnMovesConcat(true).dropRight(if (game.imported && game.situation.ghosts > 1) 1 else game.situation.ghosts)
         val pdnMoves = draughts.Replay.unambiguousPdnMoves(pdnMovesFull, ts.fen.map(_.value), game.variant).fold(
           err => {
             logger.warn(s"Could not unambiguate moves of ${game.id}: $err")
