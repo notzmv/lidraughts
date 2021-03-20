@@ -32,7 +32,7 @@ import { getCompChild, nextGlyphSymbol } from './nodeFinder';
 import * as speech from './speech';
 import { AnalyseOpts, AnalyseData, ServerEvalData, Key, DgDests, JustCaptured, NvuiPlugin, Redraw } from './interfaces';
 import GamebookPlayCtrl from './study/gamebook/gamebookPlayCtrl';
-import { calcDests } from './study/gamebook/gamebookEmbed';
+import { calcDests, key2id } from './study/gamebook/gamebookEmbed';
 import { ctrl as treeViewCtrl, TreeView, findCurrentPath } from './treeView/treeView';
 
 const li = window.lidraughts;
@@ -326,10 +326,10 @@ export default class AnalyseCtrl {
         const nextUci = gamebook.nextUci();
         if (nextUci && nextUci.length >= 4) {
           this.node.captLen = nextUci.length / 2 - 1;
-          dests = "#" + this.node.captLen.toString() + dests.substr(2);
+          dests = '#' + this.node.captLen.toString() + dests.substr(2);
         }
       }
-      this.addDests(dests, this.path);
+      setTimeout(() => this.addDests(dests, this.path), 1);
     } else if (!this.embed && this.missingDests() && (this.node.destreq || 0) < 3) {
       if (defined(this.node.dests) && this.missingFullCaptureDests()) {
         this.node.dests = undefined; // prevent temporarily showing wrong dests
@@ -550,20 +550,22 @@ export default class AnalyseCtrl {
 
   private moreCaptures(boardFen: string): boolean {
      const fenParts = this.node.fen.split(':');
-     var fen = this.node.fen[0] + ":" + boardFen;
-     if (fenParts.length > 3) fen += ":" + fenParts.slice(3).join(':');
+     var fen = this.node.fen[0] + ':' + boardFen;
+     if (fenParts.length > 3) fen += ':' + fenParts.slice(3).join(':');
      const dests = calcDests(fen, this.data.game.variant);
-     return dests.length > 1 && dests[0] === "#";
+     return dests.length > 1 && dests[0] === '#';
   }
 
-  private gamebookMove(orig: Key, dest: Key, gamebook: GamebookPlayCtrl, capture?: JustCaptured): void {
-    const key2id = (key: Key) => String.fromCharCode(35 + parseInt(key) - 1),
-      ghosts = countGhosts(this.node.fen),
+  private gamebookMove(orig: Key, dest: Key, capture?: JustCaptured): void {
+    const gamebook = this.gamebookPlay();
+    if (!gamebook) return;
+
+    const ghosts = countGhosts(this.node.fen),
       uci: string = (ghosts == 0 || !this.node.uci) ? (orig + dest) : (this.node.uci + dest),
       boardFen = this.draughtsground.getFen(),
       continueCapture = capture && this.moreCaptures(boardFen),
       nextColor = continueCapture ? this.node.fen[0] : (this.node.fen[0] == 'W' ? 'B' : 'W'),
-      nextFen = nextColor + ":" +  boardFen;
+      nextFen = nextColor + ':' +  boardFen;
 
     let treeNode = continueCapture ? (ghosts === 0 ? gamebook.peekChild() : this.node) : gamebook.tryJump(uci, nextFen);
     if (treeNode) {
@@ -576,7 +578,7 @@ export default class AnalyseCtrl {
             if (!ghosts)
               treeNode.san = treeNode.san.substr(0, capt + 1) + parseInt(uci.substr(uci.length - 2, 2)).toString();
             else
-              treeNode.san = treeNode.san.substr(capt + 1) + "x" + parseInt(uci.substr(uci.length - 2, 2)).toString();
+              treeNode.san = treeNode.san.substr(capt + 1) + 'x' + parseInt(uci.substr(uci.length - 2, 2)).toString();
           }
         }
         if (!ghosts) {
@@ -600,7 +602,7 @@ export default class AnalyseCtrl {
           treeNode.fen += ":" + fenParts.slice(3).join(':');
         if (treeNode.captLen > 0) {
           treeNode.dests = calcDests(treeNode.fen, this.data.game.variant);
-          treeNode.dests = "#" + treeNode.captLen.toString() + treeNode.dests.substr(2);
+          treeNode.dests = '#' + treeNode.captLen.toString() + treeNode.dests.substr(2);
         } else
           treeNode.dests = undefined;
       }
@@ -610,7 +612,7 @@ export default class AnalyseCtrl {
           const nextChild = gamebook.peekNextChild();
           if (nextChild && nextChild.uci && nextChild.uci.length > 4) {
             treeNode.captLen = nextChild.uci.length / 2 - 1;
-            treeNode.dests = "#" + treeNode.captLen.toString() + treeNode.dests.substr(2);
+            treeNode.dests = '#' + treeNode.captLen.toString() + treeNode.dests.substr(2);
           }
         }
       }
@@ -629,9 +631,8 @@ export default class AnalyseCtrl {
     if (capture) this.justCaptured = capture;
     if (uci) move.uci = uci;
     if (this.practice) this.practice.onUserMove();
-    const gamebook = this.gamebookPlay();
-    if (this.embed && gamebook) {
-      this.gamebookMove(orig, dest, gamebook, capture);
+    if (this.embed && this.gamebookPlay()) {
+      this.gamebookMove(orig, dest, capture);
     } else {
       if (this.data.pref.fullCapture) move.fullCapture = true;
       this.socket.sendAnaMove(move, this.data.puzzleEditor);

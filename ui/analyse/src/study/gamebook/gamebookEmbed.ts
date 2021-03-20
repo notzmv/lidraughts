@@ -11,6 +11,10 @@ function key2piotr(key: Key) {
   return '';
 }
 
+export function key2id(key: Key) {
+  return String.fromCharCode(35 + parseInt(key) - 1);
+}
+
 export function calcDests(fen: string, variant: Variant): string {
 
   const pieces = read(fen),
