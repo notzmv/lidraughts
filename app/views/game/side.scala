@@ -67,9 +67,8 @@ object side {
             ),
             game.pdnImport.flatMap(_.date).map { date =>
               small(
-                "Imported",
                 game.pdnImport.flatMap(_.user).map { user =>
-                  trans.by(userIdLink(user.some, None, false))
+                  trans.pdnImportBy(userIdLink(user.some, None, false))
                 }
               )
             }
