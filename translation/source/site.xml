@@ -389,6 +389,7 @@
   <string name="fromPosition">From position</string>
   <string name="continueFromHere">Continue from here</string>
   <string name="toStudy">Study</string>
+  <string name="pdnImportBy">PDN import by %s</string>
   <string name="importGame">Import game</string>
   <string name="importGameExplanation">Paste a game PDN to get a browsable replay,
 computer analysis, game chat and shareable URL.</string>

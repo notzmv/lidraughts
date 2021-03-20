@@ -381,6 +381,7 @@
   <string name="fromPosition">Vanuit een stand</string>
   <string name="continueFromHere">Ga vanaf hier verder</string>
   <string name="toStudy">Studie</string>
+  <string name="pdnImportBy">PDN import van %s</string>
   <string name="importGame">Importeer partij</string>
   <string name="importGameExplanation">Wanneer je een PDN in het venster plakt dan krijg je een doorzoekbare replay,
 een computeranalyse, een chatbox bij de partij en een deelbare URL.</string>

@@ -97,7 +97,7 @@ object widgets {
         g.metadata.analysed option
           div(cls := "metadata text", dataIcon := "")(trans.computerAnalysisAvailable()),
         g.pdnImport.flatMap(_.user).map { user =>
-          div(cls := "metadata")("PDN import by ", userIdLink(user.some))
+          div(cls := "metadata")(trans.pdnImportBy(userIdLink(user.some)))
         }
       )
     )
