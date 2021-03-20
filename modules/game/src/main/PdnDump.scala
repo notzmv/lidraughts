@@ -26,16 +26,18 @@ final class PdnDump(
     tagsFuture map { ts =>
       val turns = flags.moves ?? {
         val fenSituation = ts.fen.map(_.value) flatMap Forsyth.<<<
-        val pdnMovesFull =
-          if (game.situation.ghosts != 0) game.pdnMovesConcat(true).dropRight(1)
-          else game.pdnMovesConcat(true)
-        val pdnMoves = draughts.Replay.unambiguousPdnMoves(pdnMovesFull, ts.fen.map(_.value), game.variant).fold(
-          err => {
-            logger.warn(s"Could not unambiguate moves of ${game.id}: $err")
-            shortenMoves(pdnMovesFull)
-          },
-          moves => moves
-        )
+        val pdnMovesFull = game.pdnMovesConcat(true, true)
+        val pdnMoves = draughts.Replay.unambiguousPdnMoves(
+          pdnMoves = pdnMovesFull,
+          initialFen = ts.fen.map(_.value),
+          variant = game.variant
+        ).fold(
+            err => {
+              logger.warn(s"Could not unambiguate moves of ${game.id}: $err")
+              shortenMoves(pdnMovesFull)
+            },
+            moves => moves
+          )
         val moves = flags keepDelayIf game.playable applyDelay pdnMoves
         val moves2 =
           if (algebraic) san2alg(moves, boardPos)

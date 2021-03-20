@@ -222,16 +222,25 @@ private[api] final class GameApi(
         .add("analysis" -> analysisOption.flatMap(analysisJson.player(g pov p.color)))
     }),
     "analysis" -> analysisOption.ifTrue(withFlags.analysis).map(analysisJson.moves(_)),
-    "moves" -> withFlags.moves.option(g.pdnMoves mkString " "),
+    "moves" -> withFlags.moves.option(
+      draughts.Replay.unambiguousPdnMoves(
+        pdnMoves = g.pdnMovesConcat(true, true),
+        initialFen = initialFen.map(_.value),
+        variant = g.variant
+      ).toOption map { moves =>
+          moves mkString " "
+        }
+    ),
     "opening" -> withFlags.opening.??(g.opening),
     "fens" -> (withFlags.fens && g.finished) ?? {
       draughts.Replay.boards(
-        moveStrs = g.pdnMoves,
+        moveStrs = g.pdnMovesConcat(true, true),
         initialFen = initialFen,
-        variant = g.variant
+        variant = g.variant,
+        finalSquare = true
       ).toOption map { boards =>
-        JsArray(boards map { draughts.format.Forsyth.exportBoard(_, withFlags.algebraic) } map JsString.apply)
-      }
+          JsArray(boards map { draughts.format.Forsyth.exportBoard(_, withFlags.algebraic) } map JsString.apply)
+        }
     },
     "winner" -> g.winnerColor.map(_.name),
     "url" -> makeUrl(g)
