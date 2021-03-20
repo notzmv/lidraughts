@@ -10,9 +10,9 @@ import V.FlatMap._
 trait DraughtsTest extends Specification with ValidationMatchers {
 
   def fenToGame(positionString: String, variant: Variant) = {
-    val situation = Forsyth << positionString
+    val situation = Forsyth.<<@(variant, positionString)
     situation map { sit =>
-      sit.color -> sit.withVariant(variant).board
+      sit.color -> sit.board
     } toValid "Could not construct situation from FEN" map {
       case (color, board) => DraughtsGame(variant).copy(
         situation = Situation(board, color)

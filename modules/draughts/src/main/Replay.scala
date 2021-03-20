@@ -1,7 +1,8 @@
 package draughts
 
 import format.pdn._
-import draughts.format.{ FEN, Forsyth, Uci }
+import format.{ FEN, Forsyth, Uci }
+import variant.Variant
 import scalaz.Validation.FlatMap._
 import scalaz.Validation.{ failureNel, success }
 
@@ -25,7 +26,7 @@ object Replay {
   def apply(
     moveStrs: Traversable[String],
     initialFen: Option[String],
-    variant: draughts.variant.Variant,
+    variant: Variant,
     finalSquare: Boolean
   ): Valid[Reader.Result] =
     moveStrs.some.filter(_.nonEmpty) toValid "[replay] pdn is empty" flatMap { nonEmptyMoves =>
@@ -51,7 +52,7 @@ object Replay {
   def games(
     moveStrs: Traversable[String],
     initialFen: Option[String],
-    variant: draughts.variant.Variant
+    variant: Variant
   ): Valid[List[DraughtsGame]] =
     Parser.moves(moveStrs, variant) flatMap { moves =>
       val game = makeGame(variant, initialFen)
@@ -62,7 +63,7 @@ object Replay {
   def gameMoveWhileValid(
     moveStrs: Seq[String],
     initialFen: String,
-    variant: draughts.variant.Variant,
+    variant: Variant,
     iteratedCapts: Boolean = false
   ): (DraughtsGame, List[(DraughtsGame, Uci.WithSan)], Option[ErrorMessage]) = {
 
@@ -100,7 +101,7 @@ object Replay {
   def unambiguousPdnMoves(
     pdnMoves: Seq[String],
     initialFen: Option[String],
-    variant: draughts.variant.Variant
+    variant: Variant
   ): Valid[List[String]] = {
 
     def mk(sit: Situation, moves: List[San], ambs: List[(San, String)]): (List[String], Option[ErrorMessage]) = {
@@ -140,7 +141,7 @@ object Replay {
   def exportScanMoves(
     uciMoves: Seq[String],
     initialFen: String,
-    variant: draughts.variant.Variant,
+    variant: Variant,
     debugId: String,
     iteratedCapts: Boolean = false
   ): List[String] = {
@@ -227,14 +228,13 @@ object Replay {
       }
     }
 
-  private def initialFenToSituation(initialFen: Option[FEN], variant: draughts.variant.Variant): Situation = {
-    initialFen.flatMap { fen => Forsyth << fen.value } | Situation(variant)
-  } withVariant variant
+  private def initialFenToSituation(initialFen: Option[FEN], variant: Variant): Situation =
+    initialFen.flatMap { fen => Forsyth.<<@(variant, fen.value) } | Situation(variant)
 
   def boards(
     moveStrs: Traversable[String],
     initialFen: Option[FEN],
-    variant: draughts.variant.Variant,
+    variant: Variant,
     finalSquare: Boolean = false
   ): Valid[List[Board]] = situations(moveStrs, initialFen, variant, finalSquare) map (_ map (_.board))
 
@@ -250,7 +250,7 @@ object Replay {
   def situations(
     moveStrs: Traversable[String],
     initialFen: Option[FEN],
-    variant: draughts.variant.Variant,
+    variant: Variant,
     finalSquare: Boolean = false
   ): Valid[List[Situation]] = {
     val sit = initialFenToSituation(initialFen, variant)
@@ -262,13 +262,13 @@ object Replay {
   def boardsFromUci(
     moves: List[Uci],
     initialFen: Option[FEN],
-    variant: draughts.variant.Variant
+    variant: Variant
   ): Valid[List[Board]] = situationsFromUci(moves, initialFen, variant) map (_ map (_.board))
 
   def situationsFromUci(
     moves: List[Uci],
     initialFen: Option[FEN],
-    variant: draughts.variant.Variant,
+    variant: Variant,
     finalSquare: Boolean = false
   ): Valid[List[Situation]] = {
     val sit = initialFenToSituation(initialFen, variant)
@@ -278,7 +278,7 @@ object Replay {
   def apply(
     moves: List[Uci],
     initialFen: Option[String],
-    variant: draughts.variant.Variant,
+    variant: Variant,
     finalSquare: Boolean = false
   ): Valid[Replay] =
     recursiveReplayFromUci(Replay(makeGame(variant, initialFen)), moves, finalSquare)
@@ -286,7 +286,7 @@ object Replay {
   def plyAtFen(
     moveStrs: Traversable[String],
     initialFen: Option[String],
-    variant: draughts.variant.Variant,
+    variant: Variant,
     atFen: String
   ): Valid[Int] =
     if (Forsyth.<<@(variant, atFen).isEmpty) failureNel(s"Invalid FEN $atFen")
@@ -317,7 +317,7 @@ object Replay {
       }
     }
 
-  private def makeGame(variant: draughts.variant.Variant, initialFen: Option[String]): DraughtsGame = {
+  private def makeGame(variant: Variant, initialFen: Option[String]): DraughtsGame = {
     val g = DraughtsGame(variant.some, initialFen)
     g.copy(startedAtTurn = g.turns)
   }
