@@ -21,7 +21,7 @@ final class PdnDump(
     val boardPos = game.variant.boardSize.pos
     val algebraic = flags.algebraic && boardPos.hasAlgebraic
     val tagsFuture =
-      if (flags.tags) tags(game, initialFen, imported, algebraic, flags.opening, flags.profileName, !hideRatings)
+      if (flags.tags) tags(game, initialFen, imported, flags.draughtsResult, algebraic, flags.opening, flags.profileName, !hideRatings)
       else fuccess(Tags(Nil))
     tagsFuture map { ts =>
       val turns = flags.moves ?? {
@@ -118,6 +118,7 @@ final class PdnDump(
     game: Game,
     initialFen: Option[FEN],
     imported: Option[ParsedPdn],
+    draughtsResult: Boolean,
     algebraic: Boolean,
     withOpening: Boolean,
     withProfileName: Boolean = false,
@@ -136,7 +137,7 @@ final class PdnDump(
         Tag(_.Round, imported.flatMap(_.tags(_.Round)) | "-").some,
         Tag(_.White, player(game.whitePlayer, wu)).some,
         Tag(_.Black, player(game.blackPlayer, bu)).some,
-        Tag(_.Result, result(game)).some,
+        Tag(_.Result, result(game, draughtsResult)).some,
         importedDate.isEmpty option Tag(_.UTCDate, imported.flatMap(_.tags(_.UTCDate)) | Tag.UTCDate.format.print(game.createdAt)),
         importedDate.isEmpty option Tag(_.UTCTime, imported.flatMap(_.tags(_.UTCTime)) | Tag.UTCTime.format.print(game.createdAt)),
         withRatings option Tag(_.WhiteElo, rating(game.whitePlayer)),
@@ -217,7 +218,7 @@ object PdnDump {
     def keepDelayIf(cond: Boolean) = copy(delayMoves = delayMoves && cond)
   }
 
-  def result(game: Game) =
-    if (game.finished) Color.showResult(game.winnerColor, false /* result 1-1 is also a move */ )
+  def result(game: Game, draughtsResult: Boolean) =
+    if (game.finished) Color.showResult(game.winnerColor, draughtsResult)
     else "*"
 }
