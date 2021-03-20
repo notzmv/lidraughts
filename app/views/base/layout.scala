@@ -37,7 +37,7 @@ object layout {
   private val manifests = raw(s"""<link rel="manifest" href="/manifest.json" />""")
 
   private val favicons = raw {
-    List(256, 128, 64) map { px =>
+    List(512, 256, 192, 128, 64) map { px =>
       s"""<link rel="icon" type="image/png" href="${staticUrl(s"favicon.$px.png")}" sizes="${px}x${px}">"""
     } mkString ("", "", s"""<link id="favicon" rel="icon" type="image/png" href="${staticUrl("images/favicon-32-white.png")}" sizes="32x32">""")
   }
