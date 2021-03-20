@@ -35,10 +35,10 @@ object embed {
             cls := "embedded",
             title := trans.clickToSolve.txt()
           )(
-            span(cls := "text")(trans.puzzleOfTheDay()),
-            raw(daily.html),
-            span(cls := "text")(daily.color.fold(trans.whitePlays, trans.blackPlays)())
-          ),
+              span(cls := "text")(trans.puzzleOfTheDay()),
+              raw(daily.html),
+              span(cls := "text")(daily.color.fold(trans.whitePlays, trans.blackPlays)())
+            ),
           jQueryTag,
           jsAt("javascripts/vendor/draughtsground.min.js", false),
           jsAt("compiled/puzzle.js", false)
