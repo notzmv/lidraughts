@@ -75,10 +75,7 @@ private[round] final class Rematcher(
     initialFen <- GameRepo initialFen pov.game
     situation = initialFen flatMap { fen => Forsyth <<< fen.value }
     pieces = pov.game.variant match {
-      /*case Chess960 =>
-        if (rematches getIfPresent pov.gameId isDefined) Chess960.pieces
-        else situation.fold(Chess960.pieces)(_.situation.board.pieces)*/
-      case FromPosition => situation.fold(Standard.pieces)(_.situation.board.pieces)
+      case FromPosition | Russian | Brazilian => situation.fold(pov.game.variant.pieces)(_.situation.board.pieces)
       case variant => variant.pieces
     }
     users <- UserRepo byIds pov.game.userIds
