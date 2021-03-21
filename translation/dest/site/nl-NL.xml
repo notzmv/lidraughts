@@ -486,7 +486,7 @@ een computeranalyse, een chatbox bij de partij en een deelbare URL.</string>
   <string name="boardEditor">Bordbewerker</string>
   <string name="setTheBoard">Zet het bord op</string>
   <string name="popularOpenings">Populaire openingen</string>
-  <string name="startPosition">Beginstelling</string>
+  <string name="startPosition">Beginstand</string>
   <string name="clearBoard">Maak het bord leeg</string>
   <string name="edit">Bewerken</string>
   <string name="save">Opslaan</string>
@@ -912,7 +912,7 @@ Een URL per regel</string>
   <string name="draughtsBasics">Basis dammen</string>
   <string name="invalidPdn">Ongeldige PDN</string>
   <string name="invalidFen">Ongeldige FEN</string>
-  <string name="invalidPosition">Ongeldige stand</string>
+  <string name="invalidPosition">Ongeldige positie</string>
   <string name="tooManyKings">Je kan niet tegen Scan spelen met meer dan 30 dammen op het bord.</string>
   <string name="error.minLength">Minimumlengte is %s tekens</string>
   <string name="error.maxLength">Maximumlengte is %s tekens</string>
