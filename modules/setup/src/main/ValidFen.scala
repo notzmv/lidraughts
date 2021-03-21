@@ -1,6 +1,7 @@
 package lidraughts.setup
 
 import draughts.format.{ FEN, Forsyth }
+import draughts.variant.Variant
 
 case class ValidFen(
     fen: FEN,
@@ -13,8 +14,8 @@ case class ValidFen(
 }
 
 object ValidFen {
-  def apply(strict: Boolean)(fen: String): Option[ValidFen] = for {
-    parsed ← Forsyth <<< fen
+  def apply(variant: Variant, strict: Boolean)(fen: String): Option[ValidFen] = for {
+    parsed ← Forsyth.<<<@(variant, fen)
     if (parsed.situation playable strict)
     validated = Forsyth >> parsed
   } yield ValidFen(FEN(validated), parsed.situation)

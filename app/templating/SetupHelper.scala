@@ -169,6 +169,11 @@ trait SetupHelper { self: I18nHelper with GameHelper =>
       variantTupleId(draughts.variant.Breakthrough) :+
       variantTupleId(draughts.variant.FromPosition)
 
+  def translatedFromPositionVariantChoices(implicit ctx: Context) =
+    translatedVariantChoices(ctx) :+
+      variantTupleId(draughts.variant.Russian) :+
+      variantTupleId(draughts.variant.Brazilian)
+
   def translatedVariantChoicesWithVariantsAndFen(implicit ctx: Context) =
     translatedVariantChoicesWithVariants :+
       variantTupleId(draughts.variant.FromPosition)

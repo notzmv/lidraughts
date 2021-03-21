@@ -55,13 +55,18 @@ private[setup] final class FormFactory(
   def friendFilled(fen: Option[FEN])(implicit ctx: UserContext): Fu[Form[FriendConfig]] =
     friendConfig map { config =>
       friend(ctx) fill fen.fold(config) { f =>
-        config.copy(fen = f.some, variant = draughts.variant.FromPosition)
+        config.copy(
+          fen = f.some,
+          variant = draughts.variant.FromPosition,
+          fenVariant = config.fenVariant
+        )
       }
     }
 
   def friend(ctx: UserContext) = Form(
     mapping(
       "variant" -> variantWithFenAndVariants,
+      "fenVariant" -> optional(fromPositionVariants),
       "timeMode" -> timeMode,
       "time" -> time,
       "increment" -> increment,

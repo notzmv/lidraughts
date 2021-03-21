@@ -195,7 +195,9 @@ module.exports = function(cfg, element) {
     var $casual = $modeChoices.eq(0),
       $rated = $modeChoices.eq(1);
     var $variantSelect = $form.find('#sf_variant');
+    var $fenVariantSelect = $form.find('#sf_fenVariant');
     var $fenPosition = $form.find(".fen_position");
+    var $fenVariant = $form.find(".fen_variant");
     var $timeInput = $form.find('.time_choice [name=time]');
     var $incrementInput = $form.find('.increment_choice [name=increment]');
     var $daysInput = $form.find('.days_choice [name=days]');
@@ -226,19 +228,27 @@ module.exports = function(cfg, element) {
     };
     var showRating = function() {
       var timeMode = $timeModeSelect.val();
+      let variantSelected = $variantSelect.val();
+      if (variantSelected == '3' && $fenVariantSelect.val() != '1') {
+        variantSelected = $fenVariantSelect.val();
+      }
       var key;
-      switch ($variantSelect.val()) {
+      switch (variantSelected) {
         case '1':
         case '3':
-          if (timeMode == '1') {
-            var time = $timeInput.val() * 60 + $incrementInput.val() * 50;
-            if (time < 30) key = 'ultraBullet';
-            else if (time < 180) key = 'bullet';
-            else if (time < 480) key = 'blitz';
-            else if (time < 1500) key = 'rapid';
-            else key = 'classical';
-          } else key = 'correspondence';
-          break;
+          if ($fenVariantSelect.val() != '1') {
+            // variant fromPosition: fall through to variant ratings
+          } else {
+            if (timeMode == '1') {
+              var time = $timeInput.val() * 60 + $incrementInput.val() * 50;
+              if (time < 30) key = 'ultraBullet';
+              else if (time < 180) key = 'bullet';
+              else if (time < 480) key = 'blitz';
+              else if (time < 1500) key = 'rapid';
+              else key = 'classical';
+            } else key = 'correspondence';
+            break;
+          }
         case '10':
           key = 'frisian';
           break;
@@ -369,8 +379,12 @@ module.exports = function(cfg, element) {
       $fenInput.removeClass("success failure");
       var fen = $fenInput.val();
       if (fen) {
+        let validateUrl = $fenInput.parent().data('validate-url');
+        if ($fenVariantSelect.val() != '1') {
+          validateUrl += (validateUrl.indexOf('?') !== -1 ? '&' : '?') + 'variant=' + $fenVariantSelect.val();
+        }
         $.ajax({
-          url: $fenInput.parent().data('validate-url'),
+          url: validateUrl,
           data: {
             fen: fen
           },
@@ -398,6 +412,7 @@ module.exports = function(cfg, element) {
     $variantSelect.on('change', function() {
       var fen = $(this).val() == '3';
       $fenPosition.toggle(fen);
+      $fenVariant.toggleClass('hidden', !fen);
       $modeChoicesWrap.toggle(!fen);
       if (fen) {
         $casual.click();
@@ -407,6 +422,10 @@ module.exports = function(cfg, element) {
       }
       showRating();
       toggleButtons();
+    }).trigger('change');
+    $fenVariantSelect.on('change', function() {
+      $fenInput.trigger('keyup');
+      showRating();
     }).trigger('change');
 
     $form.find('div.level').each(function() {

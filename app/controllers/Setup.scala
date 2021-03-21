@@ -6,6 +6,7 @@ import play.api.mvc.{ Result, Results }
 import scala.concurrent.duration._
 
 import draughts.format.FEN
+import draughts.variant.{ Variant, Standard }
 import lidraughts.api.{ Context, BodyContext }
 import lidraughts.app._
 import lidraughts.common.{ HTTPRequest, LidraughtsCookie, IpAddress }
@@ -43,7 +44,7 @@ object Setup extends LidraughtsController with TheftPrevention {
         html.setup.forms.ai(
           form,
           Env.draughtsnet.aiPerfApi.intRatings,
-          form("fen").value flatMap ValidFen(getBool("strict"))
+          form("fen").value flatMap ValidFen(draughts.variant.Standard, getBool("strict"))
         )
       }
     } else fuccess {
@@ -58,7 +59,8 @@ object Setup extends LidraughtsController with TheftPrevention {
   def friendForm(userId: Option[String]) = Open { implicit ctx =>
     if (HTTPRequest isXhr ctx.req)
       env.forms friendFilled get("fen").map(FEN) flatMap { form =>
-        val validFen = form("fen").value flatMap ValidFen(false)
+        val fenVariant = form("fenVariant").value.flatMap(parseIntOption).flatMap(Variant.apply) | Standard
+        val validFen = form("fen").value flatMap ValidFen(fenVariant, false)
         userId ?? UserRepo.named flatMap {
           case None => Ok(html.setup.forms.friend(form, none, none, validFen)).fuccess
           case Some(user) => Env.challenge.granter(ctx.me, user, none) map {
@@ -203,7 +205,8 @@ object Setup extends LidraughtsController with TheftPrevention {
   }
 
   def validateFen = Open { implicit ctx =>
-    get("fen") flatMap ValidFen(getBool("strict")) match {
+    val v = getInt("variant").flatMap(Variant.apply) | Standard
+    get("fen") flatMap ValidFen(v, getBool("strict")) match {
       case None => BadRequest.fuccess
       case Some(v) if getBool("kings") && v.tooManyKings => BadRequest.fuccess
       case Some(v) => Ok(html.game.bits.miniBoard(v.fen, v.color, v.boardSize)).fuccess
@@ -211,7 +214,8 @@ object Setup extends LidraughtsController with TheftPrevention {
   }
 
   def validateFenOk = Open { implicit ctx =>
-    get("fen") flatMap ValidFen(getBool("strict")) match {
+    val v = getInt("variant").flatMap(Variant.apply) | Standard
+    get("fen") flatMap ValidFen(v, getBool("strict")) match {
       case None => BadRequest("<p class=\"errortext\">" + lidraughts.i18n.I18nKeys.invalidPosition.txt() + "</p>").fuccess
       case Some(v) if getBool("kings") && v.tooManyKings => BadRequest("<p class=\"errortext\">" + lidraughts.i18n.I18nKeys.tooManyKings.txt() + "</p>").fuccess
       case Some(v) => Ok(html.game.bits.miniBoard(v.fen, v.color, v.boardSize)).fuccess

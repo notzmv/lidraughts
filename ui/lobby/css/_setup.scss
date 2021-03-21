@@ -43,6 +43,13 @@ $c-slider: $c-setup;
     &.variant {
       margin-bottom: .5em;
     }
+    &.fen_variant {
+      margin-top: -1em;
+      margin-bottom: .5em;
+      &.hidden {
+        display: none;
+      }
+    }
     label {
       flex: 0 0 33%;
       text-align: right;

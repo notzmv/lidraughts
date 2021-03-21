@@ -91,6 +91,7 @@ object forms {
           userLink(u, cssClass = "target".some)
         },
         renderVariant(form, translatedVariantChoicesWithVariantsAndFen),
+        renderFromPositionVariant(form, translatedFromPositionVariantChoices),
         fenInput(form("fen"), false, false, validFen),
         renderTimeMode(form, lidraughts.setup.FriendConfig),
         ctx.isAuth option div(cls := "mode_choice buttons")(

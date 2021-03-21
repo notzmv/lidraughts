@@ -8,6 +8,7 @@ import lidraughts.game.PerfPicker
 
 case class FriendConfig(
     variant: draughts.variant.Variant,
+    fenVariant: Option[draughts.variant.Variant],
     timeMode: TimeMode,
     time: Double,
     increment: Int,
@@ -19,7 +20,7 @@ case class FriendConfig(
 
   val strictFen = false
 
-  def >> = (variant.id, timeMode.id, time, increment, days, mode.id.some, color.name, fen.map(_.value)).some
+  def >> = (variant.id, fenVariant.map(_.id), timeMode.id, time, increment, days, mode.id.some, color.name, fen.map(_.value)).some
 
   def isPersistent = timeMode == TimeMode.Unlimited || timeMode == TimeMode.Correspondence
 
@@ -28,9 +29,10 @@ case class FriendConfig(
 
 object FriendConfig extends BaseHumanConfig {
 
-  def <<(v: Int, tm: Int, t: Double, i: Int, d: Int, m: Option[Int], c: String, fen: Option[String]) =
+  def <<(v: Int, v2: Option[Int], tm: Int, t: Double, i: Int, d: Int, m: Option[Int], c: String, fen: Option[String]) =
     new FriendConfig(
       variant = draughts.variant.Variant(v) err "Invalid game variant " + v,
+      fenVariant = v2 flatMap draughts.variant.Variant.apply,
       timeMode = TimeMode(tm) err s"Invalid time mode $tm",
       time = t,
       increment = i,
@@ -42,6 +44,7 @@ object FriendConfig extends BaseHumanConfig {
 
   val default = FriendConfig(
     variant = variantDefault,
+    fenVariant = none,
     timeMode = TimeMode.Unlimited,
     time = 5d,
     increment = 8,
@@ -60,6 +63,7 @@ object FriendConfig extends BaseHumanConfig {
 
     def reads(r: BSON.Reader): FriendConfig = FriendConfig(
       variant = draughts.variant.Variant orDefault (r int "v"),
+      fenVariant = (r intO "v2") flatMap draughts.variant.Variant.apply,
       timeMode = TimeMode orDefault (r int "tm"),
       time = r double "t",
       increment = r int "i",
@@ -71,6 +75,7 @@ object FriendConfig extends BaseHumanConfig {
 
     def writes(w: BSON.Writer, o: FriendConfig) = $doc(
       "v" -> o.variant.id,
+      "v2" -> o.fenVariant.map(_.id),
       "tm" -> o.timeMode.id,
       "t" -> o.time,
       "i" -> o.increment,
