@@ -143,7 +143,7 @@ function controls(ctrl, fen) {
       m('div.continue-with.none', [
         m('a.button', playWithMachineAttrs(ctrl, fen), ctrl.trans.noarg('playWithTheMachine')),
         m('a.button', {
-          href: '/?fen=' + fen + '&variant=' + ctrl.data.variant.key + '#friend',
+          href: '/?fen=' + toggleCoordinates(fen, ctrl.isAlgebraic()) + '&variant=' + ctrl.data.variant.key + '#friend',
           rel: 'nofollow'
         }, ctrl.trans.noarg('playWithAFriend'))
       ])

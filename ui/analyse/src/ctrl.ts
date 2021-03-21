@@ -1,5 +1,5 @@
 import { opposite } from 'draughtsground/util';
-import { countGhosts } from 'draughtsground/fen';
+import { countGhosts, toggleCoordinates } from 'draughtsground/fen';
 import { Api as DraughtsgroundApi } from 'draughtsground/api';
 import { DrawShape } from 'draughtsground/draw';
 import * as cg from 'draughtsground/types';
@@ -787,7 +787,7 @@ export default class AnalyseCtrl {
   }
 
   encodeNodeFen(): Fen {
-    return this.node.fen.replace(/\s/g, '_');
+    return toggleCoordinates(this.node.fen.replace(/\s/g, '_'), this.isAlgebraic());
   }
 
   currentEvals() {

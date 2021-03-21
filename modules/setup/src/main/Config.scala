@@ -1,7 +1,7 @@
 package lidraughts.setup
 
 import draughts.{ DraughtsGame, Situation, Clock, Speed }
-import draughts.variant.FromPosition
+import draughts.variant.{ FromPosition, Standard, Variant }
 import draughts.format.FEN
 
 import lidraughts.game.Game
@@ -53,14 +53,17 @@ trait Positional { self: Config =>
   import draughts.format.Forsyth, Forsyth.SituationPlus
 
   def fen: Option[FEN]
+  def fenVariant: Option[Variant]
 
   def strictFen: Boolean
 
-  lazy val validFen = variant != FromPosition || {
-    fen ?? { f => ~(Forsyth <<< f.value).map(_.situation playable strictFen) }
+  private def useFen = variant.fromPosition && Config.fromPositionVariants.contains((fenVariant | Standard).id)
+
+  lazy val validFen = !useFen || {
+    fen ?? { f => ~Forsyth.<<<@(fenVariant | Standard, f.value).map(_.situation playable strictFen) }
   }
 
-  lazy val validKingCount = variant != FromPosition || {
+  lazy val validKingCount = !useFen || {
     fen ?? { f => Forsyth.countKings(f.value) <= 30 }
   }
 
