@@ -94,7 +94,8 @@ object Setup extends LidraughtsController with TheftPrevention {
               import lidraughts.challenge.Challenge._
               val challenge = lidraughts.challenge.Challenge.make(
                 variant = config.variant,
-                initialFen = config.fen,
+                initialFen = config.variant.fromPosition ?? config.fen,
+                fenVariant = config.variant.fromPosition ?? config.fenVariant,
                 timeControl = config.makeClock map { c =>
                   TimeControl.Clock(c)
                 } orElse config.makeDaysPerTurn.map {

@@ -1,7 +1,7 @@
 package lidraughts.challenge
 
 import draughts.format.FEN
-import draughts.variant.{ Variant, FromPosition, Frysk }
+import draughts.variant.{ Variant, FromPosition }
 import draughts.{ Mode, Speed }
 import org.joda.time.DateTime
 
@@ -64,10 +64,12 @@ case class Challenge(
 
   def speed = speedOf(timeControl)
 
-  def notableInitialFen: Option[FEN] = variant match {
-    case FromPosition | Frysk => initialFen
-    case _ => none
-  }
+  def notableInitialFen: Option[FEN] =
+    customStartingPosition ?? initialFen
+
+  def customStartingPosition: Boolean =
+    variant.fromPosition ||
+      (fromPositionVariants(variant) && initialFen.isDefined && !initialFen.exists(_.value == variant.initialFen))
 
   def isExternal = external.isDefined
 
@@ -169,8 +171,16 @@ object Challenge {
   private def toRegistered(variant: Variant, timeControl: TimeControl)(u: User) =
     Registered(u.id, Rating(u.perfs(perfTypeOf(variant, timeControl))))
 
+  // NOTE: Only variants with standardInitialPosition = false!
+  private val fromPositionVariants = Set[Variant](
+    draughts.variant.FromPosition,
+    draughts.variant.Russian,
+    draughts.variant.Brazilian
+  )
+
   def make(
     variant: Variant,
+    fenVariant: Option[Variant],
     initialFen: Option[FEN],
     timeControl: TimeControl,
     mode: Mode,
@@ -186,26 +196,37 @@ object Challenge {
       case "black" => ColorChoice.Black -> draughts.Black
       case _ => ColorChoice.Random -> draughts.Color(scala.util.Random.nextBoolean)
     }
+    val finalVariant = fenVariant match {
+      case Some(v) if fromPositionVariants(variant) =>
+        if (variant.fromPosition && v.standard) FromPosition
+        else v
+      case _ => variant
+    }
+    val finalInitialFen =
+      fromPositionVariants(finalVariant) ?? {
+        initialFen.flatMap(fen => Forsyth.<<@(finalVariant, fen.value)).map(sit => FEN(Forsyth >> sit.withoutGhosts))
+      } match {
+        case fen @ Some(_) => fen
+        case _ => !finalVariant.standardInitialPosition option FEN(finalVariant.initialFen)
+      }
     val finalMode = timeControl match {
-      case TimeControl.Clock(clock) if !lidraughts.game.Game.allowRated(variant, clock) => Mode.Casual
+      case TimeControl.Clock(clock) if !lidraughts.game.Game.allowRated(finalVariant, clock) => Mode.Casual
       case _ => mode
     }
     new Challenge(
       _id = randomId,
       status = if (external) Status.External else Status.Created,
-      variant = variant,
-      initialFen =
-        if (variant == FromPosition) initialFen.flatMap(fen => Forsyth << fen.value).map(sit => FEN(Forsyth >> sit.withoutGhosts))
-        else !variant.standardInitialPosition option FEN(variant.initialFen),
+      variant = finalVariant,
+      initialFen = finalInitialFen,
       timeControl = timeControl,
       mode = finalMode,
       colorChoice = colorChoice,
       finalColor = finalColor,
       challenger = challenger.fold[EitherChallenger](
         sid => Left(Anonymous(sid)),
-        u => Right(toRegistered(variant, timeControl)(u))
+        u => Right(toRegistered(finalVariant, timeControl)(u))
       ),
-      destUser = destUser map toRegistered(variant, timeControl),
+      destUser = destUser map toRegistered(finalVariant, timeControl),
       rematchOf = rematchOf,
       createdAt = DateTime.now,
       seenAt = DateTime.now,

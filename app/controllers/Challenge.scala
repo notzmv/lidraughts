@@ -169,6 +169,7 @@ object Challenge extends LidraughtsController {
               import lidraughts.challenge.Challenge._
               val challenge = lidraughts.challenge.Challenge.make(
                 variant = config.variant,
+                fenVariant = none,
                 initialFen = config.position,
                 timeControl = config.clock map { c =>
                   TimeControl.Clock(c)
@@ -206,6 +207,7 @@ object Challenge extends LidraughtsController {
                   import lidraughts.challenge.Challenge._
                   val challenge = lidraughts.challenge.Challenge.make(
                     variant = config.variant,
+                    fenVariant = none,
                     initialFen = config.position,
                     timeControl = config.clock map { c =>
                       TimeControl.Clock(c)
