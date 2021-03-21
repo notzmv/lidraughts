@@ -16,16 +16,16 @@ private object bits {
     val url = field.value.fold(routes.Editor.index)(routes.Editor.parse).url
     div(cls := "fen_position optional_config")(
       frag(
-        div(cls := "fen_form", dataValidateUrl := s"""${routes.Setup.validateFen()}${strict.??("?strict=1")}${limitKings.??((if (strict) "&" else "?") + "kings=1")}""")(
+        div(cls := "fen_form", dataValidateUrl := s"""${routes.Setup.validateFenOk()}${strict.??("?strict=1")}${limitKings.??((if (strict) "&" else "?") + "kings=1")}""")(
           form3.input(field)(st.placeholder := trans.pasteTheFenStringHere.txt()),
           a(cls := "button button-empty", dataIcon := "m", title := trans.boardEditor.txt(), href := url)
         ),
         a(cls := "board_editor", href := url)(
           span(cls := "preview")(
-            validFen match {
-              case Some(vf) if limitKings && vf.tooManyKings =>
+            validFen map { vf =>
+              if (limitKings && vf.tooManyKings)
                 p(cls := "errortext")(trans.tooManyKings())
-              case Some(vf) =>
+              else {
                 val boardSize = vf.situation.board.boardSize
                 div(
                   cls := s"mini-board cg-wrap parse-fen is2d is${boardSize.key}",
@@ -34,8 +34,7 @@ private object bits {
                   dataBoard := s"${boardSize.width}x${boardSize.height}",
                   dataResizable := "1"
                 )(cgWrapContent)
-              case _ =>
-                p(cls := "errortext")("Invalid position")
+              }
             }
           )
         )

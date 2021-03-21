@@ -212,8 +212,8 @@ object Setup extends LidraughtsController with TheftPrevention {
 
   def validateFenOk = Open { implicit ctx =>
     get("fen") flatMap ValidFen(getBool("strict")) match {
-      case None => Ok("<p class=\"errortext\">Invalid position</p>").fuccess
-      case Some(v) if getBool("kings") && v.tooManyKings => Ok("<p class=\"errortext\">" + lidraughts.i18n.I18nKeys.tooManyKings.txt() + "</p>").fuccess
+      case None => BadRequest("<p class=\"errortext\">" + lidraughts.i18n.I18nKeys.invalidPosition.txt() + "</p>").fuccess
+      case Some(v) if getBool("kings") && v.tooManyKings => BadRequest("<p class=\"errortext\">" + lidraughts.i18n.I18nKeys.tooManyKings.txt() + "</p>").fuccess
       case Some(v) => Ok(html.game.bits.miniBoard(v.fen, v.color, v.boardSize)).fuccess
     }
   }

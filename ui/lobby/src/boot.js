@@ -375,20 +375,22 @@ module.exports = function(cfg, element) {
             fen: fen
           },
           success: function(data) {
-            $fenInput.addClass("success");
+            $fenInput.addClass('success');
             $fenPosition.find('.preview').html(data);
             $fenPosition.find('a.board_editor').each(function() {
-              $(this).attr('href', $(this).attr('href').replace(/editor\/.+$/, "editor/" + fen));
+              $(this).attr('href', $(this).attr('href').replace(/editor\/.+$/, 'editor/' + fen));
             });
             $submits.removeClass('nope');
             lidraughts.pubsub.emit('content_loaded');
           },
-          error: function() {
-            $fenInput.addClass("failure");
-            $fenPosition.find('.preview').html("");
+          error: function(res) {
+            $fenInput.addClass('failure');
+            $fenPosition.find('.preview').html(res.responseText || '');
             $submits.addClass('nope');
           }
         });
+      } else {
+        $fenPosition.find('.preview').html('');
       }
     }, 200);
     $fenInput.on('keyup', validateFen);

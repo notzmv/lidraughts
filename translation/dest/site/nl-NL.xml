@@ -912,6 +912,7 @@ Een URL per regel</string>
   <string name="draughtsBasics">Basis dammen</string>
   <string name="invalidPdn">Ongeldige PDN</string>
   <string name="invalidFen">Ongeldige FEN</string>
+  <string name="invalidPosition">Ongeldige stand</string>
   <string name="tooManyKings">Je kan niet tegen Scan spelen met meer dan 30 dammen op het bord.</string>
   <string name="error.minLength">Minimumlengte is %s tekens</string>
   <string name="error.maxLength">Maximumlengte is %s tekens</string>
