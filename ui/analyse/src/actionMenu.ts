@@ -157,7 +157,7 @@ export function view(ctrl: AnalyseCtrl): VNode {
   const d = ctrl.data,
     noarg = ctrl.trans.noarg,
     isOngoing = ctrl.ongoing || (ctrl.study && ctrl.study.isInternalRelay()),
-    canContinue = !isOngoing && !ctrl.embed && d.game.variant.key === 'standard' && !d.puzzleEditor,
+    canContinue = !isOngoing && !ctrl.embed && !d.puzzleEditor && (d.game.variant.key === 'standard' || d.game.variant.key === 'russian' || d.game.variant.key === 'brazilian'),
     canPuzzleEditor = !d.puzzleEditor && d.toPuzzleEditor && (d.game.variant.key === 'standard' || d.game.variant.key === 'frisian' || d.game.variant.key === 'russian'),
     ceval = ctrl.getCeval(),
     mandatoryCeval = ctrl.mandatoryCeval();
@@ -320,6 +320,16 @@ export function view(ctrl: AnalyseCtrl): VNode {
     }, ctrl)
   ];
 
+  const playWithMachineAttrs = function() {
+    let attrs : any = {
+      rel: 'nofollow'
+    };
+    if (d.game.variant.key === 'standard') {
+      attrs.href = d.userAnalysis ? '/?fen=' + ctrl.encodeNodeFen() + '#ai' : contRoute(d, 'ai') + '?fen=' + ctrl.node.fen;
+    }
+    return attrs;
+  }
+
   const standardTools = tools.concat(notationConfig);
   return h('div.action-menu',
     (d.puzzleEditor ? standardTools.concat(puzzleTools) : standardTools)
@@ -328,15 +338,14 @@ export function view(ctrl: AnalyseCtrl): VNode {
       .concat([
         deleteButton(ctrl, ctrl.opts.userId),
         canContinue ? h('div.continue-with.none.g_' + d.game.id, [
-          h('a.button', {
-            attrs: {
-              href: d.userAnalysis ? '/?fen=' + ctrl.encodeNodeFen() + '#ai' : contRoute(d, 'ai') + '?fen=' + ctrl.node.fen,
-              rel: 'nofollow'
-            }
+          h('a.button' + (d.game.variant.key === 'standard' ? '' : '.disabled'), {
+            attrs: playWithMachineAttrs()
           }, noarg('playWithTheMachine')),
           h('a.button', {
             attrs: {
-              href: d.userAnalysis ? '/?fen=' + ctrl.encodeNodeFen() + '#friend' : contRoute(d, 'friend') + '?fen=' + ctrl.node.fen,
+              href: d.userAnalysis ? 
+                '/?fen=' + ctrl.encodeNodeFen() + '&variant=' + d.game.variant.key + '#friend' : 
+                contRoute(d, 'friend') + '?fen=' + ctrl.node.fen,
               rel: 'nofollow'
             }
           }, noarg('playWithAFriend'))

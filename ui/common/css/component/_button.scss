@@ -9,7 +9,8 @@
   @include transition();
   white-space: nowrap;
   &,
-  &:visited {
+  &:visited,
+  &.disabled:hover {
     color: $c-primary-over;
   }
   &:not(.disabled):hover {

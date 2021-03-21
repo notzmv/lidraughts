@@ -12,13 +12,15 @@ private object bits {
 
   val prefix = "sf_"
 
-  def fenInput(field: Field, strict: Boolean, limitKings: Boolean, validFen: Option[lidraughts.setup.ValidFen])(implicit ctx: Context) = {
-    val url = field.value.fold(routes.Editor.index)(routes.Editor.parse).url
+  def fenInput(form: Form[_], strict: Boolean, limitKings: Boolean, validFen: Option[lidraughts.setup.ValidFen], fenVariants: Option[List[SelectChoice]])(implicit ctx: Context) = {
+    val field = form("fen")
+    val fenVariant = validFen.map(_.variant) | draughts.variant.Standard
+    val url = field.value.fold(routes.Editor.parse(fenVariant.key))(v => routes.Editor.parse(s"${fenVariant.key}/$v")).url
     div(cls := "fen_position optional_config")(
       frag(
         div(cls := "fen_form", dataValidateUrl := s"""${routes.Setup.validateFenOk()}${strict.??("?strict=1")}${limitKings.??((if (strict) "&" else "?") + "kings=1")}""")(
           form3.input(field)(st.placeholder := trans.pasteTheFenStringHere.txt()),
-          a(cls := "button button-empty", dataIcon := "m", title := trans.boardEditor.txt(), href := url)
+          a(cls := "button button-empty editor_button", dataIcon := "m", title := trans.boardEditor.txt(), href := url)
         ),
         a(cls := "board_editor", href := url)(
           span(cls := "preview")(
@@ -37,7 +39,8 @@ private object bits {
               }
             }
           )
-        )
+        ),
+        fenVariants.map(renderFromPositionVariant(form, _))
       )
     )
   }
@@ -50,7 +53,7 @@ private object bits {
 
   def renderFromPositionVariant(form: Form[_], variants: List[SelectChoice])(implicit ctx: Context) =
     div(cls := "fen_variant label_select hidden")(
-      renderLabel(form("fenVariant"), emptyFrag),
+      renderLabel(form("fenVariant"), trans.variant()),
       renderSelect(form("fenVariant"), variants)
     )
 

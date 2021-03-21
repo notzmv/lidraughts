@@ -58,7 +58,7 @@ object Setup extends LidraughtsController with TheftPrevention {
 
   def friendForm(userId: Option[String]) = Open { implicit ctx =>
     if (HTTPRequest isXhr ctx.req)
-      env.forms friendFilled get("fen").map(FEN) flatMap { form =>
+      env.forms.friendFilled(get("fen").map(FEN), get("variant").flatMap(Variant.apply)) flatMap { form =>
         val fenVariant = form("fenVariant").value.flatMap(parseIntOption).flatMap(Variant.apply) | Standard
         val validFen = form("fen").value flatMap ValidFen(fenVariant, false)
         userId ?? UserRepo.named flatMap {
@@ -206,7 +206,7 @@ object Setup extends LidraughtsController with TheftPrevention {
   }
 
   def validateFen = Open { implicit ctx =>
-    val v = getInt("variant").flatMap(Variant.apply) | Standard
+    val v = get("variant").flatMap(Variant.apply) | Standard
     get("fen") flatMap ValidFen(v, getBool("strict")) match {
       case None => BadRequest.fuccess
       case Some(v) if getBool("kings") && v.tooManyKings => BadRequest.fuccess
@@ -215,7 +215,7 @@ object Setup extends LidraughtsController with TheftPrevention {
   }
 
   def validateFenOk = Open { implicit ctx =>
-    val v = getInt("variant").flatMap(Variant.apply) | Standard
+    val v = get("variant").flatMap(Variant.apply) | Standard
     get("fen") flatMap ValidFen(v, getBool("strict")) match {
       case None => BadRequest("<p class=\"errortext\">" + lidraughts.i18n.I18nKeys.invalidPosition.txt() + "</p>").fuccess
       case Some(v) if getBool("kings") && v.tooManyKings => BadRequest("<p class=\"errortext\">" + lidraughts.i18n.I18nKeys.tooManyKings.txt() + "</p>").fuccess

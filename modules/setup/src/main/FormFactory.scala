@@ -52,13 +52,13 @@ private[setup] final class FormFactory(
 
   def aiConfig(implicit ctx: UserContext): Fu[AiConfig] = savedConfig map (_.ai)
 
-  def friendFilled(fen: Option[FEN])(implicit ctx: UserContext): Fu[Form[FriendConfig]] =
+  def friendFilled(fen: Option[FEN], fenVariant: Option[Variant])(implicit ctx: UserContext): Fu[Form[FriendConfig]] =
     friendConfig map { config =>
       friend(ctx) fill fen.fold(config) { f =>
         config.copy(
           fen = f.some,
           variant = draughts.variant.FromPosition,
-          fenVariant = config.fenVariant
+          fenVariant = if (fenVariant.isDefined) fenVariant else config.fenVariant
         )
       }
     }

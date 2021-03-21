@@ -58,6 +58,10 @@ $c-challenge: $c-secondary;
       color: $c-challenge;
       text-transform: uppercase;
     }
+    .variant_info {
+      font-size: 0.85em;
+      font-style: italic;
+    }
   }
   .follow-up .button {
     display: block;

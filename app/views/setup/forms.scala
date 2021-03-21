@@ -50,7 +50,7 @@ object forms {
     layout(form, "ai", trans.playWithTheMachine(), routes.Setup.ai) {
       frag(
         renderVariant(form, translatedAiVariantChoices),
-        fenInput(form("fen"), true, true, validFen),
+        fenInput(form, true, true, validFen, none),
         renderTimeMode(form, lidraughts.setup.AiConfig),
         if (ctx.blind) frag(
           renderLabel(form("level"), trans.level()),
@@ -91,8 +91,7 @@ object forms {
           userLink(u, cssClass = "target".some)
         },
         renderVariant(form, translatedVariantChoicesWithVariantsAndFen),
-        renderFromPositionVariant(form, translatedFromPositionVariantChoices),
-        fenInput(form("fen"), false, false, validFen),
+        fenInput(form, false, false, validFen, translatedFromPositionVariantChoices.some),
         renderTimeMode(form, lidraughts.setup.FriendConfig),
         ctx.isAuth option div(cls := "mode_choice buttons")(
           renderRadios(form("mode"), translatedModeChoices)

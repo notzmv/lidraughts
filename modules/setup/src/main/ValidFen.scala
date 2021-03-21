@@ -9,6 +9,7 @@ case class ValidFen(
 ) {
 
   def color = situation.color
+  def variant = situation.board.variant
   def boardSize = situation.board.boardSize
   def tooManyKings = Forsyth.countKings(fen.value) > 30
 }
