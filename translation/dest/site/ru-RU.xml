@@ -617,6 +617,7 @@
   <string name="drawVsYInZ">%1$s в %3$s с %2$s</string>
   <string name="timeline">Хронология</string>
   <string name="seeAllTournaments">Посмотреть все турниры</string>
+  <string name="start">Начать</string>
   <string name="starting">Начинается:</string>
   <string name="allInformationIsPublicAndOptional">Вся указываемая здесь информация будет доступна публично, добавляйте её по своему желанию.</string>
   <string name="yourCityRegionOrDepartment">Ваш город, область или округ.</string>
@@ -707,6 +708,7 @@
   <string name="simulClockHint">Настройка часов Фишера. Чем больше игроков играет против вас, тем больше времени вам может понадобится.</string>
   <string name="simulAddExtraTime">Вы можете взять себе дополнительное время на обдумывание партий.</string>
   <string name="simulHostExtraTime">Дополнительное время сеансёра</string>
+  <string name="everyone">Все</string>
   <string name="lidraughtsTournaments">Турниры Lidraughts</string>
   <string name="tournamentFAQ">Вопросы и ответы про Арену</string>
   <string name="tournamentOfficial">Официальный</string>

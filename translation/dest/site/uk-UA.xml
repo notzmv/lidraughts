@@ -443,6 +443,7 @@
   <string name="popularOpenings">Популярні дебюти</string>
   <string name="startPosition">Початкова позиція</string>
   <string name="clearBoard">Очистити дошку</string>
+  <string name="save">Зберегти</string>
   <string name="savePosition">Зберегти позицію</string>
   <string name="loadPosition">Завантажiти позицiю</string>
   <string name="isPrivate">Приватний</string>
@@ -595,6 +596,7 @@
   <string name="drawVsYInZ">%1$s проти %2$s в %3$s</string>
   <string name="timeline">Смуга подій</string>
   <string name="seeAllTournaments">Дивитися усі турніри</string>
+  <string name="start">Почати</string>
   <string name="starting">Початок:</string>
   <string name="allInformationIsPublicAndOptional">Уся інформація публічна та необов\'язкова.</string>
   <string name="yourCityRegionOrDepartment">Ваше місто, область або район.</string>
@@ -681,6 +683,7 @@
   <string name="simulClockHint">Налаштування Фішера. Більша кількість учасників – більше часу для сеансера.</string>
   <string name="simulAddExtraTime">Ви можете додати собі час, щоб упоратися з сеансом.</string>
   <string name="simulHostExtraTime">Додатковий час для сеансера</string>
+  <string name="everyone">Кожний</string>
   <string name="lidraughtsTournaments">Турніри Lidraughts</string>
   <string name="tournamentFAQ">FAQ сторінки турнірів</string>
   <string name="tournamentOfficial">Офіційний</string>

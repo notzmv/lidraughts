@@ -17,23 +17,23 @@
   <string name="mostPopular">Найпопулярніші</string>
   <string name="addNewChapter">Додати новий розділ</string>
   <plurals name="nbChapters">
-    <item quantity="one">%s розділ</item>
-    <item quantity="few">%s розділи</item>
-    <item quantity="many">%s розділів</item>
-    <item quantity="other">%s розділа</item>
+    <item quantity="one">%s Розділ</item>
+    <item quantity="few">%s Розділи</item>
+    <item quantity="many">%s Розділів</item>
+    <item quantity="other">%s Розділа</item>
   </plurals>
   <plurals name="nbGames">
-    <item quantity="one">%s гра</item>
-    <item quantity="few">%s гри</item>
-    <item quantity="many">%s ігор</item>
-    <item quantity="other">%s гри</item>
+    <item quantity="one">%s Гра</item>
+    <item quantity="few">%s Гри</item>
+    <item quantity="many">%s Ігор</item>
+    <item quantity="other">%s Гри</item>
   </plurals>
   <string name="addMembers">Додати учасників</string>
   <plurals name="nbMembers">
-    <item quantity="one">%s учасник</item>
-    <item quantity="few">%s учасники</item>
-    <item quantity="many">%s учасників</item>
-    <item quantity="other">%s учасників</item>
+    <item quantity="one">%s Учасник</item>
+    <item quantity="few">%s Учасники</item>
+    <item quantity="many">%s Учасників</item>
+    <item quantity="other">%s Учасників</item>
   </plurals>
   <string name="inviteToTheStudy">Запросити до дослідження</string>
   <string name="pleaseOnlyInvitePeopleYouKnow">Будь ласка запрошуйте лише людей, яких ви знаєте, і які хочуть активно долучитися до цього дослідження.</string>

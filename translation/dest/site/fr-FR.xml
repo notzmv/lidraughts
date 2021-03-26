@@ -398,6 +398,7 @@ consulter l\'analyse de l\'ordinateur, utiliser le tchat et partager le lien.</s
   <string name="popularOpenings">Ouvertures populaires</string>
   <string name="startPosition">Position de départ</string>
   <string name="clearBoard">Vider l\'échiquier</string>
+  <string name="save">Enregistrer</string>
   <string name="savePosition">Enregistrer la position</string>
   <string name="loadPosition">Charger une position</string>
   <string name="isPrivate">Privé</string>
@@ -546,6 +547,7 @@ consulter l\'analyse de l\'ordinateur, utiliser le tchat et partager le lien.</s
   <string name="drawVsYInZ">%1$s contre %2$s en %3$s</string>
   <string name="timeline">Activité</string>
   <string name="seeAllTournaments">Voir tous les tournois</string>
+  <string name="start">Commencer</string>
   <string name="starting">Démarrage :</string>
   <string name="allInformationIsPublicAndOptional">Toutes les informations sont publiques et facultatives.</string>
   <string name="yourCityRegionOrDepartment">Votre ville, région ou département.</string>
@@ -634,6 +636,7 @@ consulter l\'analyse de l\'ordinateur, utiliser le tchat et partager le lien.</s
   <string name="simulClockHint">Configuration de la cadence Fischer. Plus il y a d\'adversaires, plus vous pourriez avoir besoin de temps.</string>
   <string name="simulAddExtraTime">Vous pouvez ajouter du temps supplémentaire à votre pendule pour gérer la simultanée.</string>
   <string name="simulHostExtraTime">Temps supplémentaire de l\'hôte</string>
+  <string name="everyone">Tout le monde</string>
   <string name="lidraughtsTournaments">Tournois Lidraughts</string>
   <string name="tournamentFAQ">FAQ des tournois</string>
   <string name="tournamentOfficial">Officiel</string>

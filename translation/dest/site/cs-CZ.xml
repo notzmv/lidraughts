@@ -112,7 +112,25 @@
   <string name="claimADraw">Reklamovat remízu</string>
   <string name="offerDraw">Nabídnout remízu</string>
   <string name="draw">Remíza</string>
+  <plurals name="nbPlayers">
+    <item quantity="one">%s hráč online</item>
+    <item quantity="few">%s hráči online</item>
+    <item quantity="many">%s hráčů online</item>
+    <item quantity="other">%s hráčů online</item>
+  </plurals>
   <string name="currentGames">Právě probíhající partie</string>
+  <plurals name="nbGames">
+    <item quantity="one">%s partie</item>
+    <item quantity="few">%s partie</item>
+    <item quantity="many">%s partií</item>
+    <item quantity="other">%s partií</item>
+  </plurals>
+  <plurals name="nbBookmarks">
+    <item quantity="one">%s záložka</item>
+    <item quantity="few">%s záložky</item>
+    <item quantity="many">%s záložek</item>
+    <item quantity="other">%s záložek</item>
+  </plurals>
   <string name="viewInFullSize">Zobrazit v plné velikosti</string>
   <string name="logOut">Odhlásit se</string>
   <string name="signIn">Přihlásit se</string>
@@ -330,6 +348,8 @@ získáte počítačovou analýzu, chat ke hře a URL ke sdílení hry.</string>
   <string name="membersOnly">Hrát pouze s registrovanými</string>
   <string name="popularOpenings">Populární zahájení</string>
   <string name="startPosition">Základní postavení</string>
+  <string name="clearBoard">Prázdná šachovnice</string>
+  <string name="save">Uložit</string>
   <string name="savePosition">Uložit pozici</string>
   <string name="loadPosition">Nahrát pozici</string>
   <string name="isPrivate">Soukromý</string>
@@ -473,6 +493,7 @@ získáte počítačovou analýzu, chat ke hře a URL ke sdílení hry.</string>
   <string name="drawVsYInZ">%1$s proti %2$s v %3$s</string>
   <string name="timeline">Timeline</string>
   <string name="seeAllTournaments">Zobrazit všechny turnaje</string>
+  <string name="start">Začít</string>
   <string name="starting">Začíná:</string>
   <string name="allInformationIsPublicAndOptional">Všechny informace jsou veřejné a nepovinné.</string>
   <string name="yourCityRegionOrDepartment">Vaše město, nebo region.</string>
@@ -551,6 +572,7 @@ získáte počítačovou analýzu, chat ke hře a URL ke sdílení hry.</string>
   <string name="simulClockHint">Nastavení Fisherových hodin. Čím víc hráčů přijmete, tím víc času budete potřebovat.</string>
   <string name="simulAddExtraTime">Můžete si přidat více času, abyste  tu simultánku lépe zvládli.</string>
   <string name="simulHostExtraTime">Hostův bonusový čas</string>
+  <string name="everyone">Kdokoli</string>
   <string name="lidraughtsTournaments">Lidraughts turnaje</string>
   <string name="tournamentFAQ">Arena turnaj - často kladené otázky</string>
   <string name="tournamentOfficial">oficiální</string>

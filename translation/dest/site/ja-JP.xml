@@ -383,6 +383,7 @@
   <string name="popularOpenings">人気のオープニング</string>
   <string name="startPosition">開始局面</string>
   <string name="clearBoard">盤面をクリアする</string>
+  <string name="save">保存</string>
   <string name="savePosition">盤面を保存</string>
   <string name="loadPosition">局面を読み込む</string>
   <string name="isPrivate">プライベート</string>
@@ -535,6 +536,7 @@
   <string name="defeatVsYInZ">%1$s 対 %2$s、%3$s で</string>
   <string name="drawVsYInZ">%1$s 対 %2$s、%3$s で</string>
   <string name="timeline">タイムライン</string>
+  <string name="start">開始</string>
   <string name="starting">開始時刻：</string>
   <string name="allInformationIsPublicAndOptional">情報の記入はすべて任意で、すべて公開されます。</string>
   <string name="yourCityRegionOrDepartment">居住地の市、地域、または県</string>
@@ -619,6 +621,7 @@
   <string name="simulClockHint">フィッシャーモードの設定。相手が多いほど追加時間は長めに。</string>
   <string name="simulAddExtraTime">同時対局の手間を考え、自分に持時間をさらに追加できます。</string>
   <string name="simulHostExtraTime">ホスト延長時間</string>
+  <string name="everyone">全員</string>
   <string name="lidraughtsTournaments">Lidraughts トーナメント</string>
   <string name="tournamentFAQ">アリーナ・トーナメントFAQ</string>
   <string name="tournamentOfficial">公式</string>

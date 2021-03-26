@@ -128,12 +128,12 @@
   </plurals>
   <string name="currentGames">Partidas atuais</string>
   <plurals name="nbGames">
-    <item quantity="one">%s Jogos</item>
-    <item quantity="other">%s Jogos</item>
+    <item quantity="one">%s partida</item>
+    <item quantity="other">%s Partidas</item>
   </plurals>
   <plurals name="nbBookmarks">
-    <item quantity="one">%s Favoritos</item>
-    <item quantity="other">%s Favoritos</item>
+    <item quantity="one">%s favoritos</item>
+    <item quantity="other">%s favoritos</item>
   </plurals>
   <string name="viewInFullSize">Ver em tela cheia</string>
   <string name="logOut">Sair</string>
@@ -419,6 +419,7 @@ consultar uma análise de computador, utilizar o chat e compartilhar um link.</s
   <string name="popularOpenings">Aberturas populares</string>
   <string name="startPosition">Posição inicial</string>
   <string name="clearBoard">Limpar tabuleiro</string>
+  <string name="save">Salvar</string>
   <string name="savePosition">Guardar posição</string>
   <string name="loadPosition">Carregar posição</string>
   <string name="isPrivate">Privado</string>
@@ -578,6 +579,7 @@ Uma URL por linha</string>
   <string name="drawVsYInZ">%1$s contra %2$s em %3$s</string>
   <string name="timeline">Linha do tempo</string>
   <string name="seeAllTournaments">Ver todos os torneios</string>
+  <string name="start">Iniciar</string>
   <string name="starting">Iniciando:</string>
   <string name="allInformationIsPublicAndOptional">Todas as informações são públicas e opcionais.</string>
   <string name="yourCityRegionOrDepartment">Sua cidade, região ou divisão territorial.</string>
@@ -665,6 +667,7 @@ Uma URL por linha</string>
   <string name="simulClockHint">Configuração de acréscimos no relógio. Quanto mais jogadores admitir, mais tempo pode necessitar.</string>
   <string name="simulAddExtraTime">Você pode acrescentar tempo adicional a seu relógio, para ajudá-lo a lidar com a simultânea.</string>
   <string name="simulHostExtraTime">Tempo adicional do simultanista</string>
+  <string name="everyone">Todos</string>
   <string name="lidraughtsTournaments">Torneios do Lidraughts</string>
   <string name="tournamentFAQ">Perguntas Frequentes sobre torneios no estilo Arena</string>
   <string name="tournamentOfficial">Oficial</string>

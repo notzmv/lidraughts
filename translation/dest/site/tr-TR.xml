@@ -564,6 +564,7 @@
   <string name="defeatVsYInZ">%2$s adlı oyuncuya karşı %3$s maçında %1$s</string>
   <string name="drawVsYInZ">%2$s adlı oyuncuya karşı %3$s maçında %1$s</string>
   <string name="timeline">Zaman tüneli</string>
+  <string name="start">Başlat</string>
   <string name="starting">Başlangıç:</string>
   <string name="allInformationIsPublicAndOptional">Tüm bilgiler herkese açık ve seçime bağlıdır.</string>
   <string name="yourCityRegionOrDepartment">Şehrin, ilçen ya da bölgen.</string>
@@ -644,6 +645,7 @@
   <string name="simulClockHint">Fischer Saati formatı. Ne kadar fazla oyuncu ile yüzleşirseniz, o kadar fazla zamana ihtiyaç duyabilirsiniz.</string>
   <string name="simulAddExtraTime">Eş zamanlı gösteride süreyi idare edebilmek için kendi saatinize fazladan zaman ekleyebilirsiniz.</string>
   <string name="simulHostExtraTime">Ev sahibinin fazladan süresi</string>
+  <string name="everyone">Herkes</string>
   <string name="lidraughtsTournaments">Lidraughts turnuvaları</string>
   <string name="tournamentFAQ">Arena turnuvaları SSS</string>
   <string name="tournamentOfficial">Resmî</string>

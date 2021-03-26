@@ -494,6 +494,7 @@ spēles tērzētavu un URL saiti, kas dos pieeju citiem.</string>
   <string name="popularOpenings">Populāras atklātnes</string>
   <string name="startPosition">Sākuma pozīcija</string>
   <string name="clearBoard">Notīrīt lauciņu</string>
+  <string name="save">Saglabāt</string>
   <string name="savePosition">Saglabāt pozīciju</string>
   <string name="loadPosition">Ielādēt izkārtojumu</string>
   <string name="isPrivate">Privāts</string>
@@ -666,6 +667,7 @@ Vienā līnijā  - tikai vienu norādi.</string>
   <string name="drawVsYInZ">%1$s pret %2$s %3$s</string>
   <string name="timeline">Laika grafiks</string>
   <string name="seeAllTournaments">Skatīt visus turnīrus</string>
+  <string name="start">Sākt</string>
   <string name="starting">Sāksies:</string>
   <string name="allInformationIsPublicAndOptional">Visa informācija ir publiska un nav obligāta.</string>
   <string name="yourCityRegionOrDepartment">Tava pilsēta, novads vai reģions.</string>
