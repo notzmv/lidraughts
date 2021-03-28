@@ -845,6 +845,22 @@ object OpeningTable {
     ))
   )
 
+  val categoriesFMJDBrazilian = categoriesFMJD.map {
+    case cat if cat.name == "5" =>
+      cat.copy(positions = cat.positions.filterNot(_.code == "5-IX"))
+    case cat if cat.name == "19" =>
+      cat.copy(positions = cat.positions.filterNot(_.code == "19-V"))
+    case cat if cat.name == "25" =>
+      cat.copy(positions = cat.positions.filterNot(_.code == "25-XIII"))
+    case cat if cat.name == "41" =>
+      cat.copy(positions = cat.positions.filterNot(_.code == "41-XIII"))
+    case cat if cat.name == "42" =>
+      cat.copy(positions = cat.positions.filterNot(_.code == "42-XIV"))
+    case cat if cat.name == "43" =>
+      cat.copy(positions = cat.positions.filterNot(_.code == "43-II"))
+    case cat => cat
+  }
+
   val tableFMJD = OpeningTable(
     key = "fmjd",
     name = "FMJD Drawing Tables 64",
@@ -852,11 +868,18 @@ object OpeningTable {
     positions = categoriesFMJD.flatMap(_.positions)
   )
 
-  val allTables = List(tableFMJD)
+  val tableFMJDBrazilian = OpeningTable(
+    key = "fmjdBrazilian",
+    name = "FMJD Drawing Tables 64 - Brazilian",
+    url = "https://results.fmjd.org/viewpage.php?page_id=2",
+    positions = categoriesFMJDBrazilian.flatMap(_.positions)
+  )
 
-  def byKey = key2table.get _
+  private val allTables = List(tableFMJD, tableFMJDBrazilian)
   private val key2table: Map[String, OpeningTable] = allTables.map { p =>
     p.key -> p
   }(scala.collection.breakOut)
+
+  def byKey = key2table.get _
 
 }
