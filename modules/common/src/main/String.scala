@@ -84,14 +84,14 @@ object String {
 
     def markdownLinksOrRichText(text: String, withImages: Boolean = true): Frag = {
       val escaped = escapeHtmlRaw(text)
-      val marked = RawHtml.justMarkdownLinksEscaped(escaped, withImages)
+      val marked = RawHtml.justMarkdownLinks(escaped, withImages)
       if (marked == escaped) richText(text)
       else nl2brUnsafe(marked)
     }
 
     def markdownLinks(text: String, withImages: Boolean = true): String =
       RawHtml nl2br {
-        RawHtml.justMarkdownLinks(text, withImages)
+        RawHtml.escapeAndMarkdownLinks(text, withImages)
       }
 
     def safeJsonValue(jsValue: JsValue): String = {
