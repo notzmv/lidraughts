@@ -553,7 +553,6 @@ poproszenia o analizę komputerową, omówienia jej z innymi oraz udostępnienia
   <string name="noBerserkAllowed">Uzywanie agresji jest niedozwolone</string>
   <string name="editTournament">Edytuj turniej</string>
   <string name="tournamentDescription">Opis turnieju</string>
-  <string name="tournamentDescriptionHelp">Krótki opis dla uczestników turnieju.</string>
   <string name="cancelTheTournament">Anuluj turniej</string>
   <string name="reportXToModerators">Zgłoś %s do moderatora</string>
   <string name="profileCompletion">Kompletność profilu: %s</string>

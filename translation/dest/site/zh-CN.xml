@@ -487,7 +487,6 @@
   <string name="noBerserkAllowed">不允许快棋</string>
   <string name="editTournament">编辑锦标赛</string>
   <string name="tournamentDescription">锦标赛描述</string>
-  <string name="tournamentDescriptionHelp">有什么需要让参赛者知道的注意事项？请简要列出。</string>
   <string name="cancelTheTournament">取消锦标赛</string>
   <string name="reportXToModerators">举报%s</string>
   <string name="profileCompletion">资料完善: %s</string>

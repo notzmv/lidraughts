@@ -497,7 +497,7 @@ een computeranalyse, een chatbox bij de partij en een deelbare URL.</string>
   <string name="cancelTheTournament">Toernooi afgelasten</string>
   <string name="editTournament">Toernooi bewerken</string>
   <string name="tournamentDescription">Toernooi omschrijving</string>
-  <string name="tournamentDescriptionHelp">Iets bijzonders dat je aan de deelnemers kwijt wil? Probeer het kort te houden.</string>
+  <string name="tournamentDescriptionHelp">Iets bijzonders dat je aan de deelnemers kwijt wil? Probeer het kort te houden. Je kunt Markdown links gebruiken: [tekst](https://url)</string>
   <string name="reportXToModerators">Rapporteer %s aan de toezichthouders</string>
   <string name="profileCompletion">Voltooiing profiel: %s</string>
   <string name="xRating">%s-rating</string>

@@ -504,7 +504,7 @@ computer analysis, game chat and shareable URL.</string>
   <string name="noBerserkAllowed">No berserk allowed</string>
   <string name="editTournament">Edit tournament</string>
   <string name="tournamentDescription">Tournament description</string>
-  <string name="tournamentDescriptionHelp">Anything special you want to tell the participants? Try to keep it short.</string>
+  <string name="tournamentDescriptionHelp">Anything special you want to tell the participants? Try to keep it short. Markdown links are available: [text](https://url)</string>
   <string name="cancelTheTournament">Cancel the tournament</string>
   <string name="reportXToModerators">Report %s to moderators</string>
   <string name="profileCompletion">Profile completion: %s</string>
