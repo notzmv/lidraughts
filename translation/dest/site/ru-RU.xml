@@ -568,10 +568,11 @@
   <string name="currentPassword">Текущий пароль</string>
   <string name="newPassword">Новый пароль</string>
   <string name="newPasswordAgain">Новый пароль (ещё раз)</string>
-  <string name="boardHighlights">Подсвечивать последний ход</string>
-  <string name="pieceDestinations">Показывать допустимые ходы</string>
-  <string name="boardCoordinates">Координаты доски (1–50)</string>
+  <string name="newPasswordsDontMatch">Новые пароли не совпадают</string>
+  <string name="boardCoordinates">Координаты доски (1-50, a1-h8)</string>
   <string name="moveListWhilePlaying">Показывать список ходов</string>
+  <string name="clockInitialTime">Начальное время на часах</string>
+  <string name="clockIncrement">Добавка времени</string>
   <string name="tenthsOfSeconds">Десятые доли секунд</string>
   <string name="never">Никогда</string>
   <string name="whenTimeRemainingLessThanTenSeconds">Когда остаётся меньше 10 секунд</string>

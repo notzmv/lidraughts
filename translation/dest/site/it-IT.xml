@@ -491,12 +491,16 @@ analizzarla con il computer, commentarla in chat, e condividerla tramire indiriz
   <string name="thisAccountIsClosed">Questo account è stato chiuso.</string>
   <string name="invalidUsernameOrPassword">Nome utente o password non validi</string>
   <string name="incorrectPassword">Password errata</string>
+  <string name="invalidAuthenticationCode">Codice di autenticazione non valido</string>
   <string name="emailMeALink">Inviami il link via email</string>
   <string name="currentPassword">Password attuale</string>
   <string name="newPassword">Nuova password</string>
   <string name="newPasswordAgain">Nuova password (ripeti)</string>
+  <string name="newPasswordsDontMatch">Le nuove password non coincidono</string>
   <string name="pieceDestinations">Destinazioni del pezzo (mosse e pre-mosse valide)</string>
   <string name="moveListWhilePlaying">Lista delle mosse mentre giochi</string>
+  <string name="clockInitialTime">Tempo iniziale</string>
+  <string name="clockIncrement">Incremento orologio</string>
   <string name="tenthsOfSeconds">Decimi di secondo</string>
   <string name="never">Mai</string>
   <string name="whenTimeRemainingLessThanTenSeconds">Quando il tempo rimanente è &lt; 10 secondi</string>

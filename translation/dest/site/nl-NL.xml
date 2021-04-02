@@ -622,6 +622,7 @@ Een URL per regel</string>
   <string name="currentPassword">Huidig wachtwoord</string>
   <string name="newPassword">Nieuw wachtwoord</string>
   <string name="newPasswordAgain">Nieuw wachtwoord (opnieuw)</string>
+  <string name="newPasswordsDontMatch">De nieuwe wachtwoorden komen niet overeen</string>
   <string name="boardHighlights">Bord laten oplichten (laatste zet en slagen)</string>
   <string name="pieceDestinations">Toon geldige zetten en sta vooraf-zetten toe</string>
   <string name="boardCoordinates">Bordcoördinaten (1-50, a1-h8)</string>
@@ -632,6 +633,7 @@ Een URL per regel</string>
   <string name="notationGameResult">Notatie resultaat partij (winst wit • remise • winst zwart)</string>
   <string name="draughtsClock">Damklok</string>
   <string name="clockInitialTime">Klok begintijd</string>
+  <string name="clockIncrement">Extra tijd</string>
   <string name="onlyMembersOfTeam">Alleen leden van team</string>
   <string name="noRestriction">Geen beperking</string>
   <string name="tenthsOfSeconds">Tienden van seconden</string>

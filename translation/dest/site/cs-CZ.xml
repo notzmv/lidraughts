@@ -444,12 +444,16 @@ získáte počítačovou analýzu, chat ke hře a URL ke sdílení hry.</string>
   <string name="thisAccountIsClosed">Tento účet je zrušen.</string>
   <string name="invalidUsernameOrPassword">Špatné jméno nebo heslo</string>
   <string name="incorrectPassword">Nesprávné heslo</string>
+  <string name="invalidAuthenticationCode">Neplatný ověřovací kód</string>
   <string name="emailMeALink">Pošlete mi odkaz e-mailem</string>
   <string name="currentPassword">Současné heslo</string>
   <string name="newPassword">Nové heslo</string>
   <string name="newPasswordAgain">Nové heslo (znovu)</string>
+  <string name="newPasswordsDontMatch">Nová hesla nesouhlasí</string>
   <string name="pieceDestinations">Možnosti figur (možné tahy a předtahy)</string>
   <string name="moveListWhilePlaying">Seznam tahů během hry</string>
+  <string name="clockInitialTime">Počáteční čas</string>
+  <string name="clockIncrement">Přídavek</string>
   <string name="tenthsOfSeconds">Desetiny sekund</string>
   <string name="never">Nikdy</string>
   <string name="whenTimeRemainingLessThanTenSeconds">Když zbývající čas &lt; 10 sekund</string>

@@ -220,7 +220,7 @@ final private class TourFields(me: User, form: Form[_])(implicit ctx: Context) {
       form3.group(form("clockTime"), trans.clockInitialTime(), half = true)(
         form3.select(_, DataForm.clockTimeChoices)
       ),
-      form3.group(form("clockIncrement"), trans.increment(), half = true)(
+      form3.group(form("clockIncrement"), trans.clockIncrement(), half = true)(
         form3.select(_, DataForm.clockIncrementChoices)
       )
     )

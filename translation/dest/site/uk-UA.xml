@@ -548,9 +548,12 @@
   <string name="currentPassword">Поточний пароль</string>
   <string name="newPassword">Новий пароль</string>
   <string name="newPasswordAgain">Новий пароль (іще раз)</string>
+  <string name="newPasswordsDontMatch">Нові паролі не однакові</string>
   <string name="pieceDestinations">Поля для ходів (можливі ходи та ходи на випередження)</string>
   <string name="boardCoordinates">Координати (1-50, a1-h8)</string>
   <string name="moveListWhilePlaying">Список ходів під час гри</string>
+  <string name="clockInitialTime">Початковий час годинника</string>
+  <string name="clockIncrement">Приріст часу</string>
   <string name="tenthsOfSeconds">Десяті частки секунди</string>
   <string name="never">Ніколи</string>
   <string name="whenTimeRemainingLessThanTenSeconds">Коли часу залишається &lt; 10 секунд</string>

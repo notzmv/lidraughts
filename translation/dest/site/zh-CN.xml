@@ -615,6 +615,7 @@
   <string name="currentPassword">当前密码</string>
   <string name="newPassword">新密码</string>
   <string name="newPasswordAgain">重复新密码</string>
+  <string name="newPasswordsDontMatch">两次输入的新密码不一致</string>
   <string name="boardHighlights">棋盘高亮（最后一步走棋和吃棋）</string>
   <string name="pieceDestinations">棋子走到位置（有效着与预先走棋）</string>
   <string name="boardCoordinates">棋盘坐标（1-50, a1-h8）</string>
@@ -625,6 +626,7 @@
   <string name="notationGameResult">棋局结果格式 (白胜 • 和棋 • 黑胜)</string>
   <string name="draughtsClock">棋钟</string>
   <string name="clockInitialTime">棋钟初始时间</string>
+  <string name="clockIncrement">加秒</string>
   <string name="onlyMembersOfTeam">仅团队成员</string>
   <string name="noRestriction">没有限制</string>
   <string name="tenthsOfSeconds">显示十分之一秒</string>

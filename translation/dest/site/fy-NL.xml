@@ -359,7 +359,9 @@ kompjûteranalyze, partijpetear en dielbere URL te krijen.</string>
   <string name="currentPassword">Aktyf wachtwurd</string>
   <string name="newPassword">Nij wachtwurd</string>
   <string name="newPasswordAgain">Nij wachtwurd (nochris)</string>
+  <string name="newPasswordsDontMatch">De nije wachtwurden komme net oerien</string>
   <string name="clockInitialTime">Klok begjintiid</string>
+  <string name="clockIncrement">Tafoeging per set</string>
   <string name="increment">Tafoeging per set</string>
   <string name="privacy">Privacy</string>
   <string name="letOtherPlayersFollowYou">Oare spilers meie dy folje</string>

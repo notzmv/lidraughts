@@ -451,14 +451,16 @@
   <string name="thisAccountIsClosed">Энэ гишүүний данс хаагдсан байна.</string>
   <string name="invalidUsernameOrPassword">Гишүүний нэр эсвэл нэвтрэх үг буруу байна</string>
   <string name="incorrectPassword">Нууц үг буруу</string>
+  <string name="invalidAuthenticationCode">Баталгаажуулах код буруу байна</string>
   <string name="emailMeALink">Над руу холбоос хаягыг илгээ</string>
   <string name="currentPassword">Одоогийн нэвтрэх үг</string>
   <string name="newPassword">Шинэ нэвтрэх үг</string>
   <string name="newPasswordAgain">Шинэ нэвтрэх үгээ дахин оруулна уу</string>
-  <string name="boardHighlights">Хийгдсэн нүүдлүүдийг тодотгох (сүүлчийн нүүдэл)</string>
   <string name="pieceDestinations">Хөлгийн нүүдэл үзүүлэх (зөвшөөрөгдсөн нүүдэл, урьдчилсан нүүдэл)</string>
   <string name="boardCoordinates">Солбилцолын тэмдэглэлүүдийг үзүүлэх (1-50, a1-h8)</string>
   <string name="moveListWhilePlaying">Хийгдсэн нүүдлүүдийн жагсаалтыг хажуу талд харуулах</string>
+  <string name="clockInitialTime">Эхлэх цаг</string>
+  <string name="clockIncrement">Цагны өсөлт</string>
   <string name="tenthsOfSeconds">1/10 секунд</string>
   <string name="never">Хэзээ ч үгүй</string>
   <string name="whenTimeRemainingLessThanTenSeconds">Хэрэв цаг 10 секундээс бага болвол</string>

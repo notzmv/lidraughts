@@ -121,7 +121,7 @@ final private class SwissFields(form: Form[_])(implicit ctx: Context) {
       form3.group(form("clock.limit"), trans.clockInitialTime(), half = true)(
         form3.select(_, SwissForm.clockLimitChoices)
       ),
-      form3.group(form("clock.increment"), trans.increment(), half = true)(
+      form3.group(form("clock.increment"), trans.clockIncrement(), half = true)(
         form3.select(_, TourForm.clockIncrementChoices)
       )
     )

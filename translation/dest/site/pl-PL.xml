@@ -686,7 +686,7 @@ jeden adres URL na linię</string>
   <string name="currentPassword">Aktualne hasło</string>
   <string name="newPassword">Nowe hasło</string>
   <string name="newPasswordAgain">Powtórz nowe hasło</string>
-  <string name="boardHighlights">Podświetlenie ostatniego posunięcia</string>
+  <string name="newPasswordsDontMatch">Nowe hasła nie są takie same</string>
   <string name="pieceDestinations">Podświetlaj możliwe pola docelowe (ruchy zwykłe i planowane)</string>
   <string name="boardCoordinates">Współrzędne pól (1-50, a1-h8)</string>
   <string name="coordinateSystem8x8">System oznaczania pól na warcabnicy 8x8</string>
@@ -696,6 +696,7 @@ jeden adres URL na linię</string>
   <string name="notationGameResult">System zapisu wyniku gry (wygrana białych • remis • wygrana czarnych)</string>
   <string name="draughtsClock">Zegar warcabowy</string>
   <string name="clockInitialTime">Czas początkowy na zegarze</string>
+  <string name="clockIncrement">Przyrost czasu</string>
   <string name="onlyMembersOfTeam">Tylko członkowie zespołu</string>
   <string name="noRestriction">Bez ograniczeń</string>
   <string name="tenthsOfSeconds">Dziesiąte części sekundy</string>

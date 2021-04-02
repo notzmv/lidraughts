@@ -53,7 +53,7 @@ object form {
             },
             form3.split(
               form3.group(form("clockTime"), trans.clockInitialTime(), help = trans.simulClockHint().some, half = true)(form3.select(_, clockTimeChoices)),
-              form3.group(form("clockIncrement"), trans.increment(), half = true)(form3.select(_, clockIncrementChoices))
+              form3.group(form("clockIncrement"), trans.clockIncrement(), half = true)(form3.select(_, clockIncrementChoices))
             ),
             form3.split(
               form3.group(form("clockExtra"), trans.simulHostExtraTime(), help = trans.simulAddExtraTime().some, half = true)(form3.select(_, clockExtraChoices)),
