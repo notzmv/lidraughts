@@ -96,6 +96,11 @@ object String {
       else nl2brUnsafe(marked)
     }
 
+    def markdownLinks(text: String, withImages: Boolean = true): String =
+      RawHtml nl2br {
+        RawHtml.justMarkdownLinks(text, withImages)
+      }
+
     def safeJsonValue(jsValue: JsValue): String = {
       // Borrowed from:
       // https://github.com/playframework/play-json/blob/160f66a84a9c5461c52b50ac5e222534f9e05442/play-json/js/src/main/scala/StaticBinding.scala#L65
