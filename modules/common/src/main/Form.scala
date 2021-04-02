@@ -49,15 +49,14 @@ object Form {
   def trim(m: Mapping[String]) = m.transform[String](_.trim, identity)
   def clean(m: Mapping[String]) =
     trim(m)
-      .verifying("This text contains invalid chars", s => !String.hasZeroWidthChars(s))
+      .verifying("error.pattern", s => !String.hasZeroWidthChars(s))
 
   def eventName(minLength: Int, maxLength: Int) =
     clean(text).verifying(
       Constraints minLength minLength,
       Constraints maxLength maxLength,
       Constraints.pattern(
-        regex = """[\p{L}\p{N}-\s:,;'\+]+""".r,
-        error = "Invalid characters"
+        regex = """[\p{L}\p{N}-\s:,;'\+]+""".r
       )
     )
 
