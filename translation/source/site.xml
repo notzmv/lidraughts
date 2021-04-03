@@ -644,6 +644,7 @@ One URL per line</string>
   <string name="notationGameResult">Notation game result (white win • draw • black win)</string>
   <string name="draughtsClock">Draughts clock</string>
   <string name="clockInitialTime">Clock initial time</string>
+  <string name="clockIncrement">Clock increment</string>
   <string name="onlyMembersOfTeam">Only members of team</string>
   <string name="noRestriction">No restriction</string>
   <string name="tenthsOfSeconds">Tenths of seconds</string>
