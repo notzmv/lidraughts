@@ -5,6 +5,7 @@ import play.api.data.Forms._
 import play.api.data.validation.Constraints._
 
 import lidraughts.db.dsl._
+import lidraughts.common.Form.cleanText
 
 private[team] final class DataForm(
     teamColl: Coll,
@@ -12,9 +13,9 @@ private[team] final class DataForm(
 ) extends lidraughts.hub.CaptchedForm {
 
   private object Fields {
-    val name = "name" -> text(minLength = 3, maxLength = 60)
-    val location = "location" -> optional(text(minLength = 3, maxLength = 80))
-    val description = "description" -> text(minLength = 30, maxLength = 2000)
+    val name = "name" -> cleanText(minLength = 3, maxLength = 60)
+    val location = "location" -> optional(cleanText(minLength = 3, maxLength = 80))
+    val description = "description" -> cleanText(minLength = 30, maxLength = 4000)
     val open = "open" -> number
     val gameId = "gameId" -> text
     val move = "move" -> text
@@ -45,14 +46,9 @@ private[team] final class DataForm(
   )
 
   val request = Form(mapping(
-    "message" -> text(minLength = 30, maxLength = 2000),
-    Fields.gameId,
-    Fields.move
-  )(RequestSetup.apply)(RequestSetup.unapply)
-    .verifying(captchaFailMessage, validateCaptcha _)) fill RequestSetup(
-    message = "Hello, I would like to join the team!",
-    gameId = "",
-    move = ""
+    "message" -> cleanText(minLength = 30, maxLength = 2000)
+  )(RequestSetup.apply)(RequestSetup.unapply)) fill RequestSetup(
+    message = "Hello, I would like to join the team!"
   )
 
   val processRequest = Form(tuple(
@@ -67,7 +63,7 @@ private[team] final class DataForm(
   def createWithCaptcha = withCaptcha(create)
 
   val pmAll = Form(
-    single("message" -> text(minLength = 3, maxLength = 9000))
+    single("message" -> cleanText(minLength = 3, maxLength = 9000))
   )
 
   private def teamExists(setup: TeamSetup) =
@@ -108,7 +104,5 @@ private[team] case class TeamEdit(
 }
 
 private[team] case class RequestSetup(
-    message: String,
-    gameId: String,
-    move: String
+    message: String
 )

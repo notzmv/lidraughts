@@ -216,7 +216,7 @@ object Team extends LidraughtsController {
 
   def requestForm(id: String) = Auth { implicit ctx => me =>
     OptionFuOk(api.requestable(id, me)) { team =>
-      forms.anyCaptcha map { html.team.request.requestForm(team, forms.request, _) }
+      fuccess(html.team.request.requestForm(team, forms.request))
     }
   }
 
@@ -224,9 +224,7 @@ object Team extends LidraughtsController {
     OptionFuResult(api.requestable(id, me)) { team =>
       implicit val req = ctx.body
       forms.request.bindFromRequest.fold(
-        err => forms.anyCaptcha map { captcha =>
-          BadRequest(html.team.request.requestForm(team, err, captcha))
-        },
+        err => BadRequest(html.team.request.requestForm(team, err)).fuccess,
         setup => api.createRequest(team, setup, me) inject Redirect(routes.Team.show(team.id))
       )
     }

@@ -3,12 +3,14 @@ package lidraughts.forum
 import play.api.data._
 import play.api.data.Forms._
 
+import lidraughts.common.Form.cleanText
+
 private[forum] final class DataForm(val captcher: akka.actor.ActorSelection) extends lidraughts.hub.CaptchedForm {
 
   import DataForm._
 
   val postMapping = mapping(
-    "text" -> text(minLength = 3),
+    "text" -> cleanText(minLength = 3),
     "gameId" -> text,
     "move" -> text,
     "modIcon" -> optional(boolean)
@@ -22,7 +24,7 @@ private[forum] final class DataForm(val captcher: akka.actor.ActorSelection) ext
   def postWithCaptcha = withCaptcha(post)
 
   val topic = Form(mapping(
-    "name" -> text(minLength = 3, maxLength = 100),
+    "name" -> cleanText(minLength = 3, maxLength = 100),
     "post" -> postMapping
   )(TopicData.apply)(TopicData.unapply))
 }

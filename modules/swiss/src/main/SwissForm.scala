@@ -5,7 +5,6 @@ import draughts.variant.Variant
 import org.joda.time.DateTime
 import play.api.data._
 import play.api.data.Forms._
-import play.api.data.validation.Constraints
 import scala.concurrent.duration._
 
 import lidraughts.common.Form._
@@ -17,16 +16,7 @@ final class SwissForm(isProd: Boolean) {
   def form(minRounds: Int = 3) =
     Form(
       mapping(
-        "name" -> optional(
-          text.verifying(
-            Constraints minLength 2,
-            Constraints maxLength 30,
-            Constraints.pattern(
-              regex = """[\p{L}\p{N}-\s:,;]+""".r,
-              error = "error.unknown"
-            )
-          )
-        ),
+        "name" -> optional(eventName(2, 30)),
         "clock" -> mapping(
           "limit" -> number.verifying(clockLimits.contains _),
           "increment" -> number(min = 0, max = 600)
@@ -36,7 +26,7 @@ final class SwissForm(isProd: Boolean) {
         "variant" -> optional(nonEmptyText.verifying(v => Variant(v).isDefined)),
         "rated" -> optional(boolean),
         "nbRounds" -> number(min = minRounds, max = 100),
-        "description" -> optional(nonEmptyText),
+        "description" -> optional(cleanNonEmptyText),
         "hasChat" -> optional(boolean),
         "roundInterval" -> optional(numberIn(roundIntervals))
       )(SwissData.apply)(SwissData.unapply)

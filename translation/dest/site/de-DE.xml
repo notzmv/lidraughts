@@ -393,6 +393,7 @@ eine Computeranalyse, einen Spielchat und eine teilbare URL.</string>
   <string name="popularOpenings">Beliebte Eröffnungen</string>
   <string name="startPosition">Anfangsposition</string>
   <string name="clearBoard">Brett räumen</string>
+  <string name="save">Speichern</string>
   <string name="savePosition">Stellung speichern</string>
   <string name="loadPosition">Stellung laden</string>
   <string name="isPrivate">Privat</string>
@@ -492,14 +493,17 @@ eine Computeranalyse, einen Spielchat und eine teilbare URL.</string>
   <string name="thisAccountIsClosed">Dieses Benutzerkonto ist geschlossen.</string>
   <string name="invalidUsernameOrPassword">Ungültiger Benutzername oder Passwort</string>
   <string name="incorrectPassword">Falsches Passwort</string>
+  <string name="invalidAuthenticationCode">Ungültiger Authentifizierungscode</string>
   <string name="emailMeALink">Schicke mir einen Link per E-Mail</string>
   <string name="currentPassword">Derzeitiges Passwort</string>
   <string name="newPassword">Neues Passwort</string>
   <string name="newPasswordAgain">Neues Passwort (wiederholen)</string>
-  <string name="boardHighlights">Markierungen auf dem Brett (letzter Zug und Vorauszüge)</string>
+  <string name="newPasswordsDontMatch">Die neuen Passwörter stimmen nicht überein</string>
   <string name="pieceDestinations">Zielfelder markieren (gültige Züge und Vorauszüge)</string>
   <string name="boardCoordinates">Brettkoordinaten (1-50, a1-h8)</string>
   <string name="moveListWhilePlaying">Notation während des Spiels anzeigen</string>
+  <string name="clockInitialTime">Grundbedenkzeit</string>
+  <string name="clockIncrement">Zeit-Inkrement</string>
   <string name="tenthsOfSeconds">Zehntelsekunden</string>
   <string name="never">Nie</string>
   <string name="whenTimeRemainingLessThanTenSeconds">Wenn Restzeit &lt; 10 Sekunden</string>
@@ -545,6 +549,7 @@ eine Computeranalyse, einen Spielchat und eine teilbare URL.</string>
   <string name="drawVsYInZ">%1$s gegen %2$s in %3$s</string>
   <string name="timeline">Verlauf</string>
   <string name="seeAllTournaments">Alle Turniere anzeigen</string>
+  <string name="start">Start</string>
   <string name="starting">Beginnt:</string>
   <string name="allInformationIsPublicAndOptional">Alle Informationen sind öffentlich und freiwillig.</string>
   <string name="yourCityRegionOrDepartment">Deine Stadt, Region oder Bundesland.</string>
@@ -627,6 +632,7 @@ eine Computeranalyse, einen Spielchat und eine teilbare URL.</string>
   <string name="simulClockHint">Fischer Bedenkzeit. Je mehr Gegner du hast, desto mehr Zeit wirst du benötigen.</string>
   <string name="simulAddExtraTime">Du kannst dir selbst zusätzliche Zeit hinzufügen, um mit dem Simultan zurechtzukommen.</string>
   <string name="simulHostExtraTime">Extra Bedenkzeit des Ausrichters</string>
+  <string name="everyone">Jeder</string>
   <string name="lidraughtsTournaments">Lidraughts Turniere</string>
   <string name="tournamentFAQ">Arena FAQ</string>
   <string name="tournamentOfficial">Offiziell</string>

@@ -351,6 +351,7 @@
   <string name="popularOpenings">Түгээмэл тоглогддог нээлтүүд</string>
   <string name="startPosition">Үндсэн байрлал</string>
   <string name="clearBoard">Өргийг хоослох</string>
+  <string name="save">Хадгалах</string>
   <string name="savePosition">Өргийн байрлалыг хадгалах</string>
   <string name="loadPosition">Өрөг ачааллах</string>
   <string name="isPrivate">Урилгаар оролцох тэмцээн</string>
@@ -450,14 +451,16 @@
   <string name="thisAccountIsClosed">Энэ гишүүний данс хаагдсан байна.</string>
   <string name="invalidUsernameOrPassword">Гишүүний нэр эсвэл нэвтрэх үг буруу байна</string>
   <string name="incorrectPassword">Нууц үг буруу</string>
+  <string name="invalidAuthenticationCode">Баталгаажуулах код буруу байна</string>
   <string name="emailMeALink">Над руу холбоос хаягыг илгээ</string>
   <string name="currentPassword">Одоогийн нэвтрэх үг</string>
   <string name="newPassword">Шинэ нэвтрэх үг</string>
   <string name="newPasswordAgain">Шинэ нэвтрэх үгээ дахин оруулна уу</string>
-  <string name="boardHighlights">Хийгдсэн нүүдлүүдийг тодотгох (сүүлчийн нүүдэл)</string>
   <string name="pieceDestinations">Хөлгийн нүүдэл үзүүлэх (зөвшөөрөгдсөн нүүдэл, урьдчилсан нүүдэл)</string>
   <string name="boardCoordinates">Солбилцолын тэмдэглэлүүдийг үзүүлэх (1-50, a1-h8)</string>
   <string name="moveListWhilePlaying">Хийгдсэн нүүдлүүдийн жагсаалтыг хажуу талд харуулах</string>
+  <string name="clockInitialTime">Эхлэх цаг</string>
+  <string name="clockIncrement">Цагны өсөлт</string>
   <string name="tenthsOfSeconds">1/10 секунд</string>
   <string name="never">Хэзээ ч үгүй</string>
   <string name="whenTimeRemainingLessThanTenSeconds">Хэрэв цаг 10 секундээс бага болвол</string>
@@ -499,7 +502,8 @@
   <string name="victory">Бодлогыг амжилттай бодлоо</string>
   <string name="defeat">Явагдал</string>
   <string name="timeline">Дагагч хүмүүсийн үйлдлүүд</string>
-  <string name="starting">Тэмцээн эхлэхэд дараахь хугацаа үлдлээ:</string>
+  <string name="start">Эхлэх</string>
+  <string name="starting">Тэмцээн эхлэхэд хугацаа үлдлээ:</string>
   <string name="allInformationIsPublicAndOptional">Энэ хүснэгтийг бөглөх нь сайн дурын бөгөөд өгөгдсөн мэдээлэл нийтэд ил харагдана.</string>
   <string name="yourCityRegionOrDepartment">Таны хот дүүрэг, аймаг сум</string>
   <plurals name="maximumNbCharacters">
@@ -584,6 +588,7 @@
   <string name="simulClockHint">Фишерийн цагын тохиргоо. Олон тоглогчидтой тоглох тусам таньд илүү их цаг хэрэгтэй болно.</string>
   <string name="simulAddExtraTime">Зэрэгцээ  өрөг тоглож буй үед та өөртөө нэмэлт хугацаа өгч болно.</string>
   <string name="simulHostExtraTime">Зэрэгцээ өрөг үүсгэгчийн нэмэлт цаг</string>
+  <string name="everyone">Хүн бүр</string>
   <string name="tournamentFAQ">Тэмцээний талаарх түгээмэл асуулт хариултууд</string>
   <string name="tournamentOfficial">Албан ёсны тэмцээн</string>
   <string name="timeBeforeTournamentStarts">Тэмцээн эхлэх хүртэлх хугацаа</string>
@@ -647,6 +652,7 @@
   <string name="xHostsY">%2$s-с %1$s үзүүлж байгаа</string>
   <string name="xJoinsY">%2$s-с %1$s нэгдсэн</string>
   <string name="xLikesY">%2$s-с %1$s-д таалагдсан</string>
+  <string name="xCreatesStudyY">%1$s %2$s хичээлийг үүсгэлээ</string>
   <string name="quickPairing">Учирааг хурдасгах</string>
   <string name="lobby">Лобби</string>
   <string name="anonymous">Нэргүй</string>

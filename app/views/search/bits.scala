@@ -114,7 +114,7 @@ private object bits {
     )
 
     def clockIncrement = tr(
-      th(label(trans.increment())),
+      th(label(trans.clockIncrement())),
       td(
         div(cls := "half")(trans.from(), " ", form3.select(form("clock")("incMin"), translatedClockIncChoices, "".some)),
         div(cls := "half")(trans.to(), " ", form3.select(form("clock")("incMax"), translatedClockIncChoices, "".some))

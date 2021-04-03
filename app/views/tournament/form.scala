@@ -220,13 +220,13 @@ final private class TourFields(me: User, form: Form[_])(implicit ctx: Context) {
       form3.group(form("clockTime"), trans.clockInitialTime(), half = true)(
         form3.select(_, DataForm.clockTimeChoices)
       ),
-      form3.group(form("clockIncrement"), trans.increment(), half = true)(
+      form3.group(form("clockIncrement"), trans.clockIncrement(), half = true)(
         form3.select(_, DataForm.clockIncrementChoices)
       )
     )
   def description =
     form3.group(form("description"), trans.tournamentDescription(), help = trans.tournamentDescriptionHelp().some)(
-      form3.textarea(_)(rows := 3)
+      form3.textarea(_)(rows := 4)
     )
   def password =
     form3.group(form("password"), trans.password(), help = trans.makePrivateTournament().some)(

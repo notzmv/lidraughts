@@ -17,23 +17,23 @@
   <string name="mostPopular">Nejoblíbenější</string>
   <string name="addNewChapter">Přidat novou kapitolu</string>
   <plurals name="nbChapters">
-    <item quantity="one">%s kapitola</item>
-    <item quantity="few">%s kapitoly</item>
-    <item quantity="many">%s kapitol</item>
-    <item quantity="other">%s kapitol</item>
+    <item quantity="one">%s Kapitola</item>
+    <item quantity="few">%s Kapitoly</item>
+    <item quantity="many">%s Kapitol</item>
+    <item quantity="other">%s Kapitol</item>
   </plurals>
   <plurals name="nbGames">
-    <item quantity="one">%s hra</item>
-    <item quantity="few">%s hry</item>
-    <item quantity="many">%s her</item>
-    <item quantity="other">%s her</item>
+    <item quantity="one">%s Hra</item>
+    <item quantity="few">%s Hry</item>
+    <item quantity="many">%s Her</item>
+    <item quantity="other">%s Her</item>
   </plurals>
   <string name="addMembers">Přidat uživatele</string>
   <plurals name="nbMembers">
-    <item quantity="one">%s člen</item>
-    <item quantity="few">%s členi</item>
-    <item quantity="many">%s členů</item>
-    <item quantity="other">%s členů</item>
+    <item quantity="one">%s Člen</item>
+    <item quantity="few">%s Členi</item>
+    <item quantity="many">%s Členů</item>
+    <item quantity="other">%s Členů</item>
   </plurals>
   <string name="inviteToTheStudy">Pozvat do studie</string>
   <string name="pleaseOnlyInvitePeopleYouKnow">Prosím zvěte pouze lidi, které znáte a kteří se chtějí aktivně připojit k této studii.</string>

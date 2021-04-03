@@ -443,6 +443,7 @@
   <string name="popularOpenings">Популярні дебюти</string>
   <string name="startPosition">Початкова позиція</string>
   <string name="clearBoard">Очистити дошку</string>
+  <string name="save">Зберегти</string>
   <string name="savePosition">Зберегти позицію</string>
   <string name="loadPosition">Завантажiти позицiю</string>
   <string name="isPrivate">Приватний</string>
@@ -547,9 +548,12 @@
   <string name="currentPassword">Поточний пароль</string>
   <string name="newPassword">Новий пароль</string>
   <string name="newPasswordAgain">Новий пароль (іще раз)</string>
+  <string name="newPasswordsDontMatch">Нові паролі не однакові</string>
   <string name="pieceDestinations">Поля для ходів (можливі ходи та ходи на випередження)</string>
   <string name="boardCoordinates">Координати (1-50, a1-h8)</string>
   <string name="moveListWhilePlaying">Список ходів під час гри</string>
+  <string name="clockInitialTime">Початковий час годинника</string>
+  <string name="clockIncrement">Приріст часу</string>
   <string name="tenthsOfSeconds">Десяті частки секунди</string>
   <string name="never">Ніколи</string>
   <string name="whenTimeRemainingLessThanTenSeconds">Коли часу залишається &lt; 10 секунд</string>
@@ -595,6 +599,7 @@
   <string name="drawVsYInZ">%1$s проти %2$s в %3$s</string>
   <string name="timeline">Смуга подій</string>
   <string name="seeAllTournaments">Дивитися усі турніри</string>
+  <string name="start">Почати</string>
   <string name="starting">Початок:</string>
   <string name="allInformationIsPublicAndOptional">Уся інформація публічна та необов\'язкова.</string>
   <string name="yourCityRegionOrDepartment">Ваше місто, область або район.</string>
@@ -681,6 +686,7 @@
   <string name="simulClockHint">Налаштування Фішера. Більша кількість учасників – більше часу для сеансера.</string>
   <string name="simulAddExtraTime">Ви можете додати собі час, щоб упоратися з сеансом.</string>
   <string name="simulHostExtraTime">Додатковий час для сеансера</string>
+  <string name="everyone">Кожний</string>
   <string name="lidraughtsTournaments">Турніри Lidraughts</string>
   <string name="tournamentFAQ">FAQ сторінки турнірів</string>
   <string name="tournamentOfficial">Офіційний</string>
@@ -742,6 +748,12 @@
   <string name="correspondenceAndUnlimited">За листуванням та необмежені</string>
   <string name="viewTheSolution">Дивитись рішення</string>
   <string name="followAndChallengeFriends">Стежте та викликайте друзів</string>
+  <plurals name="availableInNbLanguages">
+    <item quantity="one">Доступно %s мовою!</item>
+    <item quantity="few">Доступно %s мовами!</item>
+    <item quantity="many">Доступно %s мовами!</item>
+    <item quantity="other">Доступно %s мовами!</item>
+  </plurals>
   <string name="gameAnalysis">Аналіз гри</string>
   <string name="xHostsY">%1$s створив %2$s</string>
   <string name="xJoinsY">%1$s приєднався до %2$s</string>

@@ -3,6 +3,7 @@ package lidraughts.message
 import play.api.data._
 import play.api.data.Forms._
 
+import lidraughts.common.Form.{ cleanNonEmptyText, cleanText }
 import lidraughts.security.Granter
 import lidraughts.user.{ User, UserRepo }
 
@@ -18,9 +19,9 @@ private[message] final class DataForm(security: MessageSecurity) {
           security.canMessage(me.id, User normalize name) awaitSeconds 2 // damn you blocking API
         }
       }),
-    "subject" -> text(minLength = 3, maxLength = 100),
-    "text" -> text(minLength = 3, maxLength = 8000),
-    "mod" -> optional(nonEmptyText)
+    "subject" -> cleanText(minLength = 3, maxLength = 100),
+    "text" -> cleanText(minLength = 3, maxLength = 8000),
+    "mod" -> optional(cleanNonEmptyText)
   )({
       case (username, subject, text, mod) => ThreadData(
         user = fetchUser(username) err "Unknown username " + username,
@@ -31,7 +32,7 @@ private[message] final class DataForm(security: MessageSecurity) {
     })(_.export.some))
 
   def post = Form(single(
-    "text" -> text(minLength = 3)
+    "text" -> cleanText(minLength = 3)
   ))
 
   private def fetchUser(username: String) = UserRepo named username awaitSeconds 2

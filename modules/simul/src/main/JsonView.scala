@@ -122,7 +122,7 @@ final class JsonView(
       )
     })
     .add("unique" -> simul.spotlight.map { s => true })
-    .add("description" -> simul.spotlight.map(s => lidraughts.base.RawHtml.markdownLinks(s.description)))
+    .add("description" -> simul.spotlight.map(s => lidraughts.common.String.html.markdownLinks(s.description)))
     .add("targetPct" -> simul.targetPct)
 
   def arbiterJson(simul: Simul): Fu[JsArray] = for {

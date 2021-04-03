@@ -399,6 +399,7 @@ análise de computador, sala de conversação e link de partilha.</string>
   <string name="popularOpenings">Aberturas populares</string>
   <string name="startPosition">Posição inicial</string>
   <string name="clearBoard">Limpar tabuleiro</string>
+  <string name="save">Guardar</string>
   <string name="savePosition">Guardar posição</string>
   <string name="loadPosition">Carregar posição</string>
   <string name="isPrivate">Privado</string>
@@ -500,14 +501,17 @@ análise de computador, sala de conversação e link de partilha.</string>
   <string name="thisAccountIsClosed">Esta conta foi encerrada</string>
   <string name="invalidUsernameOrPassword">Nome de usuário ou senha incorretos</string>
   <string name="incorrectPassword">Contrassenha incorreta</string>
+  <string name="invalidAuthenticationCode">Código de autenticação inválido</string>
   <string name="emailMeALink">Envie-me um link</string>
   <string name="currentPassword">Senha atual</string>
   <string name="newPassword">Nova senha</string>
   <string name="newPasswordAgain">Nova senha (novamente)</string>
-  <string name="boardHighlights">Luzes do tabuleiro</string>
+  <string name="newPasswordsDontMatch">As novas palavras-passe não coincidem</string>
   <string name="pieceDestinations">Destino das peças (movimentos válidos e pré-movimentos)</string>
   <string name="boardCoordinates">Coordenadas do tabuleiro (1-50, a1-h8)</string>
   <string name="moveListWhilePlaying">Lista de movimentos</string>
+  <string name="clockInitialTime">Tempo inicial no relógio</string>
+  <string name="clockIncrement">Incremento no relógio</string>
   <string name="tenthsOfSeconds">Décimos de segundo</string>
   <string name="never">Nunca</string>
   <string name="whenTimeRemainingLessThanTenSeconds">Quando o tempo remanescente for menor do que 10 segundos</string>
@@ -553,6 +557,7 @@ análise de computador, sala de conversação e link de partilha.</string>
   <string name="drawVsYInZ">%1$s contra %2$s em %3$s</string>
   <string name="timeline">Linha do tempo</string>
   <string name="seeAllTournaments">Ver todos os torneios</string>
+  <string name="start">Iniciar</string>
   <string name="starting">Iniciando:</string>
   <string name="allInformationIsPublicAndOptional">Todas as informações são públicas e opcionais.</string>
   <string name="yourCityRegionOrDepartment">Sua cidade, região ou divisão territorial.</string>
@@ -639,6 +644,7 @@ análise de computador, sala de conversação e link de partilha.</string>
   <string name="simulClockHint">Configuração de acréscimos no relógio. Quanto mais jogadores admitir, mais tempo pode necessitar.</string>
   <string name="simulAddExtraTime">Você pode acrescentar tempo adicional a seu relógio, para ajudá-lo a lidar com a simultânea.</string>
   <string name="simulHostExtraTime">Tempo adicional do simultanista</string>
+  <string name="everyone">Toda a gente</string>
   <string name="lidraughtsTournaments">Torneios do Lidraughts</string>
   <string name="tournamentFAQ">Perguntas Frequentes sobre torneios no estilo Arena</string>
   <string name="tournamentOfficial">Oficial</string>
@@ -710,7 +716,7 @@ análise de computador, sala de conversação e link de partilha.</string>
   <string name="xHostsY">%1$s criou %2$s</string>
   <string name="xJoinsY">%1$s entra em %2$s</string>
   <string name="xLikesY">%1$s gosta de %2$s</string>
-  <string name="xCreatesStudyY">%1$s cria estudo %2$s</string>
+  <string name="xCreatesStudyY">%1$s criou o estudo %2$s</string>
   <string name="quickPairing">Emparelhamento rápido</string>
   <string name="lobby">Vestíbulo</string>
   <string name="anonymous">Anónimo</string>

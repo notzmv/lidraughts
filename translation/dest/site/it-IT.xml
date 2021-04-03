@@ -391,6 +391,7 @@ analizzarla con il computer, commentarla in chat, e condividerla tramire indiriz
   <string name="membersOnly">Solo per iscritti</string>
   <string name="popularOpenings">Aperture popolari</string>
   <string name="startPosition">Posizione iniziale</string>
+  <string name="save">Salva</string>
   <string name="savePosition">Salva la posizione</string>
   <string name="loadPosition">Carica una posizione</string>
   <string name="isPrivate">Privato</string>
@@ -490,12 +491,16 @@ analizzarla con il computer, commentarla in chat, e condividerla tramire indiriz
   <string name="thisAccountIsClosed">Questo account è stato chiuso.</string>
   <string name="invalidUsernameOrPassword">Nome utente o password non validi</string>
   <string name="incorrectPassword">Password errata</string>
+  <string name="invalidAuthenticationCode">Codice di autenticazione non valido</string>
   <string name="emailMeALink">Inviami il link via email</string>
   <string name="currentPassword">Password attuale</string>
   <string name="newPassword">Nuova password</string>
   <string name="newPasswordAgain">Nuova password (ripeti)</string>
+  <string name="newPasswordsDontMatch">Le nuove password non coincidono</string>
   <string name="pieceDestinations">Destinazioni del pezzo (mosse e pre-mosse valide)</string>
   <string name="moveListWhilePlaying">Lista delle mosse mentre giochi</string>
+  <string name="clockInitialTime">Tempo iniziale</string>
+  <string name="clockIncrement">Incremento orologio</string>
   <string name="tenthsOfSeconds">Decimi di secondo</string>
   <string name="never">Mai</string>
   <string name="whenTimeRemainingLessThanTenSeconds">Quando il tempo rimanente è &lt; 10 secondi</string>
@@ -535,6 +540,7 @@ analizzarla con il computer, commentarla in chat, e condividerla tramire indiriz
   <string name="defeat">Sconfitta</string>
   <string name="timeline">Resoconto attività</string>
   <string name="seeAllTournaments">Vedi tutti i tornei</string>
+  <string name="start">Inizia</string>
   <string name="starting">Inizio:</string>
   <string name="allInformationIsPublicAndOptional">Tutte le informazioni sono pubbliche e facoltative.</string>
   <string name="yourCityRegionOrDepartment">La tua città, regione o provincia.</string>
@@ -618,6 +624,7 @@ analizzarla con il computer, commentarla in chat, e condividerla tramire indiriz
   <string name="simulClockHint">Modello Fischer Clock. Più giocatori sfidi, più tempo ti potrebbe servire.</string>
   <string name="simulAddExtraTime">Puoi aggiungere più tempo al tuo orologio per far fronte alla simultanea.</string>
   <string name="simulHostExtraTime">Tempo aggiuntivo del simultaneista</string>
+  <string name="everyone">Tutti</string>
   <string name="lidraughtsTournaments">Tornei Lidraughts</string>
   <string name="tournamentFAQ">FAQ tornei Arena</string>
   <string name="tournamentOfficial">Ufficiale</string>

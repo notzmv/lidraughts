@@ -218,26 +218,8 @@ case class Game(
       )
   }
 
-  def pdnMovesConcat(fullCaptures: Boolean = false, dropGhosts: Boolean = false): PdnMoves = {
-    val movesConcat = pdnMoves.foldLeft(Vector.empty[String]) {
-      (moves, curMove) =>
-        if (moves.isEmpty) moves :+ curMove
-        else {
-          val curX = curMove.indexOf('x')
-          if (curX == -1) moves :+ curMove
-          else {
-            val lastMove = moves.last
-            val lastX = lastMove.lastIndexOf('x')
-            if (lastX != -1 && lastMove.takeRight(lastMove.length - lastX - 1) == curMove.take(curX)) {
-              val prefix = if (fullCaptures) lastMove else lastMove.take(lastX)
-              moves.dropRight(1) :+ (prefix + curMove.takeRight(curMove.length - curX))
-            } else moves :+ curMove
-          }
-        }
-    }
-    if (dropGhosts && situation.ghosts != 0) movesConcat.dropRight(1)
-    else movesConcat
-  }
+  def pdnMovesConcat(fullCaptures: Boolean = false, dropGhosts: Boolean = false): PdnMoves =
+    draughts.pdnMovesConcat(fullCaptures, dropGhosts)
 
   def pdnMoves(color: Color): PdnMoves = {
     val pivot = if (color == startColor) 0 else 1

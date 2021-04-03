@@ -30,10 +30,10 @@ object String {
     }
   }
 
+  private[this] def oneline(s: String) = s.replace('\n', ' ')
   def shorten(text: String, length: Int, sep: String = "…") = {
-    val t = text.replace('\n', ' ')
-    if (t.size > (length + sep.size)) (t take length) ++ sep
-    else t
+    if (text.length > length + sep.length) oneline(text take length) ++ sep
+    else oneline(text)
   }
 
   def isShouting(text: String) = text.length >= 5 && {
@@ -64,8 +64,9 @@ object String {
   val atUsernameRegex = RawHtml.atUsernameRegex
 
   object html {
-    def richText(rawText: String, nl2br: Boolean = true): Frag = raw {
-      val withLinks = RawHtml.addLinks(rawText)
+
+    def richText(rawText: String, nl2br: Boolean = true, expandImg: Boolean = true): Frag = raw {
+      val withLinks = RawHtml.addLinks(rawText, expandImg)
       if (nl2br) RawHtml.nl2br(withLinks) else withLinks
     }
 
@@ -81,9 +82,17 @@ object String {
     def unescapeHtml(html: String): String =
       org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4(html)
 
-    def markdownLinks(text: String, withImages: Boolean = true): Frag = raw {
-      RawHtml.markdownLinks(text, withImages)
+    def markdownLinksOrRichText(text: String, withImages: Boolean = true): Frag = {
+      val escaped = escapeHtmlRaw(text)
+      val marked = RawHtml.justMarkdownLinks(escaped, withImages)
+      if (marked == escaped) richText(text)
+      else nl2brUnsafe(marked)
     }
+
+    def markdownLinks(text: String, withImages: Boolean = true): String =
+      RawHtml nl2br {
+        RawHtml.escapeAndMarkdownLinks(text, withImages)
+      }
 
     def safeJsonValue(jsValue: JsValue): String = {
       // Borrowed from:

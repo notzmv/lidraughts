@@ -504,7 +504,7 @@ computer analysis, game chat and shareable URL.</string>
   <string name="noBerserkAllowed">No berserk allowed</string>
   <string name="editTournament">Edit tournament</string>
   <string name="tournamentDescription">Tournament description</string>
-  <string name="tournamentDescriptionHelp">Anything special you want to tell the participants? Try to keep it short.</string>
+  <string name="tournamentDescriptionHelp">Anything special you want to tell the participants? Try to keep it short. Markdown links are available: [text](https://url)</string>
   <string name="cancelTheTournament">Cancel the tournament</string>
   <string name="reportXToModerators">Report %s to moderators</string>
   <string name="profileCompletion">Profile completion: %s</string>
@@ -633,6 +633,7 @@ One URL per line</string>
   <string name="currentPassword">Current password</string>
   <string name="newPassword">New password</string>
   <string name="newPasswordAgain">New password (again)</string>
+  <string name="newPasswordsDontMatch">The new passwords don't match</string>
   <string name="boardHighlights">Board highlights (last move and captures)</string>
   <string name="pieceDestinations">Piece destinations (valid moves and premoves)</string>
   <string name="boardCoordinates">Board coordinates (1-50, a1-h8)</string>
@@ -643,6 +644,7 @@ One URL per line</string>
   <string name="notationGameResult">Notation game result (white win • draw • black win)</string>
   <string name="draughtsClock">Draughts clock</string>
   <string name="clockInitialTime">Clock initial time</string>
+  <string name="clockIncrement">Clock increment</string>
   <string name="onlyMembersOfTeam">Only members of team</string>
   <string name="noRestriction">No restriction</string>
   <string name="tenthsOfSeconds">Tenths of seconds</string>
@@ -941,6 +943,7 @@ One URL per line</string>
   <string name="error.max">Must be less or equal to %s</string>
   <string name="error.unknown">Error</string>
   <string name="error.pattern">Contains invalid characters</string>
+  <string name="error.eventName">Contains invalid characters. Only letters, numbers, and common punctuation marks are accepted.</string>
   <string name="mustNotContainLidraughts">Must not contain \"lidraughts\"</string>
   <string name="mustNotContainATitleThatIsNotVerified">Must not contain a title that is not verified for your account</string>
   <string name="custom">Custom</string>

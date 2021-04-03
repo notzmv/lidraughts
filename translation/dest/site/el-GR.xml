@@ -390,6 +390,7 @@
   <string name="membersOnly">Μόνο για μέλη</string>
   <string name="popularOpenings">Δημοφιλή ανοίγματα</string>
   <string name="startPosition">Αρχική διάταξη</string>
+  <string name="save">Αποθήκευση</string>
   <string name="savePosition">Αποθηκεύστε τη θέση</string>
   <string name="loadPosition">Φορτώστε θέση</string>
   <string name="isPrivate">Ιδιωτικό</string>
@@ -490,12 +491,16 @@
   <string name="thisAccountIsClosed">Αυτός ο λογαριασμός έχει κλείσει.</string>
   <string name="invalidUsernameOrPassword">Άκυρο όνομα χρήστη ή κωδικός</string>
   <string name="incorrectPassword">Εσφαλμένος κωδικός</string>
+  <string name="invalidAuthenticationCode">Μη έγκυρος κωδικός επαλήθευσης</string>
   <string name="emailMeALink">Στείλτε μου σύνδεσμο μέσω ηλ. ταχυδρομείου</string>
   <string name="currentPassword">Κωδικός σε ισχύ</string>
   <string name="newPassword">Νέος κωδικός</string>
   <string name="newPasswordAgain">Νέος κωδικός (επαλήθευση)</string>
+  <string name="newPasswordsDontMatch">Οι νέοι κωδικοί πρόσβασης δεν ταιριάζουν</string>
   <string name="pieceDestinations">Προορισμοί κομματιών (έγκυρες κινήσεις και προκινήσεις)</string>
   <string name="moveListWhilePlaying">Λίστα κινήσεων κατά τη διάρκεια της παρτίδας</string>
+  <string name="clockInitialTime">Ρολόι αρχικός χρόνος</string>
+  <string name="clockIncrement">Ρολόι προσαύξηση</string>
   <string name="tenthsOfSeconds">Δέκατα του δευτερολέπτου</string>
   <string name="never">Ποτέ</string>
   <string name="whenTimeRemainingLessThanTenSeconds">Όταν απομένουν &lt; 10 δευτερόλεπτα</string>
@@ -539,6 +544,7 @@
   <string name="drawVsYInZ">%1$s εναντίον %2$s στο %3$s</string>
   <string name="timeline">Χρονολόγιο</string>
   <string name="seeAllTournaments">Προβολή όλων των πρωταθλημάτων</string>
+  <string name="start">Δημιουργία</string>
   <string name="starting">Αρχίζει:</string>
   <string name="allInformationIsPublicAndOptional">Όλες οι πληροφορίες είναι δημόσιες και προαιρετικές.</string>
   <string name="yourCityRegionOrDepartment">Η πόλη, περιοχή ή ο νομός σας.</string>
@@ -624,6 +630,7 @@
   <string name="simulClockHint">Ρολόι Φίσερ. Όσους περισσότερους παίκτες παίξετε, τόσο περισσότερο χρόνο ίσως χρειαστείτε.</string>
   <string name="simulAddExtraTime">Μπορείτε να προσθέσετε επιπλέον χρόνο στο ρολόι σας για να σας βοηθήσει στην έκθεση.</string>
   <string name="simulHostExtraTime">Παροχή επιπλέον χρόνου στο ρολόι</string>
+  <string name="everyone">Οποιοσδήποτε</string>
   <string name="lidraughtsTournaments">Πρωταθλήματα lidraughts</string>
   <string name="tournamentFAQ">Τεκμηρίωση πρωταθλημάτων τύπου αρένας</string>
   <string name="tournamentOfficial">Επίσημο</string>
@@ -694,6 +701,7 @@
   <string name="xHostsY">%1$s φιλοξενεί τη %2$s</string>
   <string name="xJoinsY">%1$s συμμετέχει στη %2$s</string>
   <string name="xLikesY">Η %1$s αρέσει στον %2$s</string>
+  <string name="xCreatesStudyY">Ο/Η %1$s δημιούργησε την μελέτη %2$s</string>
   <string name="quickPairing">Γρήγορη αντιστοίχιση</string>
   <string name="lobby">Χώρος αναμονής</string>
   <string name="anonymous">Ανώνυμος</string>

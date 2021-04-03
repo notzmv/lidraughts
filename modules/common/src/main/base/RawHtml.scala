@@ -10,24 +10,20 @@ final object RawHtml {
   @inline implicit def toPimpedChars(i: Iterable[CharSequence]) = new PimpedChars(i)
 
   def nl2br(s: String): String = {
-    var i = s.indexOf('\n')
-    if (i < 0) s
-    else {
-      val sb = new jStringBuilder(s.length + 30)
-      var copyIdx = 0
-      do {
-        if (i > copyIdx) {
-          // copyIdx >= 0, so i - 1 >= 0
-          sb.append(s, copyIdx, if (s.charAt(i - 1) == '\r') i - 1 else i)
+    val sb = new jStringBuilder(s.length)
+    var counter = 0
+    for (char <- s) {
+      if (char == '\n') {
+        counter += 1
+        if (counter < 3) {
+          sb.append("<br>")
         }
-        sb.append("<br />")
-        copyIdx = i + 1
-        i = s.indexOf('\n', copyIdx)
-      } while (i >= 0)
-
-      sb.append(s, copyIdx, s.length)
-      sb.toString
+      } else if (char != '\r') {
+        counter = 0
+        sb.append(char)
+      }
     }
+    sb.toString
   }
 
   private[this] val urlPattern = (
@@ -67,8 +63,8 @@ final object RawHtml {
     } else List(text)
   }
 
-  def addLinks(text: String): String = {
-    expandAtUser(text) map { expanded =>
+  def addLinks(text: String, expandImg: Boolean = true): String =
+    expandAtUser(text).map { expanded =>
       val m = urlPattern.matcher(expanded)
 
       if (!m.find) escapeHtmlRaw(expanded) // preserve fast case!
@@ -121,7 +117,7 @@ final object RawHtml {
             val url = (if (isHttp) "http://" else "https://") + allButScheme
             val text = if (isHttp) url else allButScheme
             val imgHtml = {
-              if (end < sArr.length && sArr(end) == '"') None
+              if ((end < sArr.length && sArr(end) == '"') || !expandImg) None
               else imgUrl(url)
             }
             sb.append(
@@ -137,7 +133,6 @@ final object RawHtml {
         sb
       }
     } concat
-  }
 
   private[this] def adjustUrlEnd(sArr: Array[Char], start: Int, end: Int): Int = {
     var last = end - 1
@@ -177,9 +172,11 @@ final object RawHtml {
   private[this] val markdownLinkRegex = """\[([^]]++)\]\((https?://[^)]++)\)""".r
   private[this] val markdownImageRegex = """!\[([^]]++)\]\((https?://[^)]++)\)""".r
 
-  def markdownLinks(text: String, withImages: Boolean = true): String = nl2br {
-    val escaped = escapeHtmlRaw(text)
-    val maybeImages = if (withImages) markdownImageRegex.replaceAllIn(escaped, """<img src="$2" alt="$1">""") else escaped
+  def escapeAndMarkdownLinks(text: String, withImages: Boolean = true): String =
+    justMarkdownLinks(escapeHtmlRaw(text), withImages)
+
+  def justMarkdownLinks(escapedHtml: String, withImages: Boolean = true): String = {
+    val maybeImages = if (withImages) markdownImageRegex.replaceAllIn(escapedHtml, """<img src="$2" alt="$1">""") else escapedHtml
     markdownLinkRegex.replaceAllIn(maybeImages, """<a href="$2">$1</a>""")
   }
 }

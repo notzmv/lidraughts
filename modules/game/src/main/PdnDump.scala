@@ -25,7 +25,7 @@ final class PdnDump(
       else fuccess(Tags(Nil))
     tagsFuture map { ts =>
       val turns = flags.moves ?? {
-        val fenSituation = ts.fen.map(_.value) flatMap Forsyth.<<<
+        val fenSituation = ts.fen.map(_.value) flatMap { f => Forsyth.<<<@(game.variant, f) }
         val pdnMovesFull = game.pdnMovesConcat(true, true)
         val pdnMoves = draughts.Replay.unambiguousPdnMoves(
           pdnMoves = pdnMovesFull,

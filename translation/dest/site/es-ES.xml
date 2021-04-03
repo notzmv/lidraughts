@@ -118,8 +118,8 @@
   </plurals>
   <string name="currentGames">Partidas en juego</string>
   <plurals name="nbGames">
-    <item quantity="one">%s Partida</item>
-    <item quantity="other">%s Partidas</item>
+    <item quantity="one">%s partida</item>
+    <item quantity="other">%s partidas</item>
   </plurals>
   <plurals name="nbBookmarks">
     <item quantity="one">%s partida favorita</item>
@@ -396,6 +396,7 @@ un análisis por ordenador, un chat de juego y una URL para compartir.</string>
   <string name="popularOpenings">Aperturas populares</string>
   <string name="startPosition">Posición inicial</string>
   <string name="clearBoard">Limpiar el tablero</string>
+  <string name="save">Guardar</string>
   <string name="savePosition">Guardar posición</string>
   <string name="loadPosition">Cargar posicion</string>
   <string name="isPrivate">Privado</string>
@@ -495,14 +496,17 @@ un análisis por ordenador, un chat de juego y una URL para compartir.</string>
   <string name="thisAccountIsClosed">Esta cuenta está cerrada.</string>
   <string name="invalidUsernameOrPassword">Nombre de usuario o contraseña erróneo</string>
   <string name="incorrectPassword">Contraseña incorrecta</string>
+  <string name="invalidAuthenticationCode">Código de autenticación inválido</string>
   <string name="emailMeALink">Envíame un enlace por correo electrónico</string>
   <string name="currentPassword">Contraseña actual</string>
   <string name="newPassword">Nueva contraseña</string>
   <string name="newPasswordAgain">Nueva contraseña (otra vez)</string>
-  <string name="boardHighlights">Destacar casillas del tablero (último movimiento y jaque)</string>
+  <string name="newPasswordsDontMatch">Las contraseñas nuevas no coinciden</string>
   <string name="pieceDestinations">Destino de las piezas (movimientos válidos y anticipados)</string>
   <string name="boardCoordinates">Coordenadas del tablero (1-50, a1-h8)</string>
   <string name="moveListWhilePlaying">Lista de movimientos durante la partida</string>
+  <string name="clockInitialTime">Tiempo inicial del reloj</string>
+  <string name="clockIncrement">Incremento</string>
   <string name="tenthsOfSeconds">Décimas de segundo</string>
   <string name="never">Nunca</string>
   <string name="whenTimeRemainingLessThanTenSeconds">Cuando queden menos de 10 segundos</string>
@@ -546,6 +550,7 @@ un análisis por ordenador, un chat de juego y una URL para compartir.</string>
   <string name="drawVsYInZ">%1$s contra %2$s en %3$s</string>
   <string name="timeline">Cronología</string>
   <string name="seeAllTournaments">Ver todos los torneos</string>
+  <string name="start">Comenzar</string>
   <string name="starting">Comienzo:</string>
   <string name="allInformationIsPublicAndOptional">Toda la información es pública y opcional.</string>
   <string name="yourCityRegionOrDepartment">Tu ciudad, región o provincia.</string>
@@ -632,6 +637,7 @@ un análisis por ordenador, un chat de juego y una URL para compartir.</string>
   <string name="simulClockHint">Configuración de reloj Fischer. Cuantos más oponentes, más tiempo se necesita.</string>
   <string name="simulAddExtraTime">Puedes añadir tiempo adicional a tu reloj para ayudarte en la simultánea.</string>
   <string name="simulHostExtraTime">Tiempo extra del anfitrión</string>
+  <string name="everyone">Todo el mundo</string>
   <string name="lidraughtsTournaments">Torneos de Lidraughts</string>
   <string name="tournamentFAQ">Preguntas frecuentes de los torneos</string>
   <string name="tournamentOfficial">Oficial</string>

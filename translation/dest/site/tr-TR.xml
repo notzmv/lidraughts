@@ -514,10 +514,12 @@
   <string name="currentPassword">Geçerli şifre</string>
   <string name="newPassword">Yeni şifre</string>
   <string name="newPasswordAgain">Yeni şifre(tekrar)</string>
-  <string name="boardHighlights">Tahta uyarıları (son hamle)</string>
+  <string name="newPasswordsDontMatch">Yeni parolalar eşleşmiyor</string>
   <string name="pieceDestinations">Taşın gidebileceği kareler (kurallara uygun hamleler)</string>
-  <string name="boardCoordinates">Tahta kordinatları</string>
+  <string name="boardCoordinates">Tahta kordinatları (1-50, a1-h8)</string>
   <string name="moveListWhilePlaying">Oyun sırasında notasyonu göster</string>
+  <string name="clockInitialTime">Maç başlangıç süresi</string>
+  <string name="clockIncrement">Hamle başına süre artışı</string>
   <string name="tenthsOfSeconds">Saniyenin Onda Biri</string>
   <string name="never">Asla</string>
   <string name="whenTimeRemainingLessThanTenSeconds">Kalan zaman 10 saniyeden az ise</string>
@@ -531,7 +533,6 @@
   <string name="premovesPlayingDuringOpponentTurn">Ön hamleler (hamle sırası rakipteyken oynama)</string>
   <string name="takebacksWithOpponentApproval">Geri Alma (rakibin onayıyla)</string>
   <string name="claimDrawOnThreefoldRepetitionAutomatically">Üçlü tekrarda otomatik olarak beraberlik teklif et</string>
-  <string name="clockInitialTime">Maç başlangıç süresi</string>
   <string name="privacy">Gizlilik</string>
   <string name="letOtherPlayersFollowYou">Diğer oyuncular seni takip etsin mi?</string>
   <string name="letOtherPlayersChallengeYou">Diğer oyuncular oyun teklif edebilsin</string>
@@ -564,6 +565,7 @@
   <string name="defeatVsYInZ">%2$s adlı oyuncuya karşı %3$s maçında %1$s</string>
   <string name="drawVsYInZ">%2$s adlı oyuncuya karşı %3$s maçında %1$s</string>
   <string name="timeline">Zaman tüneli</string>
+  <string name="start">Başlat</string>
   <string name="starting">Başlangıç:</string>
   <string name="allInformationIsPublicAndOptional">Tüm bilgiler herkese açık ve seçime bağlıdır.</string>
   <string name="yourCityRegionOrDepartment">Şehrin, ilçen ya da bölgen.</string>
@@ -644,6 +646,7 @@
   <string name="simulClockHint">Fischer Saati formatı. Ne kadar fazla oyuncu ile yüzleşirseniz, o kadar fazla zamana ihtiyaç duyabilirsiniz.</string>
   <string name="simulAddExtraTime">Eş zamanlı gösteride süreyi idare edebilmek için kendi saatinize fazladan zaman ekleyebilirsiniz.</string>
   <string name="simulHostExtraTime">Ev sahibinin fazladan süresi</string>
+  <string name="everyone">Herkes</string>
   <string name="lidraughtsTournaments">Lidraughts turnuvaları</string>
   <string name="tournamentFAQ">Arena turnuvaları SSS</string>
   <string name="tournamentOfficial">Resmî</string>

@@ -72,7 +72,7 @@ case class User(
 
   def countRated = count.rated
 
-  def hasTitle = title.isDefined
+  def hasTitle = title.exists(Title.BOT !=)
 
   lazy val seenRecently: Boolean = timeNoSee < 2.minutes
 
@@ -201,6 +201,8 @@ object User {
   val newUsernameSuffix = """(?i).*[a-z0-9]""".r
 
   val newUsernameChars = """(?i)[\w-]*""".r
+
+  val newUsernameLetters = """(?i)^([a-z0-9][\w-]?)+$""".r
 
   def couldBeUsername(str: User.ID) = historicalUsernameRegex.matches(str)
   def couldBeStartOfUsername(str: User.ID) = historicalUsernameStartRegex.matches(str)

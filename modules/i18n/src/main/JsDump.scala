@@ -17,8 +17,8 @@ private[i18n] final class JsDump(path: String) {
 
   private val pathFile = new File(path)
 
-  private def dumpFromKey(keys: Set[String], lang: Lang, ref: I18nDb.Ref): Set[String] =
-    keys.map { key =>
+  private def dumpFromKey(keys: Set[String], dedupKeys: Set[String], lang: Lang, ref: I18nDb.Ref): Set[String] =
+    keys.filterNot(dedupKeys.apply).map { key =>
       """"%s":"%s"""".format(key, escape(Translator.txt.literal(key, ref, Nil, lang)))
     }
 
@@ -31,8 +31,11 @@ private[i18n] final class JsDump(path: String) {
 
   private def writeFullJson = I18nDb.langs foreach { lang =>
     val dbs = List(I18nDb.Site, I18nDb.Arena, I18nDb.Study)
-    val keys = dbs.foldLeft(Set[String]()) { (set, ref) => set ++ dumpFromKey(asScalaSet(I18nDb(ref)(defaultLang.value).keySet).toSet, lang, ref) }
-    val code = keys.mkString("{", ",", "}")
+    val (keyValues, _) = dbs.foldLeft(Set.empty[String] -> Set.empty[String]) { (sets, ref) =>
+      val newKeys = asScalaSet(I18nDb(ref)(defaultLang.value).keySet).toSet
+      (sets._1 ++ dumpFromKey(newKeys, sets._2, lang, ref), sets._2 ++ newKeys)
+    }
+    val code = keyValues.mkString("{", ",", "}")
     val file = new File("%s/%s.all.json".format(pathFile.getCanonicalPath, lang.code))
     writeFile(file, code)
   }

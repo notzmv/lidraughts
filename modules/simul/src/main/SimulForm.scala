@@ -14,28 +14,26 @@ object SimulForm {
     u.count.game >= 10 && u.createdSinceDays(3) && !u.troll
   } || u.hasTitle || u.isVerified
 
-  private def nameType(host: User) = text.verifying(
-    Constraints minLength 2,
-    Constraints maxLength 40,
-    Constraints.pattern(regex = """[\p{L}\p{N}-\s:,;]+""".r),
-    Constraint[String] { (t: String) =>
-      if (t.toLowerCase contains "lidraughts")
-        validation.Invalid(validation.ValidationError("mustNotContainLidraughts"))
-      else validation.Valid
-    },
-    Constraint[String] { (t: String) =>
-      if (t.toUpperCase.split(' ').exists { word =>
-        lidraughts.user.Title.all.exists {
-          case (title, name) =>
-            !(host.title.has(title) || host.title.has(title.with64) || host.title.has(title.without64)) && {
-              title.value == word || name.toUpperCase == word
-            }
-        }
-      })
-        validation.Invalid(validation.ValidationError("mustNotContainATitleThatIsNotVerified"))
-      else validation.Valid
-    }
-  )
+  private def nameType(host: User) =
+    eventName(2, 40).verifying(
+      Constraint[String] { (t: String) =>
+        if (t.toLowerCase contains "lidraughts")
+          validation.Invalid(validation.ValidationError("mustNotContainLidraughts"))
+        else validation.Valid
+      },
+      Constraint[String] { (t: String) =>
+        if (t.toUpperCase.split(' ').exists { word =>
+          lidraughts.user.Title.all.exists {
+            case (title, name) =>
+              !(host.title.has(title) || host.title.has(title.with64) || host.title.has(title.without64)) && {
+                title.value == word || name.toUpperCase == word
+              }
+          }
+        })
+          validation.Invalid(validation.ValidationError("mustNotContainATitleThatIsNotVerified"))
+        else validation.Valid
+      }
+    )
 
   def create(host: User) = Form(mapping(
     "name" -> optional(nameType(host)),
@@ -48,7 +46,7 @@ object SimulForm {
     "color" -> stringIn(colorChoices),
     "targetPct" -> text(minLength = 0, maxLength = 3)
       .verifying("invalidTargetPercentage", pct => pct.length == 0 || parseIntOption(pct).fold(false)(p => p >= 50 && p <= 100)),
-    "text" -> text,
+    "text" -> cleanText,
     "team" -> optional(nonEmptyText)
   )(Setup.apply)(Setup.unapply)) fill empty(host)
 

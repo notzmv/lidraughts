@@ -83,7 +83,7 @@ object features {
               "Forum, teams, messaging, friends, challenges"
             ),
             tr(check)(
-              "Available in 19 languages"
+              "Available in 20 languages"
             ),
             tr(check)(
               "Light/dark theme, custom boards, pieces and background"
@@ -116,7 +116,7 @@ object features {
               a(href := routes.Puzzle.home)("Tactics puzzles")
             ),
             tr(check)(
-              "Available in 17 languages"
+              "Available in 20 languages"
             ),
             tr(check)(
               "Light and dark theme, custom boards and pieces"

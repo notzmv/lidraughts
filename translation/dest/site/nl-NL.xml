@@ -497,7 +497,7 @@ een computeranalyse, een chatbox bij de partij en een deelbare URL.</string>
   <string name="cancelTheTournament">Toernooi afgelasten</string>
   <string name="editTournament">Toernooi bewerken</string>
   <string name="tournamentDescription">Toernooi omschrijving</string>
-  <string name="tournamentDescriptionHelp">Iets bijzonders dat je aan de deelnemers kwijt wil? Probeer het kort te houden.</string>
+  <string name="tournamentDescriptionHelp">Iets bijzonders dat je aan de deelnemers kwijt wil? Probeer het kort te houden. Je kunt Markdown links gebruiken: [tekst](https://url)</string>
   <string name="reportXToModerators">Rapporteer %s aan de toezichthouders</string>
   <string name="profileCompletion">Voltooiing profiel: %s</string>
   <string name="xRating">%s-rating</string>
@@ -622,6 +622,7 @@ Een URL per regel</string>
   <string name="currentPassword">Huidig wachtwoord</string>
   <string name="newPassword">Nieuw wachtwoord</string>
   <string name="newPasswordAgain">Nieuw wachtwoord (opnieuw)</string>
+  <string name="newPasswordsDontMatch">De nieuwe wachtwoorden komen niet overeen</string>
   <string name="boardHighlights">Bord laten oplichten (laatste zet en slagen)</string>
   <string name="pieceDestinations">Toon geldige zetten en sta vooraf-zetten toe</string>
   <string name="boardCoordinates">Bordcoördinaten (1-50, a1-h8)</string>
@@ -632,6 +633,7 @@ Een URL per regel</string>
   <string name="notationGameResult">Notatie resultaat partij (winst wit • remise • winst zwart)</string>
   <string name="draughtsClock">Damklok</string>
   <string name="clockInitialTime">Klok begintijd</string>
+  <string name="clockIncrement">Extra tijd</string>
   <string name="onlyMembersOfTeam">Alleen leden van team</string>
   <string name="noRestriction">Geen beperking</string>
   <string name="tenthsOfSeconds">Tienden van seconden</string>
@@ -920,6 +922,7 @@ Een URL per regel</string>
   <string name="error.max">Moet kleiner dan of gelijk aan %s zijn</string>
   <string name="error.unknown">Fout</string>
   <string name="error.pattern">Bevat ongeldige tekens</string>
+  <string name="error.eventName">Bevat ongeldige tekens. Alleen letters, cijfers, en gangbare leestekens zijn toegestaan.</string>
   <string name="mustNotContainLidraughts">Kan geen \"lidraughts\" bevatten</string>
   <string name="mustNotContainATitleThatIsNotVerified">Kan geen titel bevatten die niet is geverifieerd voor jouw account</string>
   <string name="custom">Aangepast</string>
