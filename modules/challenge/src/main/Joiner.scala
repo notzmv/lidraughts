@@ -32,7 +32,7 @@ private[challenge] final class Joiner(onStart: String => Unit) {
                 makeDraughts(draughts.variant.Standard) -> none
               else game -> baseState
           }
-          val microMatch = c.microMatch && c.customStartingPosition option "micromatch"
+          val microMatch = c.isMicroMatch && c.customStartingPosition option "micromatch"
           val perfPicker = (perfs: lidraughts.user.Perfs) => perfs(c.perfType)
           val game = Game.make(
             draughts = draughtsGame,

@@ -53,7 +53,7 @@ object bits {
       ),
       div(cls := "mode")(modeName(c.mode))
     ),
-    c.microMatch option div(cls := "micro-match")(
+    c.isMicroMatch option div(cls := "micro-match")(
       trans.microMatchChallenge(), " ",
       trans.microMatchExplanation()
     )

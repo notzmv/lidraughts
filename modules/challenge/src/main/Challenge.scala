@@ -26,7 +26,7 @@ case class Challenge(
     seenAt: DateTime,
     expiresAt: DateTime,
     external: Option[Challenge.ExternalChallenge],
-    microMatch: Boolean
+    microMatch: Option[Boolean]
 ) {
 
   import Challenge._
@@ -73,6 +73,8 @@ case class Challenge(
       (fromPositionVariants(variant) && initialFen.isDefined && !initialFen.exists(_.value == variant.initialFen))
 
   def isExternal = external.isDefined
+
+  def isMicroMatch = ~microMatch
 
   def acceptExternal(u: User) = external match {
     case Some(e) if challengerUserId.contains(u.id) => copy(
@@ -234,9 +236,9 @@ object Challenge {
       seenAt = DateTime.now,
       expiresAt = inTwoWeeks,
       external = external option ExternalChallenge(startsAt = startsAt),
-      microMatch = microMatch
+      microMatch = microMatch option true
     )
-    if (microMatch && !challenge.customStartingPosition) challenge.copy(microMatch = false)
+    if (microMatch && !challenge.customStartingPosition) challenge.copy(microMatch = none)
     else challenge
   }
 }
