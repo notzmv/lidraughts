@@ -196,8 +196,9 @@ module.exports = function(cfg, element) {
       $rated = $modeChoices.eq(1);
     var $variantSelect = $form.find('#sf_variant');
     var $fenVariantSelect = $form.find('#sf_fenVariant');
-    var $fenPosition = $form.find(".fen_position");
-    var $fenVariant = $form.find(".fen_variant");
+    var $fenPosition = $form.find('.fen_position');
+    var $fenVariant = $form.find('.fen_variant');
+    var $microMatch = $form.find('.micro_match');
     var $timeInput = $form.find('.time_choice [name=time]');
     var $incrementInput = $form.find('.increment_choice [name=increment]');
     var $daysInput = $form.find('.days_choice [name=days]');
@@ -412,6 +413,7 @@ module.exports = function(cfg, element) {
       var fen = $(this).val() == '3';
       $fenPosition.toggle(fen);
       $fenVariant.toggleClass('hidden', !fen);
+      $microMatch.toggle(fen);
       $modeChoicesWrap.toggle(!fen);
       if (fen) {
         $casual.click();

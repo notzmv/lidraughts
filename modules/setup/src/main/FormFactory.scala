@@ -73,7 +73,8 @@ private[setup] final class FormFactory(
       "days" -> days,
       "mode" -> mode(withRated = ctx.isAuth),
       "color" -> color,
-      "fen" -> fen
+      "fen" -> fen,
+      "microMatch" -> boolean
     )(FriendConfig.<<)(_.>>)
       .verifying("Invalid clock", _.validClock)
       .verifying("invalidFen", _.validFen)

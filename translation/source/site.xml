@@ -18,6 +18,8 @@
   <string name="white">White</string>
   <string name="black">Black</string>
   <string name="randomColor">Random side</string>
+  <string name="microMatch">Micro-match</string>
+  <string name="microMatchExplanation">A rematch with colors reversed is played immediately after this game</string>
   <string name="createAGame">Create a game</string>
   <string name="whiteIsVictorious">White is victorious</string>
   <string name="blackIsVictorious">Black is victorious</string>

@@ -12,6 +12,8 @@ private object bits {
 
   val prefix = "sf_"
 
+  def fieldId(field: Field): String = s"$prefix${field.id}"
+
   def fenInput(form: Form[_], strict: Boolean, limitKings: Boolean, validFen: Option[lidraughts.setup.ValidFen], fenVariants: Option[List[SelectChoice]])(implicit ctx: Context) = {
     val field = form("fen")
     val fenVariant = validFen.map(_.variant) | draughts.variant.Standard
@@ -60,7 +62,7 @@ private object bits {
     field: Field,
     options: Seq[SelectChoice],
     compare: (String, String) => Boolean = (a, b) => a == b
-  ) = select(id := s"$prefix${field.id}", name := field.name)(
+  ) = select(id := fieldId(field), name := field.name)(
     options.map {
       case (value, name, title) => option(
         st.value := value,
@@ -76,7 +78,7 @@ private object bits {
         case (key, name, hint) => div(
           input(
             `type` := "radio",
-            id := s"$prefix${field.id}_${key}",
+            id := s"${fieldId(field)}_${key}",
             st.name := field.name,
             value := key,
             field.value.has(key) option checked
@@ -84,7 +86,7 @@ private object bits {
           label(
             cls := "required",
             title := hint,
-            `for` := s"$prefix${field.id}_$key"
+            `for` := s"${fieldId(field)}_$key"
           )(name)
         )
       }
@@ -94,7 +96,19 @@ private object bits {
     input(name := field.name, value := field.value, `type` := "hidden")
 
   def renderLabel(field: Field, content: Frag) =
-    label(`for` := s"$prefix${field.id}")(content)
+    label(`for` := fieldId(field))(content)
+
+  def renderCheckbox(field: Field, labelContent: Frag) = div(
+    span(cls := "form-check-input")(
+      form3.cmnToggle(fieldId(field), field.name, field.value.has("true"))
+    ),
+    renderLabel(field, labelContent)
+  )
+
+  def renderMicroMatch(form: Form[_])(implicit ctx: Context) =
+    div(cls := "micro_match", title := trans.microMatchExplanation.txt())(
+      renderCheckbox(form("microMatch"), trans.microMatch())
+    )
 
   def renderTimeMode(form: Form[_], config: lidraughts.setup.BaseConfig)(implicit ctx: Context) =
     div(cls := "time_mode_config optional_config")(

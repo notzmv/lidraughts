@@ -93,6 +93,7 @@ object forms {
         renderVariant(form, translatedVariantChoicesWithVariantsAndFen),
         fenInput(form, false, false, validFen, translatedFromPositionVariantChoices.some),
         renderTimeMode(form, lidraughts.setup.FriendConfig),
+        renderMicroMatch(form),
         ctx.isAuth option div(cls := "mode_choice buttons")(
           renderRadios(form("mode"), translatedModeChoices)
         ),
