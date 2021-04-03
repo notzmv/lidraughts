@@ -52,8 +52,7 @@ private object bits {
     )
 
   def renderFromPositionVariant(form: Form[_], variants: List[SelectChoice])(implicit ctx: Context) =
-    div(cls := "fen_variant label_select hidden")(
-      renderLabel(form("fenVariant"), trans.variant()),
+    div(cls := "fen_variant hidden")(
       renderSelect(form("fenVariant"), variants)
     )
 

@@ -43,12 +43,6 @@ $c-slider: $c-setup;
     &.variant {
       margin-bottom: .5em;
     }
-    &.fen_variant {
-      margin-top: .5em;
-      &.hidden {
-        display: none;
-      }
-    }
     label {
       flex: 0 0 33%;
       text-align: right;
@@ -73,6 +67,16 @@ $c-slider: $c-setup;
     }
     .fen_form input {
       flex: 1 1 100%;
+    }
+    .fen_variant {
+      margin-top: .5em;
+      &.hidden {
+        display: none;
+      }
+      select {
+        margin-left: 0;
+        font-weight: bold;
+      }
     }
   }
   #form3-fen.failure {
