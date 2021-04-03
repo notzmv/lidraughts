@@ -59,9 +59,16 @@ $c-challenge: $c-secondary;
       text-transform: uppercase;
     }
     .variant_info {
-      font-size: 0.85em;
+      font-size: 0.9em;
       font-style: italic;
     }
+  }
+  .micro-match {
+    @extend %roboto;
+    display: flex;
+    font-size: 2em;
+    text-align: center;
+    margin: -1.5rem 0 2rem 0;
   }
   .follow-up .button {
     display: block;

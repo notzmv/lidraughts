@@ -18,8 +18,10 @@
   <string name="black">Zwart</string>
   <string name="randomColor">Willekeurige kleur</string>
   <string name="microMatch">Micro-match</string>
-  <string name="microMatchExplanation">Na deze partij wordt er meteen een rematch met omgekeerde kleuren gespeeld</string>
+  <string name="microMatchChallenge">Deze uitdaging is een micro-match!</string>
+  <string name="microMatchExplanation">Na deze partij wordt er meteen een rematch gespeeld met omgekeerde kleuren.</string>
   <string name="microMatchRematchStart">Tweede partij van de micro-match gestart</string>
+  <string name="microMatchGameOne">Micro-match partij 1</string>
   <string name="createAGame">Start een nieuwe partij</string>
   <string name="whiteIsVictorious">Wit heeft gewonnen</string>
   <string name="blackIsVictorious">Zwart heeft gewonnen</string>
@@ -137,6 +139,7 @@
   <string name="currentGames">Lopende partijen</string>
   <string name="gamesInTimeout">Partijen met timeout</string>
   <string name="yourTurnInX">Je bent aan zet in %s</string>
+  <string name="gameNumberX">Partij %s</string>
   <plurals name="nbGames">
     <item quantity="one">%s partij</item>
     <item quantity="other">%s partijen</item>
