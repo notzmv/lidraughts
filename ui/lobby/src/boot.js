@@ -369,6 +369,11 @@ module.exports = function(cfg, element) {
     }).trigger('change');
 
     var $fenInput = $fenPosition.find('input');
+    var updateEditorHref = function(fen) {
+      $fenPosition.find('a.board_editor, a.editor_button').each(function() {
+        $(this).attr('href', $(this).attr('href').replace(/editor\/.+$/, 'editor/' + variantKey($fenVariantSelect.val()) + (fen ? '/' + fen : '')));
+      });
+    };
     var validateFen = lidraughts.debounce(function() {
       $fenInput.removeClass("success failure");
       var fen = $fenInput.val();
@@ -385,23 +390,20 @@ module.exports = function(cfg, element) {
           success: function(data) {
             $fenInput.addClass('success');
             $fenPosition.find('.preview').html(data);
-            $fenPosition.find('a.board_editor, a.editor_button').each(function() {
-              $(this).attr('href', $(this).attr('href').replace(/editor\/.+$/, 'editor/' + variantKey($fenVariantSelect.val()) + '/' + fen));
-            });
+            updateEditorHref(fen);
             $submits.removeClass('nope');
             lidraughts.pubsub.emit('content_loaded');
           },
           error: function(res) {
             $fenInput.addClass('failure');
             $fenPosition.find('.preview').html(res.responseText || '');
+            updateEditorHref();
             $submits.addClass('nope');
           }
         });
       } else {
         $fenPosition.find('.preview').html('');
-        $fenPosition.find('a.board_editor, a.editor_button').each(function() {
-          $(this).attr('href', $(this).attr('href').replace(/editor\/.+$/, 'editor/' + variantKey($fenVariantSelect.val())));
-        });
+        updateEditorHref();
       }
     }, 200);
     $fenInput.on('keyup', validateFen);
