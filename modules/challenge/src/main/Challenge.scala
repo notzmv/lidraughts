@@ -25,7 +25,8 @@ case class Challenge(
     createdAt: DateTime,
     seenAt: DateTime,
     expiresAt: DateTime,
-    external: Option[Challenge.ExternalChallenge]
+    external: Option[Challenge.ExternalChallenge],
+    microMatch: Boolean
 ) {
 
   import Challenge._
@@ -189,7 +190,8 @@ object Challenge {
     destUser: Option[User],
     rematchOf: Option[String],
     external: Boolean = false,
-    startsAt: Option[DateTime] = None
+    startsAt: Option[DateTime] = None,
+    microMatch: Boolean = false
   ): Challenge = {
     val (colorChoice, finalColor) = color match {
       case "white" => ColorChoice.White -> draughts.White
@@ -213,7 +215,7 @@ object Challenge {
       case TimeControl.Clock(clock) if !lidraughts.game.Game.allowRated(finalVariant, clock) => Mode.Casual
       case _ => mode
     }
-    new Challenge(
+    val challenge = new Challenge(
       _id = randomId,
       status = if (external) Status.External else Status.Created,
       variant = finalVariant,
@@ -231,7 +233,10 @@ object Challenge {
       createdAt = DateTime.now,
       seenAt = DateTime.now,
       expiresAt = inTwoWeeks,
-      external = external option ExternalChallenge(startsAt = startsAt)
+      external = external option ExternalChallenge(startsAt = startsAt),
+      microMatch = microMatch
     )
+    if (microMatch && !challenge.customStartingPosition) challenge.copy(microMatch = false)
+    else challenge
   }
 }

@@ -737,7 +737,8 @@ object Game {
     source: Source,
     pdnImport: Option[PdnImport],
     daysPerTurn: Option[Int] = None,
-    drawLimit: Option[Int] = None
+    drawLimit: Option[Int] = None,
+    microMatch: Option[String] = None
   ): NewGame = {
     val createdAt = DateTime.now
     NewGame(Game(
@@ -758,6 +759,7 @@ object Game {
         simulPairing = none,
         timeOutUntil = none,
         drawLimit = drawLimit,
+        microMatch = microMatch,
         analysed = false
       ),
       createdAt = createdAt,
@@ -806,6 +808,7 @@ object Game {
     val initialFen = "if"
     val checkAt = "ck"
     val timeOutUntil = "to"
+    val microMatch = "mm"
     val drawLimit = "dl"
   }
 }

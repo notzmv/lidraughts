@@ -109,7 +109,8 @@ object Setup extends LidraughtsController with TheftPrevention {
                   case _ => Left("no_sid")
                 },
                 destUser = destUser,
-                rematchOf = none
+                rematchOf = none,
+                microMatch = config.microMatch
               )
               env.processor.saveFriendConfig(config) >>
                 (Env.challenge.api create challenge) flatMap {

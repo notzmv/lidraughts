@@ -209,6 +209,9 @@ object GameRepo {
 
   def setTv(id: ID) = coll.updateFieldUnchecked($id(id), F.tvAt, DateTime.now)
 
+  def setMicroMatch(id: ID, microMatch: String) =
+    coll.updateField($id(id), F.microMatch, microMatch)
+
   def setAnalysed(id: ID): Unit = {
     coll.updateFieldUnchecked($id(id), F.analysed, true)
   }

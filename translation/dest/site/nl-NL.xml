@@ -19,6 +19,7 @@
   <string name="randomColor">Willekeurige kleur</string>
   <string name="microMatch">Micro-match</string>
   <string name="microMatchExplanation">Na deze partij wordt er meteen een rematch met omgekeerde kleuren gespeeld</string>
+  <string name="microMatchRematchStart">Tweede partij van de micro-match gestart</string>
   <string name="createAGame">Start een nieuwe partij</string>
   <string name="whiteIsVictorious">Wit heeft gewonnen</string>
   <string name="blackIsVictorious">Zwart heeft gewonnen</string>

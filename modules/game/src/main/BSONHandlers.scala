@@ -119,6 +119,7 @@ object BSONHandlers {
           simulId = r strO F.simulId,
           simulPairing = r intO F.simulPairing,
           timeOutUntil = r dateO F.timeOutUntil,
+          microMatch = r strO F.microMatch,
           drawLimit = r intO F.drawLimit,
           analysed = r boolD F.analysed
         )
@@ -151,6 +152,7 @@ object BSONHandlers {
       F.simulId -> o.metadata.simulId,
       F.simulPairing -> o.metadata.simulPairing,
       F.timeOutUntil -> o.metadata.timeOutUntil.map(w.date),
+      F.microMatch -> o.metadata.microMatch,
       F.drawLimit -> o.metadata.drawLimit,
       F.analysed -> w.boolO(o.metadata.analysed)
     ) ++ {
