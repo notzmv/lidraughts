@@ -217,7 +217,7 @@ object Challenge {
       case TimeControl.Clock(clock) if !lidraughts.game.Game.allowRated(finalVariant, clock) => Mode.Casual
       case _ => mode
     }
-    val challenge = new Challenge(
+    new Challenge(
       _id = randomId,
       status = if (external) Status.External else Status.Created,
       variant = finalVariant,
@@ -237,8 +237,14 @@ object Challenge {
       expiresAt = inTwoWeeks,
       external = external option ExternalChallenge(startsAt = startsAt),
       microMatch = microMatch option true
-    )
-    if (microMatch && !challenge.customStartingPosition) challenge.copy(microMatch = none)
-    else challenge
+    ) |> { challenge =>
+      if (microMatch && !challenge.customStartingPosition)
+        challenge.copy(microMatch = none)
+      else challenge
+    } |> { challenge =>
+      if (challenge.mode.rated && !challenge.isMicroMatch && challenge.customStartingPosition)
+        challenge.copy(mode = Mode.Casual)
+      else challenge
+    }
   }
 }

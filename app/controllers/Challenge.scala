@@ -168,8 +168,8 @@ object Challenge extends LidraughtsController {
             case _ =>
               import lidraughts.challenge.Challenge._
               val challenge = lidraughts.challenge.Challenge.make(
-                variant = config.variant,
-                fenVariant = none,
+                variant = config.realVariant,
+                fenVariant = config.fenVariant,
                 initialFen = config.position,
                 timeControl = config.clock map { c =>
                   TimeControl.Clock(c)
@@ -180,7 +180,8 @@ object Challenge extends LidraughtsController {
                 color = config.color.name,
                 challenger = Right(me),
                 destUser = destUser,
-                rematchOf = none
+                rematchOf = none,
+                microMatch = config.microMatch
               )
               (Env.challenge.api create challenge) map {
                 case true =>
@@ -206,8 +207,8 @@ object Challenge extends LidraughtsController {
                 case Some(opponentUser) =>
                   import lidraughts.challenge.Challenge._
                   val challenge = lidraughts.challenge.Challenge.make(
-                    variant = config.variant,
-                    fenVariant = none,
+                    variant = config.realVariant,
+                    fenVariant = config.fenVariant,
                     initialFen = config.position,
                     timeControl = config.clock map { c =>
                       TimeControl.Clock(c)
@@ -220,7 +221,8 @@ object Challenge extends LidraughtsController {
                     destUser = opponentUser.some,
                     rematchOf = none,
                     external = true,
-                    startsAt = config.startsAt
+                    startsAt = config.startsAt,
+                    microMatch = config.microMatch
                   )
                   (Env.challenge.api create challenge) map {
                     case true =>

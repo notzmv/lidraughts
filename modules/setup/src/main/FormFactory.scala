@@ -116,8 +116,11 @@ private[setup] final class FormFactory(
       "color" -> optional(color),
       "fen" -> fen,
       "opponent" -> optional(nonEmptyText),
-      "startsAt" -> optional(utcDate)
-    )(ApiConfig.<<)(_.>>).verifying("invalidFen", _.validFen)
+      "startsAt" -> optional(utcDate),
+      "microMatch" -> optional(boolean)
+    )(ApiConfig.<<)(_.>>)
+      .verifying("A custom fen is not allowed for this variant", _.validVariantForFen)
+      .verifying("invalidFen", _.validFen)
   )
 
   def savedConfig(implicit ctx: UserContext): Fu[UserConfig] =
