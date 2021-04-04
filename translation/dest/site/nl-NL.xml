@@ -623,7 +623,7 @@ Een URL per regel</string>
   <string name="newPassword">Nieuw wachtwoord</string>
   <string name="newPasswordAgain">Nieuw wachtwoord (opnieuw)</string>
   <string name="newPasswordsDontMatch">De nieuwe wachtwoorden komen niet overeen</string>
-  <string name="boardHighlights">Bord laten oplichten (laatste zet en slagen)</string>
+  <string name="boardHighlights">Bord markeringen (laatste zet)</string>
   <string name="pieceDestinations">Toon geldige zetten en sta vooraf-zetten toe</string>
   <string name="boardCoordinates">Bordcoördinaten (1-50, a1-h8)</string>
   <string name="coordinateSystem8x8">Coördinaten systeem op 8x8 borden</string>

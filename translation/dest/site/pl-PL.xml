@@ -687,6 +687,7 @@ jeden adres URL na linię</string>
   <string name="newPassword">Nowe hasło</string>
   <string name="newPasswordAgain">Powtórz nowe hasło</string>
   <string name="newPasswordsDontMatch">Nowe hasła nie są takie same</string>
+  <string name="boardHighlights">Podświetlenie ostatniego posunięcia</string>
   <string name="pieceDestinations">Podświetlaj możliwe pola docelowe (ruchy zwykłe i planowane)</string>
   <string name="boardCoordinates">Współrzędne pól (1-50, a1-h8)</string>
   <string name="coordinateSystem8x8">System oznaczania pól na warcabnicy 8x8</string>

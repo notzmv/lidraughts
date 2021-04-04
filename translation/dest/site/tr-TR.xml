@@ -515,6 +515,7 @@
   <string name="newPassword">Yeni şifre</string>
   <string name="newPasswordAgain">Yeni şifre(tekrar)</string>
   <string name="newPasswordsDontMatch">Yeni parolalar eşleşmiyor</string>
+  <string name="boardHighlights">Tahta uyarıları (son hamle)</string>
   <string name="pieceDestinations">Taşın gidebileceği kareler (kurallara uygun hamleler)</string>
   <string name="boardCoordinates">Tahta kordinatları (1-50, a1-h8)</string>
   <string name="moveListWhilePlaying">Oyun sırasında notasyonu göster</string>

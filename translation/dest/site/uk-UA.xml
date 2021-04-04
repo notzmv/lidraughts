@@ -549,6 +549,7 @@
   <string name="newPassword">Новий пароль</string>
   <string name="newPasswordAgain">Новий пароль (іще раз)</string>
   <string name="newPasswordsDontMatch">Нові паролі не однакові</string>
+  <string name="boardHighlights">Підсвітлення кольором (останнього ходу)</string>
   <string name="pieceDestinations">Поля для ходів (можливі ходи та ходи на випередження)</string>
   <string name="boardCoordinates">Координати (1-50, a1-h8)</string>
   <string name="moveListWhilePlaying">Список ходів під час гри</string>

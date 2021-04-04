@@ -616,7 +616,7 @@ Vienā līnijā  - tikai vienu norādi.</string>
   <string name="newPassword">Jaunā parole</string>
   <string name="newPasswordAgain">Jaunā parole (atkārtoti)</string>
   <string name="newPasswordsDontMatch">Jaunās paroles nesaskan</string>
-  <string name="boardHighlights">Izgaismojumi uz dēlīša (pēdējais gājiens un sitiena lauciņi)</string>
+  <string name="boardHighlights">Izgaismojumi uz dēlīša (pēdējais gājiens)</string>
   <string name="pieceDestinations">Kauliņu galamērķi (atļauti gājieni vai priekšgājieni)</string>
   <string name="boardCoordinates">Galdiņa koordinātas (1-50, a1-h8)</string>
   <string name="moveListWhilePlaying">Gājienu saraksts spēles laikā</string>

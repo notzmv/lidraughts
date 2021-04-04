@@ -499,6 +499,7 @@ eine Computeranalyse, einen Spielchat und eine teilbare URL.</string>
   <string name="newPassword">Neues Passwort</string>
   <string name="newPasswordAgain">Neues Passwort (wiederholen)</string>
   <string name="newPasswordsDontMatch">Die neuen Passwörter stimmen nicht überein</string>
+  <string name="boardHighlights">Markierungen auf dem Brett (letzter Zug)</string>
   <string name="pieceDestinations">Zielfelder markieren (gültige Züge und Vorauszüge)</string>
   <string name="boardCoordinates">Brettkoordinaten (1-50, a1-h8)</string>
   <string name="moveListWhilePlaying">Notation während des Spiels anzeigen</string>

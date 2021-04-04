@@ -569,6 +569,7 @@
   <string name="newPassword">Новый пароль</string>
   <string name="newPasswordAgain">Новый пароль (ещё раз)</string>
   <string name="newPasswordsDontMatch">Новые пароли не совпадают</string>
+  <string name="boardHighlights">Подсвечивать последний ход</string>
   <string name="boardCoordinates">Координаты доски (1-50, a1-h8)</string>
   <string name="moveListWhilePlaying">Показывать список ходов</string>
   <string name="clockInitialTime">Начальное время на часах</string>
