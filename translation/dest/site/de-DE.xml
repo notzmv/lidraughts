@@ -241,7 +241,7 @@
   <string name="variantTitleFrysk">Frisian draughts startet mit je 5 Steinen.</string>
   <string name="variantTitleAntidraughts">Verliere all deine Steine (oder spiel bis kein Zug mehr möglich ist) um das Spiel zu gewinnen.</string>
   <string name="variantTitleBreakthrough">Der erste Spieler mit Dame gewinnt.</string>
-  <string name="variantTitleRussian">Wahl des Schlagens, Aufstufung während Mehrfachsprung<string>
+  <string name="variantTitleRussian">Wahl des Schlagens, Aufstufung während Mehrfachsprung</string>
   <string name="variantTitleBrazilian">Gleiche Regeln wie internationale Dame, gespielt auf einem 8x8 Brett.</string>
   <string name="customStartingPosition">Benutzerdefiniert Startposition</string>
   <string name="unlimited">Unbegrenzt</string>
@@ -645,7 +645,7 @@ Eine URL pro Zeile</string>
   <string name="notationGameResult">Spielergebnis-Notation (weiß Sieg • Remis • schwarz Sieg)</string>
   <string name="draughtsClock">Dameuhr</string>
   <string name="clockInitialTime">Uhr Startzeit</string>
-  <string name="onlyMembersOfTeam">Nur Teammitglieder/string>
+  <string name="onlyMembersOfTeam">Nur Teammitglieder</string>
   <string name="noRestriction">Keine Einschränkungen</string>
   <string name="tenthsOfSeconds">Zehntelsekunden</string>
   <string name="never">Nie</string>
