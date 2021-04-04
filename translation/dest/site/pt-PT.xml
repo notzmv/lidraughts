@@ -507,6 +507,7 @@ análise de computador, sala de conversação e link de partilha.</string>
   <string name="newPassword">Nova senha</string>
   <string name="newPasswordAgain">Nova senha (novamente)</string>
   <string name="newPasswordsDontMatch">As novas palavras-passe não coincidem</string>
+  <string name="boardHighlights">Destacar casas do tabuleiro (último movimento)</string>
   <string name="pieceDestinations">Destino das peças (movimentos válidos e pré-movimentos)</string>
   <string name="boardCoordinates">Coordenadas do tabuleiro (1-50, a1-h8)</string>
   <string name="moveListWhilePlaying">Lista de movimentos</string>

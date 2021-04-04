@@ -450,6 +450,7 @@ získáte počítačovou analýzu, chat ke hře a URL ke sdílení hry.</string>
   <string name="newPassword">Nové heslo</string>
   <string name="newPasswordAgain">Nové heslo (znovu)</string>
   <string name="newPasswordsDontMatch">Nová hesla nesouhlasí</string>
+  <string name="boardHighlights">Zvýraznění na šachovnici (poslední tah)</string>
   <string name="pieceDestinations">Možnosti figur (možné tahy a předtahy)</string>
   <string name="moveListWhilePlaying">Seznam tahů během hry</string>
   <string name="clockInitialTime">Počáteční čas</string>

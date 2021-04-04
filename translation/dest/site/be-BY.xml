@@ -545,6 +545,7 @@
   <string name="currentPassword">Бягучы пароль</string>
   <string name="newPassword">Новы пароль</string>
   <string name="newPasswordAgain">Новы пароль (яшчэ раз)</string>
+  <string name="boardHighlights">Падсвечваць апошні ход</string>
   <string name="moveListWhilePlaying">Паказваць спіс хадоў</string>
   <string name="clockInitialTime">Пачатковы час на часах</string>
   <string name="clockIncrement">Дадатак часу</string>

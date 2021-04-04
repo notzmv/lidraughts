@@ -502,6 +502,7 @@ consulter l\'analyse de l\'ordinateur, utiliser le tchat et partager le lien.</s
   <string name="newPassword">Nouveau mot de passe</string>
   <string name="newPasswordAgain">Nouveau mot de passe (encore)</string>
   <string name="newPasswordsDontMatch">Les nouveaux mots de passe ne correspondent pas</string>
+  <string name="boardHighlights">Mettre en évidence les cases (dernier coup)</string>
   <string name="pieceDestinations">Cases de destination (coups et pré-coups légaux)</string>
   <string name="boardCoordinates">Coordonnées (1-50, a1-h8)</string>
   <string name="moveListWhilePlaying">Liste des coups durant la partie</string>

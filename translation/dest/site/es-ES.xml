@@ -502,6 +502,7 @@ un análisis por ordenador, un chat de juego y una URL para compartir.</string>
   <string name="newPassword">Nueva contraseña</string>
   <string name="newPasswordAgain">Nueva contraseña (otra vez)</string>
   <string name="newPasswordsDontMatch">Las contraseñas nuevas no coinciden</string>
+  <string name="boardHighlights">Destacar casillas del tablero (último movimiento)</string>
   <string name="pieceDestinations">Destino de las piezas (movimientos válidos y anticipados)</string>
   <string name="boardCoordinates">Coordenadas del tablero (1-50, a1-h8)</string>
   <string name="moveListWhilePlaying">Lista de movimientos durante la partida</string>
