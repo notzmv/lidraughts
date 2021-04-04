@@ -155,6 +155,7 @@
   <string name="viewInFullSize">Bekijk op volledige grootte</string>
   <string name="logOut">Afmelden</string>
   <string name="signIn">Aanmelden</string>
+  <string name="youMustSignInToJoinIt">Je moet je %s om mee te doen</string>
   <string name="newToLidraughts">Nieuw op Lidraughts?</string>
   <string name="youNeedAnAccountToDoThat">Je hebt een account nodig om dat te doen</string>
   <string name="signUp">Registreren</string>

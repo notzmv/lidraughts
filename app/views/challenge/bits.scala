@@ -29,11 +29,11 @@ object bits {
 
   def details(c: Challenge)(implicit ctx: Context) = frag(
     div(cls := "details")(
-      div(cls := "variant", dataIcon := (if (c.customStartingPosition) '*' else c.perfType.iconChar))(
+      div(cls := "variant", dataIcon := (if (c.variant.fromPosition) '*' else c.perfType.iconChar))(
         div(
           if (c.variant.exotic) {
             frag(
-              views.html.game.bits.variantLink(c.variant, variantName(c.variant)),
+              views.html.game.bits.variantLink(c.variant, variantName(c.variant), c.initialFen),
               (!c.variant.fromPosition && c.customStartingPosition) option {
                 span(cls := "variant_info")(
                   " ", variantName(draughts.variant.FromPosition)

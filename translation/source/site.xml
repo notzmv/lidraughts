@@ -160,6 +160,7 @@
   <string name="viewInFullSize">View in full size</string>
   <string name="logOut">Sign out</string>
   <string name="signIn">Sign in</string>
+  <string name="youMustSignInToJoinIt">You must %s to join it</string>
   <string name="newToLidraughts">New to Lidraughts?</string>
   <string name="youNeedAnAccountToDoThat">You need an account to do that</string>
   <string name="signUp">Register</string>

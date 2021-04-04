@@ -42,12 +42,10 @@ object theirs {
               else frag(
                 hr,
                 badTag(
-                  p("This game is rated"),
-                  p(
-                    "You must ",
-                    a(cls := "button", href := s"${routes.Auth.login}?referrer=${routes.Round.watcher(c.id, "white")}")(trans.signIn()),
-                    " to join it."
-                  )
+                  p(trans.thisGameIsRated()),
+                  p(trans.youMustSignInToJoinIt(
+                    a(cls := "button", href := s"${routes.Auth.login}?referrer=${routes.Round.watcher(c.id, "white")}")(trans.signIn())
+                  ))
                 )
               )
             )
