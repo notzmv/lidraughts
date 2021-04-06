@@ -9,7 +9,8 @@ import lidraughts.socket.UserLagCache
 
 final class JsonView(
     getLightUser: lidraughts.common.LightUser.GetterSync,
-    isOnline: lidraughts.user.User.ID => Boolean
+    isOnline: lidraughts.user.User.ID => Boolean,
+    baseUrl: String
 ) {
 
   import lidraughts.game.JsonView._
@@ -28,6 +29,7 @@ final class JsonView(
 
   def apply(direction: Option[Direction])(c: Challenge): JsObject = Json.obj(
     "id" -> c.id,
+    "url" -> s"$baseUrl/${c.id}",
     "status" -> c.status.name,
     "challenger" -> c.challengerUser,
     "destUser" -> c.destUser,
