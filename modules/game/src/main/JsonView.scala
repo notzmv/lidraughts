@@ -15,7 +15,7 @@ final class JsonView(rematchOf: Game.ID => Option[Game.ID]) {
     "speed" -> game.speed.key,
     "perf" -> PerfPicker.key(game),
     "rated" -> game.rated,
-    "initialFen" -> initialFen.|(FEN(draughts.format.Forsyth.initial)),
+    "initialFen" -> initialFen.|(FEN(Forsyth.initial)),
     "fen" -> (Forsyth >> game.draughts),
     "player" -> game.turnColor,
     "turns" -> game.turns,

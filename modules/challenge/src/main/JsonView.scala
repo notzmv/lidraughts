@@ -2,6 +2,7 @@ package lidraughts.challenge
 
 import play.api.libs.json._
 
+import draughts.format.Forsyth
 import lidraughts.common.Lang
 import lidraughts.i18n.{ I18nKeys => trans }
 import lidraughts.socket.Socket.SocketVersion
@@ -55,7 +56,7 @@ final class JsonView(
       "name" -> c.perfType.name
     )
   ).add("direction" -> direction.map(_.name))
-    .add("initialFen" -> c.initialFen)
+    .add("initialFen" -> c.initialFen.map(f => Forsyth.shorten(f.value)))
     .add("external" -> c.isExternal.option(true))
     .add("startsAt" -> c.external.flatMap(_.startsAt))
 
