@@ -19,8 +19,8 @@ function renderContent(ctrl: Ctrl): VNode[] {
   let d = ctrl.data();
   const nb = d.in.length + d.out.length;
   return nb ? [allChallenges(ctrl, d, nb)] : [
-    empty(),
-    create()
+    empty(ctrl),
+    create(ctrl)
   ];
 }
 
@@ -53,9 +53,9 @@ function challenge(ctrl: Ctrl, dir: ChallengeDirection) {
       }
     }, [
       h('div.content', [
-        h('span.head', renderUser(dir === 'in' ? c.challenger : c.destUser)),
+        h('span.head', renderUser(ctrl, dir === 'in' ? c.challenger : c.destUser)),
         h('span.desc', {
-          attrs: { 'title': descStr }
+          attrs: { title: descStr }
         }, descStr)
       ]),
       h('i', {
@@ -122,15 +122,15 @@ function timeControl(ctrl: Ctrl, c: TimeControl): string {
     case 'unlimited':
       return ctrl.trans()('unlimited');
     case 'correspondence':
-      if (c.daysPerTurn === 1) return ctrl.trans()('oneDay');
+      if (!c.daysPerTurn || c.daysPerTurn === 1) return ctrl.trans()('oneDay');
       return ctrl.trans()('nbDays', c.daysPerTurn);
     case 'clock':
       return c.show || '-';
   }
 }
 
-function renderUser(u?: ChallengeUser): VNode {
-  if (!u) return h('span', 'Open challenge');
+function renderUser(ctrl: Ctrl, u?: ChallengeUser): VNode {
+  if (!u) return h('span', ctrl.trans()('openChallenge'));
   const rating = u.rating + (u.provisional ? '?' : ''),
     title64 = u.title && u.title.endsWith('-64');
   return h('a.ulpt.user-link', {
@@ -152,22 +152,22 @@ function renderUser(u?: ChallengeUser): VNode {
   ]);
 }
 
-function create(): VNode {
+function create(ctrl?: Ctrl): VNode {
   return h('a.create', {
     attrs: {
       href: '/?any#friend',
-      'data-icon': 'O'
-    },
-    title: 'Challenge someone'
+      'data-icon': 'O',
+      title: ctrl ? ctrl.trans()('challengeSomeone') : 'Challenge someone'
+    }
   });
 }
 
-function empty(): VNode {
+function empty(ctrl: Ctrl): VNode {
   return h('div.empty.text', {
     attrs: {
       'data-icon': '',
     }
-  }, 'No challenges.');
+  }, ctrl.trans()('noChallenges'));
 }
 
 function onClick(f: (e: Event) => void) {
