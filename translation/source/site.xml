@@ -21,7 +21,8 @@
   <string name="microMatch">Micro-match</string>
   <string name="microMatchChallenge">This challenge is a micro-match!</string>
   <string name="microMatchExplanation">A rematch with colors reversed will be played immediately after this game.</string>
-  <string name="microMatchRematchStart">Started second game of micro-match</string>
+  <string name="microMatchRematchStarted">Started second game of micro-match</string>
+  <string name="microMatchRematchAwaiting">Awaiting second game of micro-match</string>
   <string name="microMatchGameOne">Micro-match game 1</string>
   <string name="createAGame">Create a game</string>
   <string name="whiteIsVictorious">White is victorious</string>

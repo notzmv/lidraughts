@@ -43,22 +43,22 @@ private[round] final class Rematcher(
   }
 
   def microMatch(game: Game): Fu[Events] =
-    rematchJoin(game, true)
+    rematchJoin(game)
 
   private def rematchExists(pov: Pov)(nextId: Game.ID): Fu[Events] =
     GameRepo game nextId flatMap {
       _.fold(rematchJoin(pov.game))(g => fuccess(redirectEvents(g)))
     }
 
-  private def rematchJoin(game: Game, microMatch: Boolean = false): Fu[Events] =
+  private def rematchJoin(game: Game): Fu[Events] =
     rematches.getIfPresent(game.id) match {
       case None => for {
-        nextGame ← returnGame(game, microMatch) map (_.start)
+        nextGame ← returnGame(game) map (_.start)
         _ = offers invalidate game.id
         _ = rematches.put(game.id, nextGame.id)
         _ ← GameRepo insertDenormalized nextGame
       } yield {
-        if (microMatch) messenger.system(game, _.microMatchRematchStart)
+        if (nextGame.metadata.microMatchGameNr.contains(2)) messenger.system(game, _.microMatchRematchStarted)
         else messenger.system(game, _.rematchOfferAccepted)
         onStart(nextGame.id)
         redirectEvents(nextGame)
@@ -75,7 +75,11 @@ private[round] final class Rematcher(
     List(Event.RematchOffer(by = pov.color.some))
   }
 
-  private def returnGame(g: Game, microMatch: Boolean): Fu[Game] = for {
+  private def nextMicroMatch(g: Game) =
+    if (g.metadata.microMatch.contains("micromatch")) s"1:${g.id}".some
+    else g.metadata.microMatch.isDefined option "micromatch"
+
+  private def returnGame(g: Game): Fu[Game] = for {
     initialFen <- GameRepo initialFen g
     situation = initialFen flatMap { fen => Forsyth <<< fen.value }
     pieces = g.variant match {
@@ -99,7 +103,7 @@ private[round] final class Rematcher(
       source = g.source | Source.Lobby,
       daysPerTurn = g.daysPerTurn,
       pdnImport = None,
-      microMatch = if (microMatch) s"1:${g.id}".some else g.metadata.microMatch.isDefined option "micromatch"
+      microMatch = nextMicroMatch(g)
     ).withUniqueId
   } yield game
 

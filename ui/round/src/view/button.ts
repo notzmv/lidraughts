@@ -256,7 +256,8 @@ export function moretime(ctrl: RoundController) {
 
 export function followUp(ctrl: RoundController): VNode {
   const d = ctrl.data,
-    rematchable = !d.game.rematch && (status.finished(d) || status.aborted(d)) && !d.tournament && !d.simul && !d.swiss && !d.game.boosted,
+    autoRematch = d.game.microMatch === 1,
+    rematchable = !d.game.rematch && (status.finished(d) || status.aborted(d)) && !d.tournament && !d.simul && !d.swiss && !d.game.boosted && !autoRematch,
     newable = (status.finished(d) || status.aborted(d)) && (
       d.game.source === 'lobby' ||
       d.game.source === 'pool'),
@@ -264,7 +265,9 @@ export function followUp(ctrl: RoundController): VNode {
       h('div.suggestion.text', {
         hook: onSuggestionHook
       }, ctrl.noarg('rematchOfferSent'))
-    ] : (rematchable || d.game.rematch ? rematchButtons(ctrl) : []);
+    ] : (rematchable || d.game.rematch ? rematchButtons(ctrl) : (
+          autoRematch ? [h('button.fbt.rematch.disabled.micromatch', ctrl.noarg('microMatchRematchAwaiting'))] : []
+        ));
   return h('div.follow-up', [
     ...rematchZone,
     d.tournament ? h('a.fbt', {
