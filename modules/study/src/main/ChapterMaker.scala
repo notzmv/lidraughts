@@ -19,7 +19,7 @@ private final class ChapterMaker(
 
   import ChapterMaker._
 
-  def apply(study: Study, data: Data, order: Int, userId: User.ID, draughtsResult: Boolean): Fu[Chapter] =
+  def apply(study: Study, data: Data, order: Int, count: Int, userId: User.ID, draughtsResult: Boolean): Fu[Chapter] =
     data.game.??(parseGame) flatMap {
       case None =>
         data.game ?? pdnFetch.fromUrl flatMap {
@@ -28,7 +28,7 @@ private final class ChapterMaker(
         }
       case Some(game) => fromGame(study, game, data, order, userId, none, draughtsResult)
     } map { (c: Chapter) =>
-      if (c.name.value.isEmpty) c.copy(name = Chapter defaultName order) else c
+      if (c.name.value.isEmpty) c.copy(name = Chapter.defaultName(count + 1)) else c
     }
 
   def fromFenOrPdnOrBlank(study: Study, data: Data, order: Int, userId: User.ID, draughtsResult: Boolean): Fu[Chapter] =
