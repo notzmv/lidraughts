@@ -59,6 +59,7 @@ final class JsonView(
     .add("initialFen" -> c.initialFen.map(f => Forsyth.shorten(f.value)))
     .add("external" -> c.isExternal.option(true))
     .add("startsAt" -> c.external.flatMap(_.startsAt))
+    .add("microMatch" -> c.microMatch)
 
   private def iconChar(c: Challenge) =
     if (c.variant == draughts.variant.FromPosition) '*'
@@ -84,6 +85,10 @@ final class JsonView(
     trans.accept,
     trans.decline,
     trans.viewInFullSize,
-    trans.cancel
+    trans.cancel,
+    trans.microMatch,
+    trans.nbDays,
+    trans.oneDay,
+    trans.unlimited
   ), lidraughts.i18n.I18nDb.Site, lang)
 }

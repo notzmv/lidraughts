@@ -8,7 +8,7 @@ export interface ChallengeOpts {
 export interface Ctrl {
   update(data: ChallengeData): void
   data(): ChallengeData
-  trans(): (key: string) => string
+  trans(): (key: string, ...args: Array<string | number>) => string
   decline(id: string): void
   cancel(id: string): void
   onRedirect(): void
@@ -54,6 +54,7 @@ export interface Challenge {
     name: string
   },
   declined?: boolean
+  microMatch?: boolean
 }
 
 export interface ChallengeData {

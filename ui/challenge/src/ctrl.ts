@@ -6,12 +6,12 @@ const li = window.lidraughts;
 
 export default function(opts: ChallengeOpts, data: ChallengeData, redraw: () => void): Ctrl {
 
-  let trans = (key: string) => key;
+  let trans = (key: string, ..._: Array<string | number>) => key;
   let redirecting = false;
 
   function update(d: ChallengeData) {
     data = d;
-    if (d.i18n) trans = li.trans(d.i18n).noarg;
+    if (d.i18n) trans = li.trans(d.i18n);
     opts.setCount(countActiveIn());
     notifyNew();
   }
