@@ -21,6 +21,8 @@ object Study extends LidraughtsController {
 
   private def env = Env.study
 
+  private val logger = lidraughts.log("study")
+
   def search(text: String, page: Int) = OpenBody { implicit ctx =>
     Reasonable(page) {
       if (text.trim.isEmpty)
@@ -276,7 +278,10 @@ object Study extends LidraughtsController {
     implicit val req = ctx.body
     get("sri") ?? { uid =>
       lidraughts.study.DataForm.importPdn.form.bindFromRequest.fold(
-        jsonFormError,
+        err => {
+          logger.info(s"PDN import for $id failed: $err")
+          jsonFormError(err)
+        },
         data => env.api.importPdns(me, StudyModel.Id(id), data.toChapterDatas, sticky = data.sticky, lidraughts.socket.Socket.Uid(uid))
       )
     }
