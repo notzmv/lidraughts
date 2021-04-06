@@ -106,7 +106,9 @@ final class Env(
     },
     'finishGame -> {
       case lidraughts.game.actorApi.FinishGame(game, _, _) if !game.aborted && game.metadata.needsMicroRematch =>
-        roundMap.tell(game.id, MicroRematch)
+        system.scheduler.scheduleOnce(2 seconds) {
+          roundMap.tell(game.id, MicroRematch)
+        }
     }
   )
 
