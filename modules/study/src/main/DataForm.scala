@@ -3,7 +3,7 @@ package lidraughts.study
 import play.api.data._
 import play.api.data.Forms._
 
-import lidraughts.common.Form.cleanNonEmptyText
+import lidraughts.common.Form.{ cleanText, cleanNonEmptyText }
 
 object DataForm {
 
@@ -54,13 +54,13 @@ object DataForm {
   object importPdn {
 
     lazy val form = Form(mapping(
-      "name" -> cleanNonEmptyText,
+      "name" -> cleanText,
       "orientation" -> optional(nonEmptyText),
       "variant" -> optional(nonEmptyText),
       "mode" -> nonEmptyText.verifying(ChapterMaker.Mode(_).isDefined),
       "initial" -> boolean,
       "sticky" -> boolean,
-      "pdn" -> nonEmptyText
+      "pdn" -> cleanNonEmptyText
     )(Data.apply)(Data.unapply))
 
     case class Data(
