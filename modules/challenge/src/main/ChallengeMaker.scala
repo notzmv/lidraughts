@@ -44,7 +44,8 @@ object ChallengeMaker {
         color = (!pov.color).name,
         challenger = Right(challenger),
         destUser = dest.some,
-        rematchOf = pov.gameId.some
+        rematchOf = pov.gameId.some,
+        microMatch = pov.game.metadata.microMatchGameNr.contains(2)
       )
     }
 }
