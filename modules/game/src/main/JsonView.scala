@@ -29,6 +29,7 @@ final class JsonView(rematchOf: Game.ID => Option[Game.ID]) {
     .add("winner" -> game.winnerColor)
     .add("lastMove" -> game.lastMoveKeys)
     .add("rematch" -> rematchOf(game.id))
+    .add("microMatch" -> game.metadata.microMatchGameNr)
 }
 
 object JsonView {
