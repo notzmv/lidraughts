@@ -20,8 +20,9 @@ function poolUrl(clock: ClockData, blocking?: PlayerUser) {
 
 function analysisButton(ctrl: RoundController): VNode | null {
   const d = ctrl.data,
+    awaitingAutoRematch = !d.game.rematch && !d.player.spectator && d.game.microMatch === 1 && !status.aborted(d),
     url = gameRoute(d, analysisBoardOrientation(d)) + '#' + ctrl.ply;
-  return game.replayable(d) ? h('a.fbt', {
+  return (!awaitingAutoRematch && game.replayable(d)) ? h('a.fbt', {
     attrs: { href: url },
     hook: util.bind('click', _ => {
       // force page load in case the URL is the same
