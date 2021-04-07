@@ -256,7 +256,7 @@ export function moretime(ctrl: RoundController) {
 
 export function followUp(ctrl: RoundController): VNode {
   const d = ctrl.data,
-    autoRematch = d.game.microMatch === 1,
+    autoRematch = d.game.microMatch === 1 && !status.aborted(d),
     rematchable = !d.game.rematch && (status.finished(d) || status.aborted(d)) && !d.tournament && !d.simul && !d.swiss && !d.game.boosted && !autoRematch,
     newable = (status.finished(d) || status.aborted(d)) && (
       d.game.source === 'lobby' ||

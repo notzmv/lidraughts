@@ -76,7 +76,7 @@ private[round] final class Rematcher(
   }
 
   private def nextMicroMatch(g: Game) =
-    if (g.metadata.microMatch.contains("micromatch")) s"1:${g.id}".some
+    if (!g.aborted && g.metadata.microMatch.contains("micromatch")) s"1:${g.id}".some
     else g.metadata.microMatch.isDefined option "micromatch"
 
   private def returnGame(g: Game): Fu[Game] = for {
