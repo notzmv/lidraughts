@@ -18,10 +18,16 @@ private[game] case class Metadata(
 ) {
 
   def needsMicroRematch = microMatch.contains("micromatch")
+
   def microMatchGameNr = microMatch ?? { mm =>
     if (mm == "micromatch" || mm.startsWith("2:")) 1.some
     else if (mm.startsWith("1:")) 2.some
     else none
+  }
+
+  def microMatchGameId = microMatch.map { mm =>
+    if (mm.startsWith("2:") || mm.startsWith("1:")) mm.drop(2)
+    else "*"
   }
 
   def pdnDate = pdnImport flatMap (_.date)
