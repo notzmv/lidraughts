@@ -40,7 +40,7 @@ export function bothPlayersHavePlayed(data: GameData): boolean {
 }
 
 export function abortable(data: GameData): boolean {
-  return playable(data) && !bothPlayersHavePlayed(data) && !mandatory(data) && data.game.microMatch !== 2;
+  return playable(data) && !bothPlayersHavePlayed(data) && !mandatory(data) && data.game.microMatch?.index !== 2;
 }
 
 export function takebackable(data: GameData): boolean {

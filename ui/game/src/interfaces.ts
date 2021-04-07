@@ -29,9 +29,14 @@ export interface Game {
   threefold?: boolean;
   boosted?: boolean;
   rematch?: string;
-  microMatch?: number;
+  microMatch?: MicroMatch;
   rated?: boolean;
   perf: string;
+}
+
+export interface MicroMatch {
+  index: number;
+  gameId?: string;
 }
 
 export interface Status {

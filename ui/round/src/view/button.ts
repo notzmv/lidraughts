@@ -19,8 +19,8 @@ function poolUrl(clock: ClockData, blocking?: PlayerUser) {
 }
 
 function analysisButton(ctrl: RoundController): VNode | null {
-  const d = ctrl.data,
-    awaitingAutoRematch = !d.game.rematch && !d.player.spectator && d.game.microMatch === 1 && !status.aborted(d),
+  const d = ctrl.data, mm = d.game.microMatch,
+    awaitingAutoRematch = !d.game.rematch && !d.player.spectator && mm && mm.index === 1 && !mm.gameId && !status.aborted(d),
     url = gameRoute(d, analysisBoardOrientation(d)) + '#' + ctrl.ply;
   return (!awaitingAutoRematch && game.replayable(d)) ? h('a.fbt', {
     attrs: { href: url },
@@ -256,9 +256,9 @@ export function moretime(ctrl: RoundController) {
 }
 
 export function followUp(ctrl: RoundController): VNode {
-  const d = ctrl.data,
-    autoRematch = d.game.microMatch === 1 && !status.aborted(d),
-    rematchable = !d.game.rematch && (status.finished(d) || status.aborted(d)) && !d.tournament && !d.simul && !d.swiss && !d.game.boosted && !autoRematch,
+  const d = ctrl.data, mm = d.game.microMatch,
+    awaitingAutoRematch = !d.game.rematch && mm && mm.index === 1 && !mm.gameId && !status.aborted(d),
+    rematchable = !d.game.rematch && (status.finished(d) || status.aborted(d)) && !d.tournament && !d.simul && !d.swiss && !d.game.boosted && !awaitingAutoRematch,
     newable = (status.finished(d) || status.aborted(d)) && (
       d.game.source === 'lobby' ||
       d.game.source === 'pool'),
@@ -267,7 +267,7 @@ export function followUp(ctrl: RoundController): VNode {
         hook: onSuggestionHook
       }, ctrl.noarg('rematchOfferSent'))
     ] : (rematchable || d.game.rematch ? rematchButtons(ctrl) : (
-          autoRematch ? [h('button.fbt.rematch.disabled.micromatch', ctrl.noarg('microMatchRematchAwaiting'))] : []
+          awaitingAutoRematch ? [h('button.fbt.rematch.disabled.micromatch', ctrl.noarg('microMatchRematchAwaiting'))] : []
         ));
   return h('div.follow-up', [
     ...rematchZone,
@@ -285,22 +285,25 @@ export function followUp(ctrl: RoundController): VNode {
 }
 
 export function watcherFollowUp(ctrl: RoundController): VNode | null {
-  const d = ctrl.data,
-  content = [
-    d.game.rematch ? h('a.fbt.text', {
-      attrs: {
-        'data-icon': 'v',
-        href: `/${d.game.rematch}/${d.opponent.color}`
-      }
-    }, ctrl.noarg('viewRematch')) : null,
-    d.tournament ? h('a.fbt', {
-      attrs: {href: '/tournament/' + d.tournament.id}
-    }, ctrl.noarg('viewTournament')) : null,
-    d.swiss ? h('a.fbt', {
-      attrs: {href: '/swiss/' + d.swiss.id}
-    }, ctrl.noarg('viewTournament')) : null,
-    analysisButton(ctrl)
-  ];
+  const d = ctrl.data, mm = d.game.microMatch,
+    awaitingAutoRematch = !d.game.rematch && mm && mm.index === 1 && !mm.gameId && !status.aborted(d),
+    content = [
+      d.game.rematch ? h('a.fbt.text', {
+        attrs: {
+          'data-icon': 'v',
+          href: `/${d.game.rematch}/${d.opponent.color}`
+        }
+      }, ctrl.noarg('viewRematch')) : (
+        awaitingAutoRematch ? h('button.fbt.rematch.disabled.micromatch', ctrl.noarg('microMatchRematchAwaiting')) : null
+      ),
+      d.tournament ? h('a.fbt', {
+        attrs: {href: '/tournament/' + d.tournament.id}
+      }, ctrl.noarg('viewTournament')) : null,
+      d.swiss ? h('a.fbt', {
+        attrs: {href: '/swiss/' + d.swiss.id}
+      }, ctrl.noarg('viewTournament')) : null,
+      analysisButton(ctrl)
+    ];
   return content.find(x => !!x) ? h('div.follow-up', content) : null;
 }
 
