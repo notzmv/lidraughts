@@ -192,6 +192,7 @@ final class JsonView(
             "evalPut" -> JsBoolean(me.??(evalCache.shouldPut))
           ).add("evalPut" -> me.??(evalCache.shouldPut))
             .add("toPuzzleEditor" -> me ?? Granter(_.CreatePuzzles))
+            .add("isAnon" -> me.isEmpty.option(true))
             .add("tv" -> tv.collect {
               case OnLidraughtsTv(channel, flip) => Json.obj("channel" -> channel, "flip" -> flip)
             }).add("userTv" -> tv.collect {
@@ -251,6 +252,7 @@ final class JsonView(
       "userAnalysis" -> true
     ).add("evalPut" -> me.??(evalCache.shouldPut))
       .add("toPuzzleEditor" -> me ?? Granter(_.CreatePuzzles))
+      .add("isAnon" -> me.isEmpty.option(true))
   }
 
   def puzzleEditorJson(

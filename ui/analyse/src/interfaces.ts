@@ -38,6 +38,7 @@ export interface AnalyseData {
   forecast?: ForecastData;
   treeParts: Tree.Node[];
   evalPut?: boolean;
+  isAnon?: boolean;
   practiceGoal?: PracticeGoal;
   clock?: Clock;
   pref: any;
