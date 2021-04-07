@@ -230,6 +230,14 @@ object Forsyth {
       pos.toString
   }
 
+  def shorten(fen: String): String = {
+    if (fen.endsWith(":+0+0")) fen.dropRight(5)
+    else fen
+  } |> { fen2 =>
+    if (fen2.endsWith(":H0:F1")) fen2.dropRight(6)
+    else fen2
+  }
+
   def getFullMove(rawSource: String): Option[Int] = read(rawSource) { fen =>
     fen.split(':') filter (s => s.length > 1 && s.charAt(0) == 'F') lift 0 flatMap parseIntOption
   }

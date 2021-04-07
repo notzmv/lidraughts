@@ -116,6 +116,22 @@ object side {
         )
       },
 
+      game.metadata.microMatch map { m =>
+        st.section(cls := "game__micro-match")(
+          if (m.startsWith("1:") && m.length == 10) frag(
+            trans.microMatch(), ": ",
+            a(cls := "text", href := routes.Round.watcher(m.drop(2), (!pov.color).name))(trans.gameNumberX(1)), " ",
+            span(cls := "current")(trans.gameNumberX(2))
+          )
+          else if (m.startsWith("2:") && m.length == 10) frag(
+            trans.microMatch(), ": ",
+            span(cls := "current")(trans.gameNumberX(1)), " ",
+            a(cls := "text", href := routes.Round.watcher(m.drop(2), (!pov.color).name))(trans.gameNumberX(2))
+          )
+          else trans.microMatchGameOne()
+        )
+      },
+
       simul.map { sim =>
         frag(
           st.section(cls := "game__simul-link")(

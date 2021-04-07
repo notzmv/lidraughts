@@ -12,20 +12,24 @@ private object bits {
 
   val prefix = "sf_"
 
-  def fenInput(field: Field, strict: Boolean, limitKings: Boolean, validFen: Option[lidraughts.setup.ValidFen])(implicit ctx: Context) = {
-    val url = field.value.fold(routes.Editor.index)(routes.Editor.parse).url
+  def fieldId(field: Field): String = s"$prefix${field.id}"
+
+  def fenInput(form: Form[_], strict: Boolean, limitKings: Boolean, validFen: Option[lidraughts.setup.ValidFen], fenVariants: Option[List[SelectChoice]])(implicit ctx: Context) = {
+    val field = form("fen")
+    val fenVariant = validFen.map(_.variant) | draughts.variant.Standard
+    val url = field.value.fold(routes.Editor.parse(fenVariant.key))(v => routes.Editor.parse(s"${fenVariant.key}/$v")).url
     div(cls := "fen_position optional_config")(
       frag(
-        div(cls := "fen_form", dataValidateUrl := s"""${routes.Setup.validateFen()}${strict.??("?strict=1")}${limitKings.??((if (strict) "&" else "?") + "kings=1")}""")(
+        div(cls := "fen_form", dataValidateUrl := s"""${routes.Setup.validateFenOk()}${strict.??("?strict=1")}${limitKings.??((if (strict) "&" else "?") + "kings=1")}""")(
           form3.input(field)(st.placeholder := trans.pasteTheFenStringHere.txt()),
-          a(cls := "button button-empty", dataIcon := "m", title := trans.boardEditor.txt(), href := url)
+          a(cls := "button button-empty editor_button", dataIcon := "m", title := trans.boardEditor.txt(), href := url)
         ),
         a(cls := "board_editor", href := url)(
           span(cls := "preview")(
-            validFen match {
-              case Some(vf) if limitKings && vf.tooManyKings =>
+            validFen map { vf =>
+              if (limitKings && vf.tooManyKings)
                 p(cls := "errortext")(trans.tooManyKings())
-              case Some(vf) =>
+              else {
                 val boardSize = vf.situation.board.boardSize
                 div(
                   cls := s"mini-board cg-wrap parse-fen is2d is${boardSize.key}",
@@ -34,11 +38,11 @@ private object bits {
                   dataBoard := s"${boardSize.width}x${boardSize.height}",
                   dataResizable := "1"
                 )(cgWrapContent)
-              case _ =>
-                p(cls := "errortext")("Invalid position")
+              }
             }
           )
-        )
+        ),
+        fenVariants.map(renderFromPositionVariant(form, _))
       )
     )
   }
@@ -49,11 +53,16 @@ private object bits {
       renderSelect(form("variant"), variants)
     )
 
+  def renderFromPositionVariant(form: Form[_], variants: List[SelectChoice])(implicit ctx: Context) =
+    div(cls := "fen_variant hidden")(
+      renderSelect(form("fenVariant"), variants)
+    )
+
   def renderSelect(
     field: Field,
     options: Seq[SelectChoice],
     compare: (String, String) => Boolean = (a, b) => a == b
-  ) = select(id := s"$prefix${field.id}", name := field.name)(
+  ) = select(id := fieldId(field), name := field.name)(
     options.map {
       case (value, name, title) => option(
         st.value := value,
@@ -69,7 +78,7 @@ private object bits {
         case (key, name, hint) => div(
           input(
             `type` := "radio",
-            id := s"$prefix${field.id}_${key}",
+            id := s"${fieldId(field)}_${key}",
             st.name := field.name,
             value := key,
             field.value.has(key) option checked
@@ -77,7 +86,7 @@ private object bits {
           label(
             cls := "required",
             title := hint,
-            `for` := s"$prefix${field.id}_$key"
+            `for` := s"${fieldId(field)}_$key"
           )(name)
         )
       }
@@ -87,7 +96,19 @@ private object bits {
     input(name := field.name, value := field.value, `type` := "hidden")
 
   def renderLabel(field: Field, content: Frag) =
-    label(`for` := s"$prefix${field.id}")(content)
+    label(`for` := fieldId(field))(content)
+
+  def renderCheckbox(field: Field, labelContent: Frag) = div(
+    span(cls := "form-check-input")(
+      form3.cmnToggle(fieldId(field), field.name, field.value.has("true"))
+    ),
+    renderLabel(field, labelContent)
+  )
+
+  def renderMicroMatch(form: Form[_])(implicit ctx: Context) =
+    div(cls := "micro_match", title := trans.microMatchExplanation.txt())(
+      renderCheckbox(form("microMatch"), trans.microMatch())
+    )
 
   def renderTimeMode(form: Form[_], config: lidraughts.setup.BaseConfig)(implicit ctx: Context) =
     div(cls := "time_mode_config optional_config")(

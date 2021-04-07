@@ -27,23 +27,36 @@ object bits {
       }""")
     )
 
-  def details(c: Challenge)(implicit ctx: Context) = div(cls := "details")(
-    div(cls := "variant", dataIcon := (if (c.initialFen.isDefined) '*' else c.perfType.iconChar))(
-      div(
-        if (c.variant.exotic)
-          views.html.game.bits.variantLink(c.variant, variantName(c.variant))
-        else
-          c.perfType.name,
-        br,
-        span(cls := "clock")(
-          c.daysPerTurn map { days =>
-            if (days == 1) trans.oneDay()
-            else trans.nbDays.pluralSame(days)
-          } getOrElse shortClockName(c.clock.map(_.config))
+  def details(c: Challenge)(implicit ctx: Context) = frag(
+    div(cls := "details")(
+      div(cls := "variant", dataIcon := (if (c.variant.fromPosition) '*' else c.perfType.iconChar))(
+        div(
+          if (c.variant.exotic) {
+            frag(
+              views.html.game.bits.variantLink(c.variant, variantName(c.variant), c.initialFen),
+              (!c.variant.fromPosition && c.customStartingPosition) option {
+                span(cls := "variant_info")(
+                  " ", variantName(draughts.variant.FromPosition)
+                )
+              }
+            )
+          } else
+            c.perfType.name,
+          br,
+          span(cls := "clock")(
+            c.daysPerTurn map { days =>
+              if (days == 1) trans.oneDay()
+              else trans.nbDays.pluralSame(days)
+            } getOrElse shortClockName(c.clock.map(_.config))
+          )
         )
-      )
+      ),
+      div(cls := "mode")(modeName(c.mode))
     ),
-    div(cls := "mode")(modeName(c.mode))
+    c.isMicroMatch option div(cls := "micro-match")(
+      trans.microMatchChallenge(), " ",
+      trans.microMatchExplanation()
+    )
   )
 
   private def jsI18n()(implicit ctx: Context) = i18nJsObject(translations)

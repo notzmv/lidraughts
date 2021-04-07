@@ -19,8 +19,8 @@ function renderContent(ctrl: Ctrl): VNode[] {
   let d = ctrl.data();
   const nb = d.in.length + d.out.length;
   return nb ? [allChallenges(ctrl, d, nb)] : [
-    empty(),
-    create()
+    empty(ctrl),
+    create(ctrl)
   ];
 }
 
@@ -40,18 +40,23 @@ function allChallenges(ctrl: Ctrl, d: ChallengeData, nb: number): VNode {
 
 function challenge(ctrl: Ctrl, dir: ChallengeDirection) {
   return (c: Challenge) => {
+    const descItems = [
+      ctrl.trans()(c.rated ? 'rated' : 'casual'),
+      timeControl(ctrl, c.timeControl),
+      c.variant.name
+    ];
+    if (c.microMatch) descItems.push(ctrl.trans()('microMatch'));
+    const descStr = descItems.join(' • ');
     return h('div.challenge.' + dir + '.c-' + c.id, {
       class: {
         declined: !!c.declined
       }
     }, [
       h('div.content', [
-        h('span.head', renderUser(dir === 'in' ? c.challenger : c.destUser)),
-        h('span.desc', [
-          ctrl.trans()(c.rated ? 'rated' : 'casual'),
-          timeControl(c.timeControl),
-          c.variant.name
-        ].join(' • '))
+        h('span.head', renderUser(ctrl, dir === 'in' ? c.challenger : c.destUser)),
+        h('span.desc', {
+          attrs: { title: descStr }
+        }, descStr)
       ]),
       h('i', {
         attrs: {'data-icon': c.perf.icon}
@@ -112,19 +117,20 @@ function outButtons(ctrl: Ctrl, c: Challenge) {
   ];
 }
 
-function timeControl(c: TimeControl): string {
+function timeControl(ctrl: Ctrl, c: TimeControl): string {
   switch (c.type) {
     case 'unlimited':
-      return 'Unlimited';
+      return ctrl.trans()('unlimited');
     case 'correspondence':
-      return c.daysPerTurn + ' days';
+      if (!c.daysPerTurn || c.daysPerTurn === 1) return ctrl.trans()('oneDay');
+      return ctrl.trans()('nbDays', c.daysPerTurn);
     case 'clock':
       return c.show || '-';
   }
 }
 
-function renderUser(u?: ChallengeUser): VNode {
-  if (!u) return h('span', 'Open challenge');
+function renderUser(ctrl: Ctrl, u?: ChallengeUser): VNode {
+  if (!u) return h('span', ctrl.trans()('openChallenge'));
   const rating = u.rating + (u.provisional ? '?' : ''),
     title64 = u.title && u.title.endsWith('-64');
   return h('a.ulpt.user-link', {
@@ -146,22 +152,22 @@ function renderUser(u?: ChallengeUser): VNode {
   ]);
 }
 
-function create(): VNode {
+function create(ctrl?: Ctrl): VNode {
   return h('a.create', {
     attrs: {
       href: '/?any#friend',
-      'data-icon': 'O'
-    },
-    title: 'Challenge someone'
+      'data-icon': 'O',
+      title: ctrl ? ctrl.trans()('challengeSomeone') : 'Challenge someone'
+    }
   });
 }
 
-function empty(): VNode {
+function empty(ctrl: Ctrl): VNode {
   return h('div.empty.text', {
     attrs: {
       'data-icon': '',
     }
-  }, 'No challenges.');
+  }, ctrl.trans()('noChallenges'));
 }
 
 function onClick(f: (e: Event) => void) {

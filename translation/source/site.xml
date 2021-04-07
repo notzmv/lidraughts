@@ -18,6 +18,12 @@
   <string name="white">White</string>
   <string name="black">Black</string>
   <string name="randomColor">Random side</string>
+  <string name="microMatch">Micro-match</string>
+  <string name="microMatchChallenge">This challenge is a micro-match!</string>
+  <string name="microMatchExplanation">A rematch with colors reversed will be played immediately after this game.</string>
+  <string name="microMatchRematchStarted">Started second game of micro-match</string>
+  <string name="microMatchRematchAwaiting">Awaiting second game of micro-match</string>
+  <string name="microMatchGameOne">Micro-match game 1</string>
   <string name="createAGame">Create a game</string>
   <string name="whiteIsVictorious">White is victorious</string>
   <string name="blackIsVictorious">Black is victorious</string>
@@ -139,6 +145,7 @@
   <string name="currentGames">Current games</string>
   <string name="gamesInTimeout">Games in timeout</string>
   <string name="yourTurnInX">Your turn in %s</string>
+  <string name="gameNumberX">Game %s</string>
   <plurals name="nbGames">
     <item quantity="one">%s game</item>
     <item quantity="other">%s games</item>
@@ -154,6 +161,7 @@
   <string name="viewInFullSize">View in full size</string>
   <string name="logOut">Sign out</string>
   <string name="signIn">Sign in</string>
+  <string name="youMustSignInToJoinIt">You must %s to join it</string>
   <string name="newToLidraughts">New to Lidraughts?</string>
   <string name="youNeedAnAccountToDoThat">You need an account to do that</string>
   <string name="signUp">Register</string>
@@ -935,6 +943,7 @@ One URL per line</string>
   <string name="coaches">Coaches</string>
   <string name="invalidPdn">Invalid PDN</string>
   <string name="invalidFen">Invalid FEN</string>
+  <string name="invalidPosition">Invalid position</string>
   <string name="tooManyKings">You can't play against Scan with more than 30 kings on the board.</string>
   <string name="error.minLength">Minimum length is %s</string>
   <string name="error.maxLength">Maximum length is %s</string>
@@ -948,6 +957,9 @@ One URL per line</string>
   <string name="custom">Custom</string>
   <string name="notifications">Notifications</string>
   <string name="challenges">Challenges</string>
+  <string name="noChallenges">No challenges</string>
+  <string name="challengeSomeone">Challenge someone</string>
+  <string name="openChallenge">Open challenge</string>
   <string name="startsAtX">Starts at %s</string>
   <string name="challengeDeclined">Challenge declined</string>
   <string name="challengeAccepted">Challenge accepted!</string>

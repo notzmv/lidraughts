@@ -132,26 +132,32 @@ function controls(ctrl, fen) {
           rel: 'nofollow'
         }, 'Puzzle editor')) : null,
         m('a.button.button-empty', {
-          class: (looksLegit && ctrl.data.variant.key === 'standard') ? '' : 'disabled',
+          class: (looksLegit && ctrl.canContinueWithVariant()) ? '' : 'disabled',
           onclick: function() {
-            if (ctrl.positionLooksLegit() && ctrl.data.variant.key === 'standard') $.modal($('.continue-with'));
+            if (ctrl.positionLooksLegit() && ctrl.canContinueWithVariant()) $.modal($('.continue-with'));
           }
         },
           m('span.text[data-icon=U]', ctrl.trans.noarg('continueFromHere'))),
         studyButton(ctrl, fen)
       ]),
       m('div.continue-with.none', [
+        m('a.button', playWithMachineAttrs(ctrl, fen), ctrl.trans.noarg('playWithTheMachine')),
         m('a.button', {
-          href: '/?fen=' + fen + '#ai',
-          rel: 'nofollow'
-        }, ctrl.trans.noarg('playWithTheMachine')),
-        m('a.button', {
-          href: '/?fen=' + fen + '#friend',
+          href: '/?fen=' + toggleCoordinates(fen, ctrl.isAlgebraic()) + '&variant=' + ctrl.data.variant.key + '#friend',
           rel: 'nofollow'
         }, ctrl.trans.noarg('playWithAFriend'))
       ])
     ]
   ]);
+}
+
+function playWithMachineAttrs(ctrl, fen) {
+  let attrs = {
+    class: ctrl.data.variant.key === 'standard' ? '' : 'disabled',
+    rel: 'nofollow'
+  };
+  if (ctrl.data.variant.key === 'standard') attrs.href = '/?fen=' + fen + '#ai';
+  return attrs;
 }
 
 function inputs(ctrl, fen) {

@@ -195,7 +195,10 @@ module.exports = function(cfg, element) {
     var $casual = $modeChoices.eq(0),
       $rated = $modeChoices.eq(1);
     var $variantSelect = $form.find('#sf_variant');
-    var $fenPosition = $form.find(".fen_position");
+    var $fenVariantSelect = $form.find('#sf_fenVariant');
+    var $fenPosition = $form.find('.fen_position');
+    var $fenVariant = $form.find('.fen_variant');
+    var $microMatch = $form.find('.micro_match');
     var $timeInput = $form.find('.time_choice [name=time]');
     var $incrementInput = $form.find('.increment_choice [name=increment]');
     var $daysInput = $form.find('.days_choice [name=days]');
@@ -224,39 +227,41 @@ module.exports = function(cfg, element) {
         $submits.filter(':not(.random)').toggle(!rated || !randomColorVariants.includes(variantId));
       } else $submits.toggleClass('nope', true);
     };
+    var variantKey = function(id) {
+      switch (id) {
+        case '10':
+          return 'frisian';
+        case '8':
+          return 'frysk';
+        case '6':
+          return 'antidraughts'
+        case '9':
+          return 'breakthrough'
+        case '11':
+          return 'russian'
+        case '12':
+          return 'brazilian'
+      }
+      return 'standard';
+    }
     var showRating = function() {
       var timeMode = $timeModeSelect.val();
+      let realVariant = $variantSelect.val();
+      if (realVariant == '3' && $fenVariantSelect.val() != '1') {
+        realVariant = $fenVariantSelect.val();
+      }
       var key;
-      switch ($variantSelect.val()) {
-        case '1':
-        case '3':
-          if (timeMode == '1') {
-            var time = $timeInput.val() * 60 + $incrementInput.val() * 50;
-            if (time < 30) key = 'ultraBullet';
-            else if (time < 180) key = 'bullet';
-            else if (time < 480) key = 'blitz';
-            else if (time < 1500) key = 'rapid';
-            else key = 'classical';
-          } else key = 'correspondence';
-          break;
-        case '10':
-          key = 'frisian';
-          break;
-        case '8':
-          key = 'frysk';
-          break;
-        case '6':
-          key = 'antidraughts'
-          break;
-        case '9':
-          key = 'breakthrough'
-          break;
-        case '11':
-          key = 'russian'
-          break;
-        case '12':
-          key = 'brazilian'
-          break;
+      if (realVariant == '1' || realVariant == '3') {
+        if (timeMode == '1') {
+          var time = $timeInput.val() * 60 + $incrementInput.val() * 50;
+          if (time < 30) key = 'ultraBullet';
+          else if (time < 180) key = 'bullet';
+          else if (time < 480) key = 'blitz';
+          else if (time < 1500) key = 'rapid';
+          else key = 'classical';
+        } else key = 'correspondence';
+      } else {
+        key = variantKey(realVariant);
       }
       $ratings.hide().filter('.' + key).show();
     };
@@ -365,30 +370,41 @@ module.exports = function(cfg, element) {
     }).trigger('change');
 
     var $fenInput = $fenPosition.find('input');
+    var updateEditorHref = function(fen) {
+      $fenPosition.find('a.board_editor, a.editor_button').each(function() {
+        $(this).attr('href', $(this).attr('href').replace(/editor\/.+$/, 'editor/' + variantKey($fenVariantSelect.val()) + (fen ? '/' + fen : '')));
+      });
+    };
     var validateFen = lidraughts.debounce(function() {
       $fenInput.removeClass("success failure");
       var fen = $fenInput.val();
       if (fen) {
+        let validateUrl = $fenInput.parent().data('validate-url');
+        if ($fenVariantSelect.val() != '1') {
+          validateUrl += (validateUrl.indexOf('?') !== -1 ? '&' : '?') + 'variant=' + variantKey($fenVariantSelect.val());
+        }
         $.ajax({
-          url: $fenInput.parent().data('validate-url'),
+          url: validateUrl,
           data: {
             fen: fen
           },
           success: function(data) {
-            $fenInput.addClass("success");
+            $fenInput.addClass('success');
             $fenPosition.find('.preview').html(data);
-            $fenPosition.find('a.board_editor').each(function() {
-              $(this).attr('href', $(this).attr('href').replace(/editor\/.+$/, "editor/" + fen));
-            });
+            updateEditorHref(fen);
             $submits.removeClass('nope');
             lidraughts.pubsub.emit('content_loaded');
           },
-          error: function() {
-            $fenInput.addClass("failure");
-            $fenPosition.find('.preview').html("");
+          error: function(res) {
+            $fenInput.addClass('failure');
+            $fenPosition.find('.preview').html(res.responseText || '');
+            updateEditorHref();
             $submits.addClass('nope');
           }
         });
+      } else {
+        $fenPosition.find('.preview').html('');
+        updateEditorHref();
       }
     }, 200);
     $fenInput.on('keyup', validateFen);
@@ -396,6 +412,8 @@ module.exports = function(cfg, element) {
     $variantSelect.on('change', function() {
       var fen = $(this).val() == '3';
       $fenPosition.toggle(fen);
+      $fenVariant.toggleClass('hidden', !fen);
+      $microMatch.toggle(fen);
       $modeChoicesWrap.toggle(!fen);
       if (fen) {
         $casual.click();
@@ -405,6 +423,10 @@ module.exports = function(cfg, element) {
       }
       showRating();
       toggleButtons();
+    }).trigger('change');
+    $fenVariantSelect.on('change', function() {
+      $fenInput.trigger('keyup');
+      showRating();
     }).trigger('change');
 
     $form.find('div.level').each(function() {

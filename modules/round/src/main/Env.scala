@@ -10,7 +10,7 @@ import actorApi.{ GetSocketStatus, SocketStatus }
 
 import lidraughts.game.{ Game, GameRepo, Pov, PlayerRef }
 import lidraughts.hub.actorApi.map.{ Tell, TellMany }
-import lidraughts.hub.actorApi.round.{ Abort, Resign, AnalysisComplete }
+import lidraughts.hub.actorApi.round.{ Abort, Resign, AnalysisComplete, MicroRematch }
 import lidraughts.hub.actorApi.socket.HasUserId
 import lidraughts.hub.actorApi.{ Announce, DeployPost }
 import lidraughts.user.User
@@ -103,6 +103,12 @@ final class Env(
     },
     'gameStartId -> {
       case gameId: String => onStart(gameId)
+    },
+    'finishGame -> {
+      case lidraughts.game.actorApi.FinishGame(game, _, _) if !game.aborted && game.metadata.needsMicroRematch =>
+        system.scheduler.scheduleOnce(2 seconds) {
+          roundMap.tell(game.id, MicroRematch)
+        }
     }
   )
 

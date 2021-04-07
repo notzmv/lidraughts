@@ -8,6 +8,11 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
+  .micromatch {
+    opacity: 1.0;
+    cursor: default;
+    text-transform: none;
+  }
   .ddloader {
     margin: 20px auto 10px auto;
   }

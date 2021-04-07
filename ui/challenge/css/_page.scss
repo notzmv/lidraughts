@@ -58,13 +58,24 @@ $c-challenge: $c-secondary;
       color: $c-challenge;
       text-transform: uppercase;
     }
+    .variant_info {
+      font-size: 0.9em;
+      font-style: italic;
+    }
+  }
+  .micro-match {
+    @extend %roboto;
+    display: flex;
+    font-size: 2em;
+    text-align: center;
+    margin: -1.5rem 0 2rem 0;
   }
   .follow-up .button {
     display: block;
     margin-top: 2em;
   }
   .board-preview {
-    margin: 0 auto;
+    margin: 0 auto 2rem auto;
     max-width: 300px;
   }
 }

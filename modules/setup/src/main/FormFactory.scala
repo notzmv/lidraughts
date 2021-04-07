@@ -52,23 +52,29 @@ private[setup] final class FormFactory(
 
   def aiConfig(implicit ctx: UserContext): Fu[AiConfig] = savedConfig map (_.ai)
 
-  def friendFilled(fen: Option[FEN])(implicit ctx: UserContext): Fu[Form[FriendConfig]] =
+  def friendFilled(fen: Option[FEN], fenVariant: Option[Variant])(implicit ctx: UserContext): Fu[Form[FriendConfig]] =
     friendConfig map { config =>
       friend(ctx) fill fen.fold(config) { f =>
-        config.copy(fen = f.some, variant = draughts.variant.FromPosition)
+        config.copy(
+          fen = f.some,
+          variant = draughts.variant.FromPosition,
+          fenVariant = if (fenVariant.isDefined) fenVariant else config.fenVariant
+        )
       }
     }
 
   def friend(ctx: UserContext) = Form(
     mapping(
       "variant" -> variantWithFenAndVariants,
+      "fenVariant" -> optional(fromPositionVariants),
       "timeMode" -> timeMode,
       "time" -> time,
       "increment" -> increment,
       "days" -> days,
       "mode" -> mode(withRated = ctx.isAuth),
       "color" -> color,
-      "fen" -> fen
+      "fen" -> fen,
+      "microMatch" -> boolean
     )(FriendConfig.<<)(_.>>)
       .verifying("Invalid clock", _.validClock)
       .verifying("invalidFen", _.validFen)
@@ -110,8 +116,11 @@ private[setup] final class FormFactory(
       "color" -> optional(color),
       "fen" -> fen,
       "opponent" -> optional(nonEmptyText),
-      "startsAt" -> optional(utcDate)
-    )(ApiConfig.<<)(_.>>).verifying("invalidFen", _.validFen)
+      "startsAt" -> optional(utcDate),
+      "microMatch" -> optional(boolean)
+    )(ApiConfig.<<)(_.>>)
+      .verifying("A custom fen is not allowed for this variant", _.validVariantForFen)
+      .verifying("invalidFen", _.validFen)
   )
 
   def savedConfig(implicit ctx: UserContext): Fu[UserConfig] =

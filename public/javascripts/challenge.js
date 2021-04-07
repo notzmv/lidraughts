@@ -22,6 +22,7 @@ window.onload = function() {
       success: function(html) {
         $(selector).replaceWith($(html).find(selector));
         init();
+        window.lidraughts.pubsub.emit('content_loaded');
       }
     });
   }

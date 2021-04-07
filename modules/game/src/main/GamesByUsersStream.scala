@@ -5,7 +5,7 @@ import play.api.libs.iteratee._
 import play.api.libs.json._
 
 import actorApi.{ StartGame, FinishGame }
-import draughts.format.FEN
+import draughts.format.{ FEN, Forsyth }
 import lidraughts.user.User
 
 final class GamesByUsersStream(system: ActorSystem) {
@@ -65,7 +65,7 @@ private object GamesByUsersStream {
           ).add("provisional" -> p.provisional)
             .add("name" -> p.name)
         })
-      ).add("initialFen" -> initialFen)
+      ).add("initialFen" -> initialFen.map(f => Forsyth.shorten(f.value)))
         .add("clock" -> g.clock.map { clock =>
           Json.obj(
             "initial" -> clock.limitSeconds,

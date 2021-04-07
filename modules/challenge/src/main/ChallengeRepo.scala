@@ -14,7 +14,7 @@ private final class ChallengeRepo(coll: Coll, maxPerUser: Int) {
   def byIdFor(id: Challenge.ID, dest: lidraughts.user.User) =
     coll.find($id(id) ++ $doc("destUser.id" -> dest.id)).uno[Challenge]
 
-  def exists(id: Challenge.ID) = coll.count($id(id).some).map(0<)
+  def exists(id: Challenge.ID) = coll.exists($id(id))
 
   def insert(c: Challenge): Funit =
     coll.insert(c) >> c.challenger.right.toOption.?? { challenger =>

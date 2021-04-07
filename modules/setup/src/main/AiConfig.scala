@@ -7,6 +7,7 @@ import lidraughts.user.User
 
 case class AiConfig(
     variant: draughts.variant.Variant,
+    fenVariant: Option[draughts.variant.Variant],
     timeMode: TimeMode,
     time: Double,
     increment: Int,
@@ -50,6 +51,7 @@ object AiConfig extends BaseConfig {
 
   def <<(v: Int, tm: Int, t: Double, i: Int, d: Int, level: Int, c: String, fen: Option[String]) = new AiConfig(
     variant = draughts.variant.Variant(v) err "Invalid game variant " + v,
+    fenVariant = none,
     timeMode = TimeMode(tm) err s"Invalid time mode $tm",
     time = t,
     increment = i,
@@ -61,6 +63,7 @@ object AiConfig extends BaseConfig {
 
   val default = AiConfig(
     variant = variantDefault,
+    fenVariant = none,
     timeMode = TimeMode.Unlimited,
     time = 5d,
     increment = 8,
@@ -83,6 +86,7 @@ object AiConfig extends BaseConfig {
 
     def reads(r: BSON.Reader): AiConfig = AiConfig(
       variant = draughts.variant.Variant orDefault (r int "v"),
+      fenVariant = none,
       timeMode = TimeMode orDefault (r int "tm"),
       time = r double "t",
       increment = r int "i",

@@ -1,8 +1,7 @@
 package lidraughts.game
 
-import draughts.format.Forsyth
 import draughts.format.pdn.{ Pdn, Tag, Tags, TagType, Parser, ParsedPdn }
-import draughts.format.{ FEN, pdn => draughtsPdn }
+import draughts.format.{ FEN, Forsyth, pdn => draughtsPdn }
 import draughts.{ Centis, Color }
 
 import lidraughts.common.LightUser
@@ -163,7 +162,7 @@ final class PdnDump(
           }
         }).some
       ).flatten ::: customStartPosition(game.variant).??(List(
-          Tag(_.FEN, convertedFen.fold("?")(_.value.split(':').take(3).mkString(":")))
+          Tag(_.FEN, convertedFen.fold("?")(f => Forsyth.shorten(f.value)))
         ))
     }
   }

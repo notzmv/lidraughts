@@ -2,6 +2,7 @@ package lidraughts.challenge
 
 import play.api.libs.json._
 
+import draughts.format.Forsyth
 import lidraughts.common.Lang
 import lidraughts.i18n.{ I18nKeys => trans }
 import lidraughts.socket.Socket.SocketVersion
@@ -9,7 +10,8 @@ import lidraughts.socket.UserLagCache
 
 final class JsonView(
     getLightUser: lidraughts.common.LightUser.GetterSync,
-    isOnline: lidraughts.user.User.ID => Boolean
+    isOnline: lidraughts.user.User.ID => Boolean,
+    baseUrl: String
 ) {
 
   import lidraughts.game.JsonView._
@@ -28,6 +30,7 @@ final class JsonView(
 
   def apply(direction: Option[Direction])(c: Challenge): JsObject = Json.obj(
     "id" -> c.id,
+    "url" -> s"$baseUrl/${c.id}",
     "status" -> c.status.name,
     "challenger" -> c.challengerUser,
     "destUser" -> c.destUser,
@@ -53,9 +56,10 @@ final class JsonView(
       "name" -> c.perfType.name
     )
   ).add("direction" -> direction.map(_.name))
-    .add("initialFen" -> c.initialFen)
+    .add("initialFen" -> c.initialFen.map(f => Forsyth.shorten(f.value)))
     .add("external" -> c.isExternal.option(true))
     .add("startsAt" -> c.external.flatMap(_.startsAt))
+    .add("microMatch" -> c.microMatch)
 
   private def iconChar(c: Challenge) =
     if (c.variant == draughts.variant.FromPosition) '*'
@@ -75,12 +79,19 @@ final class JsonView(
   }
 
   private def translations(lang: Lang) = lidraughts.i18n.JsDump.keysToObject(List(
+    trans.noChallenges,
+    trans.challengeSomeone,
+    trans.openChallenge,
     trans.rated,
     trans.casual,
     trans.waiting,
     trans.accept,
     trans.decline,
     trans.viewInFullSize,
-    trans.cancel
+    trans.cancel,
+    trans.microMatch,
+    trans.nbDays,
+    trans.oneDay,
+    trans.unlimited
   ), lidraughts.i18n.I18nDb.Site, lang)
 }

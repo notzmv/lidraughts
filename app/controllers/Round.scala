@@ -306,9 +306,10 @@ object Round extends LidraughtsController with TheftPrevention {
 
   def continue(id: String, mode: String) = Open { implicit ctx =>
     OptionResult(GameRepo game id) { game =>
-      Redirect("%s?fen=%s#%s".format(
+      Redirect("%s?fen=%s&variant=%s#%s".format(
         routes.Lobby.home(),
         get("fen") | (draughts.format.Forsyth >> game.draughts),
+        get("variant") | game.variant.key,
         mode
       ))
     }

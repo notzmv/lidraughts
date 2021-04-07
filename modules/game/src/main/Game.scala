@@ -414,7 +414,7 @@ case class Game(
     clock.??(_ moretimeable color) || correspondenceClock.??(_ moretimeable color)
   }
 
-  def abortable = status == Status.Started && playedTurns < 2 && nonMandatory
+  def abortable = status == Status.Started && playedTurns < 2 && nonMandatory && !metadata.microMatchGameNr.contains(2)
 
   def berserkable = clock.??(_.config.berserkable) && status == Status.Started && playedTurns < 2
 
@@ -737,7 +737,8 @@ object Game {
     source: Source,
     pdnImport: Option[PdnImport],
     daysPerTurn: Option[Int] = None,
-    drawLimit: Option[Int] = None
+    drawLimit: Option[Int] = None,
+    microMatch: Option[String] = None
   ): NewGame = {
     val createdAt = DateTime.now
     NewGame(Game(
@@ -758,6 +759,7 @@ object Game {
         simulPairing = none,
         timeOutUntil = none,
         drawLimit = drawLimit,
+        microMatch = microMatch,
         analysed = false
       ),
       createdAt = createdAt,
@@ -806,6 +808,7 @@ object Game {
     val initialFen = "if"
     val checkAt = "ck"
     val timeOutUntil = "to"
+    val microMatch = "mm"
     val drawLimit = "dl"
   }
 }

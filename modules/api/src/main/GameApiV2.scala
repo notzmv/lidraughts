@@ -6,7 +6,7 @@ import play.api.libs.json._
 import reactivemongo.play.iteratees.cursorProducer
 import scala.concurrent.duration._
 
-import draughts.format.FEN
+import draughts.format.{ FEN, Forsyth }
 import draughts.format.pdn.Tag
 import lidraughts.analyse.{ AnalysisRepo, JsonView => analysisJson, Analysis }
 import lidraughts.common.{ LightUser, MaxPerSecond, HTTPRequest }
@@ -176,7 +176,7 @@ final class GameApiV2(
           .add("analysis" -> analysisOption.flatMap(analysisJson.player(g pov p.color)))
         // .add("moveCentis" -> withFlags.moveTimes ?? g.moveTimes(p.color).map(_.map(_.centis)))
       })
-    ).add("initialFen" -> initialFen.map(_.value))
+    ).add("initialFen" -> initialFen.map(f => Forsyth.shorten(f.value)))
       .add("winner" -> g.winnerColor.map(_.name))
       .add("opening" -> g.opening.ifTrue(withFlags.opening))
       .add("moves" -> withFlags.moves.option {

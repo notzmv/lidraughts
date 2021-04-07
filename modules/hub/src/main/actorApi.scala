@@ -268,6 +268,7 @@ package round {
   case class Abort(playerId: String)
   case class Resign(playerId: String)
   case object AnalysisComplete
+  case object MicroRematch
 }
 
 package evaluation {

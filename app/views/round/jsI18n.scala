@@ -15,11 +15,13 @@ object jsI18n {
     } ++ {
       g.isTournament ?? tournamentTranslations
     } ++ {
+      g.isSwiss ?? swissTranslations
+    } ++ {
       g.isSimul ?? simulTranslations
     } ++ {
       g.metadata.drawLimit.isDefined ?? drawLimitTranslations
     } ++ {
-      g.isSwiss ?? swissTranslations
+      g.metadata.microMatch.isDefined ?? microMatchTranslations
     }
   }
 
@@ -29,12 +31,22 @@ object jsI18n {
     trans.nbHours
   )
 
-  private val realtimeTranslations = Vector(trans.nbSecondsToPlayTheFirstMove)
-  private val drawLimitTranslations = Vector(trans.drawOffersAfterX, trans.drawOffersNotAllowed)
+  private val realtimeTranslations = Vector(
+    trans.nbSecondsToPlayTheFirstMove
+  )
+
+  private val drawLimitTranslations = Vector(
+    trans.drawOffersAfterX,
+    trans.drawOffersNotAllowed
+  )
 
   private val variantTranslations = Vector(
     trans.promotion,
     trans.variantEnding
+  )
+
+  private val microMatchTranslations = Vector(
+    trans.microMatchRematchAwaiting
   )
 
   private val tournamentTranslations = Vector(

@@ -26,6 +26,10 @@ module.exports = function(cfg) {
       name: this.trans('loadPosition')
   }];
 
+  this.canContinueWithVariant = function() {
+    return ['standard', 'russian', 'brazilian'].includes(this.data.variant.key);
+  }.bind(this);
+
   this.positionsKey = function() {
     return (this.data.variant.key === 'russian' || this.data.variant.key === 'brazilian') ? 'draughts64' : this.data.variant.key;
   }.bind(this);
@@ -39,7 +43,7 @@ module.exports = function(cfg) {
       });
     });
     this.positionMap = positionMap
-  }.bind(this)
+  }.bind(this);
   this.makePositionMap();
 
   this.draughtsground; // will be set from the view when instanciating draughtsground

@@ -17,6 +17,12 @@
   <string name="white">Wit</string>
   <string name="black">Zwart</string>
   <string name="randomColor">Willekeurige kleur</string>
+  <string name="microMatch">Micro-match</string>
+  <string name="microMatchChallenge">Deze uitdaging is een micro-match!</string>
+  <string name="microMatchExplanation">Na deze partij wordt er meteen een rematch gespeeld met omgekeerde kleuren.</string>
+  <string name="microMatchRematchStarted">Tweede partij van micro-match gestart</string>
+  <string name="microMatchRematchAwaiting">Wachten op tweede partij van micro-match</string>
+  <string name="microMatchGameOne">Micro-match partij 1</string>
   <string name="createAGame">Start een nieuwe partij</string>
   <string name="whiteIsVictorious">Wit heeft gewonnen</string>
   <string name="blackIsVictorious">Zwart heeft gewonnen</string>
@@ -134,6 +140,7 @@
   <string name="currentGames">Lopende partijen</string>
   <string name="gamesInTimeout">Partijen met timeout</string>
   <string name="yourTurnInX">Je bent aan zet in %s</string>
+  <string name="gameNumberX">Partij %s</string>
   <plurals name="nbGames">
     <item quantity="one">%s partij</item>
     <item quantity="other">%s partijen</item>
@@ -149,6 +156,7 @@
   <string name="viewInFullSize">Bekijk op volledige grootte</string>
   <string name="logOut">Afmelden</string>
   <string name="signIn">Aanmelden</string>
+  <string name="youMustSignInToJoinIt">Je moet je %s om mee te doen</string>
   <string name="newToLidraughts">Nieuw op Lidraughts?</string>
   <string name="youNeedAnAccountToDoThat">Je hebt een account nodig om dat te doen</string>
   <string name="signUp">Registreren</string>
@@ -486,7 +494,7 @@ een computeranalyse, een chatbox bij de partij en een deelbare URL.</string>
   <string name="boardEditor">Bordbewerker</string>
   <string name="setTheBoard">Zet het bord op</string>
   <string name="popularOpenings">Populaire openingen</string>
-  <string name="startPosition">Beginstelling</string>
+  <string name="startPosition">Beginstand</string>
   <string name="clearBoard">Maak het bord leeg</string>
   <string name="edit">Bewerken</string>
   <string name="save">Opslaan</string>
@@ -914,6 +922,7 @@ Een URL per regel</string>
   <string name="draughtsBasics">Basis dammen</string>
   <string name="invalidPdn">Ongeldige PDN</string>
   <string name="invalidFen">Ongeldige FEN</string>
+  <string name="invalidPosition">Ongeldige positie</string>
   <string name="tooManyKings">Je kan niet tegen Scan spelen met meer dan 30 dammen op het bord.</string>
   <string name="error.minLength">Minimumlengte is %s tekens</string>
   <string name="error.maxLength">Maximumlengte is %s tekens</string>
@@ -927,6 +936,9 @@ Een URL per regel</string>
   <string name="custom">Aangepast</string>
   <string name="notifications">Meldingen</string>
   <string name="challenges">Uitdagingen</string>
+  <string name="noChallenges">Geen uitdagingen</string>
+  <string name="challengeSomeone">Daag iemand uit</string>
+  <string name="openChallenge">Open uitdaging</string>
   <string name="startsAtX">Begint op %s</string>
   <string name="challengeDeclined">Uitdaging geweigerd</string>
   <string name="challengeAccepted">Uitdaging geaccepteerd!</string>

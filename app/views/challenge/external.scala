@@ -24,15 +24,20 @@ object external {
         main(cls := "page-small challenge-page challenge-external box box-pad")(
           c.status match {
             case Status.Created | Status.External | Status.Offline =>
+              val whiteUserId = c.finalColor.fold(c.challengerUserId, c.destUserId)
+              val blackUserId = c.finalColor.fold(c.destUserId, c.challengerUserId)
               frag(
                 h1(
-                  userIdLink(c.finalColor.fold(c.challengerUserId, c.destUserId)),
+                  userIdLink(whiteUserId),
                   " vs ",
-                  userIdLink(c.finalColor.fold(c.destUserId, c.challengerUserId))
+                  userIdLink(blackUserId)
                 ),
                 bits.details(c),
                 c.notableInitialFen.map { fen =>
-                  div(cls := "board-preview", views.html.game.bits.miniBoard(fen, color = !c.finalColor, boardSize = c.variant.boardSize))
+                  val orientation =
+                    if (player && ctx.userId == blackUserId) draughts.Color.black
+                    else draughts.Color.white
+                  div(cls := "board-preview", views.html.game.bits.miniBoard(fen, color = orientation, boardSize = c.variant.boardSize))
                 },
                 if (startsAt.isDefined) startsAt.map { dt =>
                   div(cls := "starts-at")(
@@ -44,42 +49,30 @@ object external {
                     )
                   )
                 }
-                else if (player) {
-                  if (!c.mode.rated || ctx.isAuth) frag(
-                    (c.mode.rated && c.unlimited) option
-                      badTag(trans.bewareTheGameIsRatedButHasNoClock()),
-                    if (c.hasAcceptedExternal(ctx.me)) frag(
-                      p(cls := "player-accepted")(trans.challengeAcceptedAndWaiting()),
-                      p(cls := "accepting-message")(trans.youWillBeRedirectedToTheGame())
-                    )
-                    else postForm(cls := "accept", action := routes.Challenge.accept(c.id))(
-                      submitButton(cls := "text button button-fat", dataIcon := "G")(trans.joinTheGame())
-                    )
+                else if (player) frag(
+                  (c.mode.rated && c.unlimited) option
+                    badTag(trans.bewareTheGameIsRatedButHasNoClock()),
+                  if (c.hasAcceptedExternal(ctx.me)) frag(
+                    p(cls := "player-accepted")(trans.challengeAcceptedAndWaiting()),
+                    p(cls := "accepting-message")(trans.youWillBeRedirectedToTheGame())
                   )
-                  else frag(
-                    hr,
-                    badTag(
-                      p("This game is rated"),
-                      p(
-                        "You must ",
-                        a(cls := "button", href := s"${routes.Auth.login}?referrer=${routes.Round.watcher(c.id, "white")}")(trans.signIn()),
-                        " to join it."
-                      )
-                    )
+                  else postForm(cls := "accept", action := routes.Challenge.accept(c.id))(
+                    submitButton(cls := "text button button-fat", dataIcon := "G")(trans.joinTheGame())
                   )
-                } else c.external map { e =>
+                )
+                else c.external map { e =>
                   val accepted = div(cls := "status")(span(dataIcon := "E"), trans.challengeAccepted())
                   val waiting = div(cls := "status")(trans.waitingForPlayer())
                   frag(
                     div(cls := "accepting")(
                       div(cls := "players")(
                         div(
-                          div(cls := "player color-icon is white")(userIdLink(c.finalColor.fold(c.challengerUserId, c.destUserId), withOnline = false)),
+                          div(cls := "player color-icon is white")(userIdLink(whiteUserId, withOnline = false)),
                           if (c.finalColor.fold(e.challengerAccepted, e.destUserAccepted)) accepted
                           else waiting
                         ),
                         div(
-                          div(cls := "player color-icon is black")(userIdLink(c.finalColor.fold(c.destUserId, c.challengerUserId), withOnline = false)),
+                          div(cls := "player color-icon is black")(userIdLink(blackUserId, withOnline = false)),
                           if (c.finalColor.fold(e.destUserAccepted, e.challengerAccepted)) accepted
                           else waiting
                         )

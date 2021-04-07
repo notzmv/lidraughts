@@ -33,6 +33,7 @@ object ChallengeMaker {
     GameRepo initialFen pov.game map { initialFen =>
       Challenge.make(
         variant = pov.game.variant,
+        fenVariant = pov.game.variant.some,
         initialFen = initialFen,
         timeControl = (pov.game.clock, pov.game.daysPerTurn) match {
           case (Some(clock), _) => TimeControl.Clock(clock.config)
@@ -43,7 +44,8 @@ object ChallengeMaker {
         color = (!pov.color).name,
         challenger = Right(challenger),
         destUser = dest.some,
-        rematchOf = pov.gameId.some
+        rematchOf = pov.gameId.some,
+        microMatch = pov.game.metadata.microMatchGameNr.contains(2)
       )
     }
 }

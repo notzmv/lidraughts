@@ -132,10 +132,17 @@ trait SetupHelper { self: I18nHelper with GameHelper =>
 
   private val encodeId = (v: Variant) => v.id.toString
 
-  private def variantTupleId(v: Variant)(implicit ctx: Context) = variantTuple(encodeId)(v)
+  private def variantTupleId(v: Variant)(implicit ctx: Context) =
+    variantTuple(encodeId)(v)
 
-  private def variantTuple(encode: Variant => String)(variant: Variant)(implicit ctx: Context) =
-    (encode(variant), variant.name, variantTitle(variant).some)
+  private def fromPositionVariantTupleId(v: Variant)(implicit ctx: Context) =
+    variantTuple(encodeId, v => fromPositionVariantName(v.name))(v)
+
+  private def variantTuple(encode: Variant => String, variantName: Variant => String = _.name)(variant: Variant)(implicit ctx: Context) =
+    (encode(variant), variantName(variant), variantTitle(variant).some)
+
+  private def fromPositionVariantName(variantName: String) =
+    s"${draughts.variant.FromPosition.name} | ${variantName}"
 
   def translatedVariantChoices(implicit ctx: Context): List[SelectChoice] =
     translatedVariantChoices(encodeId)
@@ -168,6 +175,12 @@ trait SetupHelper { self: I18nHelper with GameHelper =>
       variantTupleId(draughts.variant.Antidraughts) :+
       variantTupleId(draughts.variant.Breakthrough) :+
       variantTupleId(draughts.variant.FromPosition)
+
+  def translatedFromPositionVariantChoices(implicit ctx: Context) = List(
+    (encodeId(draughts.variant.Standard), fromPositionVariantName(trans.standard.txt()), trans.variantTitleStandard.txt().some),
+    fromPositionVariantTupleId(draughts.variant.Russian),
+    fromPositionVariantTupleId(draughts.variant.Brazilian)
+  )
 
   def translatedVariantChoicesWithVariantsAndFen(implicit ctx: Context) =
     translatedVariantChoicesWithVariants :+

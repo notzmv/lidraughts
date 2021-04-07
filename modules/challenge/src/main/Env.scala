@@ -31,6 +31,7 @@ final class Env(
     val UidTimeout = config duration "uid.timeout"
     val SocketTimeout = config duration "socket.timeout"
     val MaxPlaying = config getInt "max_playing"
+    val NetBaseUrl = config getString "net.base_url"
   }
   import settings._
 
@@ -79,7 +80,7 @@ final class Env(
     maxPerUser = MaxPerUser
   )
 
-  lazy val jsonView = new JsonView(lightUser, isOnline)
+  lazy val jsonView = new JsonView(lightUser, isOnline, NetBaseUrl)
 
   scheduler.future(3 seconds, "sweep challenges") {
     api.sweep

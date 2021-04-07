@@ -29,6 +29,7 @@ export interface Game {
   threefold?: boolean;
   boosted?: boolean;
   rematch?: string;
+  microMatch?: number;
   rated?: boolean;
   perf: string;
 }

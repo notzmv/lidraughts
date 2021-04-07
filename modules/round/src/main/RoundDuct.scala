@@ -12,7 +12,7 @@ import draughts.format.Uci
 import lidraughts.game.{ Event, Game, Pov, Progress, Source, Player => GamePlayer }
 import lidraughts.hub.actorApi.DeployPost
 import lidraughts.hub.actorApi.map._
-import lidraughts.hub.actorApi.round.{ DraughtsnetPlay, BotPlay, RematchYes, RematchNo, Abort, Resign, AnalysisComplete }
+import lidraughts.hub.actorApi.round.{ DraughtsnetPlay, BotPlay, RematchYes, RematchNo, Abort, Resign, AnalysisComplete, MicroRematch }
 import lidraughts.hub.Duct
 import lidraughts.socket.UserLagCache
 import makeTimeout.large
@@ -176,6 +176,19 @@ private[round] final class RoundDuct(
 
     case RematchYes(playerRef) => handle(playerRef)(rematcher.yes)
     case RematchNo(playerRef) => handle(playerRef)(rematcher.no)
+
+    case MicroRematch => handle { game =>
+      rematcher.microMatch(game) map { events =>
+        events.foreach {
+          case Event.RematchTaken(gameId) =>
+            val microMatch = s"2:$gameId"
+            proxy.persist(_.setMicroMatch(game.id, microMatch).void) >>-
+              proxy.set(game.withMetadata(_.copy(microMatch = microMatch.some)))
+          case _ =>
+        }
+        events
+      }
+    }
 
     case TakebackYes(playerRef) => handle(playerRef) { pov =>
       takebacker.yes(~takebackSituation)(pov) map {

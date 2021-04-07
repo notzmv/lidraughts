@@ -6,6 +6,7 @@ import play.api.mvc.{ Result, Results }
 import scala.concurrent.duration._
 
 import draughts.format.FEN
+import draughts.variant.{ Variant, Standard }
 import lidraughts.api.{ Context, BodyContext }
 import lidraughts.app._
 import lidraughts.common.{ HTTPRequest, LidraughtsCookie, IpAddress }
@@ -43,7 +44,7 @@ object Setup extends LidraughtsController with TheftPrevention {
         html.setup.forms.ai(
           form,
           Env.draughtsnet.aiPerfApi.intRatings,
-          form("fen").value flatMap ValidFen(getBool("strict"))
+          form("fen").value flatMap ValidFen(draughts.variant.Standard, getBool("strict"))
         )
       }
     } else fuccess {
@@ -57,8 +58,9 @@ object Setup extends LidraughtsController with TheftPrevention {
 
   def friendForm(userId: Option[String]) = Open { implicit ctx =>
     if (HTTPRequest isXhr ctx.req)
-      env.forms friendFilled get("fen").map(FEN) flatMap { form =>
-        val validFen = form("fen").value flatMap ValidFen(false)
+      env.forms.friendFilled(get("fen").map(FEN), get("variant").flatMap(Variant.apply)) flatMap { form =>
+        val fenVariant = form("fenVariant").value.flatMap(parseIntOption).flatMap(Variant.apply) | Standard
+        val validFen = form("fen").value flatMap ValidFen(fenVariant, false)
         userId ?? UserRepo.named flatMap {
           case None => Ok(html.setup.forms.friend(form, none, none, validFen)).fuccess
           case Some(user) => Env.challenge.granter(ctx.me, user, none) map {
@@ -92,7 +94,8 @@ object Setup extends LidraughtsController with TheftPrevention {
               import lidraughts.challenge.Challenge._
               val challenge = lidraughts.challenge.Challenge.make(
                 variant = config.variant,
-                initialFen = config.fen,
+                initialFen = config.variant.fromPosition ?? config.fen,
+                fenVariant = config.variant.fromPosition ?? config.fenVariant,
                 timeControl = config.makeClock map { c =>
                   TimeControl.Clock(c)
                 } orElse config.makeDaysPerTurn.map {
@@ -106,7 +109,8 @@ object Setup extends LidraughtsController with TheftPrevention {
                   case _ => Left("no_sid")
                 },
                 destUser = destUser,
-                rematchOf = none
+                rematchOf = none,
+                microMatch = config.microMatch
               )
               env.processor.saveFriendConfig(config) >>
                 (Env.challenge.api create challenge) flatMap {
@@ -203,7 +207,8 @@ object Setup extends LidraughtsController with TheftPrevention {
   }
 
   def validateFen = Open { implicit ctx =>
-    get("fen") flatMap ValidFen(getBool("strict")) match {
+    val v = get("variant").flatMap(Variant.apply) | Standard
+    get("fen") flatMap ValidFen(v, getBool("strict")) match {
       case None => BadRequest.fuccess
       case Some(v) if getBool("kings") && v.tooManyKings => BadRequest.fuccess
       case Some(v) => Ok(html.game.bits.miniBoard(v.fen, v.color, v.boardSize)).fuccess
@@ -211,9 +216,17 @@ object Setup extends LidraughtsController with TheftPrevention {
   }
 
   def validateFenOk = Open { implicit ctx =>
-    get("fen") flatMap ValidFen(getBool("strict")) match {
-      case None => Ok("<p class=\"errortext\">Invalid position</p>").fuccess
-      case Some(v) if getBool("kings") && v.tooManyKings => Ok("<p class=\"errortext\">" + lidraughts.i18n.I18nKeys.tooManyKings.txt() + "</p>").fuccess
+    import lidraughts.i18n.{ I18nKeys => trans }
+    val v = get("variant").flatMap(Variant.apply) | Standard
+    val strict = getBool("strict")
+    val fen = get("fen")
+    fen flatMap ValidFen(v, strict) match {
+      case None =>
+        val errorText =
+          if (fen.flatMap(draughts.format.Forsyth.makeBoard(v, _)).??(_.pieceCount) != 0) trans.invalidPosition.txt()
+          else trans.invalidFen.txt()
+        BadRequest("<p class=\"errortext\">" + errorText + "</p>").fuccess
+      case Some(v) if getBool("kings") && v.tooManyKings => BadRequest("<p class=\"errortext\">" + trans.tooManyKings.txt() + "</p>").fuccess
       case Some(v) => Ok(html.game.bits.miniBoard(v.fen, v.color, v.boardSize)).fuccess
     }
   }

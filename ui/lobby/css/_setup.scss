@@ -1,3 +1,5 @@
+@import '../../../common/css/form/cmn-toggle';
+
 $c-setup: $c-secondary;
 $c-slider: $c-setup;
 
@@ -52,12 +54,28 @@ $c-slider: $c-setup;
       font-weight: bold;
     }
   }
+  .micro_match {
+    display: none;
+    padding: 0;
+    margin-bottom: -.5em;
+    div {
+      display: flex;
+      justify-content: center;
+      margin-top: .8em;
+      .form-check-input {
+        margin-right: .5em;
+      }
+    }
+  }
   .fen_position {
     display: none;
     .board_editor {
       display: block;
       width: 50%;
       margin: .5em auto 0 auto;
+      p.errortext {
+        margin-bottom: 0;
+      }
     }
     .fen_form {
       @extend %flex-center-nowrap;
@@ -65,14 +83,20 @@ $c-slider: $c-setup;
     .fen_form input {
       flex: 1 1 100%;
     }
-    .fen_form .button {
+    .fen_variant {
+      margin-top: .5em;
+      &.hidden {
+        display: none;
+      }
+      select {
+        margin-left: 0;
+        font-weight: bold;
+      }
     }
   }
-  input#fen.success {
-    border-color: $c-good;
-  }
-  input#fen.failure {
-    border-color: $c-bad;
+  #form3-fen.failure {
+    background: mix($c-bg-box, $c-bad, 80%);
+    box-shadow: 0 0 13px $c-bad;
   }
   .ui-slider {
     margin: .5em 1em;

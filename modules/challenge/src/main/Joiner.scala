@@ -17,8 +17,8 @@ private[challenge] final class Joiner(onStart: String => Unit) {
           def makeDraughts(variant: draughts.variant.Variant): draughts.DraughtsGame =
             draughts.DraughtsGame(situation = Situation(variant), clock = c.clock.map(_.config.toClock))
 
-          val baseState = c.initialFen.ifTrue(c.variant.fromPosition) flatMap { fen =>
-            Forsyth.<<<@(draughts.variant.FromPosition, fen.value)
+          val baseState = c.initialFen.ifTrue(c.customStartingPosition) flatMap { fen =>
+            Forsyth.<<<@(c.variant, fen.value)
           }
           val (draughtsGame, state) = baseState.fold(makeDraughts(c.variant) -> none[SituationPlus]) {
             case sit @ SituationPlus(s, _) =>
@@ -28,9 +28,11 @@ private[challenge] final class Joiner(onStart: String => Unit) {
                 startedAtTurn = sit.turns,
                 clock = c.clock.map(_.config.toClock)
               )
-              if (Forsyth.>>(game) == Forsyth.initial) makeDraughts(draughts.variant.Standard) -> none
+              if (s.board.variant.fromPosition && Forsyth.>>(game) == Forsyth.initial)
+                makeDraughts(draughts.variant.Standard) -> none
               else game -> baseState
           }
+          val microMatch = c.isMicroMatch && c.customStartingPosition option "micromatch"
           val perfPicker = (perfs: lidraughts.user.Perfs) => perfs(c.perfType)
           val game = Game.make(
             draughts = draughtsGame,
@@ -39,7 +41,8 @@ private[challenge] final class Joiner(onStart: String => Unit) {
             mode = if (draughtsGame.board.variant.fromPosition) Mode.Casual else c.mode,
             source = if (draughtsGame.board.variant.fromPosition) Source.Position else Source.Friend,
             daysPerTurn = c.daysPerTurn,
-            pdnImport = None
+            pdnImport = None,
+            microMatch = microMatch
           ).withId(c.id).|> { g =>
               state.fold(g) {
                 case sit @ SituationPlus(Situation(board, _), _) => g.copy(
@@ -47,7 +50,7 @@ private[challenge] final class Joiner(onStart: String => Unit) {
                     situation = g.situation.copy(
                       board = g.board.copy(
                         history = board.history,
-                        variant = draughts.variant.FromPosition
+                        variant = c.variant
                       )
                     ),
                     turns = sit.turns

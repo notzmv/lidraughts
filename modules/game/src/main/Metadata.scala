@@ -13,8 +13,16 @@ private[game] case class Metadata(
     simulPairing: Option[Int],
     timeOutUntil: Option[DateTime],
     drawLimit: Option[Int],
+    microMatch: Option[String],
     analysed: Boolean
 ) {
+
+  def needsMicroRematch = microMatch.contains("micromatch")
+  def microMatchGameNr = microMatch ?? { mm =>
+    if (mm == "micromatch" || mm.startsWith("2:")) 1.some
+    else if (mm.startsWith("1:")) 2.some
+    else none
+  }
 
   def pdnDate = pdnImport flatMap (_.date)
 
@@ -25,7 +33,7 @@ private[game] case class Metadata(
 
 private[game] object Metadata {
 
-  val empty = Metadata(None, None, None, None, None, None, None, None, false)
+  val empty = Metadata(None, None, None, None, None, None, None, None, None, false)
 }
 
 case class PdnImport(
