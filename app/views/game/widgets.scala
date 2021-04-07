@@ -55,7 +55,10 @@ object widgets {
               } orElse
               isGranted(_.Beta) ?? g.swissId.map { swissId =>
                 frag(separator, views.html.swiss.bits.link(lidraughts.swiss.Swiss.Id(swissId)))
-              }
+              },
+            g.metadata.microMatchGameNr map { gameNr =>
+              frag(separator, trans.microMatchGameX(gameNr))
+            }
           )
         ),
         div(cls := "versus")(

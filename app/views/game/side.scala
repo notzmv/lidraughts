@@ -128,7 +128,7 @@ object side {
             span(cls := "current")(trans.gameNumberX(1)), " ",
             a(cls := "text", href := routes.Round.watcher(m.drop(2), (!pov.color).name))(trans.gameNumberX(2))
           )
-          else trans.microMatchGameOne()
+          else trans.microMatchGameX(1)
         )
       },
 
