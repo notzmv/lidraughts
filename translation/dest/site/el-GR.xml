@@ -346,7 +346,7 @@
   <string name="list">Κατάλογος</string>
   <string name="graph">Διάγραμμα</string>
   <plurals name="lessThanNbMinutes">
-    <item quantity="one">Λιγότερο από ένα λεπτό</item>
+    <item quantity="one">Λιγότερο από %s λεπτό</item>
     <item quantity="other">Λιγότερο από %s λεπτά</item>
   </plurals>
   <string name="required">Απαιτείται.</string>
@@ -658,8 +658,8 @@
   <string name="ifYouDoNotSeeTheEmailCheckOtherPlaces">Εάν δεν μπορείτε να δείτε το μήνυμα ηλ. ταχυδρομείου, ελέγξτε άλλες θέσεις που θα μπορούσε να είναι, όπως στα διαγραμμένα, ανεπιθύμητη αλληλογραφία, κοινωνικά, ή σε άλλους φακέλους.</string>
   <string name="weHaveSentYouAnEmailTo">Έχουμε στείλει ένα μήνυμα ηλ. ταχυδρομείου στο %s. Κάντε κλικ τον σύνδεσμο στο ηλ. ταχυδρομείο για να επαναφέρετε τον κωδικό πρόσβασής σας.</string>
   <string name="byRegisteringYouAgreeToBeBoundByOur">Με την εγγραφή σας συμφωνείτε ότι δεσμεύεστε από τους %s.</string>
-  <string name="networkLagBetweenYouAndLidraughts">Υστέρηση δικτύου ανάμεσα σε εσάς και το lidraughts</string>
-  <string name="timeToProcessAMoveOnLidraughtsServer">Χρόνος επεξεργασίας μίας κίνησης στον διακομιστή lidraughts</string>
+  <string name="networkLagBetweenYouAndLidraughts">Υστέρηση δικτύου ανάμεσα σε εσάς και το Lidraughts</string>
+  <string name="timeToProcessAMoveOnLidraughtsServer">Χρόνος επεξεργασίας μίας κίνησης στον διακομιστή Lidraughts</string>
   <string name="downloadAnnotated">Λήψη με υποσημειώσεις</string>
   <string name="downloadRaw">Λήψη ακατέργαστο</string>
   <string name="downloadImported">Λήψη εισαγόμενου</string>

@@ -714,8 +714,8 @@
   <string name="ifYouDoNotSeeTheEmailCheckOtherPlaces">Якщо не знайшли листа, перевірте місця, де б він міг бути (наприклад, спам).</string>
   <string name="weHaveSentYouAnEmailTo">Ми надіслали повідомлення на %s. Для перевстановлення паролю перейдіть за посиланням у повідомленні.</string>
   <string name="byRegisteringYouAgreeToBeBoundByOur">Ваша рєєстрація означає згоду з обмеженням нашими %s.</string>
-  <string name="networkLagBetweenYouAndLidraughts">Мережева затримка між вами та lidraughts</string>
-  <string name="timeToProcessAMoveOnLidraughtsServer">Час обробки ходу на сервері lidraughts</string>
+  <string name="networkLagBetweenYouAndLidraughts">Мережева затримка між вами та Lidraughts</string>
+  <string name="timeToProcessAMoveOnLidraughtsServer">Час обробки ходу на сервері Lidraughts</string>
   <string name="downloadAnnotated">Завантажити з коментарями</string>
   <string name="downloadRaw">Завантажити без коментарів</string>
   <string name="downloadImported">Завантажити імпортоване</string>

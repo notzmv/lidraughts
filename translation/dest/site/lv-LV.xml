@@ -822,8 +822,8 @@ Vienā līnijā  - tikai vienu norādi.</string>
   <string name="ifYouDoNotSeeTheEmailCheckOtherPlaces">Ja nevari atrast e-pastu, pārbaudi citās vietās, kur tas varētu būt, piemēram, mēstules, draza, spam, junk, sociālie tīkli vai citās mapēs.</string>
   <string name="weHaveSentYouAnEmailTo">Mēs aizsūtījām e-pastu uz %s. Noklikšķini uz saites e-pastā lai atjaunotu savu paroli.</string>
   <string name="byRegisteringYouAgreeToBeBoundByOur">Reģistrējoties, tev jāpiekrīt saistībām atbilstoši mūsu %s.</string>
-  <string name="networkLagBetweenYouAndLidraughts">Tīkla aizture starp tevi un lidraughts</string>
-  <string name="timeToProcessAMoveOnLidraughtsServer">Gājiena apstrādei nepieciešamais laiks lidraughts serverī</string>
+  <string name="networkLagBetweenYouAndLidraughts">Tīkla aizture starp tevi un Lidraughts</string>
+  <string name="timeToProcessAMoveOnLidraughtsServer">Gājiena apstrādei nepieciešamais laiks Lidraughts serverī</string>
   <string name="downloadAnnotated">Lejupielādēt anotētu</string>
   <string name="downloadRaw">Lejupielādēt neapstrādātu</string>
   <string name="downloadImported">Lejupielādēt importēto</string>

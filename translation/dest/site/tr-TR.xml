@@ -672,8 +672,8 @@
   <string name="ifYouDoNotSeeTheEmailCheckOtherPlaces">Eğer e-postayı görmüyorsanız, spam, sosyal veya diğer klasörlere göz atmayı deneyin.</string>
   <string name="weHaveSentYouAnEmailTo">%s adresine e-posta yolladık. Şifrenizi tekrar ayarlamak için e-postadaki linke tıklayın.</string>
   <string name="byRegisteringYouAgreeToBeBoundByOur">Kaydolarak, %s \'ı kabul etmiş sayılırsınız.</string>
-  <string name="networkLagBetweenYouAndLidraughts">Siz ve lidraughts.org arasındaki gecikme (ping)</string>
-  <string name="timeToProcessAMoveOnLidraughtsServer">lidraughts.org üzerindeki hamle süreniz (ms)</string>
+  <string name="networkLagBetweenYouAndLidraughts">Siz ve Lidraughts arasındaki gecikme (ping)</string>
+  <string name="timeToProcessAMoveOnLidraughtsServer">Lidraughts üzerindeki hamle süreniz (ms)</string>
   <string name="downloadAnnotated">Açıklamalarıyla beraber indirin</string>
   <string name="downloadRaw">Açıklamasız indirin.</string>
   <string name="downloadImported">İçeri aktarılmış oyunu indir</string>

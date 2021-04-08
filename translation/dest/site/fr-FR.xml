@@ -667,8 +667,8 @@ consulter l\'analyse de l\'ordinateur, utiliser le tchat et partager le lien.</s
   <string name="ifYouDoNotSeeTheEmailCheckOtherPlaces">Si vous ne trouvez pas l\'email dans votre boîte de réception, vérifiez dans vos emails indésirables ou autres dossiers.</string>
   <string name="weHaveSentYouAnEmailTo">Nous avons envoyé un email à %s. Cliquez le lien qui s\'y trouve pour réinitialiser votre mot de passe.</string>
   <string name="byRegisteringYouAgreeToBeBoundByOur">En vous inscrivant, vous acceptez d\'être lié à notre %s.</string>
-  <string name="networkLagBetweenYouAndLidraughts">Latence du réseau entre vous et lidraughts</string>
-  <string name="timeToProcessAMoveOnLidraughtsServer">Temps nécessaire au traitement d\'un coup sur un serveur lidraughts</string>
+  <string name="networkLagBetweenYouAndLidraughts">Latence du réseau entre vous et Lidraughts</string>
+  <string name="timeToProcessAMoveOnLidraughtsServer">Temps nécessaire au traitement d\'un coup sur un serveur Lidraughts</string>
   <string name="downloadAnnotated">Télécharger le PDN annoté</string>
   <string name="downloadRaw">Télécharger le PDN brut</string>
   <string name="downloadImported">Télécharger le PDN importé</string>

@@ -917,8 +917,8 @@ jeden adres URL na linię</string>
   <string name="ifYouDoNotSeeTheEmailCheckOtherPlaces">Jeśli nie widzisz wiadomości e-mail, sprawdź inne możliwe miejsca, takie jak kosz, spam lub inne foldery.</string>
   <string name="weHaveSentYouAnEmailTo">Wysłaliśmy wiadomość e-mail do %s.Kliknij w link znajdujący się w wiadomości aby zresetować swoje hasło.</string>
   <string name="byRegisteringYouAgreeToBeBoundByOur">Rejestrując się wyrażasz zgodę na przestrzeganie %s.</string>
-  <string name="networkLagBetweenYouAndLidraughts">Opóźnienie w połączeniu internetowym pomiędzy Tobą i lidraughts</string>
-  <string name="timeToProcessAMoveOnLidraughtsServer">Czas przetwarzania ruchu na serwerze lidraughts</string>
+  <string name="networkLagBetweenYouAndLidraughts">Opóźnienie w połączeniu internetowym pomiędzy Tobą i Lidraughts</string>
+  <string name="timeToProcessAMoveOnLidraughtsServer">Czas przetwarzania ruchu na serwerze Lidraughts</string>
   <string name="downloadAnnotated">Pobierz z komentarzem</string>
   <string name="downloadRaw">Pobierz bez komentarza</string>
   <string name="downloadImported">Pobierz zaimportowane partie</string>
@@ -1003,7 +1003,7 @@ jeden adres URL na linię</string>
   <string name="error.max">Musi być mniejsze lub równe %s</string>
   <string name="error.unknown">Wystąpił błąd</string>
   <string name="error.pattern">Zawiera niedozwolone znaki</string>
-  <string name="mustNotContainLidraughts">Nie może zawierać \"ldraughts\"</string>
+  <string name="mustNotContainLidraughts">Nie może zawierać \"lidraughts\"</string>
   <string name="mustNotContainATitleThatIsNotVerified">Nie może zawierać tytułu który nie jest zweryfikowany z Twoim kontem</string>
   <string name="custom">Niestandardowa</string>
   <string name="notifications">Powiadomienia</string>

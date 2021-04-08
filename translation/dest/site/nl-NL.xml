@@ -867,7 +867,7 @@ Een URL per regel</string>
   <string name="weHaveSentYouAnEmailTo">We hebben een email verstuurd naar %s. Klik op de link in de email om je wachtwoord te resetten.</string>
   <string name="byRegisteringYouAgreeToBeBoundByOur">Door je registratie ben je gebonden aan onze %s.</string>
   <string name="networkLagBetweenYouAndLidraughts">Netwerkvertraging tussen jou en Lidraughts</string>
-  <string name="timeToProcessAMoveOnLidraughtsServer">Tijd om een zet te verwerken op de lidraughts server</string>
+  <string name="timeToProcessAMoveOnLidraughtsServer">Tijd om een zet te verwerken op de Lidraughts server</string>
   <string name="downloadAnnotated">Download de geannoteerde partij</string>
   <string name="downloadRaw">Download PDN</string>
   <string name="downloadImported">Download de geïmporteerde partij</string>

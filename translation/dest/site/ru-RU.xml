@@ -743,7 +743,7 @@
   <string name="ifYouDoNotSeeTheEmailCheckOtherPlaces">Если письма нет, проверьте папку для спама и другие места, куда оно могло попасть.</string>
   <string name="weHaveSentYouAnEmailTo">Мы отправили письмо по адресу %s. Нажмите на ссылку в нём для сброса пароля.</string>
   <string name="byRegisteringYouAgreeToBeBoundByOur">Регистрируясь, вы берёте на себя обязанность соблюдать наше %s</string>
-  <string name="networkLagBetweenYouAndLidraughts">Задержки передачи данных между вами и серверами lidraughts</string>
+  <string name="networkLagBetweenYouAndLidraughts">Задержки передачи данных между вами и серверами Lidraughts</string>
   <string name="downloadAnnotated">Скачать с аннотациями</string>
   <string name="downloadRaw">Скачать в исходном виде</string>
   <string name="downloadImported">Скачать в исходном виде</string>

@@ -665,7 +665,7 @@ un análisis por ordenador, un chat de juego y una URL para compartir.</string>
   <string name="ifYouDoNotSeeTheEmailCheckOtherPlaces">Si no encuentras el correo, mira a ver si está en otras carpetas (spam, social, ...).</string>
   <string name="weHaveSentYouAnEmailTo">Te hemos enviado un correo a %s. Restablece tu contraseña haciendo clic en el enlace.</string>
   <string name="byRegisteringYouAgreeToBeBoundByOur">Al registrarte, aceptas las %s.</string>
-  <string name="networkLagBetweenYouAndLidraughts">Retardo de conexión entre tú y lidraughts</string>
+  <string name="networkLagBetweenYouAndLidraughts">Retardo de conexión entre tú y Lidraughts</string>
   <string name="timeToProcessAMoveOnLidraughtsServer">Tiempo para procesar un movimiento en el servidor de Lidraughts</string>
   <string name="downloadAnnotated">Descargar la partida anotada</string>
   <string name="downloadRaw">Descargar la partida sin anotar</string>

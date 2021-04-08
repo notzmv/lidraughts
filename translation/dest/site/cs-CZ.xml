@@ -599,8 +599,8 @@ získáte počítačovou analýzu, chat ke hře a URL ke sdílení hry.</string>
   <string name="ifYouDoNotSeeTheEmailCheckOtherPlaces">Pokud email nenaleznete v doručené poště, zkontrolujte další místa, kde by mohl být, jako spam, zprávy ze sociálních sítí, koš nebo jiné složky.</string>
   <string name="weHaveSentYouAnEmailTo">Zaslali jsme vám email na %s. Klikněte na odkaz v emailu pro přenastavení vašeho hesla.</string>
   <string name="byRegisteringYouAgreeToBeBoundByOur">Registrací berete na vědomí naše %s.</string>
-  <string name="networkLagBetweenYouAndLidraughts">Síťové zpoždění mezi vámi a lidraughts</string>
-  <string name="timeToProcessAMoveOnLidraughtsServer">Čas na zpracování tahu na lidraughts serveru.</string>
+  <string name="networkLagBetweenYouAndLidraughts">Síťové zpoždění mezi vámi a Lidraughts</string>
+  <string name="timeToProcessAMoveOnLidraughtsServer">Čas na zpracování tahu na Lidraughts serveru.</string>
   <string name="downloadAnnotated">Stáhnout s poznámkami</string>
   <string name="downloadRaw">Stáhnout jako text</string>
   <string name="downloadImported">Stáhnout importované</string>
