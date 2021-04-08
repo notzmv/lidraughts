@@ -33,8 +33,9 @@ object faq {
         question(
           "contributing",
           "How can I contribute to Lidraughts?",
-          p("Lidraughts is powered by donations from patrons and the efforts of a team of volunteers. You can find out more about being a patron ", a(href := routes.Plan.index())("here"), "."),
-          p("If you want to help Lidraughts by volunteering your time and skills (translations, piece sets, etc), you can contact us by ", a(href := "mailto:contact@lidraughts.org")("e-mail"), " or in the ", a(href := routes.ForumCateg.index())("forum"), ".")
+          p("Lidraughts is powered by donations from patrons and the efforts of a small team of volunteers. You can find out more about being a patron ", a(href := routes.Plan.index())("here"), "."),
+          p("If you want to help by translating Lidraughts to your native language, visit our translations ", a(href := "https://crowdin.com/project/lidraughts")("project page"), ". If your language is not yet listed, send us an ", a(href := "mailto:contact@lidraughts.org")("email"), " to discuss adding it."),
+          p("If there are other ways you want to volunteer your time and skills (piece sets, board designs, etc), you can contact us by ", a(href := "mailto:contact@lidraughts.org")("email"), ".")
         ),
         question(
           "embed",
