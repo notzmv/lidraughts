@@ -62,7 +62,7 @@
     <item quantity="one">Classificado #%1$s (top %2$s%%) com %3$s jogo em %4$s</item>
     <item quantity="other">Classificado #%1$s (top %2$s%%) com %3$s jogos em %4$s</item>
   </plurals>
-  <string name="signedUp">Registrou-se no lidraughts</string>
+  <string name="signedUp">Registrou-se no lidraughts.org</string>
   <plurals name="joinedNbTeams">
     <item quantity="one">Uniu-se a %s time</item>
     <item quantity="other">Uniu-se a %s times</item>

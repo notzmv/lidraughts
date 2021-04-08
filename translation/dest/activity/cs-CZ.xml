@@ -92,7 +92,7 @@
     <item quantity="many">Skončil #%1$s (top %2$s%%) s %3$s hrami v %4$s</item>
     <item quantity="other">Skončil #%1$s (top %2$s%%) s %3$s hrami v %4$s</item>
   </plurals>
-  <string name="signedUp">Vytvořen účet na lidraughts</string>
+  <string name="signedUp">Vytvořen účet na lidraughts.org</string>
   <plurals name="joinedNbTeams">
     <item quantity="one">Přidal se k %s týmu</item>
     <item quantity="few">Přidal se k %s týmům</item>
