@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="coordinates">Koordinatės</string>
+  <string name="coordinateTraining">Koordinačių treniruotė</string>
+  <string name="averageScoreAsWhiteX">Vidutinis rezultatas baltaisiais: %s</string>
+  <string name="averageScoreAsBlackX">Vidutinis rezultatas juodaisiais: %s</string>
+  <string name="startTraining">Pradėti treniruotę</string>
+</resources>

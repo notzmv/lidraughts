@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="donate">Paremti</string>
+  <string name="lidraughtsPatron">Lidraughts Rėmėjas</string>
+  <string name="freeAccount">Nemokama paskyra</string>
+  <string name="becomePatron">Tapkite Lidraughts Rėmėju</string>
+  <string name="xBecamePatron">%s tapo Lidraughts Rėmėju</string>
+  <string name="newPatrons">Nauji Rėmėjai</string>
+  <string name="noAdsNoSubs">Jokių reklamų, prenumeratų - tik atviras kodas ir aistra.</string>
+  <string name="thankYou">Dėkojame už jūsų paramą!</string>
+  <string name="youHaveLifetime">Jūs turite Rėmėjo Gyvenimui paskyrą. Kietai!</string>
+  <string name="patronUntil">Jūs turite Rėmėjo paskyrą iki %s.</string>
+  <string name="ifNotRenewed">Jei ji nebus atnaujinta, būsite grąžintas į nemokamą paskyrą.</string>
+  <string name="weRelyOnSupport">Norėdami tai pasiekti, mes remiamės tokių žmonių kaip jūs parama. Jei jums patinka Lidraughts, pamąstykite apie paramą mums ir tapkite Rėmėju!</string>
+  <string name="lifetime">Gyvenimui</string>
+  <string name="payLifetimeOnce">Mokėkite %s vieną kartą. Tapkite Lidraughts Rėmėju visam laikui!</string>
+  <string name="lifetimePatron">Lidraughts Rėmėjas gyvenimui</string>
+  <string name="makeExtraDonation">Suteikti dar paramos?</string>
+  <string name="monthly">Kas mėnesį</string>
+  <string name="recurringBilling">Pasikartojantis mokėjimas, atnaujinantis jūsų Rėmėjo sparnus kiekvieną mėnesį.</string>
+  <string name="onetime">Vieną kartą</string>
+  <string name="singleDonation">Viena parama suteikia jums Rėmėjo sparnus vienam mėnesiui.</string>
+  <string name="otherAmount">Kita</string>
+  <string name="pleaseEnterAmount">Įveskite sumą EUR</string>
+  <string name="withCreditCard">Banko kortele</string>
+  <string name="weAreSmallTeam">Mes esame maža komanda, todėl jūsų pagalba mums labai svarbi!</string>
+  <string name="celebratedPatrons">Mūsų gerbiami Rėmėjai, kurie leidžia gyvuoti Lidraughts</string>
+  <string name="whereMoneyGoes">Kur eina pinigai?</string>
+  <string name="changeMonthlySupport">Ar galiu pakeisti/atšaukti savo mėnesinę paramą?</string>
+  <string name="otherMethods">Kiti būdai paremti?</string>
+  <string name="bitcoin">Štai mūsų Bitcoin adresas: %s</string>
+  <string name="patronFeatures">Ar yra funkcijų, kurios prieinamos tik Rėmėjams?</string>
+  <string name="noPatronFeatures">Ne, kadangi Lidraughts visiškai ir visada nemokamas ir visiems. Tai yra mūsų pažadas.
+Tačiau Rėmėjai gauna pagyrų teises ir šaunią naują profilio piktogramą.</string>
+  <string name="featuresComparison">Peržiūrėkite detalų funkcijų palyginimą</string>
+  <plurals name="patronForMonths">
+    <item quantity="one">Lidraughts Rėmėjas vieną mėnesį</item>
+    <item quantity="few">Lidraughts Rėmėjas %s mėnesius</item>
+    <item quantity="many">Lidraughts Rėmėjas %s mėnesio</item>
+    <item quantity="other">Lidraughts rėmėjas %s mėnesių</item>
+  </plurals>
+  <string name="youSupportWith">Jūs remiate lidraughts.org %s per mėnesį.</string>
+  <string name="tyvm">Dekojame už pagalbą. Jūs šauniausias!</string>
+  <string name="currentStatus">Dabartinė būsena</string>
+  <string name="nextPayment">Kitas mokėjimas</string>
+  <string name="youWillBeChargedXOnY">%1$s bus nuskaityta %2$s.</string>
+  <string name="makeAdditionalDonation">Atlikti papildomą paramos pervedimą</string>
+  <string name="update">Atnaujinti</string>
+  <string name="changeMonthlyAmount">Pakeisti mėnesinį kiekį (%s)</string>
+  <string name="cancelSupport">atšaukti savo pagalbą</string>
+  <string name="xOrY">%1$s arba %2$s</string>
+  <string name="decideHowMuch">Nuspręskite, kiek jums vertas Lidraughts:</string>
+  <string name="stopPayments">Pašalinti savo kortelę ir sustabdyti mokėjimus:</string>
+  <string name="noLongerSupport">Daugiau neberemti Lidraughts</string>
+  <string name="paymentHistory">Mokėjimų istorija</string>
+  <string name="paid">Mokėta</string>
+  <string name="viewOthers">Peržiūrėti kitus Lidraughts rėmėjus</string>
+  <string name="date">Data</string>
+  <string name="amount">Suma</string>
+  <string name="transactionCompleted">Jūsų pervedimas buvo atliktas, dovanos sąskaita jums buvo išsiųsta el. paštu.</string>
+  <string name="permanentPatron">Dabar visam laikui turite rėmėjo paskyrą.</string>
+  <string name="checkOutProfile">Patikrinkite savo profilio puslapį!</string>
+  <string name="nowLifetime">Jūs esate Lidraughts rėmėjas visam gyvenimui!</string>
+  <string name="nowOneMonth">Jūs esate Lidraughts rėmėjas vienam mėnesiui!</string>
+  <string name="downgradeNextMonth">Po mėnesio pinigai nebus nuskaityti dar kartą ir jūsų Lidraughts paskyra atsistatys į įprastą.</string>
+</resources>
