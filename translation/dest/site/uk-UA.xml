@@ -19,9 +19,6 @@
   <string name="createAGame">Створити гру</string>
   <string name="whiteIsVictorious">Перемога білих</string>
   <string name="blackIsVictorious">Перемога чорних</string>
-  <string name="youPlayTheWhitePieces">Ви граєте білими фігурами</string>
-  <string name="youPlayTheBlackPieces">Ви граєте чорними фігурами</string>
-  <string name="itsYourTurn">Ваш хід!</string>
   <string name="variantEnding">Гру завершено</string>
   <string name="important">Важливо</string>
   <string name="yourQuestionMayHaveBeenAnswered">Ваше запитання може мати відповідь %1$s</string>
@@ -274,13 +271,13 @@
   </plurals>
   <string name="exportGames">Експорт ігор</string>
   <string name="ratingRange">Діапазон рейтинґу</string>
-  <string name="giveMoreTime">Додати часу</string>
   <plurals name="giveNbSeconds">
     <item quantity="one">Додати %s секунду</item>
     <item quantity="few">Додати %s секунди</item>
     <item quantity="many">Додати %s секунд</item>
     <item quantity="other">Додати %s секунд</item>
   </plurals>
+  <string name="giveMoreTime">Додати часу</string>
   <string name="thisPlayerArtificiallyIncreasesTheirRating">Цей гравець штучно збільшує свій рейтинг</string>
   <string name="openingExplorerAndTablebase">Відкриваємо провідник &amp; таблицю бази</string>
   <string name="takeback">Повернення ходу</string>
@@ -622,6 +619,9 @@
   <string name="computer">Комп\'ютер</string>
   <string name="side">Колір</string>
   <string name="clock">Годинник</string>
+  <string name="youPlayTheWhitePieces">Ви граєте білими фігурами</string>
+  <string name="youPlayTheBlackPieces">Ви граєте чорними фігурами</string>
+  <string name="itsYourTurn">Ваш хід!</string>
   <string name="unauthorizedError">Доступ не надано.</string>
   <string name="noInternetConnection">Немає зв\'язку з Інтернетом. Ви можете грати оффлайн через меню.</string>
   <string name="connectedToLidraughts">Ви з\'єднані з lidraughts.org</string>

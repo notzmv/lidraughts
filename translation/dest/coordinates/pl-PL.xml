@@ -6,7 +6,7 @@
   <string name="averageScoreAsBlackX">Średni wynik czarnymi: %s</string>
   <string name="knowingTheDraughtsBoard">Biegłość w posługiwaniu się współrzędnymi na warcabnicy to ważna umiejętność:</string>
   <string name="mostDraughtsCourses">Większość kursów lub ćwiczeń warcabowych wykorzystuje notację numeryczną.</string>
-  <string name="talkToYourDraughtsFriends">Będzie Ci łatwiej dogadać się ze znajomymi grającymi w warcaby, gdyż oboje będziecie znać "język warcabnicy".</string>
+  <string name="talkToYourDraughtsFriends">Będzie Ci łatwiej dogadać się ze znajomymi grającymi w warcaby, gdyż oboje będziecie znać \"język warcabnicy\".</string>
   <string name="youCanAnalyseAGameMoreEffectively">Będzie Ci dużo łatwieć analizować rozgrywane partie, jeżeli wyrobisz sobie pamięć mięśniową i nie będzisz musiał(a) długo szukać właściwego pola.</string>
   <string name="aSquareNameAppears">Numer pola pojawi się na środku warcabnicy, a Twoim zadaniem będzie wskazanie pola o tym adresie. Masz 30 sekund na wskazanie jak największej ilości pól!</string>
   <string name="startTraining">Rozpocznij trening</string>

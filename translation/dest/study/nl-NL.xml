@@ -54,6 +54,7 @@
   <string name="onlyOngoingGames">Alleen lopende partijen</string>
   <string name="first">Eerste</string>
   <string name="previous">Vorige</string>
+  <string name="next">Volgende</string>
   <string name="last">Laatste</string>
   <string name="shareAndExport">Deel &amp; exporteer</string>
   <string name="cloneStudy">Kopiëren</string>

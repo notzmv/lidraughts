@@ -19,9 +19,6 @@
   <string name="createAGame">Создать игру</string>
   <string name="whiteIsVictorious">Победа белых</string>
   <string name="blackIsVictorious">Победа чёрных</string>
-  <string name="youPlayTheWhitePieces">Вы играете белыми фигурами</string>
-  <string name="youPlayTheBlackPieces">Вы играете чёрными фигурами</string>
-  <string name="itsYourTurn">Ваш ход!</string>
   <string name="variantEnding">Партия окончена</string>
   <string name="important">Важно</string>
   <string name="yourQuestionMayHaveBeenAnswered">На ваш вопрос уже мог быть дан ответ %1$s</string>
@@ -105,7 +102,7 @@
   <string name="infiniteAnalysis">Бесконечный анализ</string>
   <string name="removesTheDepthLimit">Снимает ограничение на глубину анализа, но заставляет поработать ваш компьютер</string>
   <string name="blunder">Зевок</string>
-  <string name="blunders">Зевки</string>
+  <string name="blunders">Зевка</string>
   <string name="mistake">Ошибка</string>
   <string name="mistakes">Ошибки</string>
   <string name="inaccuracy">Неточность</string>
@@ -353,7 +350,6 @@
   <string name="filterGames">Фильтр партий</string>
   <string name="reset">Сбросить</string>
   <string name="apply">Сохранить</string>
-  <string name="save">Сохранить</string>
   <string name="leaderboard">Лучшие игроки</string>
   <string name="pasteTheFenStringHere">Вставьте строку в формате FEN</string>
   <string name="fromPosition">С позиции</string>
@@ -457,6 +453,7 @@
   <string name="popularOpenings">Популярные дебюты</string>
   <string name="startPosition">Начальная позиция</string>
   <string name="clearBoard">Пустая доска</string>
+  <string name="save">Сохранить</string>
   <string name="savePosition">Сохранить позицию</string>
   <string name="loadPosition">Загрузить позицию</string>
   <string name="isPrivate">Закрытый</string>
@@ -640,6 +637,9 @@
   <string name="computer">Компьютер</string>
   <string name="side">Сторона</string>
   <string name="clock">Часы</string>
+  <string name="youPlayTheWhitePieces">Вы играете белыми фигурами</string>
+  <string name="youPlayTheBlackPieces">Вы играете чёрными фигурами</string>
+  <string name="itsYourTurn">Ваш ход!</string>
   <string name="unauthorizedError">Неавторизованный доступ.</string>
   <string name="noInternetConnection">Нет интернет соединения. Вы можете пока играть офлайн из меню.</string>
   <string name="connectedToLidraughts">Сейчас вы подключены к lidraughts.org</string>

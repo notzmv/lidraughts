@@ -50,6 +50,7 @@
   <string name="playing">プレイ中</string>
   <string name="first">最初</string>
   <string name="previous">前</string>
+  <string name="next">次</string>
   <string name="last">最後</string>
   <string name="shareAndExport">共有とエクスポート</string>
   <string name="cloneStudy">研究をコピー</string>

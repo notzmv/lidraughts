@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="learnDraughts">Learn draughts</string>
   <string name="byPlaying">by playing!</string>
@@ -15,17 +15,17 @@
   <string name="takeTheEnemyPieces">Take the enemy pieces</string>
   <string name="takeTheBlackPieces">Take the black pieces!</string>
   <string name="takeTheBlackPiecesAndDontLoseYours">Take the black pieces!
-And don't lose yours.</string>
+And don\'t lose yours.</string>
   <string name="captureComplete">Congratulations! You know how to capture with draughts pieces!</string>
   <string name="protection">Protection</string>
   <string name="keepYourPiecesSafe">Keep your pieces safe</string>
   <string name="protectionIntro">Identify the pieces your opponent attacks, and defend them!</string>
-  <string name="protectionComplete">Congratulations! A piece you don't lose is a piece you win!</string>
-  <string name="escape">You're under attack!
+  <string name="protectionComplete">Congratulations! A piece you don\'t lose is a piece you win!</string>
+  <string name="escape">You\'re under attack!
 Escape the threat!</string>
   <string name="noEscape">There is no escape,
 but you can defend!</string>
-  <string name="dontLetThemTakeAnyUndefendedPiece">Don't let them take
+  <string name="dontLetThemTakeAnyUndefendedPiece">Don\'t let them take
 any undefended piece!</string>
   <string name="combat">Combat</string>
   <string name="captureAndDefendPieces">Capture and defend pieces</string>
@@ -47,7 +47,6 @@ Make any move to continue.</string>
   <string name="getAFreeLidraughtsAccount">Get a free Lidraughts account</string>
   <string name="practice">Practice</string>
   <string name="learnCommonDraughtsPositions">Learn common draughts positions</string>
-  <string name="variantPuzzles">%s puzzles</string>
   <string name="exerciseYourTacticalSkills">Exercise your tactical skills</string>
   <string name="videos">Videos</string>
   <string name="watchInstructiveDraughtsVideos">Watch instructive draughts videos</string>
@@ -55,7 +54,7 @@ Make any move to continue.</string>
   <string name="opponentsFromAroundTheWorld">Opponents from around the world</string>
   <string name="playMachine">Play machine</string>
   <string name="testYourSkillsWithTheComputer">Test your skills with the computer</string>
-  <string name="letsGo">Let's go!</string>
+  <string name="letsGo">Let\'s go!</string>
   <string name="stageX">Stage %s</string>
   <string name="awesome">Awesome!</string>
   <string name="excellent">Excellent!</string>
@@ -64,7 +63,7 @@ Make any move to continue.</string>
   <string name="outstanding">Outstanding!</string>
   <string name="wayToGo">Way to go!</string>
   <string name="yesYesYes">Yes, yes, yes!</string>
-  <string name="youreGoodAtThis">You're good at this!</string>
+  <string name="youreGoodAtThis">You\'re good at this!</string>
   <string name="nailedIt">Nailed it.</string>
   <string name="rightOn">Right on!</string>
   <string name="success">Success!</string>

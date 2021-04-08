@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="private">私有</string>
   <string name="myStudies">我的课程</string>
@@ -17,16 +17,13 @@
   <string name="mostPopular">最受欢迎</string>
   <string name="addNewChapter">添加新章节</string>
   <plurals name="nbChapters">
-    <item quantity="one">%s章节</item>
     <item quantity="other">%s章节</item>
   </plurals>
   <plurals name="nbGames">
-    <item quantity="one">%s盘棋</item>
     <item quantity="other">%s盘棋</item>
   </plurals>
   <string name="addMembers">添加成员</string>
   <plurals name="nbMembers">
-    <item quantity="one">%s成员</item>
     <item quantity="other">%s成员</item>
   </plurals>
   <string name="inviteToTheStudy">课程邀请</string>
@@ -54,6 +51,7 @@
   <string name="onlyOngoingGames">仅正在进行的棋局</string>
   <string name="first">起始</string>
   <string name="previous">上一个</string>
+  <string name="next">下一页</string>
   <string name="last">末尾</string>
   <string name="shareAndExport">分享 &amp; 导出</string>
   <string name="cloneStudy">克隆</string>
@@ -94,7 +92,6 @@
   <string name="loadAGameFromPdn">从棋谱PDN加载棋局</string>
   <string name="automatic">自动</string>
   <plurals name="pasteYourPdnTextHereUpToNbGames">
-    <item quantity="one">将棋局棋谱PDN文本粘贴在此, 一次最多允许%s盘棋局, 每盘棋局用空行分开。</item>
     <item quantity="other">将棋局棋谱PDN文本粘贴在此, 一次最多允许%s盘棋局, 每盘棋局用空行分开。</item>
   </plurals>
   <string name="urlOfTheGame">棋局网址</string>

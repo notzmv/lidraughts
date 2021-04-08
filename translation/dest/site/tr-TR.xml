@@ -19,9 +19,6 @@
   <string name="createAGame">Yeni bir oyun kur</string>
   <string name="whiteIsVictorious">Zafer Beyazın</string>
   <string name="blackIsVictorious">Zafer Siyahın</string>
-  <string name="youPlayTheWhitePieces">Beyaz taşlar sizin</string>
-  <string name="youPlayTheBlackPieces">Siyah taşlar sizin</string>
-  <string name="itsYourTurn">Sıra sizde!</string>
   <string name="variantEnding">Varyant bitti</string>
   <string name="important">Önemli</string>
   <string name="yourQuestionMayHaveBeenAnswered">Sorunuzun yanıtı %1$s cevaplanmış olabilir.</string>
@@ -314,7 +311,6 @@
   <string name="filterGames">Oyunları kategorilendir</string>
   <string name="reset">Sıfırla</string>
   <string name="apply">Uygula</string>
-  <string name="save">Kaydet</string>
   <string name="leaderboard">Lider Tablosu</string>
   <string name="pasteTheFenStringHere">FEN kodunu buraya yapıştırın</string>
   <string name="pasteThePdnStringHere">PDN\'yi buraya yapıştırın</string>
@@ -406,6 +402,8 @@
   <string name="popularOpenings">Popüler açılışlar</string>
   <string name="startPosition">Başlangıç konumu</string>
   <string name="clearBoard">Tahtayı temizle</string>
+  <string name="edit">Düzenle</string>
+  <string name="save">Kaydet</string>
   <string name="savePosition">Konumu kaydet</string>
   <string name="loadPosition">Konumu yükle</string>
   <string name="isPrivate">Özel</string>
@@ -420,7 +418,6 @@
   <string name="lastName">Soyad</string>
   <string name="biography">Biyografi</string>
   <string name="country">Ülke</string>
-  <string name="thankYou">Teşekkürler!</string>
   <string name="socialMediaLinks">Sosyal medya bağlantıları</string>
   <string name="inlineNotation">Notasyonu aynı satırda göster</string>
   <string name="watchLidraughtsTV">Lidraughts TV\'ye göz at</string>
@@ -551,7 +548,6 @@
   <string name="inCasualGamesOnly">Sadece puansız oyunlarda</string>
   <string name="whenPremoving">Ön hamlelerde</string>
   <string name="whenTimeRemainingLessThanThirtySeconds">Kalan zaman 30 saniyeden az ise</string>
-  <string name="never">Asla</string>
   <string name="difficultyEasy">Kolay</string>
   <string name="difficultyNormal">Normal</string>
   <string name="difficultyHard">Zor</string>
@@ -583,6 +579,9 @@
   <string name="computer">Bilgisayar</string>
   <string name="side">Taraf</string>
   <string name="clock">Saat</string>
+  <string name="youPlayTheWhitePieces">Beyaz taşlar sizin</string>
+  <string name="youPlayTheBlackPieces">Siyah taşlar sizin</string>
+  <string name="itsYourTurn">Sıra sizde!</string>
   <string name="unauthorizedError">Yetkisiz erişim.</string>
   <string name="noInternetConnection">İnternet bağlantısı yok. Hâlâ menüden çevrimdışı oynayabilirsiniz.</string>
   <string name="connectedToLidraughts">Şimdi lidraughts.org\'a bağlandınız</string>
@@ -823,5 +822,4 @@
   <string name="thankYouForReading">Okuduğunuz için teşekkür ederiz!</string>
   <string name="lifetimeScore">Toplam skor</string>
   <string name="currentMatchScore">Mevcut maç skoru</string>
-  <string name="edit">Düzenle</string>
 </resources>

@@ -54,6 +54,7 @@
   <string name="onlyOngoingGames">Only ongoing games</string>
   <string name="first">First</string>
   <string name="previous">Previous</string>
+  <string name="next">Next</string>
   <string name="last">Last</string>
   <string name="shareAndExport">Share &amp; export</string>
   <string name="cloneStudy">Clone</string>

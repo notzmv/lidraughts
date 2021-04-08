@@ -156,7 +156,6 @@
   <string name="usernameOrEmail">Όνομα χρήστη ή ηλ. ταχυδρομείο</string>
   <string name="changeUsername">Αλλαγή ονόματος του χρήστη</string>
   <string name="password">Κωδικός</string>
-  <string name="haveAnAccount">Έχετε λογαριασμό;</string>
   <string name="changePassword">Αλλάξτε κωδικό</string>
   <string name="changeEmail">Αλλαγή ηλ. ταχυδρομείου</string>
   <string name="email">Ηλ. ταχυδρομείο</string>

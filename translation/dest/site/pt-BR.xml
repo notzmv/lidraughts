@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="playInATournament">Jogue em um torneio</string>
   <string name="playWithAFriend">Jogar contra um amigo</string>
@@ -172,7 +172,6 @@
   <string name="changeUsernameNotSame">Pode-se apenas trocar as letras de minúscula para maiúscula e vice-versa. Por exemplo, \"johndoe\" para \"JohnDoe\".</string>
   <string name="changeUsernameDescription">Altere seu nome de usuário. Isso só pode ser feito uma vez e você poderá apenas trocar as letras de minúscula para maiúscula e vice-versa.</string>
   <string name="password">Senha</string>
-  <string name="haveAnAccount">Tem uma conta?</string>
   <string name="changePassword">Alterar senha</string>
   <string name="changeEmail">Alterar email</string>
   <string name="email">E-mail</string>
@@ -435,9 +434,9 @@ consultar uma análise de computador, utilizar o chat e compartilhar um link.</s
   <string name="biography">Biografia</string>
   <string name="country">País</string>
   <string name="socialMediaLinks">Links de mídia social</string>
-  <string name="preferences">Preferências</string>
   <string name="linkSuggestions">Tais como Twitter, Facebook, GitHub, Lichess, ...
 Uma URL por linha</string>
+  <string name="preferences">Preferências</string>
   <string name="inlineNotation">Notação em linha</string>
   <string name="watchLidraughtsTV">Assistir Lidraughts TV</string>
   <string name="previouslyOnLidraughtsTV">Anteriormente em Lidraughts TV</string>
@@ -447,7 +446,6 @@ Uma URL por linha</string>
   <string name="bewareTheGameIsRatedButHasNoClock">Cuidado, o jogo vale pontos, mas não há controle de tempo!</string>
   <string name="rulesAndVariants">Regras e Variantes</string>
   <string name="training">Quebra-cabeças</string>
-  <string name="studyMenu">Estudar</string>
   <string name="yourPuzzleRatingX">Sua classificação de quebra-cabeças: %s</string>
   <string name="findTheBestMoveForWhite">Procure o melhor lance para as brancas.</string>
   <string name="findTheBestMoveForBlack">Procure a melhor jogada para as pretas.</string>
@@ -613,6 +611,7 @@ Uma URL por linha</string>
   <string name="playOfflineComputer">Jogar offline contra o computador</string>
   <string name="opponent">Oponente</string>
   <string name="learnMenu">Aprender</string>
+  <string name="studyMenu">Estudar</string>
   <string name="community">Comunidade</string>
   <string name="tools">Ferramentas</string>
   <string name="increment">Incremento</string>
@@ -643,7 +642,6 @@ Uma URL por linha</string>
   <string name="watchGames">Observar jogos</string>
   <string name="tpTimeSpentOnTV">Tempo na TV: %s</string>
   <string name="watch">Observar</string>
-  <string name="internationalEvents">Eventos Internacionais</string>
   <string name="videoLibrary">Videoteca</string>
   <string name="mobileApp">Aplicativo Móvel</string>
   <string name="webmasters">Webmasters</string>

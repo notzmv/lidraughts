@@ -41,7 +41,7 @@ object MessageCompiler {
   }
 
   private def isFileEmpty(f: File) = {
-    Source.fromFile(f, "UTF-8").getLines.drop(2).next == "<resources></resources>"
+    Source.fromFile(f, "UTF-8").getLines.drop(1).next == "<resources></resources>"
   }
 
   private def writeRegistry(db: String, compileTo: File, locales: Iterable[String]) = {

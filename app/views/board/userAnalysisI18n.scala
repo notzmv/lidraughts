@@ -174,8 +174,6 @@ object userAnalysisI18n {
     trans.winInXHalfMoves,
     trans.noGameFound,
     trans.maybeIncludeMoreGamesFromThePreferencesMenu,
-    trans.winPreventedBy50MoveRule,
-    trans.lossSavedBy50MoveRule,
     trans.allSet
   )
 

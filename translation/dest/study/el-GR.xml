@@ -29,7 +29,6 @@
     <item quantity="one">%s Μέλος</item>
     <item quantity="other">%s Μέλη</item>
   </plurals>
-  <string name="addMembers">Προσθήκη μελών</string>
   <string name="inviteToTheStudy">Προσκάλεσε στην σπουδή</string>
   <string name="pleaseOnlyInvitePeopleYouKnow">Παρακαλώ, προσκαλέστε μόνο άτομα που γνωρίζετε και που θέλουν να συμμετέχουν ενεργά σε αυτήν την σπουδή.</string>
   <string name="searchByUsername">Αναζήτηση με όνομα χρήστη</string>
@@ -62,16 +61,14 @@
   <string name="chapterPdn">PDN του κεφαλαίου</string>
   <string name="studyUrl">URL μελέτης</string>
   <string name="currentChapterUrl">Τρέχον κεφάλαιο URL</string>
-  <string name="open">Άνοιξε</string>
   <string name="startAtInitialPosition">Ξεκινάει από αρχική θέση</string>
   <string name="startAtX">Ξεκινάει με %s</string>
   <string name="onlyPublicStudiesCanBeEmbedded">Μόνο δημόσιες μελέτες μπορούν να ενσωματωθούν!</string>
+  <string name="open">Άνοιξε</string>
   <string name="xBroughtToYouByY">%1$s, δημιουργήθηκε από %2$s</string>
   <string name="studyNotFound">Η σπουδή δεν βρέθηκε</string>
   <string name="editChapter">Επεξεργάσου το κεφάλαιο</string>
   <string name="newChapter">Νέο κεφάλαιο</string>
-  <string name="loadAGameFromPdn">Φόρτωσε μια παρτίδα από PDN</string>
-  <string name="automatic">Αυτόματο</string>
   <string name="orientation">Προσανατολισμός</string>
   <string name="analysisMode">Τύπος ανάλυσης</string>
   <string name="pinnedChapterComment">Καρφιτσωμένο σχόλιο κεφαλαίου</string>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="playInATournament">Play in a tournament</string>
   <string name="playWithAFriend">Play with a friend</string>
@@ -174,7 +174,6 @@
   <string name="changeUsernameNotSame">Only the case of the letters can change. For example \"johndoe\" to \"JohnDoe\".</string>
   <string name="changeUsernameDescription">Change your username. This can only be done once and you are only allowed to change the case of your username.</string>
   <string name="password">Password</string>
-  <string name="haveAnAccount">Have an account?</string>
   <string name="changePassword">Change password</string>
   <string name="changeEmail">Change email</string>
   <string name="email">Email</string>
@@ -390,8 +389,8 @@ a computer analysis, a game chat and a shareable URL.</string>
   <string name="safeTournamentName">Pick a very safe name for the tournament.</string>
   <string name="inappropriateNameWarning">Anything even slightly inappropriate could get your account closed.</string>
   <string name="emptyTournamentName">Leave empty to name the tournament after a random Grandmaster.</string>
-  <string name="recommendNotTouching">We recommend not touching these.</string> 
-  <string name="fewerPlayers">If you set conditions of entry, your tournament will have fewer players.</string> 
+  <string name="recommendNotTouching">We recommend not touching these.</string>
+  <string name="fewerPlayers">If you set conditions of entry, your tournament will have fewer players.</string>
   <string name="showAdvancedSettings">Show advanced settings</string>
   <string name="makePrivateTournament">Make the tournament private, and restrict access with a password</string>
   <string name="join">Join</string>
@@ -447,7 +446,6 @@ a computer analysis, a game chat and a shareable URL.</string>
   <string name="activePlayers">Active players</string>
   <string name="bewareTheGameIsRatedButHasNoClock">Beware, the game is rated but has no clock!</string>
   <string name="training">Puzzles</string>
-  <string name="studyMenu">Study</string>
   <string name="yourPuzzleRatingX">Your puzzle rating: %s</string>
   <string name="findTheBestMoveForWhite">Find the best move for white.</string>
   <string name="findTheBestMoveForBlack">Find the best move for black.</string>
@@ -503,12 +501,12 @@ a computer analysis, a game chat and a shareable URL.</string>
   <string name="reportAUser">Report a user</string>
   <string name="user">User</string>
   <string name="reason">Reason</string>
-  <string name="whatIsIheMatter">What's the matter?</string>
+  <string name="whatIsIheMatter">What\'s the matter?</string>
   <string name="cheat">Cheat</string>
   <string name="insult">Insult</string>
   <string name="troll">Troll</string>
   <string name="other">Other</string>
-  <string name="reportDescriptionHelp">Paste the link to the game(s) and explain what is wrong about this user behavior. Don't just say "they cheat", but tell us how you came to this conclusion. Your report will be processed faster if written in English.</string>
+  <string name="reportDescriptionHelp">Paste the link to the game(s) and explain what is wrong about this user behavior. Don\'t just say \"they cheat\", but tell us how you came to this conclusion. Your report will be processed faster if written in English.</string>
   <string name="by">by %s</string>
   <string name="thisTopicIsNowClosed">This topic is now closed.</string>
   <string name="theming">Theming</string>
@@ -520,7 +518,7 @@ a computer analysis, a game chat and a shareable URL.</string>
   <string name="pieceAnimation">Piece animation</string>
   <string name="materialDifference">Material difference</string>
   <string name="closeAccount">Close account</string>
-  <string name="changedMindDoNotCloseAccount">I changed my mind, don't close my account</string>
+  <string name="changedMindDoNotCloseAccount">I changed my mind, don\'t close my account</string>
   <string name="closeAccountExplanation">Are you sure you want to close your account? Closing your account is a permanent decision. You will no longer be able to login, and your profile page will no longer be accessible.</string>
   <string name="thisAccountIsClosed">This account is closed.</string>
   <string name="invalidUsernameOrPassword">Invalid username or password</string>
@@ -535,9 +533,9 @@ a computer analysis, a game chat and a shareable URL.</string>
   <string name="pieceDestinations">Piece destinations (valid moves and premoves)</string>
   <string name="boardCoordinates">Board coordinates (1-50, a1-h8)</string>
   <string name="moveListWhilePlaying">Move list while playing</string>
+  <string name="draughtsClock">Draughts clock</string>
   <string name="clockInitialTime">Clock initial time</string>
   <string name="clockIncrement">Clock increment</string>
-  <string name="draughtsClock">Draughts clock</string>
   <string name="tenthsOfSeconds">Tenths of seconds</string>
   <string name="never">Never</string>
   <string name="whenTimeRemainingLessThanTenSeconds">When time remaining &lt; 10 seconds</string>
@@ -609,6 +607,7 @@ a computer analysis, a game chat and a shareable URL.</string>
   <string name="playOfflineComputer">Computer</string>
   <string name="opponent">Opponent</string>
   <string name="learnMenu">Learn</string>
+  <string name="studyMenu">Study</string>
   <string name="community">Community</string>
   <string name="tools">Tools</string>
   <string name="increment">Increment</string>
@@ -639,7 +638,6 @@ a computer analysis, a game chat and a shareable URL.</string>
   <string name="watchGames">Watch games</string>
   <string name="tpTimeSpentOnTV">Time on TV: %s</string>
   <string name="watch">Watch</string>
-  <string name="internationalEvents">International events</string>
   <string name="videoLibrary">Video library</string>
   <string name="mobileApp">Mobile App</string>
   <string name="webmasters">Webmasters</string>
@@ -661,7 +659,7 @@ a computer analysis, a game chat and a shareable URL.</string>
   <string name="aboutSimulImage">Out of 169 opponents, Sijbrands won 115 games, drew 43 and lost 11.</string>
   <string name="aboutSimulRealLife">The concept is taken from real world events. In real life, this involves the simul host moving from table to table to play a single move.</string>
   <string name="aboutSimulRules">When the simul starts, every player starts a game with the host, who gets to play the white pieces. The simul ends when all games are complete.</string>
-  <string name="aboutSimulSettings">Simuls are always casual. Rematches, takebacks and "moretime" are disabled.</string>
+  <string name="aboutSimulSettings">Simuls are always casual. Rematches, takebacks and adding time are disabled.</string>
   <string name="create">Create</string>
   <string name="whenCreateSimul">When you create a Simul, you get to play several players at once.</string>
   <string name="simulVariantsHint">If you select several variants, each player gets to choose which one to play.</string>
@@ -695,9 +693,9 @@ a computer analysis, a game chat and a shareable URL.</string>
   <string name="youAreBetterThanPercentOfPerfTypePlayers">You are better than %1$s of %2$s players.</string>
   <string name="youDoNotHaveAnEstablishedPerfTypeRating">You do not have an established %s rating.</string>
   <string name="checkYourEmail">Check your Email</string>
-  <string name="weHaveSentYouAnEmailClickTheLink">We've sent you an email. Click the link in the email to activate your account.</string>
-  <string name="ifYouDoNotSeeTheEmailCheckOtherPlaces">If you don't see the email, check other places it might be, like your junk, spam, social, or other folders.</string>
-  <string name="weHaveSentYouAnEmailTo">We've sent an email to %s. Click the link in the email to reset your password.</string>
+  <string name="weHaveSentYouAnEmailClickTheLink">We\'ve sent you an email. Click the link in the email to activate your account.</string>
+  <string name="ifYouDoNotSeeTheEmailCheckOtherPlaces">If you don\'t see the email, check other places it might be, like your junk, spam, social, or other folders.</string>
+  <string name="weHaveSentYouAnEmailTo">We\'ve sent an email to %s. Click the link in the email to reset your password.</string>
   <string name="byRegisteringYouAgreeToBeBoundByOur">By registering, you agree to be bound by our %s.</string>
   <string name="networkLagBetweenYouAndLidraughts">Network lag between you and lidraughts</string>
   <string name="timeToProcessAMoveOnLidraughtsServer">Time to process a move on lidraughts server</string>

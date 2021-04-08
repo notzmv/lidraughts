@@ -138,8 +138,6 @@ private object jsI18n {
     trans.masterDbExplanation,
     trans.noGameFound,
     trans.maybeIncludeMoreGamesFromThePreferencesMenu,
-    trans.winPreventedBy50MoveRule,
-    trans.lossSavedBy50MoveRule,
     trans.allSet,
     // advantage and movetime charts
     trans.advantage,

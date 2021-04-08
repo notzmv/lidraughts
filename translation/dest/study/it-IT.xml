@@ -53,6 +53,7 @@
   <string name="playing">In corso</string>
   <string name="first">Primo</string>
   <string name="previous">Precedente</string>
+  <string name="next">Successivo</string>
   <string name="last">Ultimo</string>
   <string name="shareAndExport">Condividi &amp; esporta</string>
   <string name="cloneStudy">Duplica</string>

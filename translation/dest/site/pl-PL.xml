@@ -144,6 +144,8 @@
   </plurals>
   <string name="ongoingGames">Partie w toku</string>
   <string name="currentGames">Partie w toku</string>
+  <string name="gamesInTimeout">Gry po czasie</string>
+  <string name="yourTurnInX">Twój ruch za %s</string>
   <plurals name="nbGames">
     <item quantity="one">%s partia</item>
     <item quantity="few">%s partie</item>
@@ -162,8 +164,6 @@
     <item quantity="many">%s ulubiona partii</item>
     <item quantity="other">%s ulubiona partii</item>
   </plurals>
-  <string name="gamesInTimeout">Gry po czasie</string>
-  <string name="yourTurnInX">Twój ruch za %s</string>
   <string name="viewInFullSize">Zobacz w pełnym rozmiarze</string>
   <string name="logOut">Wyloguj</string>
   <string name="signIn">Zaloguj się</string>
@@ -591,7 +591,6 @@ jeden adres URL na linię</string>
   <string name="exploreDraughtsVariants">Oprócz warcabów międzynarodowych dostępnych jest tu kilka popularnych odmian gier warcabowych, które mimo iż nieznacznie różnią się swoimi zasadami, potrafią całkowicie odmienić charakter rozgrywki. Wytęż swoje szare komórki i odkryj możliwości, które lidraughts ma do zaoferowania!</string>
   <string name="rulesAndVariants">Zasady i Odmiany Gry</string>
   <string name="training">Zadania warcabowe</string>
-  <string name="studyMenu">Opracowania</string>
   <string name="yourPuzzleRatingX">Twój ranking treningowy: %s</string>
   <string name="findTheBestMoveForWhite">Znajdź najlepszy ruch dla białych.</string>
   <string name="findTheBestMoveForBlack">Znajdź najlepszy ruch dla czarnych.</string>
@@ -611,13 +610,13 @@ jeden adres URL na linię</string>
   <string name="pleaseVotePuzzle">Pomóż nam podnieść jakość zadań! Oceń zadanie, naciskając strzałkę w górę lub w dół:</string>
   <string name="thankYou">Dziękujemy!</string>
   <string name="ratingX">Ranking: %s</string>
+  <string name="hidden">ukryte</string>
   <plurals name="playedXTimes">
     <item quantity="one">Rozwiązywane %s raz</item>
     <item quantity="few">Rozwiązywane %s razy</item>
     <item quantity="many">Rozwiązywane %s razy</item>
     <item quantity="other">Rozwiązywane %s razy</item>
   </plurals>
-  <string name="hidden">ukryte</string>
   <string name="fromGameLink">Pochodzi z partii %s</string>
   <string name="continueTraining">Kontynuuj trening</string>
   <string name="retryThisPuzzle">Powtórz to zadanie</string>
@@ -752,6 +751,7 @@ jeden adres URL na linię</string>
   <string name="starting">Zaczynają się:</string>
   <string name="allInformationIsPublicAndOptional">Poniższe informacje będą publicznie dostępne. Nie musisz ich podawać.</string>
   <string name="yourCityRegionOrDepartment">Twoje miasto, region lub województwo</string>
+  <string name="biographyDescription">Napisz coś o sobie, Twoje zainteresowania, co lubisz w warcabach, Twoje ulubione otwarcia, gracze, …</string>
   <plurals name="maximumNbCharacters">
     <item quantity="one">Maksymalnie: %s znak.</item>
     <item quantity="few">Maksymalnie: %s znaki.</item>
@@ -764,7 +764,6 @@ jeden adres URL na linię</string>
     <item quantity="many">%s zablokowanych</item>
     <item quantity="other">%s zablokowanych</item>
   </plurals>
-  <string name="biographyDescription">Napisz coś o sobie, Twoje zainteresowania, co lubisz w warcabach, Twoje ulubione otwarcia, gracze, …</string>
   <string name="listBlockedPlayers">Lista zablokowanych graczy</string>
   <string name="human">Człowiek</string>
   <string name="computer">Komputer</string>
@@ -782,6 +781,7 @@ jeden adres URL na linię</string>
   <string name="playOfflineComputer">Zagraj z komputerem</string>
   <string name="opponent">Przeciwnik</string>
   <string name="learnMenu">Nauka</string>
+  <string name="studyMenu">Opracowania</string>
   <string name="community">Społeczność</string>
   <string name="tools">Narzędzia</string>
   <string name="increment">Dodawany czas</string>

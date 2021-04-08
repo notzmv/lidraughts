@@ -139,7 +139,6 @@
   <string name="username">Хэрэглэгчийн нэр</string>
   <string name="usernameOrEmail">Хэрэглэгчийн нэр эсвэл электрон шуудангийн хаяг</string>
   <string name="password">Нууц үг</string>
-  <string name="haveAnAccount">Таньд хэрэглэгчийн бүртгэл байгаа юу?</string>
   <string name="changePassword">Нэвтрэх үгээ өөрчлөх</string>
   <string name="changeEmail">Электрон шуудангийн хаягаа өөрчлөх</string>
   <string name="email">Электрон шуудангийн хаяг</string>

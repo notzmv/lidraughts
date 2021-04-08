@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="playInATournament">参加锦标赛</string>
   <string name="playWithAFriend">邀请朋友</string>
@@ -85,11 +85,9 @@
   <string name="topGames">最佳棋局</string>
   <string name="masterDbExplanation">%2$s-%3$s年国际棋联等级分%1$s以上选手的棋局棋谱</string>
   <plurals name="winInXHalfMoves">
-    <item quantity="one">%s手棋后能够获胜</item>
     <item quantity="other">%s手棋后能够获胜</item>
   </plurals>
   <plurals name="drawInXHalfMoves">
-    <item quantity="one">%s手棋后能够和棋</item>
     <item quantity="other">%s手棋后能够和棋</item>
   </plurals>
   <string name="noGameFound">没有符合要求的棋局</string>
@@ -127,26 +125,21 @@
   <string name="drawOffersNotAllowed">不允许提和</string>
   <string name="draw">和棋</string>
   <plurals name="nbPlayers">
-    <item quantity="one">在线棋手 %s</item>
     <item quantity="other">在线棋手 %s</item>
   </plurals>
   <plurals name="nbOpponents">
-    <item quantity="one">%s位对手</item>
     <item quantity="other">%s位对手</item>
   </plurals>
   <string name="currentGames">当前对局</string>
   <string name="gamesInTimeout">超时棋局</string>
   <string name="yourTurnInX">该你走棋%s</string>
   <plurals name="nbGames">
-    <item quantity="one">棋局总计[%s]</item>
     <item quantity="other">棋局总计[%s]</item>
   </plurals>
   <plurals name="nbGamesOngoing">
-    <item quantity="one">%s局进行中</item>
     <item quantity="other">%s局进行中</item>
   </plurals>
   <plurals name="nbBookmarks">
-    <item quantity="one">收藏[%s]</item>
     <item quantity="other">收藏[%s]</item>
   </plurals>
   <string name="viewInFullSize">全屏观看</string>
@@ -173,11 +166,9 @@
   <string name="daysPerTurn">每步允许天數</string>
   <string name="oneDay">一天</string>
   <plurals name="nbDays">
-    <item quantity="one">%s天</item>
     <item quantity="other">%s天</item>
   </plurals>
   <plurals name="nbHours">
-    <item quantity="one">%s小时</item>
     <item quantity="other">%s小时</item>
   </plurals>
   <string name="time">对局时间</string>
@@ -199,15 +190,12 @@
   <string name="rankX">排名：%s</string>
   <plurals name="rankIsUpdatedEveryNbMinutes">
     <item quantity="other">每%s分钟更新排名</item>
-    <item quantity="other">每%s分钟更新排名</item>
   </plurals>
   <plurals name="nbPuzzles">
-    <item quantity="one">%s道训练题</item>
     <item quantity="other">%s道训练题</item>
   </plurals>
   <string name="gamesPlayed">完成局数</string>
   <plurals name="nbGamesWithYou">
-    <item quantity="one">与您对局[%s]</item>
     <item quantity="other">与您对局[%s]</item>
   </plurals>
   <string name="cancel">取消</string>
@@ -269,34 +257,27 @@
   <string name="freeOnlineDraughts">免费在线国际跳棋</string>
   <string name="spectators">观众：</string>
   <plurals name="nbRated">
-    <item quantity="one">定级[%s]</item>
     <item quantity="other">定级[%s]</item>
   </plurals>
   <plurals name="nbWins">
-    <item quantity="one">胜局[%s]</item>
     <item quantity="other">胜局[%s]</item>
   </plurals>
   <plurals name="nbLosses">
-    <item quantity="one">负局[%s]</item>
     <item quantity="other">负局[%s]</item>
   </plurals>
   <plurals name="nbDraws">
-    <item quantity="one">和局[%s]</item>
     <item quantity="other">和局[%s]</item>
   </plurals>
   <plurals name="nbVictories">
-    <item quantity="one">%s次获胜</item>
     <item quantity="other">%s次获胜</item>
   </plurals>
   <plurals name="nbPlaying">
-    <item quantity="one">当前[%s]</item>
     <item quantity="other">当前[%s]</item>
   </plurals>
   <string name="exportGames">导出棋局</string>
   <string name="exportSimulGames">导出车轮赛棋局</string>
   <string name="ratingRange">对方积分</string>
   <plurals name="giveNbSeconds">
-    <item quantity="one">给对方加%s秒</item>
     <item quantity="other">给对方加%s秒</item>
   </plurals>
   <string name="giveMoreTime">给对方更多时间</string>
@@ -326,7 +307,6 @@
   <string name="bestResults">最佳成绩</string>
   <string name="tournamentPoints">锦标赛分数</string>
   <plurals name="nbTournamentPoints">
-    <item quantity="one">%s 积分</item>
     <item quantity="other">%s 积分</item>
   </plurals>
   <string name="viewTournament">观看锦标赛</string>
@@ -334,19 +314,15 @@
   <string name="backToSimul">返回车轮赛</string>
   <string name="thematic">从常见开局开始的锦标赛</string>
   <plurals name="moreThanNbRatedGames">
-    <item quantity="one">您需要至少已下%s盘有积分棋局才能参加本锦标赛</item>
     <item quantity="other">您需要至少已下%s盘有积分棋局才能参加本锦标赛</item>
   </plurals>
   <plurals name="moreThanNbPerfRatedGames">
-    <item quantity="one">您需要至少已下%1$s盘有积分%2$s棋局才能参加本锦标赛</item>
     <item quantity="other">您需要至少已下%1$s盘有积分%2$s棋局才能参加本锦标赛</item>
   </plurals>
   <plurals name="needNbMorePerfGames">
-    <item quantity="one">您需要再下%1$s盘有积分%2$s棋局</item>
     <item quantity="other">您需要再下%1$s盘有积分%2$s棋局</item>
   </plurals>
   <plurals name="needNbMoreGames">
-    <item quantity="one">您需要再下%s盘有积分棋局才能参加本锦标赛</item>
     <item quantity="other">您需要再下%s盘有积分棋局才能参加本锦标赛</item>
   </plurals>
   <string name="yourPerfRatingIsProvisional">您的%s积分是暂时的</string>
@@ -378,7 +354,6 @@
   <string name="importGameExplanation">当您在此处粘贴PDN棋谱后，您将能够重放棋局、
 使用电脑分析、使用对局聊天室以及分享棋局链接。</string>
   <plurals name="nbImportedGames">
-    <item quantity="one">导入[%s]</item>
     <item quantity="other">导入[%s]</item>
   </plurals>
   <string name="thisIsADraughtsCaptcha">这是一个国际跳棋验证码。</string>
@@ -389,7 +364,6 @@
   <string name="retry">重试</string>
   <string name="reconnecting">重新连接中</string>
   <plurals name="nbFriendsOnline">
-    <item quantity="other">在线好友：%s</item>
     <item quantity="other">在线好友：%s</item>
   </plurals>
   <string name="noFriendsOnline">没有好友在线</string>
@@ -404,11 +378,9 @@
   <string name="followsYou">关注您</string>
   <string name="xStartedFollowingY">%1$s开始关注%2$s</string>
   <plurals name="nbFollowers">
-    <item quantity="one">%s 粉丝</item>
     <item quantity="other">%s 粉丝</item>
   </plurals>
   <plurals name="nbFollowing">
-    <item quantity="one">关注了%s位棋手</item>
     <item quantity="other">关注了%s位棋手</item>
   </plurals>
   <string name="more">更多</string>
@@ -426,7 +398,6 @@
   <string name="source">来源</string>
   <string name="graph">图表</string>
   <plurals name="lessThanNbMinutes">
-    <item quantity="one">小于%s分钟</item>
     <item quantity="other">小于%s分钟</item>
   </plurals>
   <string name="required">有必填项目未填。</string>
@@ -524,7 +495,6 @@
   <string name="exploreDraughtsVariants">其它跳棋都基于这些规则或有少许变化，或有可能引入完全新的游戏机制。让我们跳出框框，一起探索Lidraughts所提供的各种跳棋吧！</string>
   <string name="rulesAndVariants">基础知识</string>
   <string name="training">训练习题</string>
-  <string name="studyMenu">专题课程</string>
   <string name="yourPuzzleRatingX">你的解题积分：%s</string>
   <string name="findTheBestMoveForWhite">找出白方的最佳着</string>
   <string name="findTheBestMoveForBlack">找出黑方的最佳着</string>
@@ -546,7 +516,6 @@
   <string name="ratingX">积分：%s</string>
   <string name="hidden">隐藏</string>
   <plurals name="playedXTimes">
-    <item quantity="one">走棋%s次</item>
     <item quantity="other">走棋%s次</item>
   </plurals>
   <string name="fromGameLink">来自对局%s</string>
@@ -555,7 +524,6 @@
   <string name="thisPuzzleIsCorrect">本题正确并有趣</string>
   <string name="thisPuzzleIsWrong">本题错误或无聊</string>
   <plurals name="nbGamesInPlay">
-    <item quantity="one">当前对局 %s</item>
     <item quantity="other">当前对局 %s</item>
   </plurals>
   <string name="automaticallyProceedToNextGameAfterMoving">走棋后自动进入下一盘棋</string>
@@ -683,11 +651,9 @@
   <string name="yourCityRegionOrDepartment">您的城市、地区或省份。</string>
   <string name="biographyDescription">写您是什么样的人， 您为什么喜欢国际跳棋， 您喜欢的开局，棋局， 棋手。。。</string>
   <plurals name="maximumNbCharacters">
-    <item quantity="one">最多%s个字符</item>
     <item quantity="other">最多%s个字符</item>
   </plurals>
   <plurals name="blocks">
-    <item quantity="one">%s位黑名单用戶</item>
     <item quantity="other">%s位黑名单用戶</item>
   </plurals>
   <string name="listBlockedPlayers">显示黑名单</string>
@@ -707,6 +673,7 @@
   <string name="playOfflineComputer">电脑</string>
   <string name="opponent">对手</string>
   <string name="learnMenu">学习</string>
+  <string name="studyMenu">专题课程</string>
   <string name="community">社区</string>
   <string name="tools">工具</string>
   <string name="increment">加秒</string>
@@ -730,7 +697,6 @@
   <string name="onlyOnInitialPosition">仅初始局面</string>
   <string name="menu">菜单</string>
   <plurals name="nbForumPosts">
-    <item quantity="one">%s 发帖</item>
     <item quantity="other">%s 发帖</item>
   </plurals>
   <string name="tpTimeSpentPlaying">下棋时间：%s</string>
@@ -824,7 +790,6 @@
   <string name="returnToTournamentsHomepage">返回锦标赛主页</string>
   <string name="monthlyPerfTypeRatingDistribution">本月%s的积分分布</string>
   <plurals name="nbPerfTypePlayersThisMonth">
-    <item quantity="one">本月有%1$s位棋手下%2$s</item>
     <item quantity="other">本月有%1$s位棋手下%2$s</item>
   </plurals>
   <string name="yourPerfTypeRatingIsRating">您的%1$s积分是%2$s分。</string>
@@ -881,7 +846,6 @@
   <string name="viewTheSolution">查看解答</string>
   <string name="followAndChallengeFriends">添加和挑战朋友</string>
   <plurals name="availableInNbLanguages">
-    <item quantity="one">支持%s种语言！</item>
     <item quantity="other">支持%s种语言！</item>
   </plurals>
   <string name="gameAnalysis">棋局分析</string>
@@ -926,7 +890,6 @@
   <string name="challenges">挑战</string>
   <string name="perfRatingX">积分：%s</string>
   <plurals name="nbSecondsToPlayTheFirstMove">
-    <item quantity="one">还剩%s秒走第一步</item>
     <item quantity="other">还剩%s秒走第一步</item>
   </plurals>
   <string name="practiceWithComputer">与电脑练习</string>
@@ -983,15 +946,12 @@
   <string name="preview">预览</string>
   <string name="advantage">优势</string>
   <plurals name="nbSeconds">
-    <item quantity="one">%s秒</item>
     <item quantity="other">%s秒</item>
   </plurals>
   <plurals name="nbMinutes">
-    <item quantity="one">%s分</item>
     <item quantity="other">%s分</item>
   </plurals>
   <plurals name="nbTurns">
-    <item quantity="one">%s着</item>
     <item quantity="other">%s着</item>
   </plurals>
   <string name="opening">开局</string>
@@ -1010,7 +970,6 @@
   <string name="noConditionalPremoves">没有条件预先走棋</string>
   <string name="playX">走%s</string>
   <plurals name="andSaveNbPremoveLines">
-    <item quantity="one">并保存%s条预先走棋</item>
     <item quantity="other">并保存%s条预先走棋</item>
   </plurals>
   <string name="sorry">抱歉 :(</string>

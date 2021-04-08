@@ -59,6 +59,7 @@
   <string name="playing">Гра триває</string>
   <string name="first">Перша</string>
   <string name="previous">Попередня</string>
+  <string name="next">Наступна</string>
   <string name="last">Остання</string>
   <string name="shareAndExport">Надсилання та експорт</string>
   <string name="cloneStudy">Клонувати</string>

@@ -53,6 +53,7 @@
   <string name="playing">Oynanıyor</string>
   <string name="first">İlk</string>
   <string name="previous">Önceki</string>
+  <string name="next">Sonraki</string>
   <string name="last">Son</string>
   <string name="shareAndExport">Paylaş ve dışa aktar</string>
   <string name="cloneStudy">Klon</string>

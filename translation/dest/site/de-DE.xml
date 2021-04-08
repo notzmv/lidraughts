@@ -641,10 +641,10 @@ Eine URL pro Zeile</string>
   <string name="fieldnumbers8x8">Feldnummern (1-32)</string>
   <string name="algebraic8x8">Algebraisch (a-h, 1-8)</string>
   <string name="moveListWhilePlaying">Notation während des Spiels anzeigen</string>
-  <string name="clockIncrement">Zeit-Inkrement</string>
   <string name="notationGameResult">Spielergebnis-Notation (weiß Sieg • Remis • schwarz Sieg)</string>
   <string name="draughtsClock">Dameuhr</string>
   <string name="clockInitialTime">Uhr Startzeit</string>
+  <string name="clockIncrement">Zeit-Inkrement</string>
   <string name="onlyMembersOfTeam">Nur Teammitglieder</string>
   <string name="noRestriction">Keine Einschränkungen</string>
   <string name="tenthsOfSeconds">Zehntelsekunden</string>
