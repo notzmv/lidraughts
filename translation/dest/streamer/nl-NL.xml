@@ -17,22 +17,22 @@
   <string name="rules">Streaming regels</string>
   <string name="rule1">Voeg het trefwoord \"lidraughts.org\" toe aan je stream titel wanneer je streamt op Lidraughts.</string>
   <string name="rule2">Verwijder het trefwoord wanneer je niet-Lidraughts dingen streamt.</string>
-  <string name="rule3">Lidraughts detecteert je stream automatisch en schakelt de volgende voordelen in:</string>
+  <string name="rule3">Lidraughts zal je stream automatisch detecteren en je de volgende voordelen geven:</string>
   <string name="perks">Voordelen van het streamen met een trefwoord</string>
-  <string name="perk1">Krijg een brandende streamer pictogram op je Lidraughts profiel.</string>
-  <string name="perk2">Word aan de bovenkant van de streamers lijst toegevoegd.</string>
+  <string name="perk1">Krijg een brandende streamer icoon op je Lidraughts profiel.</string>
+  <string name="perk2">Word naar de bovenkant van de streamers lijst verplaatst.</string>
   <string name="perk3">Je Lidraughts volgers krijgen een melding.</string>
-  <string name="perk4">Toon je stream in je partijen, toernooien en studies.</string>
+  <string name="perk4">Je stream wordt getoond in je partijen, toernooien en studies.</string>
   <string name="approved">Je stream is goedgekeurd.</string>
   <string name="pendingReview">Je stream wordt beoordeeld door de toezichthouders.</string>
   <string name="pleaseFillIn">Vul je streamer informatie in en upload een foto.</string>
   <string name="whenReady">Wanneer je klaar bent om als Lidraughts stream vermeld te worden, %s</string>
-  <string name="requestReview">verzoek een beoordeling van een toezichthouder</string>
-  <string name="anotherLanguage">Als je stream in een andere taal is dan het Engels, voeg de juiste taaltag toe (%s), ingesloten in vierkante haken, aan het begin van uw stream titel.
-Als voorbeelden plaats je \"[NL]\" voor Nederlands, \"[DE]\" voor Duits, \"[FR]\" voor Frans, enz.
-Zet het in de stream titel op de Twitch of YouTube pagina, niet in de Lidraughts stream-instellingen.
-Als je stream in het Engels is, is het niet nodig om een taaltag toe te voegen.</string>
-  <string name="twitchUsername">Je Twitch gebruikersnaam of website</string>
+  <string name="requestReview">verzoek een beoordeling van de toezichthouders</string>
+  <string name="anotherLanguage">Als je stream in een andere taal is dan het Engels, voeg dan de juiste taaltag toe (%s), ingesloten in vierkante haken, aan het begin van uw stream titel.
+Bijvoorbeeld \"[NL]\" voor Nederlands, \"[DE]\" voor Duits, \"[FR]\" voor Frans, enz.
+Voeg deze toe aan de stream titel op Twitch of YouTube, niet in je Lidraughts stream-instellingen.
+Het is niet nodig een taaltag toe te voegen als je stream in het Engels is.</string>
+  <string name="twitchUsername">Je Twitch gebruikersnaam of URL</string>
   <string name="optionalOrEmpty">Optioneel. Laat leeg indien geen</string>
   <string name="youtubeChannel">Je YouTube kanaal ID of URL</string>
   <string name="streamerName">Je streamer naam op Lidraughts</string>
@@ -41,7 +41,7 @@ Als je stream in het Engels is, is het niet nodig om een taaltag toe te voegen.<
     <item quantity="other">Houd het kort: maximaal %s tekens</item>
   </plurals>
   <string name="visibility">Zichtbaar op de streamers pagina</string>
-  <string name="whenApproved">Zodra goedgekeurd door toezichthouders</string>
+  <string name="whenApproved">Zodra goedgekeurd door de toezichthouders</string>
   <string name="headline">Titel</string>
   <string name="tellUsAboutTheStream">Vertel ons in één zin over je stream</string>
   <string name="longDescription">Uitgebreide omschrijving</string>
@@ -51,8 +51,8 @@ Als je stream in het Engels is, is het niet nodig om een taaltag toe te voegen.<
   <string name="deletePicture">Foto verwijderen</string>
   <string name="maxSize">Maximale grootte: %s</string>
   <string name="installBlocker">Installeer een malware blocker!</string>
-  <string name="beSafe">Wees beschermd voor advertenties en trackers
-die Twitch en YouTube onveilig maken.
+  <string name="beSafe">Bescherm jezelf tegen de advertenties en trackers
+waardoor Twitch en YouTube geplaagd worden.
 Lidraughts beveelt uBlock Origin aan
 wat gratis en open-source is.</string>
 </resources>

@@ -28,11 +28,11 @@
   <string name="appointOwner">Maak iemand anders teamleider</string>
   <string name="changeOwner">Wie wil je leider van dit team maken?</string>
   <plurals name="xJoinRequests">
-    <item quantity="one">%s verzoek tot lidmaadschap</item>
+    <item quantity="one">%s verzoek tot lidmaatschap</item>
     <item quantity="other">%s verzoeken tot lidmaatschap</item>
   </plurals>
-  <string name="willBeReviewed">Je verzoek tot deelname zal worden beoordeeld door de teamleider.</string>
-  <string name="beingReviewed">Je verzoek tot deelname wordt beoordeeld door de teamleider.</string>
+  <string name="willBeReviewed">Je verzoek tot lidmaatschap zal worden beoordeeld door de teamleider.</string>
+  <string name="beingReviewed">Je verzoek tot lidmaatschap wordt beoordeeld door de teamleider.</string>
   <string name="teamBattle">Team battle</string>
   <string name="teamBattleOverview">Een battle met meerdere teams, iedere speler scoort punten voor het eigen team</string>
   <string name="teamTournament">Team toernooi</string>
@@ -40,14 +40,14 @@
   <string name="swissTournament">Zwitsers toernooi</string>
   <string name="swissTournamentOverview">Een Zwitsers toernooi waaraan alleen leden van je team mee kunnen meedoen</string>
   <string name="subscribeToTeamMessages">Inschrijven voor team berichten</string>
-  <string name="messageAllMembers">Stuur bericht aan alle leden</string>
-  <string name="messageAllMembersOverview">Stuur een privébericht aan alle leden van het team</string>
-  <string name="messageAllMembersLongDescription">Stuur een privébericht naar alle leden van het team.
-Je kunt dit gebruiken om spelers op te roepen om deel te nemen aan een toernooi of een team battle.
+  <string name="messageAllMembers">Bericht aan alle leden</string>
+  <string name="messageAllMembersOverview">Stuur een privébericht naar alle leden van het team</string>
+  <string name="messageAllMembersLongDescription">Stuur een privébericht naar ALLE leden van het team.
+Je kunt dit gebruiken om spelers op te roepen om deel te nemen aan een toernooi of team battle.
 Spelers die je berichten niet willen ontvangen kunnen het team verlaten.</string>
   <string name="teamsIlead">Teams die ik leid</string>
   <string name="youMayWantToLinkOneOfTheseTournaments">Misschien wil je de link van een van deze komende toernooien delen?</string>
   <string name="usersWhoCanManageThisTeam">Gebruikers die dit team beheren</string>
-  <string name="leadersChat">Teamleiderschat</string>
+  <string name="leadersChat">Teamleiders chat</string>
   <string name="enableMembersChat">Chatbox inschakelen (alleen voor teamleden)</string>
 </resources>

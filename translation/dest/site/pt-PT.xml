@@ -578,7 +578,7 @@ análise de computador, sala de conversação e link de partilha.</string>
   <string name="youPlayTheWhitePieces">Tu jogas com as peças brancas</string>
   <string name="youPlayTheBlackPieces">Tu jogas com as peças pretas</string>
   <string name="itsYourTurn">É a tua vez!</string>
-  <string name="unauthorizedError">Acesso negado</string>
+  <string name="unauthorizedError">Acesso negado.</string>
   <string name="noInternetConnection">Sem conectividade. Você ainda pode jogar offline a partir do menu.</string>
   <string name="connectedToLidraughts">Você está conectado a lidraughts.org</string>
   <string name="signedOut">Você fez logoff</string>

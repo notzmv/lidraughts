@@ -604,7 +604,7 @@ Uma URL por linha</string>
   <string name="youPlayTheWhitePieces">Você joga com as peças brancas</string>
   <string name="youPlayTheBlackPieces">Você joga com as peças pretas</string>
   <string name="itsYourTurn">É a sua vez!</string>
-  <string name="unauthorizedError">Acesso negado</string>
+  <string name="unauthorizedError">Acesso negado.</string>
   <string name="noInternetConnection">Sem conectividade. Você ainda pode jogar offline a partir do menu.</string>
   <string name="connectedToLidraughts">Você está conectado a lidraughts.org</string>
   <string name="signedOut">Você fez logoff</string>
