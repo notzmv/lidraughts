@@ -87,10 +87,12 @@ case class Game(
   def fullIdOf(color: Color): String = s"$id${player(color).id}"
 
   def tournamentId = metadata.tournamentId
+  def externalTournamentId = metadata.externalId
   def simulId = metadata.simulId
   def swissId = metadata.swissId
 
   def isTournament = tournamentId.isDefined
+  def isExternalTournament = externalTournamentId.isDefined
   def isSimul = simulId.isDefined
   def isSwiss = swissId.isDefined
   def isMandatory = isTournament || isSimul || isSwiss
@@ -637,6 +639,9 @@ case class Game(
   def withTournamentId(id: String, tableId: Option[Int]) =
     if (tableId.isDefined) copy(metadata = metadata.copy(tournamentId = id.some, simulPairing = tableId))
     else copy(metadata = metadata.copy(tournamentId = id.some))
+
+  def withExternalTournamentId(id: String) = copy(metadata = metadata.copy(externalId = id.some))
+
   def withSwissId(id: String) = copy(metadata = metadata.copy(swissId = id.some))
 
   def withSimul(id: String, pairing: Int) = copy(metadata = metadata.copy(simulId = id.some, simulPairing = pairing.some))
@@ -754,6 +759,7 @@ object Game {
         source = source.some,
         pdnImport = pdnImport,
         tournamentId = none,
+        externalId = none,
         swissId = none,
         simulId = none,
         simulPairing = none,
@@ -799,6 +805,7 @@ object Game {
     val source = "so"
     val pdnImport = "pdni"
     val tournamentId = "tid"
+    val externalId = "eid"
     val swissId = "iid"
     val simulId = "sid"
     val simulPairing = "sp"

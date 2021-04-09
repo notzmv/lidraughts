@@ -50,6 +50,9 @@ object widgets {
             g.tournamentId.map { tourId =>
               frag(separator, tournamentLink(tourId))
             } orElse
+              g.externalTournamentId.map { tourId =>
+                frag(separator, externalTournamentLink(tourId))
+              } orElse
               g.simulId.map { simulId =>
                 frag(separator, views.html.simul.bits.link(simulId))
               } orElse

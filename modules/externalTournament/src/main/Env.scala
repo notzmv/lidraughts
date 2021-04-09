@@ -2,6 +2,9 @@ package lidraughts.externalTournament
 
 import akka.actor._
 import com.typesafe.config.Config
+import scala.concurrent.duration._
+
+import lidraughts.memo._
 
 final class Env(
     config: Config,
@@ -12,6 +15,17 @@ final class Env(
 ) {
 
   private lazy val externalTournamentColl = db(config getString "collection.externalTournament")
+
+  private lazy val nameCache = new Syncache[String, Option[String]](
+    name = "externalTournament.name",
+    compute = id => api byId id map2 { (tour: ExternalTournament) => tour.title },
+    default = _ => none,
+    strategy = Syncache.WaitAfterUptime(20 millis),
+    expireAfter = Syncache.ExpireAfterAccess(1 hour),
+    logger = logger
+  )(system)
+
+  def name(id: String): Option[String] = nameCache sync id
 
   lazy val jsonView = new JsonView(lightUserApi)
 

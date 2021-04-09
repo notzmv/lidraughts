@@ -32,6 +32,7 @@ final class Env(
     getSimul: Simul.ID => Fu[Option[Simul]],
     getSimulName: Simul.ID => Fu[Option[String]],
     getTournamentName: String => Option[String],
+    getExternalTournamentName: String => Option[String],
     getTeamName: lidraughts.team.Team.ID => Option[String],
     isStreaming: lidraughts.user.User.ID => Boolean,
     isPlaying: lidraughts.user.User.ID => Boolean,
@@ -78,6 +79,7 @@ final class Env(
     annotator = annotator,
     getSimulName = getSimulName,
     getTournamentName = getTournamentName,
+    getExternalTournamentName = getExternalTournamentName,
     getSwissName = swissEnv.getName
   )
 
@@ -173,6 +175,7 @@ object Env {
     getSimul = lidraughts.simul.Env.current.repo.find,
     getSimulName = lidraughts.simul.Env.current.api.idToName,
     getTournamentName = lidraughts.tournament.Env.current.cached.name,
+    getExternalTournamentName = lidraughts.externalTournament.Env.current.name,
     getTeamName = lidraughts.team.Env.current.cached.name _,
     roundJsonView = lidraughts.round.Env.current.jsonView,
     noteApi = lidraughts.round.Env.current.noteApi,

@@ -44,6 +44,8 @@ private[challenge] final class Joiner(onStart: String => Unit) {
             pdnImport = None,
             microMatch = microMatch
           ).withId(c.id).|> { g =>
+              c.externalTournamentId.fold(g)(g.withExternalTournamentId(_))
+            }.|> { g =>
               state.fold(g) {
                 case sit @ SituationPlus(Situation(board, _), _) => g.copy(
                   draughts = g.draughts.copy(

@@ -76,6 +76,8 @@ case class Challenge(
 
   def isMicroMatch = ~microMatch
 
+  def externalTournamentId = external.flatMap(_.tournamentId)
+
   def acceptExternal(u: User) = external match {
     case Some(e) if challengerUserId.contains(u.id) => copy(
       external = e.copy(challengerAccepted = true).some

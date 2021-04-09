@@ -16,6 +16,7 @@ final class PdnDump(
     annotator: Annotator,
     getSimulName: String => Fu[Option[String]],
     getTournamentName: String => Option[String],
+    getExternalTournamentName: String => Option[String],
     getSwissName: lidraughts.swiss.Swiss.Id => Option[String]
 ) {
 
@@ -24,6 +25,7 @@ final class PdnDump(
       if (flags.tags) (game.simulId ?? getSimulName) map { simulName =>
         simulName
           .orElse(game.tournamentId flatMap getTournamentName)
+          .orElse(game.externalTournamentId flatMap getExternalTournamentName)
           .orElse(game.swissId map lidraughts.swiss.Swiss.Id flatMap getSwissName)
           .fold(pdn)(pdn.withEvent)
       }

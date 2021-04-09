@@ -38,6 +38,12 @@ trait TournamentHelper { self: I18nHelper with DateHelper with UserHelper =>
 
   def tournamentIdToName(id: String) = tournamentEnv.cached name id getOrElse "Tournament"
 
+  def externalTournamentLink(tourId: String): Frag = a(
+    dataIcon := "g",
+    cls := "text",
+    href := routes.ExternalTournament.show(tourId).url
+  )(lidraughts.externalTournament.Env.current.name(tourId))
+
   object scheduledTournamentNameShortHtml {
     private def icon(c: Char) = s"""<span data-icon="$c"></span>"""
     private val replacements = List(

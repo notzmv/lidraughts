@@ -8,6 +8,7 @@ private[game] case class Metadata(
     source: Option[Source],
     pdnImport: Option[PdnImport],
     tournamentId: Option[String],
+    externalId: Option[String],
     swissId: Option[String],
     simulId: Option[String],
     simulPairing: Option[Int],
@@ -39,7 +40,7 @@ private[game] case class Metadata(
 
 private[game] object Metadata {
 
-  val empty = Metadata(None, None, None, None, None, None, None, None, None, false)
+  val empty = Metadata(None, None, None, None, None, None, None, None, None, None, false)
 }
 
 case class PdnImport(
