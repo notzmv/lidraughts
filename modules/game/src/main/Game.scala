@@ -95,7 +95,7 @@ case class Game(
   def isExternalTournament = externalTournamentId.isDefined
   def isSimul = simulId.isDefined
   def isSwiss = swissId.isDefined
-  def isMandatory = isTournament || isSimul || isSwiss
+  def isMandatory = isTournament || isSimul || isSwiss || isExternalTournament
   def isClassical = perfType contains lidraughts.rating.PerfType.Classical
   def nonMandatory = !isMandatory
 

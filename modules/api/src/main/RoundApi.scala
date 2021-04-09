@@ -40,6 +40,7 @@ private[api] final class RoundApi(
         bookmarkApi.exists(pov.game, ctx.me) map {
           case json ~ simulOption ~ swissOption ~ note ~ forecast ~ bookmarked => (
             withTournament(pov, tour) _ compose
+            withExternalTournament(pov) _ compose
             withSimul(pov, simulOption, true) _ compose
             withSwiss(swissOption) _ compose
             withSteps(pov, initialFen) _ compose
@@ -62,6 +63,7 @@ private[api] final class RoundApi(
         bookmarkApi.exists(pov.game, ctx.me) map {
           case json ~ simulOption ~ swissOption ~ note ~ bookmarked => (
             withTournament(pov, tour) _ compose
+            withExternalTournament(pov) _ compose
             withSimul(pov, simulOption, false) _ compose
             withSwiss(swissOption) _ compose
             withNote(note) _ compose
@@ -87,6 +89,7 @@ private[api] final class RoundApi(
         bookmarkApi.exists(pov.game, ctx.me) map {
           case json ~ tour ~ simulOption ~ swissOption ~ note ~ bookmarked => (
             withTournament(pov, tour) _ compose
+            withExternalTournament(pov) _ compose
             withSimul(pov, simulOption, false) _ compose
             withSwiss(swissOption) _ compose
             withNote(note) _ compose
@@ -206,6 +209,9 @@ private[api] final class RoundApi(
           Json.obj("name" -> getTeamName(id))
         })
     })
+
+  private def withExternalTournament(pov: Pov)(json: JsObject) =
+    json.add("externalTournamentId" -> pov.game.externalTournamentId)
 
   def withSwiss(sv: Option[SwissView])(json: JsObject) =
     json.add("swiss" -> sv.map { s =>

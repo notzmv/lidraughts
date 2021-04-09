@@ -28,7 +28,7 @@ export function isForceResignable(data: GameData): boolean {
 }
 
 export function mandatory(data: GameData): boolean {
-  return !!data.tournament || !!data.simul || !!data.swiss;
+  return !!data.tournament || !!data.simul || !!data.swiss || !!data.externalTournamentId;
 }
 
 export function playedTurns(data: GameData): number {

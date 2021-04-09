@@ -4,6 +4,7 @@ export interface GameData {
   opponent: Player;
   spectator?: boolean;
   tournament?: Tournament;
+  externalTournamentId?: string;
   simul?: Simul;
   swiss?: Swiss;
   takebackable: boolean;
