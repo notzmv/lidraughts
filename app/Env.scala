@@ -162,6 +162,7 @@ final class Env(
     Env.plan, // required to load the actor
     Env.event, // required to load the actor
     Env.activity, // required to load the actor
+    Env.externalTournament, // required to load the actor
     Env.relay // you know the drill by now
   )) { lap =>
     lidraughts.log.boot.info(s"${lap.millis}ms Preloading complete")
@@ -245,4 +246,5 @@ object Env {
   def bot = lidraughts.bot.Env.current
   def evalCache = lidraughts.evalCache.Env.current
   def swiss = lidraughts.swiss.Env.current
+  def externalTournament = lidraughts.externalTournament.Env.current
 }

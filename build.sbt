@@ -48,7 +48,7 @@ lazy val modules = Seq(
   message, notifyModule, i18n, game, bookmark, search,
   gameSearch, timeline, forum, forumSearch, team, teamSearch,
   analyse, mod, site, round, pool, lobby, setup,
-  importer, tournament, simul, relation, report, pref, // simulation,
+  importer, tournament, externalTournament, simul, relation, report, pref, // simulation,
   evaluation, chat, puzzle, tv, coordinate, blog,
   history, shutup, push, explorer,
   playban, insight, perfStat, slack, quote, challenge,
@@ -213,6 +213,10 @@ lazy val importer = module("importer", Seq(common, game, round)).settings(
 
 lazy val tournament = module("tournament", Seq(common, hub, socket, game, round, security, chat, memo, quote, history, notifyModule, i18n)).settings(
   libraryDependencies ++= provided(play.api, scalatags, reactivemongo.driver, reactivemongo.iteratees)
+)
+
+lazy val externalTournament = module("externalTournament", Seq(common, db, memo, i18n)).settings(
+  libraryDependencies ++= provided(play.api, scalatags, reactivemongo.driver)
 )
 
 lazy val swiss = module("swiss", Seq(common, hub, socket, game, round, security, chat, memo, quote, i18n)).settings(

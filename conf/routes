@@ -312,6 +312,10 @@ POST  /simul/manager/$id<\w{8}>               controllers.SimulCrud.update(id: S
 GET   /simul/manager/new                      controllers.SimulCrud.form
 POST  /simul/manager                          controllers.SimulCrud.create
 
+# External Tournaments
+GET   /tournament/external/$id<\w{8}>         controllers.ExternalTournament.show(id: String)
+POST  /tournament/external                    controllers.ExternalTournament.create
+
 # Team
 GET   /team                                   controllers.Team.home(page: Int ?= 1)
 GET   /team/new                               controllers.Team.form

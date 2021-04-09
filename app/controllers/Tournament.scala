@@ -289,7 +289,7 @@ object Tournament extends LidraughtsController {
     }
   }
 
-  def apiCreate = ScopedBody() { implicit req => me =>
+  def apiCreate = ScopedBody(_.Tournament.Write) { implicit req => me =>
     if (me.isBot || me.lame) notFoundJson("This account cannot create tournaments")
     else teamsIBelongTo(me) flatMap { teams => doApiCreate(me, teams) }
   }
