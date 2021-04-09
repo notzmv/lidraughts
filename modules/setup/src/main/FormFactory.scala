@@ -117,7 +117,8 @@ private[setup] final class FormFactory(
       "fen" -> fen,
       "opponent" -> optional(nonEmptyText),
       "startsAt" -> optional(utcDate),
-      "microMatch" -> optional(boolean)
+      "microMatch" -> optional(boolean),
+      "externalTournamentId" -> optional(nonEmptyText(minLength = 8, maxLength = 8))
     )(ApiConfig.<<)(_.>>)
       .verifying("A custom fen is not allowed for this variant", _.validVariantForFen)
       .verifying("invalidFen", _.validFen)

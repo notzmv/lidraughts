@@ -148,7 +148,8 @@ object Challenge {
   case class ExternalChallenge(
       challengerAccepted: Boolean = false,
       destUserAccepted: Boolean = false,
-      startsAt: Option[DateTime] = None
+      startsAt: Option[DateTime] = None,
+      tournamentId: Option[String] = None
   ) {
 
     def bothAccepted = challengerAccepted && destUserAccepted
@@ -193,7 +194,8 @@ object Challenge {
     rematchOf: Option[String],
     external: Boolean = false,
     startsAt: Option[DateTime] = None,
-    microMatch: Boolean = false
+    microMatch: Boolean = false,
+    externalTournamentId: Option[String] = None
   ): Challenge = {
     val (colorChoice, finalColor) = color match {
       case "white" => ColorChoice.White -> draughts.White
@@ -217,6 +219,10 @@ object Challenge {
       case TimeControl.Clock(clock) if !lidraughts.game.Game.allowRated(finalVariant, clock) => Mode.Casual
       case _ => mode
     }
+    val externalData = external option ExternalChallenge(
+      startsAt = startsAt,
+      tournamentId = externalTournamentId
+    )
     new Challenge(
       _id = randomId,
       status = if (external) Status.External else Status.Created,
@@ -235,7 +241,7 @@ object Challenge {
       createdAt = DateTime.now,
       seenAt = DateTime.now,
       expiresAt = inTwoWeeks,
-      external = external option ExternalChallenge(startsAt = startsAt),
+      external = externalData,
       microMatch = microMatch option true
     ) |> { challenge =>
       if (microMatch && !challenge.customStartingPosition)

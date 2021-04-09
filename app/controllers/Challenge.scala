@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.libs.json._
-import play.api.mvc.Result
+import play.api.mvc.{ Result, Request }
 
 import lidraughts.api.Context
 import lidraughts.app._
@@ -195,51 +195,62 @@ object Challenge extends LidraughtsController {
     }
   }
 
-  def apiCreateExternal(userId: String) = OpenBody { implicit ctx =>
-    implicit val req = ctx.body
+  def apiCreateExternal(userId: String) = OpenOrScopedBody(_.Tournament.Write)(
+    open = ctx => doCreateExternal(ctx.body, none, userId),
+    scoped = req => me => doCreateExternal(req, me.id.some, userId)
+  )
+
+  private def doCreateExternal(req: Request[_], me: Option[String], userId: String) =
     Setup.PostExternalRateLimit(HTTPRequest lastRemoteAddress req) {
-      Env.setup.forms.api.bindFromRequest.fold(
+      Env.setup.forms.api.bindFromRequest()(req).fold(
         jsonFormErrorDefaultLang,
         config => UserRepo enabledById userId.toLowerCase flatMap { challengerOption =>
           challengerOption ?? { challengerUser =>
             config.opponent.fold(BadRequest(jsonError("Opponent not specified")).fuccess) { opponentId =>
-              UserRepo enabledById opponentId.toLowerCase flatMap {
-                case Some(opponentUser) =>
-                  import lidraughts.challenge.Challenge._
-                  val challenge = lidraughts.challenge.Challenge.make(
-                    variant = config.realVariant,
-                    fenVariant = config.fenVariant,
-                    initialFen = config.position,
-                    timeControl = config.clock map { c =>
-                      TimeControl.Clock(c)
-                    } orElse config.days.map {
-                      TimeControl.Correspondence.apply
-                    } getOrElse TimeControl.Unlimited,
-                    mode = config.mode,
-                    color = config.color.name,
-                    challenger = Right(challengerUser),
-                    destUser = opponentUser.some,
-                    rematchOf = none,
-                    external = true,
-                    startsAt = config.startsAt,
-                    microMatch = config.microMatch
-                  )
-                  (Env.challenge.api create challenge) map {
-                    case true =>
-                      lidraughts.log("external challenge").info(s"${ctx.req.remoteAddress} $challenge")
-                      JsonOk(env.jsonView.show(challenge, SocketVersion(0), lidraughts.challenge.Direction.Out.some))
-                    case false =>
-                      BadRequest(jsonError("Challenge not created"))
-                  }
-                case _ =>
-                  BadRequest(jsonError("Invalid opponent")).fuccess
+              config.externalTournamentId.fold(fuTrue) { tourId =>
+                Env.externalTournament.api.byId(tourId) map {
+                  _ ?? { tour => me.contains(tour.createdBy) }
+                }
+              } flatMap { validTournamentId =>
+                if (!validTournamentId) BadRequest(jsonError("Invalid external tournament, or not authorized")).fuccess
+                else UserRepo enabledById opponentId.toLowerCase flatMap {
+                  case Some(opponentUser) =>
+                    import lidraughts.challenge.Challenge._
+                    val challenge = lidraughts.challenge.Challenge.make(
+                      variant = config.realVariant,
+                      fenVariant = config.fenVariant,
+                      initialFen = config.position,
+                      timeControl = config.clock map { c =>
+                        TimeControl.Clock(c)
+                      } orElse config.days.map {
+                        TimeControl.Correspondence.apply
+                      } getOrElse TimeControl.Unlimited,
+                      mode = config.mode,
+                      color = config.color.name,
+                      challenger = Right(challengerUser),
+                      destUser = opponentUser.some,
+                      rematchOf = none,
+                      external = true,
+                      startsAt = config.startsAt,
+                      microMatch = config.microMatch,
+                      externalTournamentId = config.externalTournamentId
+                    )
+                    (Env.challenge.api create challenge) map {
+                      case true =>
+                        lidraughts.log("external challenge").info(s"${req.remoteAddress} $challenge")
+                        JsonOk(env.jsonView.show(challenge, SocketVersion(0), lidraughts.challenge.Direction.Out.some))
+                      case false =>
+                        BadRequest(jsonError("Challenge not created"))
+                    }
+                  case _ =>
+                    BadRequest(jsonError("Invalid opponent")).fuccess
+                }
               }
             }
           } map (_ as JSON)
         }
       )
     }
-  }
 
   def rematchOf(gameId: String) = Auth { implicit ctx => me =>
     OptionFuResult(GameRepo game gameId) { g =>

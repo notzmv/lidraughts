@@ -22,5 +22,5 @@ final class ExternalTournamentApi(
     coll.insert(tour) inject tour
   }
 
-  def one(id: String) = coll.byId[ExternalTournament](id)
+  def byId(id: String) = coll.byId[ExternalTournament](id)
 }

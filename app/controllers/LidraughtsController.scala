@@ -112,6 +112,22 @@ private[controllers] trait LidraughtsController
       else AuthBody(parser)(auth)(req)
     }
 
+  protected def OpenOrScopedBody(selectors: OAuthScope.Selector*)(
+    open: BodyContext[_] => Fu[Result],
+    scoped: Request[_] => UserModel => Fu[Result]
+  ): Action[AnyContent] = OpenOrScopedBody(parse.anyContent)(selectors)(open, scoped)
+
+  protected def OpenOrScopedBody[A](parser: BodyParser[A])(selectors: Seq[OAuthScope.Selector])(
+    open: BodyContext[A] => Fu[Result],
+    scoped: Request[A] => UserModel => Fu[Result]
+  ): Action[A] =
+    Action.async(parser) { req =>
+      if (HTTPRequest isOAuth req) ScopedBody(parser)(selectors)(scoped)(req)
+      else CSRF(req) {
+        reqToCtx(req) flatMap open
+      }
+    }
+
   protected def Auth(f: Context => UserModel => Fu[Result]): Action[Unit] =
     Auth(parse.empty)(f)
 

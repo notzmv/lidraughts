@@ -1,0 +1,19 @@
+.tour-ext {
+  h2 {
+    font-size: 2em;
+    margin-top: 2em;
+    text-align: center;
+  }
+  .tour-title {
+    background: #303F9F;
+    color: #ddd;
+    letter-spacing: 0.1em;
+    padding: 30px;
+    font-size: 3em;
+    text-align: center;
+  }
+  .slist {
+    border: $border;
+    margin-top: 1em;
+  }
+}

@@ -9,8 +9,10 @@ object ExternalTournament extends LidraughtsController {
   private def api = Env.externalTournament.api
 
   def show(id: String) = Open { implicit ctx =>
-    OptionOk(api one id) { tour =>
-      html.externalTournament.show(tour)
+    OptionFuOk(api byId id) { tour =>
+      for {
+        upcoming <- Env.challenge.api.forExternalTournament(tour.id)
+      } yield html.externalTournament.show(tour, upcoming)
     }
   }
 

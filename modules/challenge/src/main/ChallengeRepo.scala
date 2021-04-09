@@ -39,6 +39,11 @@ private final class ChallengeRepo(coll: Coll, maxPerUser: Int) {
   private[challenge] def allWithUserId(userId: String): Fu[List[Challenge]] =
     createdByChallengerId(userId) |+| createdByDestId(userId)
 
+  def externalByTournamentId(tourId: String): Fu[List[Challenge]] =
+    coll.find(selectExternal ++ $doc("external.tournamentId" -> tourId))
+      .sort($doc("external.startsAt" -> 1))
+      .list[Challenge]()
+
   def like(c: Challenge) = ~(for {
     challengerId <- c.challengerUserId
     destUserId <- c.destUserId
@@ -100,6 +105,7 @@ private final class ChallengeRepo(coll: Coll, maxPerUser: Int) {
   private[challenge] def remove(id: Challenge.ID) = coll.remove($id(id)).void
 
   private val selectCreated = $doc("status" -> Status.Created.id)
+  private val selectExternal = $doc("status" -> Status.External.id)
   private val selectClock = $doc("timeControl.l" $exists true)
 }
 
