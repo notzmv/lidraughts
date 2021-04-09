@@ -805,7 +805,7 @@ object Game {
     val source = "so"
     val pdnImport = "pdni"
     val tournamentId = "tid"
-    val externalId = "eid"
+    val externalTournamentId = "eid"
     val swissId = "iid"
     val simulId = "sid"
     val simulPairing = "sp"

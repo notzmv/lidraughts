@@ -1,6 +1,7 @@
 package controllers
 
 import lidraughts.app._
+import lidraughts.game.GameRepo
 import views._
 
 object ExternalTournament extends LidraughtsController {
@@ -12,7 +13,8 @@ object ExternalTournament extends LidraughtsController {
     OptionFuOk(api byId id) { tour =>
       for {
         upcoming <- Env.challenge.api.forExternalTournament(tour.id)
-      } yield html.externalTournament.show(tour, upcoming)
+        finished <- GameRepo.finishedByExternalTournament(id, 10)
+      } yield html.externalTournament.show(tour, upcoming, finished)
     }
   }
 

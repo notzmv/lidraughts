@@ -49,6 +49,8 @@ object Query {
   def user(u: String): Bdoc = F.playerUids $eq u
   def user(u: User): Bdoc = F.playerUids $eq u.id
 
+  def externalTournament(id: String): Bdoc = F.externalTournamentId $eq id
+
   val noAi: Bdoc = $doc(
     "p0.ai" $exists false,
     "p1.ai" $exists false

@@ -105,6 +105,12 @@ object GameRepo {
     .sort($sort asc F.createdAt)
     .list[Game](nb, ReadPreference.secondaryPreferred)
 
+  def finishedByExternalTournament(tourId: String, nb: Int): Fu[List[Game]] = coll.find(
+    Query.finished ++ Query.externalTournament(tourId)
+  )
+    .sort($sort desc F.createdAt)
+    .list[Game](nb, ReadPreference.secondaryPreferred)
+
   def extraGamesForIrwin(userId: String, nb: Int): Fu[List[Game]] = coll.find(
     Query.finished
       ++ Query.rated

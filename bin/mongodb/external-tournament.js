@@ -1,0 +1,1 @@
+db.game5.createIndex({"eid":1}, {"name":"eid_1","sparse":true});
