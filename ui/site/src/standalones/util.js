@@ -386,13 +386,14 @@ lidraughts.miniBoard = {
   init(node) {
     if (!window.Draughtsground) return setTimeout(() => lidraughts.miniBoard.init(node), 500);
     const $el = $(node).removeClass('mini-board--init'),
-      [fen, board, orientation, lm] = $el.data('state').split(',');
+      [fen, board, orientation, lm] = $el.data('state').split('|');
     $el.data('draughtsground', Draughtsground(node, {
       coordinates: 0,
       boardSize: board ? board.split('x').map(s => parseInt(s)) : [10, 10],
       viewOnly: !node.getAttribute('data-playable'),
       resizable: false,
       fen,
+      orientation,
       lastMove: lm && [lm.slice(-4, -2), lm.slice(-2)],
       drawable: {
         enabled: false,
@@ -403,7 +404,7 @@ lidraughts.miniBoard = {
 };
 
 lidraughts.miniGame = (() => {
-  const fenColor = fen => fen.indexOf(' b') > 0 ? 'black' : 'white';
+  const fenColor = fen => fen.startsWith('B:') ? 'black' : 'white';
   return {
     init(node) {
       if (!window.Draughtsground) setTimeout(() => lidraughts.miniGame.init(node), 200);

@@ -234,7 +234,9 @@ package round {
   case class MoveEvent(
       gameId: String,
       fen: String,
-      move: String
+      move: String,
+      whiteClock: Option[Int],
+      blackClock: Option[Int]
   )
   case class CorresMoveEvent(
       move: MoveEvent,
