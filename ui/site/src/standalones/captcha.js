@@ -6,8 +6,11 @@ $(function() {
           $board = $captcha.find('.mini-board'),
           $input = $captcha.find('input').val(''),
           cg = $board.data('draughtsground'),
-          dests = new Map();
-        for (let k in destsObj) dests.set(k, destsObj[k].match(/.{2}/g));
+          fen = cg.getFen(),
+          destsObj = $board.data('moves'),
+          destsMap = new Map();
+        for (let k in destsObj) destsMap.set(k, destsObj[k].match(/.{2}/g));
+        const dests = Object.fromEntries(destsMap);
         cg.set({
           turnColor: cg.state.orientation,
           boardSize: [10, 10],
