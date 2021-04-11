@@ -174,7 +174,7 @@ function makeCg(preview: ChapterPreview): VNode {
       postpatch(old, vnode) {
         if (old.data!.fen !== preview.fen) {
           const lm = preview.lastMove ? String(preview.lastMove) : preview.lastMove!;
-          $(vnode.elm as HTMLElement).data('chessground').set({
+          $(vnode.elm as HTMLElement).data('draughtsground').set({
             fen: preview.fen,
             lastMove: uciToLastMove(lm)
           });
