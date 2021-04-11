@@ -405,6 +405,7 @@ lidraughts.miniBoard = {
 
 lidraughts.miniGame = (() => {
   const fenColor = fen => fen.startsWith('B:') ? 'black' : 'white';
+  const draughtsResult = !$('body').hasClass('standard-result');
   return {
     init(node) {
       if (!window.Draughtsground) setTimeout(() => lidraughts.miniGame.init(node), 200);
@@ -468,7 +469,7 @@ lidraughts.miniGame = (() => {
       ['white', 'black'].forEach(color =>
         $(node).find('.mini-game__clock--' + color).each(function() {
           $(this).clock('destroy');
-        }).replaceWith(`<span class="mini-game__result">${win ? (win == color[0] ? '1' : '0') : '½'}</span>`)
+        }).replaceWith(`<span class="mini-game__result">${win ? (win == color[0] ? (draughtsResult ? '2' : '1') : '0') : (draughtsResult ? '1' : '½')}</span>`)
       );
     }
   }
