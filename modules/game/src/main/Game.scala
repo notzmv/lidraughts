@@ -462,20 +462,11 @@ case class Game(
   }
 
   def resultChar =
-    if (finishedOrAborted) winnerColor match {
-      case Some(White) => "w"
-      case Some(Black) => "b"
-      case _ => "d"
+    finishedOrAborted ?? winnerColor match {
+      case Some(White) => "w".some
+      case Some(Black) => "b".some
+      case _ => none
     }
-    else "*"
-
-  def resultColor =
-    if (finishedOrAborted) winnerColor match {
-      case Some(White) => "white"
-      case Some(Black) => "black"
-      case _ => "draw"
-    }
-    else "*"
 
   def rated = mode.rated
   def casual = !rated

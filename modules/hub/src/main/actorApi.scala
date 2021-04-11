@@ -254,7 +254,7 @@ package round {
   )
   case class ResultEvent(
       gameId: String,
-      result: String
+      result: Option[String]
   )
   case class NbRounds(nb: Int)
   case class Berserk(gameId: String, userId: String)
