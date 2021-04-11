@@ -29,12 +29,11 @@ object mini {
       href := withLink.option(gameLink(game, pov.color, ownerLink, tv)),
       cls := s"mini-game mini-game-${game.id} mini-game--init ${game.variant.key} is2d is${boardSize.key}",
       dataLive := isLive.option(game.id),
-      dataBoard := s"${boardSize.width}x${boardSize.height}",
       renderState(pov)
     )(
-        renderPlayer(!pov),
+        renderPlayer(!pov, ctx.pref.draughtsResult),
         cgWrap,
-        renderPlayer(pov)
+        renderPlayer(pov, ctx.pref.draughtsResult)
       )
   }
 
@@ -47,11 +46,12 @@ object mini {
       title := gameTitle(pov.game, pov.color),
       cls := s"mini-game mini-game-${game.id} mini-game--init is2d is${boardSize.key} ${isLive ?? "mini-game--live"} ${game.variant.key}",
       dataLive := isLive.option(game.id),
+      target := blank.option("_blank"),
       renderState(pov)
     )(
-        renderPlayer(!pov),
+        renderPlayer(!pov, lidraughts.pref.Pref.default.draughtsResult),
         cgWrap,
-        renderPlayer(pov)
+        renderPlayer(pov, lidraughts.pref.Pref.default.draughtsResult)
       )
   }
 
@@ -60,20 +60,22 @@ object mini {
     dataState := s"${Forsyth.boardAndColor(pov.game.situation)}|${boardSize.width}x${boardSize.height}|${pov.color.name}|${~pov.game.lastMoveKeys}"
   }
 
-  private def renderPlayer(pov: Pov) =
+  private def renderPlayer(pov: Pov, draughtsResult: Boolean) =
     span(cls := "mini-game__player")(
       span(cls := "mini-game__user")(
         playerUsername(pov.player, withRating = false),
         span(cls := "rating")(lidraughts.game.Namer ratingString pov.player)
       ),
-      if (pov.game.finished) renderResult(pov)
+      if (pov.game.finished) renderResult(pov, draughtsResult)
       else pov.game.clock.map { renderClock(_, pov.color) }
     )
 
-  private def renderResult(pov: Pov) =
+  private def renderResult(pov: Pov, draughtsResult: Boolean) =
     span(cls := "mini-game__result")(
-      pov.game.winnerColor.fold("½") { c =>
-        if (c == pov.color) "1" else "0"
+      pov.game.winnerColor.fold(if (draughtsResult) "1" else "½") { c =>
+        if (c == pov.color) {
+          if (draughtsResult) "2" else "1"
+        } else "0"
       }
     )
 

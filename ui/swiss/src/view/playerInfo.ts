@@ -62,9 +62,14 @@ export default function(ctrl: SwissCtrl): VNode | undefined {
         }, [
           h('th', '' + round),
           h('td.outcome', { attrs: { colspan: 3} }, noarg(p)),
-          h('td', p == 'absent' ? '-' : (p == 'bye' ? '1' : '½'))
+          h('td', 
+            p == 'absent' ? '-' : (p == 'bye' ? 
+              (ctrl.data.draughtsResult ? '2' : '1') :
+              (ctrl.data.draughtsResult ? '1' : '½')
+            )
+          )
         ]);
-        const res = result(p);
+        const res = result(p, !!ctrl.data.draughtsResult);
         return h('tr.glpt.' + (res === '1' ? '.win' : (res === '0' ? '.loss' : '')), {
           key: round,
           attrs: { 'data-href': '/' + p.g + (p.c ? '' : '/black') },
@@ -83,14 +88,14 @@ export default function(ctrl: SwissCtrl): VNode | undefined {
   ]);
 };
 
-function result(p: Pairing): string {
+function result(p: Pairing, draughtsResult: boolean): string {
   switch (p.w) {
     case true:
-      return '1';
+      return draughtsResult ? '2' : '1';
     case false:
       return '0';
     default:
-      return p.o ? '*' : '½';
+      return p.o ? '*' : (draughtsResult ? '1' : '½');
   }
 }
 

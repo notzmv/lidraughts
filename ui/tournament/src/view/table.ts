@@ -6,7 +6,7 @@ import { Duel, DuelPlayer, DuelTeams, TeamBattle, FeaturedGame } from '../interf
 import { teamName } from './battle';
 import TournamentController from '../ctrl';
 
-function featuredPlayer(game: FeaturedGame, color: Color) {
+function featuredPlayer(game: FeaturedGame, color: Color, draughtsResult: boolean) {
   const player = game[color];
   return h('span.mini-game__player', [
     h('span.mini-game__user', [
@@ -19,15 +19,18 @@ function featuredPlayer(game: FeaturedGame, color: Color) {
       }
     }) : null
   ]),
-  game.clock ? h(`span.mini-game__clock.mini-game__clock--${color}`, {
-    attrs: {
-        'data-time': game.clock[color]
-      }
-    }) : h('span.mini-game__result', game.winner ? (game.winner == color ? '1' : '0') : '½')
+  game.clock ? 
+    h(`span.mini-game__clock.mini-game__clock--${color}`, {
+      attrs: { 'data-time': game.clock[color] }
+    }) : 
+    h('span.mini-game__result', game.winner ? 
+      (game.winner == color ? (draughtsResult ? '2' : '1') : '0') :
+      (draughtsResult ? '1' : '½')
+    )
   ]);
 }
 
-function featured(game: FeaturedGame): VNode {
+function featured(game: FeaturedGame, draughtsResult: boolean): VNode {
   return h(`div.tour__featured.mini-game.mini-game-${game.id}.mini-game--init is2d`, {
     hook: {
       insert(vnode) {
@@ -36,13 +39,13 @@ function featured(game: FeaturedGame): VNode {
       }
     }
   }, [
-    featuredPlayer(game, opposite(game.orientation)),
+    featuredPlayer(game, opposite(game.orientation), draughtsResult),
     h('a.cg-wrap', {
       attrs: {
         href: `/${game.id}/${game.orientation}`
       }
     }),
-    featuredPlayer(game, game.orientation)
+    featuredPlayer(game, game.orientation, draughtsResult)
   ]);
 }
 
@@ -80,7 +83,7 @@ function renderDuel(battle?: TeamBattle, duelTeams?: DuelTeams) {
 
 export default function(ctrl: TournamentController): VNode {
   return h('div.tour__table', [
-    ctrl.data.featured ? featured(ctrl.data.featured) : null,
+    ctrl.data.featured ? featured(ctrl.data.featured, ctrl.data.draughtsResult) : null,
     ctrl.data.duels.length ? h('section.tour__duels', {
       hook: bind('click', _ => !ctrl.disableClicks)
     }, [

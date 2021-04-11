@@ -3,15 +3,13 @@ package lidraughts.swiss
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 import play.api.libs.json._
-import scala.concurrent.ExecutionContext
 
 import lidraughts.common.{ GreatPlayer, LightUser }
 import lidraughts.db.dsl._
 import lidraughts.game.Game
 import lidraughts.game.JsonView.boardSizeWriter
-import lidraughts.hub.lightTeam.TeamId
+import lidraughts.pref.Pref
 import lidraughts.quote.Quote.quoteWriter
-import lidraughts.rating.PerfType
 import lidraughts.socket.Socket.SocketVersion
 import lidraughts.user.{ User, UserRepo }
 
@@ -38,6 +36,7 @@ final class SwissJson(
     swiss: Swiss,
     me: Option[User],
     isInTeam: Boolean,
+    pref: Pref,
     reqPage: Option[Int] = None, // None = focus on me
     socketVersion: Option[SocketVersion] = None,
     playerInfo: Option[SwissPlayer.ViewExt] = None
@@ -62,6 +61,7 @@ final class SwissJson(
       .add("joinTeam" -> (!isInTeam).option(swiss.teamId))
       .add("socketVersion" -> socketVersion.map(_.value))
       .add("playerInfo" -> playerInfo.map { playerJsonExt(swiss, _) })
+      .add("draughtsResult" -> pref.draughtsResult.option(true))
       .add("podium" -> podium)
       .add("isRecentlyFinished" -> swiss.isRecentlyFinished)
       .add("stats" -> stats)

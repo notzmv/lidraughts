@@ -24,6 +24,7 @@ export interface SwissData {
   clock: Clock;
   variant: VariantData;
   me?: MyInfo;
+  draughtsResult?: boolean;
   canJoin: boolean;
   joinTeam?: string;
   round: number;
