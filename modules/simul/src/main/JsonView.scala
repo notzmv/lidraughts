@@ -100,7 +100,7 @@ final class JsonView(
         "online" -> isOnline(host.id),
         "patron" -> host.isPatron,
         "rating" -> simul.hostRating
-      ).add("gameId" -> simul.hostGameId)
+      ).add("gameId" -> simul.hostGameId.ifTrue(simul.isRunning))
         .add("title" -> host.title)
         .add("officialRating" -> simul.hasFmjd.option(simul.spotlight.flatMap(_.hostFmjdRating)))
     },
