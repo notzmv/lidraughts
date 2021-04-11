@@ -66,7 +66,7 @@ object mini {
         playerUsername(pov.player, withRating = false),
         span(cls := "rating")(lidraughts.game.Namer ratingString pov.player)
       ),
-      if (pov.game.finished) renderResult(pov, draughtsResult)
+      if (pov.game.finishedOrAborted) renderResult(pov, draughtsResult)
       else pov.game.clock.map { renderClock(_, pov.color) }
     )
 
