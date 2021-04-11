@@ -21,7 +21,7 @@ export default function(ctrl: LobbyController) {
       }, [
         h('span.mini-board.cg-wrap.is2d.is' + pov.variant.board.key, {
           attrs: {
-            'data-state': `${pov.fen}|${pov.variant.size[0]}x${pov.variant.board.size[1]}|${pov.color}|${pov.lastMove}`
+            'data-state': `${pov.fen}|${pov.variant.board.size[0]}x${pov.variant.board.size[1]}|${pov.color}|${pov.lastMove}`
           },
           hook: {
             insert(vnode) {

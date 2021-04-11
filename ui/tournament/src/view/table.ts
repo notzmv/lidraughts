@@ -34,8 +34,8 @@ function featured(game: FeaturedGame, draughtsResult: boolean): VNode {
   return h(`div.tour__featured.mini-game.mini-game-${game.id}.mini-game--init is2d`, {
     hook: {
       insert(vnode) {
-        window.lichess.miniGame.init(vnode.elm as HTMLElement, `${game.fen},${game.orientation},${game.lastMove}`)
-        window.lichess.powertip.manualUserIn(vnode.elm as HTMLElement);
+        window.lidraughts.miniGame.init(vnode.elm as HTMLElement, `${game.fen},${game.orientation},${game.lastMove}`)
+        window.lidraughts.powertip.manualUserIn(vnode.elm as HTMLElement);
       }
     }
   }, [

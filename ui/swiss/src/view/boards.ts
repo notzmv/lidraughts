@@ -19,8 +19,8 @@ const renderBoard = (board: Board, boardSize: BoardData, draughtsResult: boolean
     key: board.id,
     hook: {
       insert(vnode) {
-        window.lichess.miniGame.init(vnode.elm as HTMLElement, `${board.fen}|${boardSize.size[0]}x${boardSize.size[1]}|${board.orientation}|${board.lastMove || ''}`)
-        window.lichess.powertip.manualUserIn(vnode.elm as HTMLElement);
+        window.lidraughts.miniGame.init(vnode.elm as HTMLElement, `${board.fen}|${boardSize.size[0]}x${boardSize.size[1]}|${board.orientation}|${board.lastMove || ''}`)
+        window.lidraughts.powertip.manualUserIn(vnode.elm as HTMLElement);
       }
     }
   }, [
