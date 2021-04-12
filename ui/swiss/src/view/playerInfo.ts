@@ -37,7 +37,7 @@ export default function(ctrl: SwissCtrl): VNode | undefined {
         renderPlayer(data, true, false)
       ]),
       h('table', [
-          numberRow(noarg('points'), data.points, 'raw'),
+          numberRow(noarg('points'), ctrl.draughtsResult ? data.points * 2 : data.points, 'raw'),
           numberRow(noarg('tieBreak'), data.tieBreak, 'raw'),
           ...(games ? [
             data.performance ? numberRow(
@@ -64,12 +64,12 @@ export default function(ctrl: SwissCtrl): VNode | undefined {
           h('td.outcome', { attrs: { colspan: 3} }, noarg(p)),
           h('td', 
             p == 'absent' ? '-' : (p == 'bye' ? 
-              (ctrl.data.draughtsResult ? '2' : '1') :
-              (ctrl.data.draughtsResult ? '1' : '½')
+              (ctrl.draughtsResult ? '2' : '1') :
+              (ctrl.draughtsResult ? '1' : '½')
             )
           )
         ]);
-        const res = result(p, !!ctrl.data.draughtsResult);
+        const res = result(p, !!ctrl.draughtsResult);
         return h('tr.glpt.' + (res === '1' ? '.win' : (res === '0' ? '.loss' : '')), {
           key: round,
           attrs: { 'data-href': '/' + p.g + (p.c ? '' : '/black') },
