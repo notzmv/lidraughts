@@ -10,8 +10,6 @@ import controllers.routes
 
 object bits {
 
-  private val dataUserId = attr("data-userid")
-
   def gameIcon(game: Game): Char = game.perfType match {
     case _ if game.fromPosition => '*'
     case _ if game.imported => '/'
@@ -62,20 +60,16 @@ object bits {
       )(if (title64) t.value.dropRight(3) else t.value)
     }
 
-  def vstext(pov: Pov, withResult: Boolean = false)(ctxOption: Option[Context]): Frag =
+  def vstext(pov: Pov)(ctxOption: Option[Context]): Frag =
     span(cls := "vstext")(
-      span(cls := "vstext__pl user-link", dataUserId := withResult ?? pov.player.userId)(
+      span(cls := "vstext__pl user-link")(
         playerUsername(pov.player, withRating = false, withTitle = false),
         br,
         playerTitle(pov.player) map { t => frag(t, " ") },
         pov.player.rating,
         pov.player.provisional option "?"
       ),
-      if (withResult && pov.game.finishedOrAborted) {
-        span(cls := "vstext__res")(
-          draughts.Color.showResult(pov.game.winnerColor, ctxOption.map(_.pref.draughtsResult).getOrElse(lidraughts.pref.Pref.default.draughtsResult))
-        ).some
-      } else pov.game.clock map { c =>
+      pov.game.clock map { c =>
         span(cls := "vstext__clock")(shortClockName(c.config))
       } orElse {
         ctxOption flatMap { implicit ctx =>
@@ -86,7 +80,7 @@ object bits {
           }
         }
       },
-      span(cls := "vstext__op user-link", dataUserId := withResult ?? pov.opponent.userId)(
+      span(cls := "vstext__op user-link")(
         playerUsername(pov.opponent, withRating = false, withTitle = false),
         br,
         pov.opponent.rating,

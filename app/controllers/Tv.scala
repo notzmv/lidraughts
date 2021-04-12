@@ -5,6 +5,7 @@ import play.api.mvc._
 import lidraughts.api.Context
 import lidraughts.app._
 import lidraughts.game.Pov
+import lidraughts.user.{ User => UserModel, UserRepo }
 import views._
 
 object Tv extends LidraughtsController {
@@ -103,7 +104,7 @@ object Tv extends LidraughtsController {
       case _ => Nil
     }
     val povsFu = userIds map { userId =>
-      lidraughts.user.UserRepo.named(userId) flatMap {
+      UserRepo.named(userId) flatMap {
         _ ?? { u => lidraughts.game.GameRepo.lastPlayedPlayingId(u.id).flatMap(_ ?? { Env.round.proxy.pov(_, u) }) }
       }
     } sequenceFu
@@ -111,7 +112,7 @@ object Tv extends LidraughtsController {
       povs flatMap {
         _ map { pov =>
           Json.obj(
-            pov.player.userId.getOrElse(lidraughts.user.User.anonymous) -> html.game.mini(pov).toString
+            pov.player.userId.getOrElse(UserModel.anonymous) -> html.game.mini(pov, withUserId = true).toString
           )
         }
       }

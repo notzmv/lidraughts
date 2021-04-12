@@ -306,6 +306,7 @@ lidraughts.StrongSocket.defaults = {
       $('.mini-game-' + e.id).each(function() {
         lidraughts.miniGame.finish(this, e.win);
       });
+      lidraughts.pubsub.emit('game.finish', e);
     },
     challenges(d) {
       lidraughts.challengeApp.update(d);
