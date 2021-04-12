@@ -19,11 +19,7 @@ module.exports = function(ctrl) {
         }
       }
     }),
-    m('div.simul__main.box', {
-      config() {
-        window.lidraughts.miniGame.initAll();
-      }
-    }, handler(ctrl)),
+    m('div.simul__main.box', handler(ctrl)),
     m('div.chat__members.none', {
       config(el, done) {
         if (!done) $(el).watchers();
