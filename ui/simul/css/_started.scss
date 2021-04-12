@@ -58,10 +58,10 @@
 
     .host {
       @extend %box-radius;
-      background: fade-out($c-accent, 0.7);
+      background: fade-out($c-accent, 0.76);
 
-      &, a, .mini-game__clock {
-        color: $c-accent-over;
+      &, a, .mini-game__clock:not(.clock--run) {
+        color: #1d1d1d;
       }
     }
   }
