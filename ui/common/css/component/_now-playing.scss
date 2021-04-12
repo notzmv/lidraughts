@@ -55,6 +55,11 @@
     }
   }
 
+  .meta {
+    display: block;
+    text-align: center;
+    overflow: hidden;
+  }
   .indicator {
     color: $c-accent;
     margin-top: -3px;
