@@ -72,7 +72,17 @@ body {
 
   .meta {
     @extend %flex-column;
-
     align-items: center;
+
+    .title {
+      color: $c-brag;
+      font-weight: bold;
+      &[data-bot] {
+        color: $c-bot;
+      }
+      &[data-title64] {
+        color: $c-title64;
+      }
+    }
   }
 }

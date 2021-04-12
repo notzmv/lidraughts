@@ -14,14 +14,17 @@ function timer(pov) {
 
 export default function(ctrl: LobbyController) {
   return h('div.now-playing',
-    ctrl.data.nowPlaying.map(pov =>
-      h('a.' + pov.variant.key, {
+    ctrl.data.nowPlaying.map(pov => {
+      const u = pov.opponent,
+        board = pov.variant.board,
+        title64 = u.title && u.title.endsWith('-64');
+      return h('a.' + pov.variant.key, {
         key: `${pov.gameId}${pov.lastMove}`,
         attrs: { href: '/' + pov.fullId }
       }, [
-        h('span.mini-board.cg-wrap.is2d.is' + pov.variant.board.key, {
+        h('span.mini-board.cg-wrap.is2d.is' + board.key, {
           attrs: {
-            'data-state': `${pov.fen}|${pov.variant.board.size[0]}x${pov.variant.board.size[1]}|${pov.color}|${pov.lastMove}`
+            'data-state': `${pov.fen}|${board.size[0]}x${board.size[1]}|${pov.color}|${pov.lastMove}`
           },
           hook: {
             insert(vnode) {
@@ -30,12 +33,18 @@ export default function(ctrl: LobbyController) {
           }
         }),
         h('span.meta', [
-          pov.opponent.ai ? ctrl.trans('aiNameLevelAiLevel', 'Scan', pov.opponent.ai) : pov.opponent.username,
+          u.title && h(
+            'span.title', 
+            title64 ? { attrs: {'data-title64': true } } : (u.title == 'BOT' ? { attrs: { 'data-bot': true } } : {}), 
+            (title64 ? u.title.slice(0, u.title.length - 3) : u.title) + ' '
+          ),
+          u.ai ? ctrl.trans('aiNameLevelAiLevel', 'Scan', u.ai) : u.username,
           h('span.indicator',
             pov.isMyTurn ?
             (pov.secondsLeft ? timer(pov) : [ctrl.trans.noarg('yourTurn')]) :
             h('span', '\xa0')) // &nbsp;
         ])
       ])
-    ));
+    })
+  );
 }

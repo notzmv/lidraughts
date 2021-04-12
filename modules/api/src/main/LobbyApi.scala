@@ -31,14 +31,14 @@ final class LobbyApi(
                 Json.obj("username" -> u.username).add("isBot" -> u.isBot)
               },
               "seeks" -> JsArray(seeks map (_.render)),
-              "nowPlaying" -> JsArray(displayedPovs map nowPlaying),
+              "nowPlaying" -> JsArray(displayedPovs.map(p => nowPlaying(p, withTitle = true))),
               "nbNowPlaying" -> povs.size,
               "filter" -> filter.render
             ) -> displayedPovs
           }
       }
 
-  def nowPlaying(pov: Pov) = Json.obj(
+  def nowPlaying(pov: Pov, withTitle: Boolean = false) = Json.obj(
     "fullId" -> pov.fullId,
     "gameId" -> pov.gameId,
     "fen" -> draughts.format.Forsyth.exportBoard(pov.game.board),
@@ -52,13 +52,27 @@ final class LobbyApi(
     "speed" -> pov.game.speed.key,
     "perf" -> lidraughts.game.PerfPicker.key(pov.game),
     "rated" -> pov.game.rated,
-    "opponent" -> Json.obj(
-      "id" -> pov.opponent.userId,
-      "username" -> lidraughts.game.Namer.playerText(pov.opponent, withRating = false)(lightUserApi.sync)
-    ).add("rating" -> pov.opponent.rating)
-      .add("ai" -> pov.opponent.aiLevel),
+    "opponent" -> opponentJson(pov.opponent, withTitle),
     "isMyTurn" -> pov.isMyTurn
   ).add("secondsLeft" -> pov.remainingSeconds)
     .add("tournamentId" -> pov.game.tournamentId)
     .add("swissId" -> pov.game.tournamentId)
+
+  private def opponentJson(p: lidraughts.game.Player, withTitle: Boolean) =
+    Json.obj("id" -> p.userId)
+      .add("rating" -> p.rating)
+      .add("ai" -> p.aiLevel) ++ {
+        if (withTitle && p.aiLevel.isEmpty) {
+          p.userId.flatMap(lightUserApi.sync).fold(
+            Json.obj("username" -> (p.name | "Anon."))
+          ) { u =>
+              Json.obj(
+                "username" -> u.name,
+                "title" -> u.title
+              )
+            }
+        } else Json.obj(
+          "username" -> lidraughts.game.Namer.playerText(p)(lightUserApi.sync)
+        )
+      }
 }
