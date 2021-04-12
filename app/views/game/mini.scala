@@ -64,7 +64,7 @@ object mini {
 
   private def renderPlayer(pov: Pov, draughtsResult: Boolean, withUserId: Boolean = false) =
     span(cls := "mini-game__player")(
-      span(cls := "mini-game__user", dataUserId := withUserId ?? pov.player.userId)(
+      span(cls := s"mini-game__user mini-game__user--${pov.color.name}", dataUserId := withUserId ?? pov.player.userId)(
         playerUsername(pov.player, withRating = false),
         span(cls := "rating")(lidraughts.game.Namer ratingString pov.player)
       ),
