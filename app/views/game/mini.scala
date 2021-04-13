@@ -66,7 +66,7 @@ object mini {
     span(cls := "mini-game__player")(
       span(cls := s"mini-game__user mini-game__user--${pov.color.name}", dataUserId := withUserId ?? pov.player.userId)(
         playerUsername(pov.player, withRating = false),
-        span(cls := "rating")(lidraughts.game.Namer ratingString pov.player)
+        span(cls := "rating")(lidraughts.game.Namer ratingStringIfUser pov.player)
       ),
       if (pov.game.finishedOrAborted) renderResult(pov, draughtsResult)
       else pov.game.clock.map { renderClock(_, pov.color) }
