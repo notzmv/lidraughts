@@ -380,8 +380,8 @@ $.modal.close = function() {
 };
 
 lidraughts.miniBoard = {
-  initAll() {
-    Array.from(document.getElementsByClassName('mini-board--init')).forEach(lidraughts.miniBoard.init);
+  initAll(parent) {
+    Array.from((parent || document).getElementsByClassName('mini-board--init')).forEach(lidraughts.miniBoard.init);
   },
   init(node) {
     if (!window.Draughtsground) return setTimeout(() => lidraughts.miniBoard.init(node), 500);
@@ -439,8 +439,8 @@ lidraughts.miniGame = (() => {
       }
       return node.getAttribute('data-live');
     },
-    initAll() {
-      const nodes = Array.from(document.getElementsByClassName('mini-game--init')),
+    initAll(parent) {
+      const nodes = Array.from((parent || document).getElementsByClassName('mini-game--init')),
         ids = nodes.map(lidraughts.miniGame.init).filter(id => id);
       if (ids.length) lidraughts.StrongSocket.firstConnect.then(send =>
         send('startWatching', ids.join(' '))
